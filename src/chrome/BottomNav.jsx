@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { Avatar } from "./Avatar";
 
 /* How far the lit circle reaches past its tab: into the bar's padding above
    and below, as in Studio. */
@@ -12,9 +11,10 @@ const LIT_Y = 1;
  * its name for a screen reader and as the browser's tooltip; the names are on
  * each screen's heading.
  *
- * Profile is the last tab and wears your photo or initials, as in Studio.
+ * No Profile tab, unlike Studio: who you are and Log out live in the account
+ * menu in the header's corner (Glenn, 16 Oct 2026).
  */
-export function BottomNav({ tabs, activeTab, onChange, user }) {
+export function BottomNav({ tabs, activeTab, onChange }) {
   const barRef = useRef(null);
   const [lit, setLit] = useState(null);
 
@@ -49,9 +49,7 @@ export function BottomNav({ tabs, activeTab, onChange, user }) {
             <button key={id} type="button" data-tab={id} onClick={() => onChange(id)}
               aria-label={label} title={label} aria-current={on ? "page" : undefined}
               className={`cx-navbtn${on ? " cx-navbtn-on" : ""}`}>
-              {id === "profile"
-                ? <Avatar user={user} size={30} ring={on ? "#fff" : undefined} />
-                : <Icon size={24} strokeWidth={2} aria-hidden="true" />}
+              <Icon size={24} strokeWidth={2} aria-hidden="true" />
             </button>
           );
         })}

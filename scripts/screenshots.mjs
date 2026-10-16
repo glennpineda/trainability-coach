@@ -66,9 +66,10 @@ try {
   await shot("03-apps");
   await page.keyboard.press("Escape");
 
-  await page.click('[data-tab="profile"]');
-  await page.waitForFunction(() => document.querySelector("h1")?.textContent === "Profile");
-  await shot("04-profile");
+  await page.click('[aria-haspopup="menu"]');
+  await page.waitForSelector('[role="menu"]');
+  await page.mouse.move(10, 600);   // off the button, so the shading is the open state's
+  await shot("04-account");
 
   /* Signed out again, so the next run starts from the sign-in screen. */
   await page.evaluate(() => fetch("/api/auth/logout", { method: "POST", credentials: "include" }));

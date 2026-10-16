@@ -17,11 +17,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   of Coach on the way: Today, Clients, Programs and Messages, each marked
   Coming soon.
 - **Studio's header and tab bar.** The Coach logo and name across the top,
-  and a floating bar at the bottom for Home, Clients, Programs, Messages and
-  Profile.
+  and a floating bar at the bottom for Home, Clients, Programs and Messages.
 - **Switch between Coach and Studio.** Tap the Coach logo and a panel folds
   down with both apps; Studio is one tap away.
-- **Your account menu and Profile.** Your photo in the top corner opens a menu
-  with your name, email and kind of account, Open Studio, Log out and the
-  version; Profile, on the bar, holds the same.
+- **Your account menu.** Your photo in the top corner opens a menu with your
+  name, email and kind of account, Open Studio, Log out and the version.
 - **Light or dark,** following your phone or computer.

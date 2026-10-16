@@ -5,9 +5,9 @@ const initials = (name = "") =>
 
 /* Somebody's photo, or their initials on a cerulean disc when there is none or
    it will not load. */
-export function Avatar({ user, size = 32, ring }) {
+export function Avatar({ user, size = 32 }) {
   const [broken, setBroken] = useState(false);
-  const style = { width: size, height: size, ...(ring ? { boxShadow: `0 0 0 2px ${ring}` } : null) };
+  const style = { width: size, height: size };
   if (user.photoUrl && !broken) {
     return <img src={user.photoUrl} alt="" onError={() => setBroken(true)} className="rounded-full object-cover flex-none" style={style} />;
   }

@@ -10,8 +10,8 @@ const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "
  * You, in the corner: your photo or initials with a chevron, opening a menu
  * with who is signed in, Open Studio, Log out and the version. Coach's first
  * header had it (Glenn liked it and asked for it back, 16 Oct 2026); it sits
- * after the role badge, and Profile on the tab bar holds the same things.
- * Your name shows beside the photo where there is room.
+ * after the role badge, and is the one place for these — the tab bar has no
+ * Profile. Your name shows beside the photo where there is room.
  */
 export function AccountMenu({ user, onLogout }) {
   const [open, setOpen] = useState(false);
@@ -32,7 +32,9 @@ export function AccountMenu({ user, onLogout }) {
     <div className="relative" ref={ref}>
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
         aria-label={`${user.name}: account menu`}
-        className="flex items-center gap-1.5 rounded-full pl-0.5 pr-1.5 h-9 transition-colors hover:bg-(--ghost-fill)">
+        className="flex items-center gap-1.5 rounded-full pl-0.5 pr-1.5 h-9 transition-colors hover:bg-(--ghost-fill)"
+        /* Highlighted for as long as its menu is open, not only under the pointer. */
+        style={open ? { background: "var(--ghost-fill)" } : undefined}>
         <Avatar user={user} size={32} />
         <span className="hidden sm:block text-sm font-medium max-w-48 truncate" style={{ color: "var(--ink)" }}>{user.name}</span>
         <ChevronDown size={16} style={{ color: "var(--iron)", transform: open ? "rotate(180deg)" : undefined, transition: "transform .2s ease" }} aria-hidden="true" />

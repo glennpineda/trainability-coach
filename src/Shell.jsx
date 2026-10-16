@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { House, Users, ClipboardList, MessageCircle, UserRound } from "lucide-react";
+import { House, Users, ClipboardList, MessageCircle } from "lucide-react";
 import { Header } from "./chrome/Header";
 import { BottomNav } from "./chrome/BottomNav";
 import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
-import { ProfileTab } from "./tabs/ProfileTab";
 import { SECTIONS } from "./tabs/sections";
 
 const TABS = [
@@ -12,7 +11,6 @@ const TABS = [
   { id: "clients", label: "Clients", icon: Users },
   { id: "programs", label: "Programs", icon: ClipboardList },
   { id: "messages", label: "Messages", icon: MessageCircle },
-  { id: "profile", label: "Profile", icon: UserRound },
 ];
 const KEY = "coach-tab";
 
@@ -32,9 +30,8 @@ export function Shell({ user, onLogout }) {
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} />}
         {SECTIONS[tab] && <ComingSoonTab section={SECTIONS[tab]} />}
-        {tab === "profile" && <ProfileTab user={user} onLogout={onLogout} />}
       </main>
-      <BottomNav tabs={TABS} activeTab={tab} onChange={open} user={user} />
+      <BottomNav tabs={TABS} activeTab={tab} onChange={open} />
     </div>
   );
 }

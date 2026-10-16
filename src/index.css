@@ -163,7 +163,7 @@
     border-bottom-left-radius: 0; border-bottom-right-radius: 0; box-shadow: none; }
 
   /* The apps panel, slid down out of the badge and back up into it. */
-  .cx-appdrawer { position: absolute; top: 45px; left: -10px; z-index: 35; width: min(20rem, calc(100vw - 12px));
+  .cx-appdrawer { position: absolute; top: 45px; left: -10px; z-index: 35; width: min(22.5rem, calc(100vw - 12px));
     max-height: 0; overflow: hidden; overflow: clip; transition: max-height .22s ease; pointer-events: none; }
   .cx-appdrawer-open { max-height: 70vh; max-height: 70dvh; pointer-events: auto; }
   .cx-apppanel { background: var(--badge-open); border: 1px solid var(--iron-line); border-top-left-radius: 0;
@@ -205,10 +205,6 @@
     box-shadow: 0 3px 10px rgba(0, 123, 167, 0.35);
     transition: transform .3s cubic-bezier(.3, .7, .2, 1), width .3s cubic-bezier(.3, .7, .2, 1); }
 
-  /* A row in a card that does something: Profile's Open Studio and Log out. */
-  .cx-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 18px; text-align: left;
-    color: var(--ink); transition: background-color .15s ease; }
-  .cx-row:hover { background: var(--ghost-fill); }
   .cx-card-press { transition: transform .15s ease, box-shadow .15s ease; }
   .cx-card-press:hover { transform: translateY(-1px); }
 

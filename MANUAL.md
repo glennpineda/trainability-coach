@@ -27,7 +27,7 @@ here as it arrives.
    - [3.2 Switching between Coach and Studio](#32-switching-between-coach-and-studio)
    - [3.3 The bar at the bottom](#33-the-bar-at-the-bottom)
    - [3.4 The home screen](#34-the-home-screen)
-   - [3.5 Your profile](#35-your-profile)
+   - [3.5 Your account menu](#35-your-account-menu)
    - [3.6 Light or dark](#36-light-or-dark)
 4. [Words this app uses](#4-words-this-app-uses)
 5. [When something goes wrong](#5-when-something-goes-wrong)
@@ -155,8 +155,7 @@ time you sign in to Coach.
 
 ### 2.5 Signing out
 
-1. Tap your photo or initials — either the one in the top right corner, or
-   **Profile**, last on the bar at the bottom.
+1. Tap your photo or initials in the top right corner.
 2. Tap **Log out**.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
@@ -182,14 +181,8 @@ Across the top of every screen:
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
 - **In the corner**, your photo (or your initials) with a small arrow
-  pointing down — your account menu. On a wider screen your name is beside
-  it.
-
-**Your account menu.** Tap your photo or initials in the top right corner. A
-small panel opens with your name, your email address and what kind of account
-you have, then **Open Studio**, **Log out**, and the version on the last line.
-It holds the same things as Profile (3.5), so use whichever is closer. To close
-it, tap anywhere else or press Esc.
+  pointing down — your account menu (3.5). On a wider screen your name is
+  beside it.
 
 The bar stays at the top as you scroll.
 
@@ -206,7 +199,8 @@ between them.
    icon with **COACH** beside it, and a panel folds down underneath with the
    heading **TRAINABILITY APPS**.
 2. The panel lists both apps:
-   - **Coach** — *You're here*, with a tick.
+   - **Coach** — *Programs, progress, and nutrition*. The tick beside it
+     means it is the app you are in.
    - **Studio** — *Schedule, sessions, and payments*.
 3. Tap **Studio** to go to Studio. If you are not signed in there, sign in with
    the same email and password.
@@ -220,7 +214,7 @@ On a computer, just pointing at the logo opens it out to show the app icon and
 ### 3.3 The bar at the bottom
 
 The rounded bar floating at the bottom of the screen moves you between the
-parts of Coach. It has five buttons, as pictures with no words:
+parts of Coach. It has four buttons, as pictures with no words:
 
 | Button | Picture | Goes to |
 |---|---|---|
@@ -228,7 +222,6 @@ parts of Coach. It has five buttons, as pictures with no words:
 | **Clients** | Two people | Clients — coming soon. |
 | **Programs** | A clipboard with a list | Programs — coming soon. |
 | **Messages** | A speech bubble | Messages — coming soon. |
-| **Profile** | Your photo, or your initials | Your profile (3.5). |
 
 The one you are on sits in a filled blue circle, which slides across when you
 tap another. On a computer, pointing at a button shows its name.
@@ -260,22 +253,26 @@ Each is marked **Coming soon**. Tapping **Clients**, **Programs** or
 If you are signed in with a temporary password, a box at the top of Home says
 so — see 2.4.
 
-### 3.5 Your profile
+### 3.5 Your account menu
 
-![Profile](docs/images/04-profile.png)
+![Your account menu, open](docs/images/04-account.png)
 
-*Profile*
+*Your account menu, open*
 
-Tap **Profile** — your photo or initials, last on the bottom bar.
+1. Tap your photo or initials in the top right corner. The button stays
+   shaded, and its arrow turns to point up, while the menu is open.
+2. The menu shows:
+   - **Your name**, your email address, and what kind of account you have:
+     **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
+     the same as in Studio.
+   - **Open Studio** — goes to Studio, at trainabilitystudio.com.
+   - **Log out** — signs you out (2.5).
+   - **The last line** is the version the app is on, such as
+     *Version 1.0.0 · Caesious*. If you ever report a problem, say which
+     version it was.
 
-- **The card at the top** has your name, your email address and what kind of
-  account you have: **Trainer**, **Admin**, **Master**, **Primary Master** or
-  **Front desk** — the same as in Studio.
-- **Open Studio** goes to Studio, at trainabilitystudio.com.
-- **Log out** signs you out (2.5).
-- **The last line** is the version the app is on, such as
-  *Version 1.0.0 · Caesious*. If you ever report a problem, say which version
-  it was.
+To close it without choosing anything, tap the photo again, tap anywhere else,
+or press Esc on a keyboard.
 
 ### 3.6 Light or dark
 
@@ -297,9 +294,8 @@ and light otherwise. There is nothing to set in the app.
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Profile** | The last button on the bottom bar: who is signed in, Open Studio and Log out (3.5). |
-| **Account menu** | The menu under your photo in the top right corner: the same things as Profile (3.1). |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen, in your account menu and at the foot of Profile. |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
+| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>
 

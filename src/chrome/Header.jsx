@@ -23,8 +23,8 @@ const ROLE = { master: "Master", admin: "Admin" };
  * pointer the badge opens out, as Studio's does: the mark becomes the app's
  * own icon (the tile on a home screen) and its name slides out beside it.
  *
- * Pressed, it folds out the apps panel underneath: Coach, where you are, and
- * Studio, a tap away. Every Coach account is a Studio account, so both are
+ * Pressed, it folds out the apps panel underneath: Coach (ticked, where you
+ * are) and Studio, a tap away, each with a line on what it is for. Every Coach account is a Studio account, so both are
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
  */
@@ -131,11 +131,12 @@ export function Header({ user, onLogout }) {
               <div id="cx-apps-title" className="text-xs uppercase tracking-wide px-2 pt-1 pb-2" style={{ color: "var(--iron)" }}>
                 Trainability apps
               </div>
-              <button type="button" className="cx-app-row" aria-current="page" onClick={() => close({ restoreFocus: true })}>
+              {/* The app you are in: the tick says so, and a screen reader is told by aria-current. */}
+              <button type="button" className="cx-app-row" aria-current="page" aria-label="Coach, the app you are in: programs, progress, and nutrition" onClick={() => close({ restoreFocus: true })}>
                 <img src={coachIcon} alt="" className="flex-none" style={{ width: 40, height: 40, borderRadius: 10 }} />
                 <span className="min-w-0 flex-1 text-left">
                   <span className="block font-semibold">Coach</span>
-                  <span className="block text-sm" style={{ color: "var(--iron)" }}>You&apos;re here</span>
+                  <span className="block text-sm" style={{ color: "var(--iron)" }}>Programs, progress, and nutrition</span>
                 </span>
                 <Check size={20} className="flex-none" style={{ color: "var(--accent)" }} aria-hidden="true" />
               </button>
