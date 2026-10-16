@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CATEGORIES } from "../server/equipment.js";
+import { ORDER, WORDS, masterName, bodyweightFamilies, slug } from "../server/coach-iq.js";
 
 /**
  * Coach IQ's exercise library: checked, and written out for reading.
@@ -9,8 +10,10 @@ import { CATEGORIES } from "../server/equipment.js";
  *   npm run iq         checks coach-iq/exercises.json and writes EXERCISES.md
  *   npm run check-iq   checks it, and fails if EXERCISES.md is behind
  *
- * exercises.json is the library itself, the one Billy will read. EXERCISES.md
- * is the same list as tables, for Glenn to review; never edit it by hand.
+ * exercises.json is the library itself, the one Billy will read: its families
+ * (movements) and their versions. EXERCISES.md is the same list as tables, for
+ * Glenn to review; never edit it by hand. Master names are made here from the
+ * attributes (server/coach-iq.js), so they are never stored or typed.
  *
  * Every word in the library comes from a list below, so "lower-back" and
  * "lower back" can never both turn up, and a condition can be matched to the
@@ -55,17 +58,31 @@ const FLAGS = {
 const KINDS = new Set(CATEGORIES.map(c => c.key));
 const KIND_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.key, c.label.replace(/^(A|An) /, "").replace(/^./, ch => ch.toUpperCase())]));
 
-const list = JSON.parse(readFileSync(SOURCE, "utf8"));
+const { movements, exercises: list } = JSON.parse(readFileSync(SOURCE, "utf8"));
 const problems = [];
+for (const [key, f] of Object.entries(movements)) {
+  if (!f.label) problems.push(`family ${key}: it has no label`);
+  if (!PATTERNS[f.pattern]) problems.push(`family ${key}: unknown pattern "${f.pattern}"`);
+}
+const bwOnly = bodyweightFamilies(list);
 const ids = new Map();
+const masters = new Map();
 for (const x of list) {
   const at = x.id || `(no id: ${x.name})`;
   const wrong = (why) => problems.push(`${at}: ${why}`);
-  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(x.id || "")) wrong("its id must be lowercase words joined by hyphens");
+  if (!movements[x.movement]) { wrong(`unknown family "${x.movement}"`); continue; }
+  for (const [key, word] of Object.entries(x.attributes || {})) {
+    if (!ORDER.includes(key)) wrong(`unknown attribute "${key}"`);
+    else if (!WORDS[key].includes(word)) wrong(`"${word}" is not one of the words for ${key}`);
+  }
+  if (!x.attributes?.implement) wrong("it names no equipment");
+  x.master = masterName(x, movements, bwOnly);
+  if (x.id !== slug(x.master)) wrong(`its id should be "${slug(x.master)}", from its master name`);
+  if (masters.has(x.master)) wrong(`same master name as ${masters.get(x.master)}: "${x.master}"`);
+  masters.set(x.master, x.id);
   if (ids.has(x.id)) wrong("its id is used twice");
   ids.set(x.id, x);
-  if (!x.name) wrong("it has no name");
-  if (!PATTERNS[x.pattern]) wrong(`unknown pattern "${x.pattern}"`);
+  if (!x.name) wrong("it has no common name");
   if (!x.primary?.length) wrong("it works no main muscle");
   for (const m of [...(x.primary || []), ...(x.secondary || [])]) if (!MUSCLES.includes(m)) wrong(`unknown muscle "${m}"`);
   if (!MODALITIES.includes(x.modality)) wrong(`unknown modality "${x.modality}"`);
@@ -83,6 +100,7 @@ for (const x of list) {
     }
   }
 }
+for (const key of Object.keys(movements)) if (!list.some(x => x.movement === key)) problems.push(`family ${key}: has no versions`);
 
 const words = (a) => a.join(", ");
 const equipmentOf = (e) => {
@@ -94,30 +112,37 @@ const equipmentOf = (e) => {
   if (one.length) parts.push((needs.length || e.piece ? "with " : "") + one.join(" or "));
   return parts.join(", ") || "None";
 };
-const nameOf = (id) => ids.get(id)?.name || id;
+const nameOf = (id) => ids.get(id)?.master || id;
 const lines = [
   "# Coach IQ: exercise library",
   "",
   "Written by `npm run iq` from `exercises.json`. Do not edit this page: change",
   "`exercises.json` and run it again.",
   "",
-  `${list.length} exercises. **Care with** lists the joints an exercise loads and plain facts about it;`,
-  "which conditions call for care with which is in Coach IQ's principles.",
+  `${Object.keys(movements).length} families, ${list.length} versions. Each version's master name is the family,`,
+  "then its attributes in a fixed order: position, support, limbs, equipment, load, grip, velocity, plane. An",
+  "attribute at its usual setting is left out (standing, both sides, controlled), and so is equipment in a",
+  "family that is only ever bodyweight. The common name is what most trainers call it.",
   "",
-  "Facts used under Care with: " + Object.entries(FLAGS).map(([k, v]) => `**${k}** (${v})`).join(", ") + ".",
+  "**Care with** lists the joints an exercise loads and plain facts about it; which conditions call for care",
+  "with which is in Coach IQ's principles. The facts: " + Object.entries(FLAGS).map(([k, v]) => `**${k}** (${v})`).join(", ") + ".",
   "",
 ];
 for (const [key, title] of Object.entries(PATTERNS)) {
-  const here = list.filter(x => x.pattern === key);
-  if (!here.length) continue;
-  lines.push(`## ${title}`, "", "| Exercise | Works | Equipment | Level | Easier | Harder | Care with |", "|---|---|---|---|---|---|---|");
-  for (const x of here) {
-    const name = x.aliases?.length ? `**${x.name}** (${x.aliases.join(", ")})` : `**${x.name}**`;
-    const works = words(x.primary) + (x.secondary?.length ? `; also ${words(x.secondary)}` : "");
-    const care = [...(x.cautions?.joints || []), ...(x.cautions?.flags || [])].join(", ");
-    lines.push(`| ${name} | ${works} | ${equipmentOf(x.equipment || {})} | ${x.level} | ${(x.easier || []).map(nameOf).join(", ")} | ${(x.harder || []).map(nameOf).join(", ")} | ${care} |`);
+  const families = Object.entries(movements).filter(([, f]) => f.pattern === key);
+  if (!families.length) continue;
+  lines.push(`## ${title}`, "");
+  for (const [fkey, f] of families) {
+    const here = list.filter(x => x.movement === fkey);
+    lines.push(`### ${f.label}`, "", "| Master name | Common name | Works | Equipment | Level | Easier | Harder | Care with |", "|---|---|---|---|---|---|---|---|");
+    for (const x of here) {
+      const common = x.aliases?.length ? `${x.name} (${x.aliases.join(", ")})` : x.name;
+      const works = words(x.primary) + (x.secondary?.length ? `; also ${words(x.secondary)}` : "");
+      const care = [...(x.cautions?.joints || []), ...(x.cautions?.flags || [])].join(", ");
+      lines.push(`| **${x.master}** | ${common} | ${works} | ${equipmentOf(x.equipment || {})} | ${x.level} | ${(x.easier || []).map(nameOf).join("; ")} | ${(x.harder || []).map(nameOf).join("; ")} | ${care} |`);
+    }
+    lines.push("");
   }
-  lines.push("");
 }
 const page = lines.join("\n");
 
@@ -132,8 +157,8 @@ if (process.argv.includes("--check")) {
     console.error("coach-iq/EXERCISES.md is behind exercises.json. Run: npm run iq");
     process.exit(1);
   }
-  console.log(`Coach IQ: ${list.length} exercises, all consistent.`);
+  console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions, all consistent.`);
 } else {
   writeFileSync(PAGE, page);
-  console.log(`Coach IQ: ${list.length} exercises checked; EXERCISES.md written.`);
+  console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions checked; EXERCISES.md written.`);
 }

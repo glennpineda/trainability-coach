@@ -106,8 +106,18 @@ when the movement does not already say it ("When it isn't obvious");
 exercises are grouped in families, a base movement with each version defined
 by its attributes, which is also how alternatives are found, for equipment
 and for people with limitations ("Families would be great, also perfect for
-finding alternative exercises, and people with limitations"). Still to
-decide: the order of the words, from examples.
+finding alternative exercises, and people with limitations"). The order
+(Glenn: "I'd go with C"): the movement first, then the attributes,
+
+    Movement — position, support, limbs, equipment, load, grip, velocity, plane
+
+as in *Split Squat — Rear-Foot-Elevated, Dumbbell* or *Pull-Up — Bodyweight,
+Supinated-Grip* (common name: chin-up). Velocity is named only when it is not
+that movement's usual (*Swing — Kettlebell*, not "Ballistic"). Equipment is
+always named, except Bodyweight in a family that is only ever bodyweight, and
+where the movement's own name already says it (*Leg Press*, *Box Jump*). The
+rules and their words are in `server/coach-iq.js`, shared by the checker and,
+later, by Billy.
 
 ## The rules (Glenn, 16 Oct 2026)
 
@@ -139,9 +149,13 @@ decide: the order of the words, from examples.
 - `README.md`: this page.
 - `READ.md`: the books read into Coach IQ so far, for Glenn. Not shown to
   trainers and not given to Billy.
-- `exercises.json`: the exercise library, the list Billy will read. Its
-  starter list (177 exercises, 16 Oct 2026) was drafted by Claude from general
-  knowledge for Glenn to review; the books add to it.
+- `exercises.json`: the exercise library, the list Billy will read: its
+  families (`movements`) and their versions (`exercises`), each version with
+  its attributes, one piece of equipment, common name, muscles, level, easier
+  and harder versions and cautions. Its id is its master name in lowercase.
+  The starter list (177 exercises drafted by Claude from general knowledge, 16
+  Oct 2026) became 109 families and 229 versions, one per piece of equipment;
+  for Glenn to review, and the books add to it.
 - `EXERCISES.md`: the same library as tables, for reading and review. Written
   by `npm run iq`; never edited by hand. `npm run check-iq` fails when the
   library has a word not on its lists, an easier or harder version that does
