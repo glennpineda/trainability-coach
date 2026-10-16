@@ -36,22 +36,22 @@ cd ../TrainabilityWeb3 && npm run fixture
 ```
 
 ```bash
-STUDIO_ORIGIN=http://localhost:4700 npm run server
+npm run server
 ```
 
 ```bash
 npm run dev
 ```
 
-Then open http://localhost:5174. The local test account is in `.env.example`.
+Then open http://localhost:5174. Local settings and the test account are in `.env` (copy `.env.example` on a new machine; it is never committed).
 
 ## Deploying (GoDaddy Airo)
 
 Like Studio: push the repository to GitHub, point an Airo app at it, set the
 start command to `npm start` (it builds, then serves), and set
-`STUDIO_ORIGIN` to Studio's public address. A subdomain such as
-`coach.trainabilitystudio.com` is the natural home. `curl
-https://<coach's domain>/api/health` reports which Studio it relays to.
+`STUDIO_ORIGIN=https://www.trainabilitystudio.com` and `TRUST_PROXY=1` in
+its environment variables. Live at https://trainabilitycoach.com;
+https://trainabilitycoach.com/api/health reports which Studio it relays to.
 
 ## Brand
 
