@@ -17,9 +17,11 @@ import { fileURLToPath } from "node:url";
  * session, just held separately from the one in Studio's tab.
  */
 
-/* .env beside package.json, for local runs. Built into Node, and it never
-   overrides a variable the host has already set, so Airo's settings win. */
-try { process.loadEnvFile(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", ".env")); } catch { /* no .env: the host's environment only */ }
+/* server/.env, for local runs — the same place Studio keeps its own. Built
+   into Node, read by this file's location rather than the working directory,
+   and it never overrides a variable the host has already set, so Airo's
+   settings win. */
+try { process.loadEnvFile(path.join(path.dirname(fileURLToPath(import.meta.url)), ".env")); } catch { /* no server/.env: the host's environment only */ }
 
 const PORT = Number(process.env.PORT || 4800);
 /* Studio's public address, e.g. https://trainabilitystudio.com. In development

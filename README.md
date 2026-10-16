@@ -43,7 +43,7 @@ npm run server
 npm run dev
 ```
 
-Then open http://localhost:5174. Local settings and the test account are in `.env` (copy `.env.example` on a new machine; it is never committed).
+Then open http://localhost:5174. Local settings and the test account are in `server/.env`, as in Studio (copy `.env.example` there on a new machine; it is never committed).
 
 ## Deploying (GoDaddy Airo)
 
