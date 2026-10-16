@@ -45,16 +45,20 @@ will learn better"
 - **Fall back by category.** Every exercise in the library names its specific
   equipment and the category it belongs to; without the low row machine but
   with dumbbells, it becomes a dumbbell row.
-- **This is not Coach IQ.** Coach IQ is the shared book Glenn reviews. What
-  each place has is learned from trainers' answers as Coach is used, and kept
-  apart from it.
+- **This is not Coach IQ: it is the trainer's personal memory** (Glenn: "Equipment
+  memory should be part of the personal workout programs memory they have
+  already."). Coach IQ is the shared book, the same for everybody, that Glenn
+  reviews. Each trainer also has a personal memory of their own, learned as
+  they use Coach: their programs once they are scanned, how they like to
+  program, and the equipment they have. Equipment belongs to the trainer, not
+  to a place; a trainer who works in more than one place has it noted, inside
+  their memory, where each piece is.
 
-Still to decide: whether equipment belongs to a place (suggested: a studio
-from Studio's places, or a trainer's own, such as a client's home) or to a
-trainer; whether Billy may write down a trainer's answer (suggested: only
-what they just told him, on view and correctable); and where Coach keeps it
-(suggested: a database of Coach's own, linked to Studio's places and clients
-by their ids).
+Still to decide: whether Billy may write down a trainer's answer (suggested:
+only what they just told him, on view and correctable), and where Coach keeps
+the personal memory, the first data Coach would store itself (suggested: a
+database of Coach's own, linked to Studio's trainers and clients by their
+ids).
 
 ## The rules (Glenn, 16 Oct 2026)
 
