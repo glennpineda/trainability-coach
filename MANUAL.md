@@ -155,7 +155,8 @@ time you sign in to Coach.
 
 ### 2.5 Signing out
 
-1. Tap **Profile** — your photo or initials, last on the bar at the bottom.
+1. Tap your photo or initials — either the one in the top right corner, or
+   **Profile**, last on the bar at the bottom.
 2. Tap **Log out**.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
@@ -180,6 +181,15 @@ Across the top of every screen:
 - **On the right**, an Admin or Master account has a small shield, gold for a
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
+- **In the corner**, your photo (or your initials) with a small arrow
+  pointing down — your account menu. On a wider screen your name is beside
+  it.
+
+**Your account menu.** Tap your photo or initials in the top right corner. A
+small panel opens with your name, your email address and what kind of account
+you have, then **Open Studio**, **Log out**, and the version on the last line.
+It holds the same things as Profile (3.5), so use whichever is closer. To close
+it, tap anywhere else or press Esc.
 
 The bar stays at the top as you scroll.
 
@@ -197,7 +207,7 @@ between them.
    heading **TRAINABILITY APPS**.
 2. The panel lists both apps:
    - **Coach** — *You're here*, with a tick.
-   - **Studio** — *Schedule, clients and payments*.
+   - **Studio** — *Schedule, sessions, and payments*.
 3. Tap **Studio** to go to Studio. If you are not signed in there, sign in with
    the same email and password.
 
@@ -288,7 +298,8 @@ and light otherwise. There is nothing to set in the app.
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
 | **Profile** | The last button on the bottom bar: who is signed in, Open Studio and Log out (3.5). |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of Profile. |
+| **Account menu** | The menu under your photo in the top right corner: the same things as Profile (3.1). |
+| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen, in your account menu and at the foot of Profile. |
 
 <div style="page-break-after: always;"></div>
 

@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The account menu back beside the badge; Studio's line in the apps panel** (16 Oct 2026; Glenn: "for studio, have the description say \"schedule, sessions, and payments\"", and "I like the way you did with having the profile picture of the logged in user with a chevron pointing down then showing the submenu. Bring that back next to the user level badge."). The apps panel's Studio row now reads "Schedule, sessions, and payments", in Glenn's words and with his comma. The menu from Coach's first header came back as `src/chrome/AccountMenu.jsx`, recovered from git (`src/home/Header.jsx` before `cc8f1e9`) and restyled for the light header. That header was navy, with white text and a `white/10` hover; now it is ink text, a `--ghost-fill` hover and `--badge-open` behind the menu. It sits last in the header's badge row, after the role badge, so it holds the corner. It shows the 32px photo or initials, the name beside them from `sm` up, and a chevron that turns over while open. The menu has the name, email and kind of account ("Primary Master" where it applies, as on the badge and Profile), Open Studio, Log out and the version. Escape closes it with focus back on the button, and a press outside closes it too. The apps panel and this menu each close on a press outside themselves, so opening one closes the other (checked). Profile on the tab bar stays, holding the same things, as Glenn asked for this as well as Profile, not instead of it. The manual now has the menu in 3.1 and both ways to log out in 2.5, the word list and CHANGELOG 1.0 are updated, and the screenshots were retaken.
+
 - **Studio's header and tab bar, and the logo as the app switcher** (16 Oct 2026; Glenn: "some housekeeping lets copy the header bar and the nav bar from Studio, including the way the logo is shown. When you click on the logo now, the panel that folds out shoudl show Coach and Studio, this is a quick way to switch between apps if you have trainer account on Studio."). Copied from Studio's current code (src/chrome/Header.jsx, BottomNav.jsx, useFloatingBar.js and the theme.jsx rules behind them), not from its older screenshots, which still show a hexagon-ended bar: it has since become a pill with a lit circle. **Header** (`src/chrome/Header.jsx`): sticky, on the page's own background with a hairline under it, everything one 36px badge tall. The logo is `.cx-logo-badge`, anchored in the corner as Studio's `.iw-logo-badge` is, with two marks in one slot: the logo kit's badge at rest (cerulean on light, white on dark, through `<picture>`), and the app icon opened out, with COACH sliding out beside it. COACH is the lockup's own outline, cut out into `src/chrome/CoachWordmark.jsx` in `currentColor` (`--wordmark`: cerulean, sky in dark), as Studio sets STUDIO 3 with StudioLockupArt. It opens out under a pointer that can hover (`@media (hover: hover)`, so a tap on a phone does not leave it stuck open), on keyboard focus, and while its panel is open. **The switcher** is new rather than copied: clicking the logo folds down `.cx-apppanel`, built the way Studio's picker panel and Billy's join their buttons, with one fill and one outline, the badge squared off underneath (`.cx-logo-badge-open`). It slides on `max-height` with Studio's 220 ms put-on-the-page-a-frame-early trick, and closes on Escape (focus back to the logo), a press outside, or picking Coach. Rows: Coach ("You're here", a tick, `aria-current`) and Studio ("Schedule, clients and payments", a link to `STUDIO_URL`, with Studio's own `icon-192.png` copied in as `src/assets/studio-app-icon.png`). Always both, since every Coach account is a Studio account. The right of the header has Studio's role badges: a shield opening out to Admin, Master or Primary Master (gold, with Studio's sparkles), and none for a trainer. **Tab bar** (`src/chrome/BottomNav.jsx`): fixed at the bottom, a frosted pill (chalk at 72% with an 18px blur, at most 28rem wide) with a softening blur above it, icons only (names as `aria-label` and tooltip), and the lit tab a cerulean-to-sky circle (`.cx-nav-lit`) measured from the tab's box and slid with Studio's easing. Profile wears the photo or initials. Studio's drag-the-pill, groups and landscape rail are left out: five tabs need none of them. Tabs: Home, Clients, Programs, Messages, Profile (`src/Shell.jsx`; the tab is remembered in sessionStorage for the browser tab). The account dropdown went: as in Studio, who you are, Open Studio, Log out and the version are on **Profile** (`src/tabs/ProfileTab.jsx`). Clients, Programs and Messages open Coming soon pages, and their Home cards open those tabs too. `src/home/` became `src/tabs/` and `src/chrome/`. Checked in the browser at phone width in light and dark, and measured at 1280 wide (bar centred, 448 px): the panel opens, Escape closes it with focus back on the logo, and the tabs switch. Profile said "Master" where the header said "Primary Master", so it was made to match. Manual chapter 3 rewritten as "Finding your way around" (the top bar, switching apps, the bottom bar, Home, Profile, light or dark), sign-out in 2.5 now goes through Profile, and `npm run screenshots` takes two more pictures (`03-apps`, `04-profile`). CHANGELOG 1.0 updated.
 
 - **Vite 8 and Tailwind 4; npm audit to zero** (16 Oct 2026; was in Ideas, from the first cloud session's 9 advisories; Glenn: "let's upgrade Vite 8 and Tailwind then"). Coach only: Studio is on the same versions and still carries the warnings. Tailwind first, with its own `@tailwindcss/upgrade@4.3.3` on a clean tree: it renamed `min-h-[100dvh]` to `min-h-dvh`, `max-w-[12rem]` to `max-w-48` and `hover:bg-[var(--ghost-fill)]` to `hover:bg-(--ghost-fill)`, deleted `tailwind.config.js` (v4 is configured in CSS), and turned the `cx-` classes into `@utility` blocks. It also stripped every comment from `src/index.css` and reformatted it, so that file was rewritten by hand in v4 form with its comments kept. Two Tailwind 3 defaults that v4 drops were put back in `@layer base`: a border with no color of its own is `--iron-line` (v4 makes it the text color), and buttons show the pointing hand (v4 leaves the arrow). Then Vite 5.4 → 8.3.4 and `@vitejs/plugin-react` 4 → 6.1.2, with Tailwind through `@tailwindcss/vite` instead of PostCSS, so `postcss.config.js`, `postcss` and `autoprefixer` went (Tailwind 4 adds browser prefixes itself). Vite 8 needs Node 22.12 or newer, so `engines` went from `>=22.5` to `>=22.12`, and `/api/health` now reports `node` so the version Airo runs can be checked after the deploy (a deploy builds on the host, and an older Node there would fail the build). `npm audit`: 9 → 0. Checked: the build passes; the manual's two screenshots retaken on the new build and put beside the old ones, which look identical; the Vite 8 dev server serves the app, and in dark mode at phone width the home screen, the account menu, the pointer on every button and the divider's soft line were all correct.
@@ -224,7 +226,8 @@ time you sign in to Coach.
 
 #### 2.5 Signing out
 
-1. Tap **Profile** — your photo or initials, last on the bar at the bottom.
+1. Tap your photo or initials — either the one in the top right corner, or
+   **Profile**, last on the bar at the bottom.
 2. Tap **Log out**.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
@@ -249,6 +252,15 @@ Across the top of every screen:
 - **On the right**, an Admin or Master account has a small shield, gold for a
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
+- **In the corner**, your photo (or your initials) with a small arrow
+  pointing down — your account menu. On a wider screen your name is beside
+  it.
+
+**Your account menu.** Tap your photo or initials in the top right corner. A
+small panel opens with your name, your email address and what kind of account
+you have, then **Open Studio**, **Log out**, and the version on the last line.
+It holds the same things as Profile (3.5), so use whichever is closer. To close
+it, tap anywhere else or press Esc.
 
 The bar stays at the top as you scroll.
 
@@ -266,7 +278,7 @@ between them.
    heading **TRAINABILITY APPS**.
 2. The panel lists both apps:
    - **Coach** — *You're here*, with a tick.
-   - **Studio** — *Schedule, clients and payments*.
+   - **Studio** — *Schedule, sessions, and payments*.
 3. Tap **Studio** to go to Studio. If you are not signed in there, sign in with
    the same email and password.
 
@@ -357,7 +369,8 @@ and light otherwise. There is nothing to set in the app.
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
 | **Profile** | The last button on the bottom bar: who is signed in, Open Studio and Log out (3.5). |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of Profile. |
+| **Account menu** | The menu under your photo in the top right corner: the same things as Profile (3.1). |
+| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen, in your account menu and at the foot of Profile. |
 
 <div style="page-break-after: always;"></div>
 

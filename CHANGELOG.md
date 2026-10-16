@@ -21,6 +21,7 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   Profile.
 - **Switch between Coach and Studio.** Tap the Coach logo and a panel folds
   down with both apps; Studio is one tap away.
-- **Profile.** Your name, email and kind of account, Open Studio, Log out and
-  the version.
+- **Your account menu and Profile.** Your photo in the top corner opens a menu
+  with your name, email and kind of account, Open Studio, Log out and the
+  version; Profile, on the bar, holds the same.
 - **Light or dark,** following your phone or computer.

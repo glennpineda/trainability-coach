@@ -27,7 +27,7 @@ export function Shell({ user, onLogout }) {
 
   return (
     <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
-      <Header user={user} />
+      <Header user={user} onLogout={onLogout} />
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} />}

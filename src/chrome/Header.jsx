@@ -5,6 +5,7 @@ import badgeMarkDark from "../assets/coach-badge-dark.svg";
 import coachIcon from "../assets/coach-app-icon.png";
 import studioIcon from "../assets/studio-app-icon.png";
 import { CoachWordmark } from "./CoachWordmark";
+import { AccountMenu } from "./AccountMenu";
 import { STUDIO_URL } from "../lib/api";
 
 /* A badge's square, as in Studio's header: the logo is drawn at it so
@@ -27,7 +28,7 @@ const ROLE = { master: "Master", admin: "Admin" };
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
  */
-export function Header({ user }) {
+export function Header({ user, onLogout }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
@@ -97,8 +98,9 @@ export function Header({ user }) {
 
         <div className="flex-1" />
 
-        {/* Studio's badges: an Admin's or a Master's account says so in the
-            corner, its name opening out under the pointer. A trainer has none. */}
+        {/* Studio's badges: an Admin's or a Master's account says so, its name
+            opening out under the pointer (a trainer has none); then you, with
+            your account menu, in the corner. */}
         <div className="cx-badge-row">
           {ROLE[user.role] && (
             <span className="relative inline-flex flex-none">
@@ -120,6 +122,7 @@ export function Header({ user }) {
               )}
             </span>
           )}
+          <AccountMenu user={user} onLogout={onLogout} />
         </div>
 
         {drawn && (
@@ -140,7 +143,7 @@ export function Header({ user }) {
                 <img src={studioIcon} alt="" className="flex-none" style={{ width: 40, height: 40, borderRadius: 10 }} />
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold">Studio</span>
-                  <span className="block text-sm" style={{ color: "var(--iron)" }}>Schedule, clients and payments</span>
+                  <span className="block text-sm" style={{ color: "var(--iron)" }}>Schedule, sessions, and payments</span>
                 </span>
               </a>
             </div>
