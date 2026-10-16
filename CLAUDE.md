@@ -70,6 +70,13 @@ described in `README.md`.
   it before changing anything, and never invent one.** A minor bump changes
   `version`, `codename` and a new `## 1.1 <Name>` heading in CHANGELOG.md.
   Build numbers get no name.
+- **Every commit bumps the build number** (Glenn: "We bump the build number
+  whenever we commit"). The build is the last part of `version` (1.0.1 →
+  1.0.2): run `npm version patch --no-git-tag-version` and commit
+  `package.json` and `package-lock.json` with the change. So a piece of work
+  is one commit, with its NEURALBRAIN entry in it naming the build ("build
+  1.0.2") rather than a hash. The manual's version examples are examples and
+  are not changed each time.
 
 ## Testing and safety
 
