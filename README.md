@@ -45,6 +45,19 @@ npm run dev
 
 Then open http://localhost:5174. Local settings and the test account are in `server/.env`, as in Studio (copy `.env.example` there on a new machine; it is never committed).
 
+## Manual and notes
+
+As in Studio:
+
+- **`MANUAL.md`** — the user manual, step by step. After editing it, run
+  `npm run manual` to refresh its copy at the bottom of `NEURALBRAIN.md`;
+  `npm run check-docs` fails if the copy is behind or a picture is missing.
+  `npm run screenshots` retakes its pictures from the running app.
+- **`BRAINSTORM.md`** — the working queue. Saying "brainstorm" means work
+  through **Next up**.
+- **`NEURALBRAIN.md`** — every finished item and test run, with how it was
+  done, newest first.
+
 ## Deploying (GoDaddy Airo)
 
 Like Studio: push the repository to GitHub, point an Airo app at it, set the

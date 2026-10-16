@@ -8,7 +8,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server/index.js",
-    "start": "npm run build && node server/index.js"
+    "start": "npm run build && node server/index.js",
+    "manual": "node scripts/manual.mjs",
+    "check-docs": "node scripts/manual.mjs --check",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
@@ -24,5 +27,8 @@
   "engines": {
     "node": ">=22.5"
   },
-  "main": "server/index.js"
+  "main": "server/index.js",
+  "devDependencies": {
+    "puppeteer-core": "^25.10.0"
+  }
 }
