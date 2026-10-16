@@ -61,6 +61,14 @@ try {
   await page.waitForSelector("h1", { timeout: 10000 });
   await shot("02-home");
 
+  /* The Clients card, then the first client opened. Waits for the list
+     itself, not the "Loading…" line. */
+  await page.click('button ::-p-text(Clients)');
+  await page.waitForSelector("main ul li button");
+  await shot("03-clients");
+  await page.click("main ul li button");
+  await shot("04-client-details");
+
   /* Signed out again, so the next run starts from the sign-in screen. */
   await page.evaluate(() => fetch("/api/auth/logout", { method: "POST", credentials: "include" }));
 } finally {

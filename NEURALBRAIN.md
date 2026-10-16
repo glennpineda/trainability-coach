@@ -71,8 +71,8 @@ is written out step by step. Where a step says **tap**, you can also click with 
 mouse — they mean the same thing here.
 
 Coach is new, and so is this manual. It covers what the app does today:
-signing in and the home screen. Each new part of the app gets its own chapter
-here as it arrives.
+signing in, the home screen and your list of clients. Each new part of the
+app gets its own chapter here as it arrives.
 
 ---
 
@@ -90,8 +90,15 @@ here as it arrives.
    - [3.2 Your account menu](#32-your-account-menu)
    - [3.3 Going to Studio](#33-going-to-studio)
    - [3.4 Light or dark](#34-light-or-dark)
-4. [Words this app uses](#4-words-this-app-uses)
-5. [When something goes wrong](#5-when-something-goes-wrong)
+4. [Your clients](#4-your-clients)
+   - [4.1 Opening your clients](#41-opening-your-clients)
+   - [4.2 Reading the list](#42-reading-the-list)
+   - [4.3 Seeing a client's details](#43-seeing-a-clients-details)
+   - [4.4 Finding a client](#44-finding-a-client)
+   - [4.5 Archived clients](#45-archived-clients)
+   - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
+5. [Words this app uses](#5-words-this-app-uses)
+6. [When something goes wrong](#6-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -104,8 +111,9 @@ here as it arrives.
 Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
-programs you build for them, and your messages with them. Those parts are
-still being built — the home screen shows them as **Coming soon** (3.1).
+programs you build for them, and your messages with them. Your list of
+clients is here already (chapter 4); the other parts are still being built —
+the home screen shows them as **Coming soon** (3.1).
 
 #### One account for every Trainability app
 
@@ -242,16 +250,19 @@ From top to bottom:
 - **The blue band.** Today's date, and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.
-- **Four cards**, one for each part of Coach being built:
+- **Four cards**, one for each part of Coach:
 
-| Card | What it will be for |
+| Card | What it is for |
 |---|---|
 | **Today** | Your sessions for the day, at a glance. |
-| **Clients** | Everyone you coach, with their goals and progress. |
+| **Clients** | Everyone you coach, with their contact details and sessions. |
 | **Programs** | Workouts and plans you build and assign. |
 | **Messages** | Check-ins and notes between you and your clients. |
 
-Each card is marked **Coming soon** for now, and tapping it does nothing yet.
+**Clients** is ready: next to its name it says how many clients you have,
+such as **5 active clients**, and tapping it opens your list (chapter 4).
+The other three are marked **Coming soon**, and tapping them does nothing
+yet.
 
 #### 3.2 Your account menu
 
@@ -286,7 +297,101 @@ and light otherwise. There is nothing to set in the app.
 
 ---
 
-### 4. Words this app uses
+### 4. Your clients
+
+Coach shows the clients on your own list in Studio — the same people you see
+under your name there. It reads them from Studio every time, so anything
+changed in Studio shows in Coach the next time you open the list. Coach keeps
+no copy of its own.
+
+#### 4.1 Opening your clients
+
+1. On the home screen, tap the **Clients** card.
+2. The **Clients** screen opens. Under the word **Clients** it says how many
+   active clients you have.
+
+To go back, tap **← Home** above the word **Clients**, or use your browser's
+back button.
+
+#### 4.2 Reading the list
+
+![Your clients](docs/images/03-clients.png)
+
+*Your clients*
+
+Each client has one line, in order of first name:
+
+- **A circle with their initials.**
+- **Their name.** If they have told Studio their pronouns, those are next to
+  the name in brackets, such as *(they/them)*.
+- **One line about their sessions:**
+
+| It says | What it means |
+|---|---|
+| **Last session October 14** | The last session they had, with you or another trainer. |
+| **First session booked for October 18** | They have not had a session yet, but one is booked. |
+| **No sessions yet** | Nothing has happened and nothing is booked. |
+
+If you have no clients yet, the list says *You have no clients yet. Clients
+you add in Studio show here.*
+
+#### 4.3 Seeing a client's details
+
+![A client's details](docs/images/04-client-details.png)
+
+*A client's details, opened*
+
+1. Tap the client's line. It opens underneath to show:
+
+| Detail | What it shows |
+|---|---|
+| **Email** | Their email address. Tap it to write to them. |
+| **Phone** | Their phone number. Tap it to call them from a phone. |
+| **Birthday** | The day, and how old they are now, such as *March 12 (age 36)*. |
+| **Your client since** | The day they joined your list. |
+| **Last session** | The last session they had. |
+| **Next booked** | The next session booked for them, or *Nothing booked*. |
+| **Shared** | Only for a client who also trains with somebody else: *Also trains with 1 other trainer*. |
+
+   Anything Studio does not have says **Not given**, **Not known**,
+   **None yet** or **Nothing booked**.
+2. Tap the line again to close it. Opening another client closes the first.
+
+#### 4.4 Finding a client
+
+1. Tap the box that says **Search by name, email or phone**.
+2. Type part of their name, their email, or at least three digits of their
+   phone number. The list shrinks to the people who match as you type.
+3. To see everybody again, empty the box.
+
+If nobody matches, the list says *No one matches* and what you typed.
+
+#### 4.5 Archived clients
+
+Clients you have archived in Studio — people you no longer train — are kept
+apart from the rest.
+
+1. Tap **Archived** next to the search box. The number in brackets is how
+   many there are.
+2. The list now shows only your archived clients, with grey circles. Tapping
+   one shows the same details as in 4.3.
+3. Tap **Active** to go back to the people you are training.
+
+#### 4.6 Adding or changing a client
+
+Clients are added, changed and archived in **Studio**, not in Coach. At the
+foot of the Clients screen it says *Your clients are kept in Studio. To add a
+client or change their details, open Studio.*
+
+1. Tap **open Studio**. Studio opens.
+2. Make the change there.
+3. Come back to Coach and open **Clients** again. The change is there.
+
+<div style="page-break-after: always;"></div>
+
+---
+
+### 5. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -295,13 +400,15 @@ and light otherwise. There is nothing to set in the app.
 | **Temporary password** | A password emailed to you when yours is reset or forgotten. Use it once, then choose your own in Studio (2.4). |
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
+| **Active client** | A client on your list who you are still training. |
+| **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients screen (4.5). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and in your account menu. |
 
 <div style="page-break-after: always;"></div>
 
 ---
 
-### 5. When something goes wrong
+### 6. When something goes wrong
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock
@@ -326,8 +433,21 @@ where accounts are kept. It is not something you did. Wait a minute and reload
 the page.
 
 **"Couldn't reach Trainability. Check your connection and try again."**
-The sign-in did not get through. Check that your phone or computer is
-connected to the internet, then tap **Log in** again.
+The sign-in, or your list of clients, did not get through. Check that your
+phone or computer is connected to the internet, then tap **Log in** again —
+or, on the Clients screen, **Try again**.
+
+**"Your clients couldn't be loaded. Try again in a minute."**
+Studio answered, but not with your list. Wait a minute and tap **Try again**.
+If it keeps happening, tell whoever looks after the app.
+
+**A client is missing from your list.**
+Coach shows the clients on your own list in Studio. Check that they are under
+your name in Studio, and not archived — an archived client is under
+**Archived** (4.5).
+
+**You are back on the sign-in screen.**
+Your sign-in ran out while the app was open. Sign in again (2.1).
 
 **The temporary password email never came.**
 Look in the junk or spam folder first. Each request replaces the last password

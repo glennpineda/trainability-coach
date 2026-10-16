@@ -1,5 +1,5 @@
 import React from "react";
-import { CalendarDays, Users, ClipboardList, MessageCircle, KeyRound } from "lucide-react";
+import { CalendarDays, Users, ClipboardList, MessageCircle, KeyRound, ChevronRight } from "lucide-react";
 import { Header } from "./Header";
 import { STUDIO_URL } from "../lib/api";
 
@@ -9,16 +9,24 @@ function greeting(now = new Date()) {
 }
 const firstName = (name = "") => name.trim().split(/\s+/)[0] || "there";
 
-/* What Coach will hold. Placeholders for now, so the shape of the home screen
-   can be judged before any of them is built. */
+/* What Coach will hold. `to` is a screen that is built; the rest are
+   placeholders, so the shape of the home screen can be judged before any of
+   them is. */
 const SECTIONS = [
   { icon: CalendarDays, title: "Today", body: "Your sessions for the day, at a glance." },
-  { icon: Users, title: "Clients", body: "Everyone you coach, with their goals and progress." },
+  { icon: Users, title: "Clients", body: "Everyone you coach, with their contact details and sessions.", to: "/clients" },
   { icon: ClipboardList, title: "Programs", body: "Workouts and plans you build and assign." },
   { icon: MessageCircle, title: "Messages", body: "Check-ins and notes between you and your clients." },
 ];
 
-export function HomeScreen({ user, onLogout }) {
+/* Under the Clients card: how many, once the list has come. */
+function clientCount(clients) {
+  if (clients === undefined) return "Loading…";
+  const n = clients.filter(c => !c.archived).length;
+  return `${n} active client${n === 1 ? "" : "s"}`;
+}
+
+export function HomeScreen({ user, onLogout, onOpen, clients }) {
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
     <div className="min-h-[100dvh]" style={{ background: "var(--paper)" }}>
@@ -47,20 +55,28 @@ export function HomeScreen({ user, onLogout }) {
         )}
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {SECTIONS.map(({ icon: Icon, title, body }) => (
-            <div key={title} className="cx-card p-5 flex gap-4">
-              <span className="flex-none w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: "var(--accent-soft)" }}>
-                <Icon size={22} style={{ color: "var(--accent)" }} aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h2 className="font-semibold text-base">{title}</h2>
-                  <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)", color: "var(--iron)" }}>Coming soon</span>
+          {SECTIONS.map(({ icon: Icon, title, body, to }) => {
+            const inner = (
+              <>
+                <span className="flex-none w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: "var(--accent-soft)" }}>
+                  <Icon size={22} style={{ color: "var(--accent)" }} aria-hidden="true" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-semibold text-base">{title}</h2>
+                    {to
+                      ? title === "Clients" && <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>{clientCount(clients)}</span>
+                      : <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)", color: "var(--iron)" }}>Coming soon</span>}
+                  </div>
+                  <p className="text-sm mt-1" style={{ color: "var(--iron)" }}>{body}</p>
                 </div>
-                <p className="text-sm mt-1" style={{ color: "var(--iron)" }}>{body}</p>
-              </div>
-            </div>
-          ))}
+                {to && <ChevronRight size={20} className="flex-none self-center" style={{ color: "var(--accent)" }} aria-hidden="true" />}
+              </>
+            );
+            return to
+              ? <button key={title} onClick={() => onOpen(to)} className="cx-card p-5 flex gap-4 text-left transition-colors hover:border-[var(--cerulean)]">{inner}</button>
+              : <div key={title} className="cx-card p-5 flex gap-4">{inner}</div>;
+          })}
         </div>
       </main>
     </div>

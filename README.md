@@ -5,7 +5,7 @@ patterns as Trainability Studio (React 18, Vite, Tailwind, lucide icons, a
 small Express server) and hosted on GoDaddy like Studio, as its own app from
 its own repository.
 
-So far: the sign-in screen and the home screen.
+So far: the sign-in screen, the home screen and the trainer's client list.
 
 ## One sign-in for every Trainability app
 
@@ -20,6 +20,15 @@ Studio's API: `/api/auth/login`, `/api/auth/me`, `/api/auth/logout` and
   domain, so there is no CORS or cross-site cookie work;
 - each app holds its own session. Signing in to Coach does not sign you in to
   Studio's tab, and logging out of one leaves the other alone.
+
+Clients work the same way. Coach keeps no copy: `GET /api/clients` on
+Coach's server asks Studio's own `/api/clients` and `/api/auth/me` with the
+same session, keeps only the clients on the signed-in account's own list (a
+master or admin is otherwise sent everybody they manage), and passes on only
+what the Clients screen shows — name, pronouns, email, phone, birthday, the
+day they joined the list, last and next session dates, archived, and how many
+other trainers they share. No card, notes, address or message settings reach
+the browser. Studio did not have to change for this either.
 
 Known limit: Studio counts failed sign-ins per IP address as well as per
 email. Relayed requests all come from Coach's server, so that per-IP budget is
