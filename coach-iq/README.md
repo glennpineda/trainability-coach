@@ -54,11 +54,32 @@ will learn better"
   to a place; a trainer who works in more than one place has it noted, inside
   their memory, where each piece is.
 
-Still to decide: whether Billy may write down a trainer's answer (suggested:
-only what they just told him, on view and correctable), and where Coach keeps
-the personal memory, the first data Coach would store itself (suggested: a
-database of Coach's own, linked to Studio's trainers and clients by their
-ids).
+Decided (Glenn, 16 Oct 2026):
+
+- **Billy may write down a trainer's answer** ("Yes"): only what they have just
+  told him, on view in their memory and correctable there.
+- **Coach keeps the personal memory in a database of its own** ("go with your
+  suggestion"), linked to Studio's trainers and clients by their ids. Studio is
+  not changed.
+- **The exercise library starts from a list Claude drafts** ("A starter list
+  you draft"): common exercises with movement, muscles, modality and
+  equipment, level, easier and harder versions and cautions, reviewed by
+  Glenn; the books add to it.
+
+## Reading a book in the app (asked 16 Oct 2026, not built)
+
+"When it comes to the Coach IQ \"knowledge upload\" of PDF, can we can that
+in-app? Have a functionality for the primary master?"
+
+The proposal: a Coach IQ page that only the Primary Master sees. They upload a
+PDF; Coach reads it in the background a part at a time (a book is longer than
+one request takes), showing progress, and throws the PDF away once read. The
+result is a draft, topic by topic, of what is new, what changed and where the
+book disagrees with Coach IQ, which the Primary Master accepts, edits or
+rejects; nothing reaches Billy until accepted, and every accepted change keeps
+where it came from and when. Coach IQ then lives in Coach's database, with that
+history in place of git's, and this file stays as its rules. Waiting on: what
+database the Coach app can have on GoDaddy.
 
 ## The rules (Glenn, 16 Oct 2026)
 
