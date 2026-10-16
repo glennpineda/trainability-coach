@@ -83,5 +83,8 @@ described in `README.md`.
 - Local settings live in `server/.env` (as in Studio). It is never committed. A
   cloud session won't have it; it gets what it needs from the environment's
   variables.
-- Commit finished work on `main`, but don't push. Glenn pushes himself unless
-  he says otherwise.
+- Commit finished work on `main`, but don't push on your own. **When Glenn
+  says "push", push `main` to GitHub** (`git push`), then confirm it landed by
+  checking `git ls-remote origin main` matches the local commit. Never force
+  push. If GitHub refuses (it has commits this copy lacks), fetch and show
+  Glenn what is there before merging anything.
