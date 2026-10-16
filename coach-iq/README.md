@@ -113,7 +113,8 @@ finding alternative exercises, and people with limitations"). The order
 
 as in *Split Squat — Rear-Foot-Elevated, Dumbbell* or *Pull-Up — Bodyweight,
 Supinated-Grip* (common name: chin-up). Velocity is named only when it is not
-that movement's usual (*Swing — Kettlebell*, not "Ballistic"). Equipment is
+that movement's usual (Glenn: "name the velocity only when it differs from the
+exercise's usual"): *Swing — Kettlebell*, not "Ballistic". Equipment is
 always named, except Bodyweight in a family that is only ever bodyweight, and
 where the movement's own name already says it (*Leg Press*, *Box Jump*). The
 rules and their words are in `server/coach-iq.js`, shared by the checker and,
