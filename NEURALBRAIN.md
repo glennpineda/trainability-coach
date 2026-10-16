@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The apps panel opens on hover** (16 Oct 2026; Glenn: "when we hover over the coach logo, show the panel as if it is clicked instead."). Before, a mouse over the logo only opened the badge out (CSS `:hover`), and the panel needed a click. Now `onPointerEnter` with `pointerType === "mouse"` opens the panel itself. The logo and the drawer each carry the enter and leave handlers, so they are one place to the pointer: leaving either starts a 250 ms close, and entering the other cancels it, so moving from the logo down into the panel, or brushing an edge, never shuts it. A click on a logo the pointer has already opened leaves it open (`byHover`, with `e.detail > 0`), rather than closing what is about to be used. Touch screens never fire a mouse pointer, so a tap still toggles it there, and Enter still toggles it from a keyboard. Escape and a press outside still close it either way. Checked in the browser: on the logo it opens; on the rows it stays open, with the row under the pointer highlighted; away from both, it is gone within the 250 ms. Manual 3.1 and 3.2 now say pointing opens it.
+
 - **The account menu as the only place for you; no Profile tab; Coach's line in the selector** (16 Oct 2026; Glenn: "can you keep that background you had when selecting the profile menu on top? then remove the profile button on the nav bar", then "for the coach description on the app selector, write \"programs, progress, and nutrition\""). "That background" read as the shaded pill the account button showed under the pointer: it now stays (`--ghost-fill`, set inline while `open`) for as long as the menu is open, with the chevron turned up, checked with the pointer moved away. The Profile tab came off the bar, leaving four tabs (Home, Clients, Programs, Messages), and `src/tabs/ProfileTab.jsx` was deleted, with `.cx-row` and Avatar's `ring` going with it. Everything it held was already in the account menu, and a stale `coach-tab` of "profile" in sessionStorage falls back to Home. This is a deliberate step away from Studio, which keeps Profile on its bar. The selector's Coach row reads "Programs, progress, and nutrition" in place of "You're here". The tick and `aria-current` still say it is the app you are in, and an `aria-label` says so in words. That line wrapped at phone width, so the panel went from 20rem to 22.5rem (still capped at the screen less 12px). Manual: 3.3 has four buttons, 3.5 is now "Your account menu" with its own picture (`04-account`, replacing `04-profile`), 2.5 logs out from the menu only, and the word list and CHANGELOG 1.0 are updated.
 
 - **The account menu back beside the badge; Studio's line in the apps panel** (16 Oct 2026; Glenn: "for studio, have the description say \"schedule, sessions, and payments\"", and "I like the way you did with having the profile picture of the logged in user with a chevron pointing down then showing the submenu. Bring that back next to the user level badge."). The apps panel's Studio row now reads "Schedule, sessions, and payments", in Glenn's words and with his comma. The menu from Coach's first header came back as `src/chrome/AccountMenu.jsx`, recovered from git (`src/home/Header.jsx` before `cc8f1e9`) and restyled for the light header. That header was navy, with white text and a `white/10` hover; now it is ink text, a `--ghost-fill` hover and `--badge-open` behind the menu. It sits last in the header's badge row, after the role badge, so it holds the corner. It shows the 32px photo or initials, the name beside them from `sm` up, and a chevron that turns over while open. The menu has the name, email and kind of account ("Primary Master" where it applies, as on the badge and Profile), Open Studio, Log out and the version. Escape closes it with focus back on the button, and a press outside closes it too. The apps panel and this menu each close on a press outside themselves, so opening one closes the other (checked). Profile on the tab bar stays, holding the same things, as Glenn asked for this as well as Profile, not instead of it. The manual now has the menu in 3.1 and both ways to log out in 2.5, the word list and CHANGELOG 1.0 are updated, and the screenshots were retaken.
@@ -249,7 +251,7 @@ of Studio.
 Across the top of every screen:
 
 - **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
-  **COACH** beside it. Tapping the logo opens the apps panel (3.2).
+  **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
 - **On the right**, an Admin or Master account has a small shield, gold for a
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
@@ -268,9 +270,10 @@ The bar stays at the top as you scroll.
 Coach and Studio are two apps with one account, and the logo is the quick way
 between them.
 
-1. Tap the Coach logo in the top left corner. It opens out into the Coach app
-   icon with **COACH** beside it, and a panel folds down underneath with the
-   heading **TRAINABILITY APPS**.
+1. Tap the Coach logo in the top left corner — or, on a computer, just point
+   at it with the mouse. It opens out into the Coach app icon with **COACH**
+   beside it, and a panel folds down underneath with the heading
+   **TRAINABILITY APPS**.
 2. The panel lists both apps:
    - **Coach** — *Programs, progress, and nutrition*. The tick beside it
      means it is the app you are in.
@@ -279,10 +282,8 @@ between them.
    the same email and password.
 
 To close the panel without going anywhere, tap the logo again, tap anywhere
-else on the screen, or press Esc on a keyboard.
-
-On a computer, just pointing at the logo opens it out to show the app icon and
-**COACH**; it only folds down the panel when you click.
+else on the screen, or press Esc on a keyboard. On a computer it also folds
+back up by itself when you move the mouse away from the logo and the panel.
 
 #### 3.3 The bar at the bottom
 

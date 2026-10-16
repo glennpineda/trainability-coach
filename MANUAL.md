@@ -176,7 +176,7 @@ of Studio.
 Across the top of every screen:
 
 - **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
-  **COACH** beside it. Tapping the logo opens the apps panel (3.2).
+  **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
 - **On the right**, an Admin or Master account has a small shield, gold for a
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
@@ -195,9 +195,10 @@ The bar stays at the top as you scroll.
 Coach and Studio are two apps with one account, and the logo is the quick way
 between them.
 
-1. Tap the Coach logo in the top left corner. It opens out into the Coach app
-   icon with **COACH** beside it, and a panel folds down underneath with the
-   heading **TRAINABILITY APPS**.
+1. Tap the Coach logo in the top left corner — or, on a computer, just point
+   at it with the mouse. It opens out into the Coach app icon with **COACH**
+   beside it, and a panel folds down underneath with the heading
+   **TRAINABILITY APPS**.
 2. The panel lists both apps:
    - **Coach** — *Programs, progress, and nutrition*. The tick beside it
      means it is the app you are in.
@@ -206,10 +207,8 @@ between them.
    the same email and password.
 
 To close the panel without going anywhere, tap the logo again, tap anywhere
-else on the screen, or press Esc on a keyboard.
-
-On a computer, just pointing at the logo opens it out to show the app icon and
-**COACH**; it only folds down the panel when you click.
+else on the screen, or press Esc on a keyboard. On a computer it also folds
+back up by itself when you move the mouse away from the logo and the panel.
 
 ### 3.3 The bar at the bottom
 

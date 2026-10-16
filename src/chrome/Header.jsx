@@ -23,7 +23,7 @@ const ROLE = { master: "Master", admin: "Admin" };
  * pointer the badge opens out, as Studio's does: the mark becomes the app's
  * own icon (the tile on a home screen) and its name slides out beside it.
  *
- * Pressed, it folds out the apps panel underneath: Coach (ticked, where you
+ * Pointed at with a mouse, or tapped, it folds out the apps panel underneath: Coach (ticked, where you
  * are) and Studio, a tap away, each with a line on what it is for. Every Coach account is a Studio account, so both are
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
@@ -32,6 +32,31 @@ export function Header({ user, onLogout }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
+
+  /* Under a mouse the panel opens as the pointer arrives, as if clicked
+     (Glenn, 16 Oct 2026), and folds up a moment after it leaves both the
+     logo and the panel — the moment is so crossing from one to the other,
+     or brushing past the edge, does not shut it. A touch screen has no
+     hover, so there it is a tap, and a keyboard opens it with Enter. */
+  const leaveTimer = useRef(0);
+  const byHover = useRef(false);
+  const onPointerEnter = (e) => {
+    if (e.pointerType !== "mouse") return;
+    clearTimeout(leaveTimer.current);
+    if (!open) { byHover.current = true; setOpen(true); }
+  };
+  const onPointerLeave = (e) => {
+    if (e.pointerType !== "mouse" || !byHover.current) return;
+    leaveTimer.current = setTimeout(() => { byHover.current = false; setOpen(false); }, 250);
+  };
+  useEffect(() => () => clearTimeout(leaveTimer.current), []);
+  /* A click on a logo the pointer has already opened leaves it open, rather
+     than shutting what the person is about to use. */
+  const onLogoClick = (e) => {
+    if (byHover.current && e.detail > 0) return;
+    byHover.current = false;
+    setOpen(v => !v);
+  };
 
   /* Put on the page a frame before it slides, so there is a closed state to
      slide from, and kept for the length of the slide after it closes. */
@@ -52,6 +77,7 @@ export function Header({ user, onLogout }) {
   /* Escape, or a press anywhere else, folds it back up. Escape gives focus
      back to the badge, so a keyboard is not dropped at the top of the page. */
   const close = useCallback(({ restoreFocus } = {}) => {
+    byHover.current = false;
     setOpen(false);
     if (restoreFocus) btnRef.current?.focus();
   }, []);
@@ -68,10 +94,13 @@ export function Header({ user, onLogout }) {
   return (
     <header className="cx-headbar">
       <div className="relative flex items-center max-w-5xl mx-auto" style={{ minHeight: BADGE }}>
+        {/* The logo and its panel are one place to the pointer: entering
+            either keeps it open, leaving both starts it closing. */}
+        <div onPointerEnter={onPointerEnter} onPointerLeave={onPointerLeave}>
         <button
           ref={btnRef}
           type="button"
-          onClick={() => setOpen(v => !v)}
+          onClick={onLogoClick}
           className={`cx-logo-badge${open ? " cx-logo-badge-open" : ""}`}
           aria-expanded={open}
           aria-controls="cx-apps"
@@ -90,6 +119,7 @@ export function Header({ user, onLogout }) {
             <CoachWordmark label="" className="h-[15px] sm:h-[17px] w-auto" style={{ color: "var(--wordmark)" }} />
           </span>
         </button>
+        </div>
 
         {/* Which app this is, beside the mark, in the logo's own lettering. */}
         <span className="flex items-center" style={{ marginLeft: BADGE + 10, color: "var(--wordmark)" }}>
@@ -126,7 +156,8 @@ export function Header({ user, onLogout }) {
         </div>
 
         {drawn && (
-          <div id="cx-apps" className={`cx-appdrawer${slid && open ? " cx-appdrawer-open" : ""}`} aria-hidden={!open}>
+          <div id="cx-apps" className={`cx-appdrawer${slid && open ? " cx-appdrawer-open" : ""}`} aria-hidden={!open}
+            onPointerEnter={onPointerEnter} onPointerLeave={onPointerLeave}>
             <div ref={panelRef} className="cx-apppanel" role="group" aria-labelledby="cx-apps-title">
               <div id="cx-apps-title" className="text-xs uppercase tracking-wide px-2 pt-1 pb-2" style={{ color: "var(--iron)" }}>
                 Trainability apps
