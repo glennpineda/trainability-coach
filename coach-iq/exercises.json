@@ -1,461 +1,587 @@
 {
  "movements": {
-  "squat": {
+  "exf991xkm808": {
    "label": "Squat",
    "pattern": "squat"
   },
-  "sit-to-stand": {
+  "exf484hux714": {
    "label": "Sit to Stand",
    "pattern": "squat"
   },
-  "wall-sit": {
+  "exf498rbm811": {
    "label": "Wall Sit",
-   "pattern": "squat"
+   "pattern": "squat",
+   "measure": [
+    "time"
+   ]
   },
-  "pistol-squat": {
+  "exf733lfa079": {
    "label": "Pistol Squat",
-   "pattern": "squat"
+   "pattern": "squat",
+   "perSide": true
   },
-  "cossack-squat": {
+  "exf982npz888": {
    "label": "Cossack Squat",
-   "pattern": "squat"
+   "pattern": "squat",
+   "perSide": true
   },
-  "leg-press": {
+  "exf522zze001": {
    "label": "Leg Press",
    "pattern": "squat",
    "implementInName": true
   },
-  "hack-squat": {
+  "exf349ybm146": {
    "label": "Hack Squat",
    "pattern": "squat",
    "implementInName": true
   },
-  "hip-hinge-drill": {
+  "exf684hkb816": {
    "label": "Hip Hinge Drill",
    "pattern": "hinge"
   },
-  "glute-bridge": {
+  "exf751zvo159": {
    "label": "Glute Bridge",
    "pattern": "hinge"
   },
-  "hip-thrust": {
+  "exf805jct417": {
    "label": "Hip Thrust",
    "pattern": "hinge"
   },
-  "pull-through": {
+  "exf405slv840": {
    "label": "Pull-Through",
    "pattern": "hinge"
   },
-  "good-morning": {
+  "exf469hfo500": {
    "label": "Good Morning",
    "pattern": "hinge"
   },
-  "deadlift": {
+  "exf208wrp030": {
    "label": "Deadlift",
    "pattern": "hinge"
   },
-  "romanian-deadlift": {
+  "exf351gvn185": {
    "label": "Romanian Deadlift",
    "pattern": "hinge"
   },
-  "swing": {
+  "exf737kir522": {
    "label": "Swing",
    "pattern": "hinge"
   },
-  "back-extension": {
+  "exf159vci167": {
    "label": "Back Extension",
    "pattern": "hinge",
    "implementInName": true
   },
-  "split-squat": {
+  "exf355fyl622": {
    "label": "Split Squat",
-   "pattern": "lunge"
+   "pattern": "lunge",
+   "perSide": true
   },
-  "step-up": {
+  "exf830zab972": {
    "label": "Step-Up",
-   "pattern": "lunge"
+   "pattern": "lunge",
+   "perSide": true
   },
-  "reverse-lunge": {
-   "label": "Reverse Lunge",
-   "pattern": "lunge"
+  "exf341kkp139": {
+   "label": "Lunge",
+   "pattern": "lunge",
+   "perSide": true
   },
-  "forward-lunge": {
-   "label": "Forward Lunge",
-   "pattern": "lunge"
-  },
-  "walking-lunge": {
-   "label": "Walking Lunge",
-   "pattern": "lunge"
-  },
-  "lateral-lunge": {
-   "label": "Lateral Lunge",
-   "pattern": "lunge"
-  },
-  "push-up": {
+  "exf871tpe308": {
    "label": "Push-Up",
    "pattern": "push-horizontal"
   },
-  "chest-press": {
+  "exf581jrw375": {
    "label": "Chest Press",
    "pattern": "push-horizontal"
   },
-  "dip": {
+  "exf277uys856": {
    "label": "Dip",
    "pattern": "push-horizontal"
   },
-  "fly": {
+  "exf834orf759": {
    "label": "Fly",
    "pattern": "isolation"
   },
-  "overhead-press": {
+  "exf896icr925": {
    "label": "Overhead Press",
    "pattern": "push-vertical"
   },
-  "arnold-press": {
+  "exf229ssb664": {
    "label": "Arnold Press",
    "pattern": "push-vertical"
   },
-  "pike-push-up": {
+  "exf086wcu166": {
    "label": "Pike Push-Up",
    "pattern": "push-vertical"
   },
-  "handstand-push-up": {
+  "exf562qle108": {
    "label": "Handstand Push-Up",
    "pattern": "push-vertical"
   },
-  "row": {
+  "exf887exm679": {
    "label": "Row",
    "pattern": "pull-horizontal"
   },
-  "inverted-row": {
+  "exf022maf979": {
    "label": "Inverted Row",
    "pattern": "pull-horizontal"
   },
-  "renegade-row": {
+  "exf992gew915": {
    "label": "Renegade Row",
    "pattern": "pull-horizontal"
   },
-  "face-pull": {
+  "exf139eit623": {
    "label": "Face Pull",
    "pattern": "pull-horizontal"
   },
-  "pull-apart": {
+  "exf099fhj259": {
    "label": "Pull-Apart",
    "pattern": "pull-horizontal"
   },
-  "reverse-fly": {
+  "exf705uzc524": {
    "label": "Reverse Fly",
    "pattern": "isolation"
   },
-  "lat-pulldown": {
+  "exf000tbo941": {
    "label": "Lat Pulldown",
    "pattern": "pull-vertical"
   },
-  "pull-up": {
+  "exf353qts799": {
    "label": "Pull-Up",
-   "pattern": "pull-vertical"
+   "pattern": "pull-vertical",
+   "needs": [
+    "pullup"
+   ]
   },
-  "scapular-pull-up": {
+  "exf218elk821": {
    "label": "Scapular Pull-Up",
    "pattern": "pull-vertical"
   },
-  "straight-arm-pulldown": {
+  "exf862mgs616": {
    "label": "Straight-Arm Pulldown",
    "pattern": "isolation"
   },
-  "pullover": {
+  "exf852hgk761": {
    "label": "Pullover",
    "pattern": "isolation"
   },
-  "carry": {
+  "exf138cqj741": {
    "label": "Carry",
-   "pattern": "carry"
+   "pattern": "carry",
+   "measure": [
+    "distance",
+    "time"
+   ]
   },
-  "sled-push": {
+  "exf616rqh640": {
    "label": "Sled Push",
    "pattern": "carry",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "distance"
+   ]
   },
-  "sled-drag": {
+  "exf431khz185": {
    "label": "Sled Drag",
    "pattern": "carry",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "distance"
+   ]
   },
-  "dead-bug": {
+  "exf512tze520": {
    "label": "Dead Bug",
-   "pattern": "core-anti-extension"
+   "pattern": "core-anti-extension",
+   "perSide": true
   },
-  "bird-dog": {
+  "exf777ylb371": {
    "label": "Bird Dog",
-   "pattern": "core-anti-rotation"
+   "pattern": "core-anti-rotation",
+   "perSide": true
   },
-  "plank": {
+  "exf501hpj264": {
    "label": "Plank",
-   "pattern": "core-anti-extension"
+   "pattern": "core-anti-extension",
+   "measure": [
+    "time"
+   ]
   },
-  "side-plank": {
+  "exf015myi089": {
    "label": "Side Plank",
-   "pattern": "core-lateral"
+   "pattern": "core-lateral",
+   "perSide": true,
+   "measure": [
+    "time"
+   ]
   },
-  "copenhagen-plank": {
+  "exf134foi103": {
    "label": "Copenhagen Plank",
-   "pattern": "core-lateral"
+   "pattern": "core-lateral",
+   "perSide": true,
+   "measure": [
+    "time"
+   ]
   },
-  "anti-rotation-press": {
+  "exf581lfg342": {
    "label": "Anti-Rotation Press",
-   "pattern": "core-anti-rotation"
+   "pattern": "core-anti-rotation",
+   "perSide": true,
+   "measure": [
+    "time",
+    "reps"
+   ]
   },
-  "hollow-hold": {
+  "exf624gsj508": {
    "label": "Hollow Hold",
-   "pattern": "core-anti-extension"
+   "pattern": "core-anti-extension",
+   "measure": [
+    "time"
+   ]
   },
-  "rollout": {
+  "exf345tyd591": {
    "label": "Rollout",
    "pattern": "core-anti-extension"
   },
-  "stir-the-pot": {
+  "exf453tli247": {
    "label": "Stir the Pot",
    "pattern": "core-anti-extension"
   },
-  "crunch": {
+  "exf383wpc752": {
    "label": "Crunch",
    "pattern": "core-flexion"
   },
-  "reverse-crunch": {
+  "exf852cac572": {
    "label": "Reverse Crunch",
    "pattern": "core-flexion"
   },
-  "knee-raise": {
+  "exf900afr280": {
    "label": "Knee Raise",
    "pattern": "core-flexion"
   },
-  "leg-raise": {
+  "exf243aat568": {
    "label": "Leg Raise",
    "pattern": "core-flexion"
   },
-  "woodchop": {
+  "exf972luq220": {
    "label": "Woodchop",
-   "pattern": "rotation"
+   "pattern": "rotation",
+   "perSide": true
   },
-  "russian-twist": {
+  "exf781cvb258": {
    "label": "Russian Twist",
    "pattern": "rotation"
   },
-  "hundred": {
+  "exf460lbo035": {
    "label": "The Hundred",
-   "pattern": "core-flexion"
+   "pattern": "core-flexion",
+   "discipline": "pilates"
   },
-  "curl": {
+  "exf545ipz790": {
    "label": "Curl",
    "pattern": "isolation"
   },
-  "triceps-pushdown": {
+  "exf646jor278": {
    "label": "Triceps Pushdown",
    "pattern": "isolation"
   },
-  "triceps-extension": {
+  "exf551ogz513": {
    "label": "Triceps Extension",
    "pattern": "isolation"
   },
-  "lateral-raise": {
+  "exf490axk129": {
    "label": "Lateral Raise",
    "pattern": "isolation"
   },
-  "front-raise": {
+  "exf725rtm449": {
    "label": "Front Raise",
    "pattern": "isolation"
   },
-  "shrug": {
+  "exf006ijq093": {
    "label": "Shrug",
    "pattern": "isolation"
   },
-  "leg-extension": {
+  "exf158bpq402": {
    "label": "Leg Extension",
    "pattern": "isolation"
   },
-  "leg-curl": {
+  "exf601nbp895": {
    "label": "Leg Curl",
    "pattern": "isolation"
   },
-  "nordic-curl": {
+  "exf658gbm240": {
    "label": "Nordic Curl",
    "pattern": "isolation"
   },
-  "calf-raise": {
+  "exf809rhq817": {
    "label": "Calf Raise",
    "pattern": "isolation"
   },
-  "hip-abduction": {
+  "exf491rcl679": {
    "label": "Hip Abduction",
    "pattern": "isolation"
   },
-  "hip-adduction": {
+  "exf404unr062": {
    "label": "Hip Adduction",
    "pattern": "isolation"
   },
-  "lateral-walk": {
+  "exf744tla243": {
    "label": "Lateral Walk",
-   "pattern": "isolation"
+   "pattern": "isolation",
+   "perSide": true
   },
-  "clamshell": {
+  "exf010zki205": {
    "label": "Clamshell",
-   "pattern": "isolation"
+   "pattern": "isolation",
+   "perSide": true
   },
-  "glute-kickback": {
+  "exf833uxe036": {
    "label": "Glute Kickback",
-   "pattern": "isolation"
+   "pattern": "isolation",
+   "perSide": true
   },
-  "chest-pass": {
+  "exf159xmt234": {
    "label": "Chest Pass",
    "pattern": "plyometric"
   },
-  "slam": {
+  "exf767mzg285": {
    "label": "Slam",
    "pattern": "plyometric"
   },
-  "pogo-hop": {
+  "exf553xvj586": {
    "label": "Pogo Hop",
-   "pattern": "plyometric"
+   "pattern": "plyometric",
+   "measure": [
+    "time",
+    "reps"
+   ]
   },
-  "broad-jump": {
+  "exf740opf670": {
    "label": "Broad Jump",
    "pattern": "plyometric"
   },
-  "skater-jump": {
+  "exf015uzx616": {
    "label": "Skater Jump",
-   "pattern": "plyometric"
+   "pattern": "plyometric",
+   "perSide": true
   },
-  "box-jump": {
+  "exf921ogc614": {
    "label": "Box Jump",
    "pattern": "plyometric",
    "implementInName": true
   },
-  "rotational-throw": {
+  "exf600kzn372": {
    "label": "Rotational Throw",
    "pattern": "rotation"
   },
-  "march": {
+  "exf718wta997": {
    "label": "March",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time",
+    "reps"
+   ]
   },
-  "step-jack": {
+  "exf039hmk639": {
    "label": "Step Jack",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time",
+    "reps"
+   ]
   },
-  "jumping-jack": {
+  "exf261dee405": {
    "label": "Jumping Jack",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "reps",
+    "time"
+   ]
   },
-  "high-knees": {
+  "exf969vvj077": {
    "label": "High Knees",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time"
+   ]
   },
-  "mountain-climber": {
+  "exf473xel364": {
    "label": "Mountain Climber",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time",
+    "reps"
+   ]
   },
-  "bear-crawl": {
+  "exf060nlr227": {
    "label": "Bear Crawl",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "distance",
+    "time"
+   ]
   },
-  "burpee": {
+  "exf643psl393": {
    "label": "Burpee",
    "pattern": "conditioning"
   },
-  "shadow-boxing": {
+  "exf315hqm419": {
    "label": "Shadow Boxing",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time"
+   ]
   },
-  "walk": {
+  "exf899cpc069": {
    "label": "Walk",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time",
+    "distance"
+   ]
   },
-  "run": {
+  "exf062mwy558": {
    "label": "Run",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "distance",
+    "time"
+   ]
   },
-  "cycling": {
+  "exf834nuw800": {
    "label": "Cycling",
-   "pattern": "conditioning"
+   "pattern": "conditioning",
+   "measure": [
+    "time",
+    "distance",
+    "calories"
+   ]
   },
-  "elliptical": {
+  "exf349vez115": {
    "label": "Elliptical",
    "pattern": "conditioning",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "time",
+    "distance",
+    "calories"
+   ]
   },
-  "rowing-machine": {
+  "exf096lkq002": {
    "label": "Rowing Machine",
    "pattern": "conditioning",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "distance",
+    "time",
+    "calories"
+   ]
   },
-  "stair-climber": {
+  "exf496pil074": {
    "label": "Stair Climber",
    "pattern": "conditioning",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "time"
+   ]
   },
-  "ski-erg": {
+  "exf947wxf641": {
    "label": "Ski Erg",
    "pattern": "conditioning",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "distance",
+    "time",
+    "calories"
+   ]
   },
-  "cat-cow": {
+  "exf374lbv392": {
    "label": "Cat-Cow",
    "pattern": "mobility"
   },
-  "childs-pose": {
+  "exf976spd356": {
    "label": "Child's Pose",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "measure": [
+    "time"
+   ],
+   "discipline": "yoga"
   },
-  "downward-dog": {
+  "exf430lvh137": {
    "label": "Downward Dog",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "measure": [
+    "time"
+   ],
+   "discipline": "yoga"
   },
-  "hip-flexor-stretch": {
+  "exf344qil145": {
    "label": "Hip Flexor Stretch",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true,
+   "measure": [
+    "time"
+   ]
   },
-  "worlds-greatest-stretch": {
+  "exf928icm063": {
    "label": "World's Greatest Stretch",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true
   },
-  "ninety-ninety": {
+  "exf058ntt604": {
    "label": "90/90 Hip Switch",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true
   },
-  "open-book": {
+  "exf261cmq594": {
    "label": "Open Book",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true
   },
-  "wall-slide": {
+  "exf690hwl361": {
    "label": "Wall Slide",
    "pattern": "mobility"
   },
-  "ankle-mobilization": {
+  "exf658crt197": {
    "label": "Ankle Mobilization",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true
   },
-  "hamstring-stretch": {
+  "exf624sfc027": {
    "label": "Hamstring Stretch",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true,
+   "measure": [
+    "time"
+   ]
   },
-  "warrior-two": {
+  "exf384bur552": {
    "label": "Warrior II",
-   "pattern": "mobility"
+   "pattern": "mobility",
+   "perSide": true,
+   "measure": [
+    "time"
+   ],
+   "discipline": "yoga"
   },
-  "foam-rolling": {
+  "exf395twk688": {
    "label": "Foam Rolling",
    "pattern": "mobility",
-   "implementInName": true
+   "implementInName": true,
+   "measure": [
+    "time"
+   ]
   }
  },
  "exercises": [
   {
-   "id": "sit-to-stand-bench",
+   "id": "exr638hoa549",
    "name": "Sit to stand",
    "aliases": [
     "chair stand"
    ],
-   "movement": "sit-to-stand",
+   "formerNames": [],
+   "movement": "exf484hux714",
    "attributes": {
     "support": "Bench",
     "implement": "Bodyweight"
@@ -467,33 +593,31 @@
    "secondary": [
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "bench"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "squat-box-bodyweight",
-    "squat-bodyweight"
+    "exr113qka771",
+    "exr994ezo755",
+    "exr488lhn714",
+    "exr507ftp276",
+    "exr933huq773"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "wall-sit-wall",
+   "id": "exr984snp215",
    "name": "Wall sit",
    "aliases": [],
-   "movement": "wall-sit",
+   "formerNames": [],
+   "movement": "exf498rbm811",
    "attributes": {
-    "support": "Wall",
     "implement": "Bodyweight"
    },
    "primary": [
@@ -502,28 +626,26 @@
    "secondary": [
     "glutes"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "squat-bodyweight"
+    "exr994ezo755"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-box-bodyweight",
+   "id": "exr113qka771",
    "name": "Box squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "support": "Box",
     "implement": "Bodyweight"
@@ -536,35 +658,31 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "box"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "sit-to-stand-bench"
-   ],
    "harder": [
-    "squat-bodyweight",
-    "squat-dumbbell-goblet"
+    "exr994ezo755",
+    "exr453uze970",
+    "exr430azz541",
+    "exr011xqt983"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-suspension-trainer-assisted",
+   "id": "exr542awk310",
    "name": "Suspension-assisted squat",
    "aliases": [
     "TRX squat"
    ],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Suspension Trainer",
     "load": "Assisted"
@@ -576,32 +694,28 @@
    "secondary": [
     "core"
    ],
-   "modality": "suspension",
-   "equipment": {
-    "needs": [
-     "suspension"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "squat-bodyweight"
+    "exr994ezo755"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-bodyweight",
+   "id": "exr994ezo755",
    "name": "Bodyweight squat",
    "aliases": [
     "air squat"
    ],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -613,19 +727,15 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "squat-box-bodyweight",
-    "squat-suspension-trainer-assisted"
-   ],
    "harder": [
-    "squat-dumbbell-goblet",
-    "squat-bodyweight-jumping"
+    "exr453uze970",
+    "exr980zoo766",
+    "exr910bjh733",
+    "exr430azz541",
+    "exr645yhd356",
+    "exr152yaf746",
+    "exr047jkx219"
    ],
    "cautions": {
     "joints": [
@@ -633,13 +743,17 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-band",
+   "id": "exr910bjh733",
    "name": "Banded squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Band"
    },
@@ -650,32 +764,26 @@
    "secondary": [
     "core"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "squat-bodyweight"
-   ],
    "harder": [
-    "squat-dumbbell-goblet"
+    "exr453uze970"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-dumbbell-goblet",
+   "id": "exr453uze970",
    "name": "Goblet squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Dumbbell",
     "load": "Goblet"
@@ -688,21 +796,13 @@
     "core",
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "squat-bodyweight",
-    "squat-box-bodyweight"
-   ],
    "harder": [
-    "squat-dumbbell",
-    "squat-barbell-front-rack"
+    "exr476cdk055",
+    "exr436eqt746",
+    "exr645yhd356",
+    "exr152yaf746",
+    "exr047jkx219"
    ],
    "cautions": {
     "joints": [
@@ -710,13 +810,17 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-kettlebell-goblet",
+   "id": "exr430azz541",
    "name": "Kettlebell goblet squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Kettlebell",
     "load": "Goblet"
@@ -729,21 +833,10 @@
     "core",
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "squat-bodyweight",
-    "squat-box-bodyweight"
-   ],
    "harder": [
-    "squat-dumbbell",
-    "squat-barbell-front-rack"
+    "exr476cdk055",
+    "exr436eqt746"
    ],
    "cautions": {
     "joints": [
@@ -751,15 +844,20 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-dumbbell",
+   "id": "exr476cdk055",
    "name": "Dumbbell squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
-    "implement": "Dumbbell"
+    "implement": "Dumbbell",
+    "load": "At Sides"
    },
    "primary": [
     "quads",
@@ -770,19 +868,9 @@
     "core",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "squat-dumbbell-goblet"
-   ],
    "harder": [
-    "squat-barbell"
+    "exr047jkx219"
    ],
    "cautions": {
     "joints": [
@@ -792,16 +880,21 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-landmine",
+   "id": "exr645yhd356",
    "name": "Landmine squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Landmine"
    },
+   "piece": "Landmine",
    "primary": [
     "quads",
     "glutes"
@@ -809,36 +902,30 @@
    "secondary": [
     "core"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": [],
-    "piece": "Landmine"
-   },
    "level": "beginner",
-   "easier": [
-    "squat-dumbbell-goblet"
-   ],
    "harder": [
-    "squat-barbell-front-rack"
+    "exr436eqt746"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "leg-press",
+   "id": "exr937uwx704",
    "name": "Leg press",
    "aliases": [],
-   "movement": "leg-press",
+   "formerNames": [],
+   "movement": "exf522zze001",
    "attributes": {
     "implement": "Machine"
    },
+   "piece": "Leg press machine",
    "primary": [
     "quads",
     "glutes"
@@ -846,19 +933,11 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Leg press machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "hack-squat",
-    "squat-barbell"
+    "exr600lig809",
+    "exr047jkx219",
+    "exr152yaf746"
    ],
    "cautions": {
     "joints": [
@@ -866,16 +945,21 @@
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-smith-machine",
+   "id": "exr152yaf746",
    "name": "Smith machine squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Smith Machine"
    },
+   "piece": "Smith machine",
    "primary": [
     "quads",
     "glutes"
@@ -883,21 +967,9 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Smith machine"
-   },
    "level": "intermediate",
-   "easier": [
-    "leg-press",
-    "squat-dumbbell-goblet"
-   ],
    "harder": [
-    "squat-barbell"
+    "exr047jkx219"
    ],
    "cautions": {
     "joints": [
@@ -907,34 +979,28 @@
     "flags": [
      "spinal-load"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hack-squat",
+   "id": "exr600lig809",
    "name": "Hack squat",
    "aliases": [],
-   "movement": "hack-squat",
+   "formerNames": [],
+   "movement": "exf349ybm146",
    "attributes": {
     "implement": "Machine"
    },
+   "piece": "Hack squat machine",
    "primary": [
     "quads"
    ],
    "secondary": [
     "glutes"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Hack squat machine"
-   },
    "level": "intermediate",
-   "easier": [
-    "leg-press"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -943,13 +1009,17 @@
     "flags": [
      "spinal-load"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-barbell",
+   "id": "exr047jkx219",
    "name": "Barbell back squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Barbell"
    },
@@ -962,20 +1032,9 @@
     "core",
     "lower back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "squat-dumbbell-goblet",
-    "leg-press"
-   ],
    "harder": [
-    "squat-barbell-front-rack"
+    "exr436eqt746"
    ],
    "cautions": {
     "joints": [
@@ -987,13 +1046,17 @@
      "spinal-load",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-barbell-front-rack",
+   "id": "exr436eqt746",
    "name": "Barbell front squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Barbell",
     "load": "Front-Rack"
@@ -1006,18 +1069,7 @@
     "core",
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "squat-dumbbell-goblet",
-    "squat-barbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1029,13 +1081,17 @@
      "spinal-load",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "cossack-squat-bodyweight",
+   "id": "exr377odi688",
    "name": "Cossack squat",
    "aliases": [],
-   "movement": "cossack-squat",
+   "formerNames": [],
+   "movement": "exf982npz888",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -1047,16 +1103,11 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "lateral-lunge-bodyweight"
+   "harder": [
+    "exr360ogb203",
+    "exr869vng468"
    ],
-   "harder": [],
    "cautions": {
     "joints": [
      "knees",
@@ -1065,13 +1116,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "cossack-squat-kettlebell",
+   "id": "exr360ogb203",
    "name": "Kettlebell cossack squat",
    "aliases": [],
-   "movement": "cossack-squat",
+   "formerNames": [],
+   "movement": "exf982npz888",
    "attributes": {
     "implement": "Kettlebell"
    },
@@ -1083,17 +1138,7 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "lateral-lunge-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1103,13 +1148,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "cossack-squat-dumbbell",
+   "id": "exr869vng468",
    "name": "Dumbbell cossack squat",
    "aliases": [],
-   "movement": "cossack-squat",
+   "formerNames": [],
+   "movement": "exf982npz888",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -1121,17 +1170,7 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "lateral-lunge-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1141,13 +1180,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pistol-squat",
+   "id": "exr011xqt983",
    "name": "Pistol squat",
    "aliases": [],
-   "movement": "pistol-squat",
+   "formerNames": [],
+   "movement": "exf733lfa079",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -1158,16 +1201,7 @@
    "secondary": [
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "split-squat-rear-foot-elevated-bodyweight",
-    "squat-box-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1177,13 +1211,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hip-hinge-drill",
+   "id": "exr251euw454",
    "name": "Hip hinge with a dowel",
    "aliases": [],
-   "movement": "hip-hinge-drill",
+   "formerNames": [],
+   "movement": "exf684hkb816",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -1194,29 +1232,30 @@
    "secondary": [
     "lower back"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "deadlift-kettlebell",
-    "romanian-deadlift-barbell"
+    "exr377ccm123",
+    "exr966qog164",
+    "exr446mos842",
+    "exr323jwn374",
+    "exr190uba980"
    ],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "glute-bridge",
+   "id": "exr281gcw996",
    "name": "Glute bridge",
    "aliases": [],
-   "movement": "glute-bridge",
+   "formerNames": [],
+   "movement": "exf751zvo159",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -1227,18 +1266,12 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "glute-bridge-single-leg",
-    "hip-thrust-bench-barbell"
+    "exr952pst332",
+    "exr578hiy789",
+    "exr413wyh564",
+    "exr020kwh637"
    ],
    "cautions": {
     "joints": [
@@ -1248,13 +1281,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "glute-bridge-single-leg",
+   "id": "exr952pst332",
    "name": "Single-leg glute bridge",
    "aliases": [],
-   "movement": "glute-bridge",
+   "formerNames": [],
+   "movement": "exf751zvo159",
    "attributes": {
     "limbs": "Single-Leg",
     "implement": "Bodyweight"
@@ -1266,19 +1303,9 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "glute-bridge"
-   ],
    "harder": [
-    "hip-thrust-bench-barbell"
+    "exr578hiy789"
    ],
    "cautions": {
     "joints": [],
@@ -1286,13 +1313,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hip-thrust-bench-barbell",
+   "id": "exr578hiy789",
    "name": "Hip thrust",
    "aliases": [],
-   "movement": "hip-thrust",
+   "formerNames": [],
+   "movement": "exf805jct417",
    "attributes": {
     "support": "Bench",
     "implement": "Barbell"
@@ -1304,31 +1335,24 @@
     "hamstrings",
     "quads"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "glute-bridge"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hip-thrust-bench-dumbbell",
+   "id": "exr413wyh564",
    "name": "Dumbbell hip thrust",
    "aliases": [],
-   "movement": "hip-thrust",
+   "formerNames": [],
+   "movement": "exf805jct417",
    "attributes": {
     "support": "Bench",
     "implement": "Dumbbell"
@@ -1340,31 +1364,24 @@
     "hamstrings",
     "quads"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "glute-bridge"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pull-through-cable",
+   "id": "exr446mos842",
    "name": "Cable pull-through",
    "aliases": [],
-   "movement": "pull-through",
+   "formerNames": [],
+   "movement": "exf405slv840",
    "attributes": {
     "implement": "Cable"
    },
@@ -1375,32 +1392,28 @@
    "secondary": [
     "lower back"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "hip-hinge-drill"
-   ],
    "harder": [
-    "romanian-deadlift-barbell"
+    "exr966qog164",
+    "exr543mbc491",
+    "exr324bgi872"
    ],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "good-morning-band",
+   "id": "exr323jwn374",
    "name": "Banded good morning",
    "aliases": [],
-   "movement": "good-morning",
+   "formerNames": [],
+   "movement": "exf469hfo500",
    "attributes": {
     "implement": "Band"
    },
@@ -1411,32 +1424,27 @@
    "secondary": [
     "lower back"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "hip-hinge-drill"
-   ],
    "harder": [
-    "romanian-deadlift-barbell"
+    "exr966qog164",
+    "exr570gdd141"
    ],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "deadlift-kettlebell",
+   "id": "exr377ccm123",
    "name": "Kettlebell deadlift",
    "aliases": [],
-   "movement": "deadlift",
+   "formerNames": [],
+   "movement": "exf208wrp030",
    "attributes": {
     "implement": "Kettlebell"
    },
@@ -1449,21 +1457,13 @@
     "lower back",
     "forearms"
    ],
-   "modality": "kettlebell",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "hip-hinge-drill"
-   ],
    "harder": [
-    "romanian-deadlift-barbell",
-    "deadlift-trap-bar",
-    "swing-kettlebell"
+    "exr324bgi872",
+    "exr189owq120",
+    "exr499pab828",
+    "exr966qog164",
+    "exr687lfa999"
    ],
    "cautions": {
     "joints": [
@@ -1472,13 +1472,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "deadlift-dumbbell",
+   "id": "exr190uba980",
    "name": "Dumbbell deadlift",
    "aliases": [],
-   "movement": "deadlift",
+   "formerNames": [],
+   "movement": "exf208wrp030",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -1491,21 +1495,11 @@
     "lower back",
     "forearms"
    ],
-   "modality": "kettlebell",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "hip-hinge-drill"
-   ],
    "harder": [
-    "romanian-deadlift-barbell",
-    "deadlift-trap-bar",
-    "swing-kettlebell"
+    "exr543mbc491",
+    "exr189owq120",
+    "exr499pab828"
    ],
    "cautions": {
     "joints": [
@@ -1514,15 +1508,19 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "romanian-deadlift-barbell",
+   "id": "exr966qog164",
    "name": "Romanian deadlift",
    "aliases": [
     "RDL"
    ],
-   "movement": "romanian-deadlift",
+   "formerNames": [],
+   "movement": "exf351gvn185",
    "attributes": {
     "implement": "Barbell"
    },
@@ -1534,21 +1532,12 @@
     "lower back",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "deadlift-kettlebell",
-    "pull-through-cable"
-   ],
    "harder": [
-    "romanian-deadlift-single-leg-dumbbell",
-    "deadlift-barbell"
+    "exr725xay445",
+    "exr871stv724",
+    "exr710elq809",
+    "exr570gdd141"
    ],
    "cautions": {
     "joints": [
@@ -1557,13 +1546,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "romanian-deadlift-dumbbell",
+   "id": "exr543mbc491",
    "name": "Dumbbell Romanian deadlift",
    "aliases": [],
-   "movement": "romanian-deadlift",
+   "formerNames": [],
+   "movement": "exf351gvn185",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -1575,21 +1568,10 @@
     "lower back",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "deadlift-kettlebell",
-    "pull-through-cable"
-   ],
    "harder": [
-    "romanian-deadlift-single-leg-dumbbell",
-    "deadlift-barbell"
+    "exr725xay445",
+    "exr871stv724"
    ],
    "cautions": {
     "joints": [
@@ -1598,13 +1580,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "romanian-deadlift-kettlebell",
+   "id": "exr324bgi872",
    "name": "Kettlebell Romanian deadlift",
    "aliases": [],
-   "movement": "romanian-deadlift",
+   "formerNames": [],
+   "movement": "exf351gvn185",
    "attributes": {
     "implement": "Kettlebell"
    },
@@ -1616,21 +1602,10 @@
     "lower back",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "deadlift-kettlebell",
-    "pull-through-cable"
-   ],
    "harder": [
-    "romanian-deadlift-single-leg-dumbbell",
-    "deadlift-barbell"
+    "exr725xay445",
+    "exr871stv724"
    ],
    "cautions": {
     "joints": [
@@ -1639,15 +1614,19 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "romanian-deadlift-single-leg-dumbbell",
+   "id": "exr725xay445",
    "name": "Single-leg Romanian deadlift",
    "aliases": [
     "single-leg RDL"
    ],
-   "movement": "romanian-deadlift",
+   "formerNames": [],
+   "movement": "exf351gvn185",
    "attributes": {
     "limbs": "Single-Leg",
     "implement": "Dumbbell"
@@ -1659,17 +1638,7 @@
    "secondary": [
     "core"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "romanian-deadlift-barbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1679,13 +1648,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "romanian-deadlift-single-leg-kettlebell",
+   "id": "exr710elq809",
    "name": "Kettlebell single-leg Romanian deadlift",
    "aliases": [],
-   "movement": "romanian-deadlift",
+   "formerNames": [],
+   "movement": "exf351gvn185",
    "attributes": {
     "limbs": "Single-Leg",
     "implement": "Kettlebell"
@@ -1697,17 +1670,7 @@
    "secondary": [
     "core"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "romanian-deadlift-barbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1717,18 +1680,23 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "deadlift-trap-bar",
+   "id": "exr189owq120",
    "name": "Trap bar deadlift",
    "aliases": [
     "hex bar deadlift"
    ],
-   "movement": "deadlift",
+   "formerNames": [],
+   "movement": "exf208wrp030",
    "attributes": {
     "implement": "Trap Bar"
    },
+   "piece": "Trap bar",
    "primary": [
     "glutes",
     "quads",
@@ -1738,20 +1706,9 @@
     "upper back",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": [],
-    "piece": "Trap bar"
-   },
    "level": "intermediate",
-   "easier": [
-    "deadlift-kettlebell"
-   ],
    "harder": [
-    "deadlift-barbell"
+    "exr871stv724"
    ],
    "cautions": {
     "joints": [
@@ -1763,15 +1720,19 @@
      "grip",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "deadlift-barbell",
+   "id": "exr871stv724",
    "name": "Barbell deadlift",
    "aliases": [
     "conventional deadlift"
    ],
-   "movement": "deadlift",
+   "formerNames": [],
+   "movement": "exf208wrp030",
    "attributes": {
     "implement": "Barbell"
    },
@@ -1784,18 +1745,7 @@
     "upper back",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "deadlift-trap-bar",
-    "romanian-deadlift-barbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1806,13 +1756,17 @@
      "grip",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "deadlift-sumo-stance-barbell",
+   "id": "exr687lfa999",
    "name": "Sumo deadlift",
    "aliases": [],
-   "movement": "deadlift",
+   "formerNames": [],
+   "movement": "exf208wrp030",
    "attributes": {
     "position": "Sumo Stance",
     "implement": "Barbell"
@@ -1826,17 +1780,7 @@
     "hamstrings",
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "deadlift-kettlebell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1848,13 +1792,17 @@
      "grip",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "swing-kettlebell",
+   "id": "exr499pab828",
    "name": "Kettlebell swing",
    "aliases": [],
-   "movement": "swing",
+   "formerNames": [],
+   "movement": "exf737kir522",
    "attributes": {
     "implement": "Kettlebell"
    },
@@ -1864,19 +1812,9 @@
    ],
    "secondary": [
     "core",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "kettlebell",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "deadlift-kettlebell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1885,13 +1823,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "good-morning-barbell",
+   "id": "exr570gdd141",
    "name": "Barbell good morning",
    "aliases": [],
-   "movement": "good-morning",
+   "formerNames": [],
+   "movement": "exf469hfo500",
    "attributes": {
     "implement": "Barbell"
    },
@@ -1902,18 +1844,7 @@
    "secondary": [
     "lower back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "good-morning-band",
-    "romanian-deadlift-barbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1922,20 +1853,25 @@
     "flags": [
      "spinal-load"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "back-extension-prone",
+   "id": "exr779pyk498",
    "name": "Back extension",
    "aliases": [
     "hyperextension",
     "45-degree back extension"
    ],
-   "movement": "back-extension",
+   "formerNames": [],
+   "movement": "exf159vci167",
    "attributes": {
     "position": "Prone",
     "implement": "Machine"
    },
+   "piece": "Back extension bench",
    "primary": [
     "lower back",
     "glutes"
@@ -1943,18 +1879,7 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Back extension bench"
-   },
    "level": "beginner",
-   "easier": [
-    "bird-dog"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -1963,15 +1888,19 @@
     "flags": [
      "lying-face-down"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-suspension-trainer-assisted",
+   "id": "exr227nmg378",
    "name": "Assisted split squat",
    "aliases": [
     "split squat holding a support"
    ],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "implement": "Suspension Trainer",
     "load": "Assisted"
@@ -1981,30 +1910,28 @@
     "glutes"
    ],
    "secondary": [],
-   "modality": "suspension",
-   "equipment": {
-    "needs": [
-     "suspension"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "split-squat-bodyweight"
+    "exr166zmi513",
+    "exr794xhz745",
+    "exr790iyb842"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-bodyweight",
+   "id": "exr166zmi513",
    "name": "Split squat",
    "aliases": [],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -2015,18 +1942,14 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "split-squat-suspension-trainer-assisted"
-   ],
    "harder": [
-    "split-squat-rear-foot-elevated-bodyweight",
-    "reverse-lunge-bodyweight"
+    "exr881nru178",
+    "exr533pmf516",
+    "exr180dwo397",
+    "exr259lnr170",
+    "exr794xhz745",
+    "exr790iyb842"
    ],
    "cautions": {
     "joints": [
@@ -2035,13 +1958,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-dumbbell",
+   "id": "exr794xhz745",
    "name": "Dumbbell split squat",
    "aliases": [],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -2052,20 +1979,10 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "split-squat-suspension-trainer-assisted"
-   ],
    "harder": [
-    "split-squat-rear-foot-elevated-bodyweight",
-    "reverse-lunge-bodyweight"
+    "exr881nru178",
+    "exr320jeq938"
    ],
    "cautions": {
     "joints": [
@@ -2074,13 +1991,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-kettlebell",
+   "id": "exr790iyb842",
    "name": "Kettlebell split squat",
    "aliases": [],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "implement": "Kettlebell"
    },
@@ -2091,20 +2012,10 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "split-squat-suspension-trainer-assisted"
-   ],
    "harder": [
-    "split-squat-rear-foot-elevated-bodyweight",
-    "reverse-lunge-bodyweight"
+    "exr881nru178",
+    "exr605dfp570"
    ],
    "cautions": {
     "joints": [
@@ -2113,13 +2024,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "step-up-box-bodyweight",
+   "id": "exr488lhn714",
    "name": "Step-up",
    "aliases": [],
-   "movement": "step-up",
+   "formerNames": [],
+   "movement": "exf830zab972",
    "attributes": {
     "support": "Box",
     "implement": "Bodyweight"
@@ -2131,19 +2046,11 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "box"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "sit-to-stand-bench"
-   ],
    "harder": [
-    "split-squat-rear-foot-elevated-bodyweight"
+    "exr881nru178",
+    "exr507ftp276",
+    "exr933huq773"
    ],
    "cautions": {
     "joints": [
@@ -2152,13 +2059,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "step-up-box-dumbbell",
+   "id": "exr507ftp276",
    "name": "Dumbbell step-up",
    "aliases": [],
-   "movement": "step-up",
+   "formerNames": [],
+   "movement": "exf830zab972",
    "attributes": {
     "support": "Box",
     "implement": "Dumbbell"
@@ -2170,20 +2081,9 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "box",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "sit-to-stand-bench"
-   ],
    "harder": [
-    "split-squat-rear-foot-elevated-bodyweight"
+    "exr180dwo397"
    ],
    "cautions": {
     "joints": [
@@ -2192,13 +2092,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "step-up-box-kettlebell",
+   "id": "exr933huq773",
    "name": "Kettlebell step-up",
    "aliases": [],
-   "movement": "step-up",
+   "formerNames": [],
+   "movement": "exf830zab972",
    "attributes": {
     "support": "Box",
     "implement": "Kettlebell"
@@ -2210,20 +2114,9 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "box",
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "sit-to-stand-bench"
-   ],
    "harder": [
-    "split-squat-rear-foot-elevated-bodyweight"
+    "exr259lnr170"
    ],
    "cautions": {
     "joints": [
@@ -2232,14 +2125,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "reverse-lunge-bodyweight",
+   "id": "exr533pmf516",
    "name": "Reverse lunge",
    "aliases": [],
-   "movement": "reverse-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Reverse",
     "implement": "Bodyweight"
    },
    "primary": [
@@ -2250,18 +2148,16 @@
     "hamstrings",
     "adductors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "split-squat-bodyweight"
-   ],
    "harder": [
-    "walking-lunge-bodyweight",
-    "forward-lunge-bodyweight"
+    "exr557brp684",
+    "exr723fyt450",
+    "exr807ebu404",
+    "exr327nbj042",
+    "exr869rcj238",
+    "exr754oaj366",
+    "exr320jeq938",
+    "exr605dfp570"
    ],
    "cautions": {
     "joints": [
@@ -2270,14 +2166,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "reverse-lunge-dumbbell",
+   "id": "exr320jeq938",
    "name": "Dumbbell reverse lunge",
    "aliases": [],
-   "movement": "reverse-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Reverse",
     "implement": "Dumbbell"
    },
    "primary": [
@@ -2288,20 +2189,10 @@
     "hamstrings",
     "adductors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "split-squat-bodyweight"
-   ],
    "harder": [
-    "walking-lunge-bodyweight",
-    "forward-lunge-bodyweight"
+    "exr557brp684",
+    "exr723fyt450"
    ],
    "cautions": {
     "joints": [
@@ -2310,14 +2201,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "reverse-lunge-kettlebell",
+   "id": "exr605dfp570",
    "name": "Kettlebell reverse lunge",
    "aliases": [],
-   "movement": "reverse-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Reverse",
     "implement": "Kettlebell"
    },
    "primary": [
@@ -2328,20 +2224,10 @@
     "hamstrings",
     "adductors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "split-squat-bodyweight"
-   ],
    "harder": [
-    "walking-lunge-bodyweight",
-    "forward-lunge-bodyweight"
+    "exr557brp684",
+    "exr723fyt450"
    ],
    "cautions": {
     "joints": [
@@ -2350,14 +2236,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "forward-lunge-bodyweight",
+   "id": "exr723fyt450",
    "name": "Forward lunge",
    "aliases": [],
-   "movement": "forward-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Forward",
     "implement": "Bodyweight"
    },
    "primary": [
@@ -2367,17 +2258,11 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-lunge-bodyweight"
-   ],
    "harder": [
-    "walking-lunge-bodyweight"
+    "exr557brp684",
+    "exr807ebu404",
+    "exr327nbj042"
    ],
    "cautions": {
     "joints": [
@@ -2386,14 +2271,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "forward-lunge-dumbbell",
+   "id": "exr807ebu404",
    "name": "Dumbbell forward lunge",
    "aliases": [],
-   "movement": "forward-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Forward",
     "implement": "Dumbbell"
    },
    "primary": [
@@ -2403,19 +2293,9 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-lunge-bodyweight"
-   ],
    "harder": [
-    "walking-lunge-bodyweight"
+    "exr557brp684"
    ],
    "cautions": {
     "joints": [
@@ -2424,14 +2304,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "forward-lunge-kettlebell",
+   "id": "exr327nbj042",
    "name": "Kettlebell forward lunge",
    "aliases": [],
-   "movement": "forward-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Forward",
     "implement": "Kettlebell"
    },
    "primary": [
@@ -2441,19 +2326,9 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-lunge-bodyweight"
-   ],
    "harder": [
-    "walking-lunge-bodyweight"
+    "exr557brp684"
    ],
    "cautions": {
     "joints": [
@@ -2462,14 +2337,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "walking-lunge-bodyweight",
+   "id": "exr557brp684",
    "name": "Walking lunge",
    "aliases": [],
-   "movement": "walking-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Walking",
     "implement": "Bodyweight"
    },
    "primary": [
@@ -2480,17 +2360,11 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-lunge-bodyweight"
-   ],
    "harder": [
-    "split-squat-alternating-bodyweight-jumping"
+    "exr916pxm389",
+    "exr869rcj238",
+    "exr754oaj366"
    ],
    "cautions": {
     "joints": [
@@ -2499,14 +2373,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "walking-lunge-dumbbell",
+   "id": "exr869rcj238",
    "name": "Dumbbell walking lunge",
    "aliases": [],
-   "movement": "walking-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Walking",
     "implement": "Dumbbell"
    },
    "primary": [
@@ -2517,19 +2396,9 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-lunge-bodyweight"
-   ],
    "harder": [
-    "split-squat-alternating-bodyweight-jumping"
+    "exr916pxm389"
    ],
    "cautions": {
     "joints": [
@@ -2538,14 +2407,19 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "walking-lunge-kettlebell",
+   "id": "exr754oaj366",
    "name": "Kettlebell walking lunge",
    "aliases": [],
-   "movement": "walking-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Walking",
     "implement": "Kettlebell"
    },
    "primary": [
@@ -2556,19 +2430,9 @@
     "hamstrings",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-lunge-bodyweight"
-   ],
    "harder": [
-    "split-squat-alternating-bodyweight-jumping"
+    "exr916pxm389"
    ],
    "cautions": {
     "joints": [
@@ -2577,16 +2441,21 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-lunge-bodyweight",
+   "id": "exr351awc716",
    "name": "Lateral lunge",
    "aliases": [
     "side lunge"
    ],
-   "movement": "lateral-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Lateral",
     "implement": "Bodyweight"
    },
    "primary": [
@@ -2595,15 +2464,12 @@
     "glutes"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [
-    "cossack-squat-bodyweight"
+    "exr377odi688",
+    "exr791vdn578",
+    "exr217xrr485",
+    "exr445ten046"
    ],
    "cautions": {
     "joints": [
@@ -2611,14 +2477,19 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-lunge-dumbbell",
+   "id": "exr217xrr485",
    "name": "Dumbbell lateral lunge",
    "aliases": [],
-   "movement": "lateral-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Lateral",
     "implement": "Dumbbell"
    },
    "primary": [
@@ -2627,17 +2498,9 @@
     "glutes"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [
-    "cossack-squat-bodyweight"
+    "exr869vng468"
    ],
    "cautions": {
     "joints": [
@@ -2645,14 +2508,19 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-lunge-kettlebell",
+   "id": "exr445ten046",
    "name": "Kettlebell lateral lunge",
    "aliases": [],
-   "movement": "lateral-lunge",
+   "formerNames": [],
+   "movement": "exf341kkp139",
    "attributes": {
+    "direction": "Lateral",
     "implement": "Kettlebell"
    },
    "primary": [
@@ -2661,17 +2529,9 @@
     "glutes"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [
-    "cossack-squat-bodyweight"
+    "exr360ogb203"
    ],
    "cautions": {
     "joints": [
@@ -2679,15 +2539,19 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-rear-foot-elevated-bodyweight",
+   "id": "exr881nru178",
    "name": "Rear-foot-elevated split squat",
    "aliases": [
     "Bulgarian split squat"
    ],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "support": "Rear-Foot-Elevated",
     "implement": "Bodyweight"
@@ -2699,20 +2563,11 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "split-squat-bodyweight",
-    "step-up-box-bodyweight"
-   ],
    "harder": [
-    "pistol-squat"
+    "exr011xqt983",
+    "exr180dwo397",
+    "exr259lnr170"
    ],
    "cautions": {
     "joints": [
@@ -2721,13 +2576,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-rear-foot-elevated-dumbbell",
+   "id": "exr180dwo397",
    "name": "Dumbbell rear-foot-elevated split squat",
    "aliases": [],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "support": "Rear-Foot-Elevated",
     "implement": "Dumbbell"
@@ -2739,21 +2598,9 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "split-squat-bodyweight",
-    "step-up-box-bodyweight"
-   ],
    "harder": [
-    "pistol-squat"
+    "exr011xqt983"
    ],
    "cautions": {
     "joints": [
@@ -2762,13 +2609,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-rear-foot-elevated-kettlebell",
+   "id": "exr259lnr170",
    "name": "Kettlebell rear-foot-elevated split squat",
    "aliases": [],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "support": "Rear-Foot-Elevated",
     "implement": "Kettlebell"
@@ -2780,21 +2631,9 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "split-squat-bodyweight",
-    "step-up-box-bodyweight"
-   ],
    "harder": [
-    "pistol-squat"
+    "exr011xqt983"
    ],
    "cautions": {
     "joints": [
@@ -2803,13 +2642,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "push-up-wall",
+   "id": "exr090owe776",
    "name": "Wall push-up",
    "aliases": [],
-   "movement": "push-up",
+   "formerNames": [],
+   "movement": "exf871tpe308",
    "attributes": {
     "support": "Wall",
     "implement": "Bodyweight"
@@ -2822,15 +2665,9 @@
     "front delts",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "push-up-incline"
+    "exr370elb340"
    ],
    "cautions": {
     "joints": [
@@ -2838,13 +2675,17 @@
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "push-up-incline",
+   "id": "exr370elb340",
    "name": "Incline push-up",
    "aliases": [],
-   "movement": "push-up",
+   "formerNames": [],
+   "movement": "exf871tpe308",
    "attributes": {
     "support": "Incline",
     "implement": "Bodyweight"
@@ -2857,20 +2698,10 @@
     "front delts",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": [
-     "bench",
-     "box"
-    ]
-   },
    "level": "beginner",
-   "easier": [
-    "push-up-wall"
-   ],
    "harder": [
-    "push-up"
+    "exr554zrk414",
+    "exr544tgi593"
    ],
    "cautions": {
     "joints": [
@@ -2878,15 +2709,19 @@
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "push-up",
+   "id": "exr554zrk414",
    "name": "Push-up",
    "aliases": [
     "press-up"
    ],
-   "movement": "push-up",
+   "formerNames": [],
+   "movement": "exf871tpe308",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -2898,17 +2733,10 @@
     "front delts",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "push-up-incline"
-   ],
    "harder": [
-    "push-up-feet-elevated"
+    "exr446jjj968",
+    "exr348plq369"
    ],
    "cautions": {
     "joints": [
@@ -2918,13 +2746,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "push-up-feet-elevated",
+   "id": "exr446jjj968",
    "name": "Decline push-up",
    "aliases": [],
-   "movement": "push-up",
+   "formerNames": [],
+   "movement": "exf871tpe308",
    "attributes": {
     "support": "Feet-Elevated",
     "implement": "Bodyweight"
@@ -2937,18 +2769,7 @@
     "triceps",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": [
-     "bench",
-     "box"
-    ]
-   },
    "level": "advanced",
-   "easier": [
-    "push-up"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -2959,15 +2780,19 @@
      "inverted",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-suspension-trainer",
+   "id": "exr634xog427",
    "name": "Suspension chest press",
    "aliases": [
     "TRX chest press"
    ],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "implement": "Suspension Trainer"
    },
@@ -2979,30 +2804,26 @@
     "front delts",
     "core"
    ],
-   "modality": "suspension",
-   "equipment": {
-    "needs": [
-     "suspension"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "push-up"
+    "exr554zrk414"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-band",
+   "id": "exr015mhr813",
    "name": "Banded chest press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "implement": "Band"
    },
@@ -3013,34 +2834,31 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "chest-press-bench-dumbbell"
+    "exr078pyu347"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-seated-machine",
+   "id": "exr407wzh447",
    "name": "Machine chest press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Chest press machine",
    "primary": [
     "chest",
     "triceps"
@@ -3048,31 +2866,28 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Chest press machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "chest-press-bench-dumbbell"
+    "exr078pyu347",
+    "exr542pkd769",
+    "exr738gka485"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-cable",
+   "id": "exr122mze191",
    "name": "Cable chest press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "implement": "Cable"
    },
@@ -3084,30 +2899,26 @@
     "front delts",
     "core"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "chest-press-bench-dumbbell"
+    "exr078pyu347"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-supine-dumbbell",
+   "id": "exr213lrs594",
    "name": "Dumbbell floor press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "position": "Supine",
     "implement": "Dumbbell"
@@ -3119,17 +2930,9 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "chest-press-bench-dumbbell"
+    "exr078pyu347"
    ],
    "cautions": {
     "joints": [
@@ -3139,13 +2942,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-bench-dumbbell",
+   "id": "exr078pyu347",
    "name": "Dumbbell bench press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "support": "Bench",
     "implement": "Dumbbell"
@@ -3157,21 +2964,9 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "chest-press-seated-machine",
-    "chest-press-supine-dumbbell"
-   ],
    "harder": [
-    "chest-press-bench-barbell"
+    "exr483nxx808"
    ],
    "cautions": {
     "joints": [
@@ -3180,13 +2975,17 @@
     "flags": [
      "lying-on-back"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-incline-bench-dumbbell",
+   "id": "exr542pkd769",
    "name": "Incline dumbbell press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "support": "Incline Bench",
     "implement": "Dumbbell"
@@ -3198,33 +2997,26 @@
    "secondary": [
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "chest-press-seated-machine"
-   ],
    "harder": [
-    "chest-press-incline-bench-barbell"
+    "exr290jbu889"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-bench-barbell",
+   "id": "exr483nxx808",
    "name": "Barbell bench press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "support": "Bench",
     "implement": "Barbell"
@@ -3236,18 +3028,7 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "chest-press-bench-dumbbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3258,13 +3039,17 @@
      "lying-on-back",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-press-incline-bench-barbell",
+   "id": "exr290jbu889",
    "name": "Incline barbell press",
    "aliases": [],
-   "movement": "chest-press",
+   "formerNames": [],
+   "movement": "exf581jrw375",
    "attributes": {
     "support": "Incline Bench",
     "implement": "Barbell"
@@ -3276,18 +3061,7 @@
    "secondary": [
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "chest-press-incline-bench-dumbbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3296,15 +3070,19 @@
     "flags": [
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "dip-parallel-bars",
+   "id": "exr738gka485",
    "name": "Dip",
    "aliases": [
     "parallel bar dip"
    ],
-   "movement": "dip",
+   "formerNames": [],
+   "movement": "exf277uys856",
    "attributes": {
     "support": "Parallel Bars",
     "implement": "Bodyweight"
@@ -3316,16 +3094,7 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "dip-bench",
-    "chest-press-seated-machine"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3333,13 +3102,17 @@
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "fly-bench-dumbbell",
+   "id": "exr799iir070",
    "name": "Dumbbell fly",
    "aliases": [],
-   "movement": "fly",
+   "formerNames": [],
+   "movement": "exf834orf759",
    "attributes": {
     "support": "Bench",
     "implement": "Dumbbell"
@@ -3350,18 +3123,7 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "fly-seated-machine"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3370,15 +3132,19 @@
     "flags": [
      "lying-on-back"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "fly-cable",
+   "id": "exr549cow161",
    "name": "Cable fly",
    "aliases": [
     "cable crossover"
    ],
-   "movement": "fly",
+   "formerNames": [],
+   "movement": "exf834orf759",
    "attributes": {
     "implement": "Cable"
    },
@@ -3388,86 +3154,71 @@
    "secondary": [
     "front delts"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "fly-seated-machine",
+   "id": "exr722rkf077",
    "name": "Pec deck",
    "aliases": [
     "machine fly"
    ],
-   "movement": "fly",
+   "formerNames": [],
+   "movement": "exf834orf759",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Pec deck machine",
    "primary": [
     "chest"
    ],
    "secondary": [
     "front delts"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Pec deck machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "fly-bench-dumbbell"
+    "exr799iir070"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "overhead-press-band",
+   "id": "exr574ttw059",
    "name": "Banded overhead press",
    "aliases": [],
-   "movement": "overhead-press",
+   "formerNames": [],
+   "movement": "exf896icr925",
    "attributes": {
     "implement": "Band"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [
     "core"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "overhead-press-seated-dumbbell"
+    "exr730pmu379"
    ],
    "cautions": {
     "joints": [
@@ -3476,20 +3227,25 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "overhead-press-half-kneeling-single-arm-landmine",
+   "id": "exr927nib629",
    "name": "Landmine press",
    "aliases": [
     "half-kneeling landmine press"
    ],
-   "movement": "overhead-press",
+   "formerNames": [],
+   "movement": "exf896icr925",
    "attributes": {
     "position": "Half-Kneeling",
     "limbs": "Single-Arm",
     "implement": "Landmine"
    },
+   "piece": "Landmine",
    "primary": [
     "front delts",
     "chest"
@@ -3498,52 +3254,41 @@
     "triceps",
     "core"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": [],
-    "piece": "Landmine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "overhead-press-barbell"
+    "exr225nsa852",
+    "exr730pmu379"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "overhead-press-seated-machine",
+   "id": "exr254vbf993",
    "name": "Machine shoulder press",
    "aliases": [],
-   "movement": "overhead-press",
+   "formerNames": [],
+   "movement": "exf896icr925",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Shoulder press machine",
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Shoulder press machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "overhead-press-seated-dumbbell"
+    "exr730pmu379"
    ],
    "cautions": {
     "joints": [
@@ -3552,40 +3297,34 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "overhead-press-seated-dumbbell",
+   "id": "exr730pmu379",
    "name": "Seated dumbbell shoulder press",
    "aliases": [],
-   "movement": "overhead-press",
+   "formerNames": [],
+   "movement": "exf896icr925",
    "attributes": {
     "position": "Seated",
     "implement": "Dumbbell"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "overhead-press-seated-machine",
-    "overhead-press-half-kneeling-single-arm-landmine"
-   ],
    "harder": [
-    "overhead-press-barbell",
-    "arnold-press-seated-dumbbell"
+    "exr225nsa852",
+    "exr040fqt236",
+    "exr997nvp159"
    ],
    "cautions": {
     "joints": [
@@ -3594,34 +3333,29 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "arnold-press-seated-dumbbell",
+   "id": "exr040fqt236",
    "name": "Arnold press",
    "aliases": [],
-   "movement": "arnold-press",
+   "formerNames": [],
+   "movement": "exf229ssb664",
    "attributes": {
     "position": "Seated",
     "implement": "Dumbbell"
    },
    "primary": [
-    "shoulders"
+    "front delts",
+    "side delts"
    ],
    "secondary": [
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "overhead-press-seated-dumbbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3630,35 +3364,30 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "overhead-press-single-arm-kettlebell",
+   "id": "exr997nvp159",
    "name": "Kettlebell press",
    "aliases": [],
-   "movement": "overhead-press",
+   "formerNames": [],
+   "movement": "exf896icr925",
    "attributes": {
     "limbs": "Single-Arm",
     "implement": "Kettlebell"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [
     "core"
    ],
-   "modality": "kettlebell",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "overhead-press-seated-dumbbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3668,39 +3397,33 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "overhead-press-barbell",
+   "id": "exr225nsa852",
    "name": "Standing barbell overhead press",
    "aliases": [
     "military press",
     "OHP"
    ],
-   "movement": "overhead-press",
+   "formerNames": [],
+   "movement": "exf896icr925",
    "attributes": {
     "implement": "Barbell"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [
     "core",
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "overhead-press-seated-dumbbell",
-    "overhead-press-half-kneeling-single-arm-landmine"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3712,34 +3435,31 @@
      "spinal-load",
      "breath-hold"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pike-push-up",
+   "id": "exr348plq369",
    "name": "Pike push-up",
    "aliases": [],
-   "movement": "pike-push-up",
+   "formerNames": [],
+   "movement": "exf086wcu166",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "push-up"
-   ],
    "harder": [
-    "handstand-push-up"
+    "exr673ter596"
    ],
    "cautions": {
     "joints": [
@@ -3749,32 +3469,29 @@
     "flags": [
      "inverted"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "handstand-push-up",
+   "id": "exr673ter596",
    "name": "Handstand push-up",
    "aliases": [],
-   "movement": "handstand-push-up",
+   "formerNames": [],
+   "movement": "exf562qle108",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "triceps"
    ],
    "secondary": [
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "pike-push-up"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -3786,13 +3503,17 @@
      "inverted",
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-band",
+   "id": "exr460nbs707",
    "name": "Banded row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "implement": "Band"
    },
@@ -3804,31 +3525,28 @@
     "biceps",
     "rear delts"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "row-seated-cable",
-    "row-bent-over-bench-single-arm-dumbbell"
+    "exr273kld150",
+    "exr655qgm646",
+    "exr270oru271"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-suspension-trainer",
+   "id": "exr374kxj727",
    "name": "Suspension row",
    "aliases": [
     "TRX row"
    ],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "implement": "Suspension Trainer"
    },
@@ -3841,34 +3559,31 @@
     "rear delts",
     "core"
    ],
-   "modality": "suspension",
-   "equipment": {
-    "needs": [
-     "suspension"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "inverted-row-barbell"
+    "exr783rpx793"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-seated-machine",
+   "id": "exr953zrp514",
    "name": "Low row machine",
    "aliases": [
     "seated row machine"
    ],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Low row machine",
    "primary": [
     "upper back",
     "lats"
@@ -3877,29 +3592,25 @@
     "biceps",
     "rear delts"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Low row machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "row-bent-over-bench-single-arm-dumbbell"
+    "exr655qgm646",
+    "exr270oru271"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-seated-cable",
+   "id": "exr273kld150",
    "name": "Seated cable row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Seated",
     "implement": "Cable"
@@ -3912,30 +3623,25 @@
     "biceps",
     "rear delts"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "row-band"
-   ],
    "harder": [
-    "row-bent-over-barbell"
+    "exr376sbd398",
+    "exr433sxh585"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-prone-incline-bench-dumbbell",
+   "id": "exr688irx715",
    "name": "Chest-supported dumbbell row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Prone",
     "support": "Incline Bench",
@@ -3949,31 +3655,27 @@
     "biceps",
     "rear delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "row-bent-over-barbell"
+    "exr376sbd398",
+    "exr433sxh585"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "lying-face-down"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-bent-over-bench-single-arm-dumbbell",
+   "id": "exr655qgm646",
    "name": "One-arm dumbbell row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Bent-Over",
     "support": "Bench",
@@ -3988,33 +3690,27 @@
     "biceps",
     "rear delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "row-band",
-    "row-seated-machine"
-   ],
    "harder": [
-    "row-bent-over-barbell"
+    "exr376sbd398",
+    "exr551lpq854"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-bent-over-bench-single-arm-kettlebell",
+   "id": "exr270oru271",
    "name": "One-arm kettlebell row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Bent-Over",
     "support": "Bench",
@@ -4029,36 +3725,29 @@
     "biceps",
     "rear delts"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "row-band",
-    "row-seated-machine"
-   ],
    "harder": [
-    "row-bent-over-barbell"
+    "exr376sbd398"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "inverted-row-barbell",
+   "id": "exr783rpx793",
    "name": "Inverted row",
    "aliases": [
     "bodyweight row",
     "Australian pull-up"
    ],
-   "movement": "inverted-row",
+   "formerNames": [],
+   "movement": "exf022maf979",
    "attributes": {
     "implement": "Barbell"
    },
@@ -4070,30 +3759,24 @@
     "biceps",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "row-suspension-trainer"
-   ],
    "harder": [
-    "pull-up-bodyweight"
+    "exr196pqa113"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-bent-over-barbell",
+   "id": "exr376sbd398",
    "name": "Bent-over barbell row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Bent-Over",
     "implement": "Barbell"
@@ -4106,18 +3789,7 @@
     "biceps",
     "lower back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "row-prone-incline-bench-dumbbell",
-    "row-seated-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -4126,13 +3798,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "row-bent-over-dumbbell",
+   "id": "exr433sxh585",
    "name": "Bent-over dumbbell row",
    "aliases": [],
-   "movement": "row",
+   "formerNames": [],
+   "movement": "exf887exm679",
    "attributes": {
     "position": "Bent-Over",
     "implement": "Dumbbell"
@@ -4145,18 +3821,7 @@
     "biceps",
     "lower back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "row-prone-incline-bench-dumbbell",
-    "row-seated-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -4165,13 +3830,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "renegade-row-alternating-dumbbell",
+   "id": "exr551lpq854",
    "name": "Renegade row",
    "aliases": [],
-   "movement": "renegade-row",
+   "formerNames": [],
+   "movement": "exf992gew915",
    "attributes": {
     "limbs": "Alternating",
     "implement": "Dumbbell"
@@ -4185,18 +3854,7 @@
     "chest",
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "row-bent-over-bench-single-arm-dumbbell",
-    "plank"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -4206,13 +3864,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "face-pull-cable",
+   "id": "exr014bag560",
    "name": "Face pull",
    "aliases": [],
-   "movement": "face-pull",
+   "formerNames": [],
+   "movement": "exf139eit623",
    "attributes": {
     "implement": "Cable"
    },
@@ -4221,30 +3883,26 @@
     "upper back"
    ],
    "secondary": [
-    "shoulders"
+    "rotator cuff"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "face-pull-band",
+   "id": "exr667mya288",
    "name": "Banded face pull",
    "aliases": [],
-   "movement": "face-pull",
+   "formerNames": [],
+   "movement": "exf139eit623",
    "attributes": {
     "implement": "Band"
    },
@@ -4253,30 +3911,26 @@
     "upper back"
    ],
    "secondary": [
-    "shoulders"
+    "rotator cuff"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pull-apart-band",
+   "id": "exr161zdl816",
    "name": "Band pull-apart",
    "aliases": [],
-   "movement": "pull-apart",
+   "formerNames": [],
+   "movement": "exf099fhj259",
    "attributes": {
     "implement": "Band"
    },
@@ -4285,30 +3939,27 @@
     "upper back"
    ],
    "secondary": [],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "face-pull-cable"
+    "exr667mya288",
+    "exr931snz991"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "reverse-fly-bent-over-dumbbell",
+   "id": "exr931snz991",
    "name": "Dumbbell reverse fly",
    "aliases": [
     "rear delt fly"
    ],
-   "movement": "reverse-fly",
+   "formerNames": [],
+   "movement": "exf705uzc524",
    "attributes": {
     "position": "Bent-Over",
     "implement": "Dumbbell"
@@ -4318,30 +3969,24 @@
     "upper back"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "pull-apart-band"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lat-pulldown-band",
+   "id": "exr118zkh543",
    "name": "Banded lat pulldown",
    "aliases": [],
-   "movement": "lat-pulldown",
+   "formerNames": [],
+   "movement": "exf000tbo941",
    "attributes": {
     "implement": "Band"
    },
@@ -4352,32 +3997,31 @@
     "biceps",
     "upper back"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "lat-pulldown-seated-machine"
+    "exr919oam993",
+    "exr209dqe822",
+    "exr686rwx265"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lat-pulldown-seated-machine",
+   "id": "exr919oam993",
    "name": "Lat pulldown",
    "aliases": [],
-   "movement": "lat-pulldown",
+   "formerNames": [],
+   "movement": "exf000tbo941",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Lat pulldown",
    "primary": [
     "lats"
    ],
@@ -4385,32 +4029,26 @@
     "biceps",
     "upper back"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Lat pulldown"
-   },
    "level": "beginner",
-   "easier": [
-    "lat-pulldown-band"
-   ],
    "harder": [
-    "pull-up-machine-assisted",
-    "pull-up-bodyweight"
+    "exr564wuh278",
+    "exr196pqa113",
+    "exr784hmv613"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lat-pulldown-seated-cable",
+   "id": "exr209dqe822",
    "name": "Cable lat pulldown",
    "aliases": [],
-   "movement": "lat-pulldown",
+   "formerNames": [],
+   "movement": "exf000tbo941",
    "attributes": {
     "position": "Seated",
     "implement": "Cable"
@@ -4422,31 +4060,56 @@
     "biceps",
     "upper back"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "lat-pulldown-band"
-   ],
    "harder": [
-    "pull-up-machine-assisted",
-    "pull-up-bodyweight"
+    "exr564wuh278",
+    "exr196pqa113",
+    "exr890csr023"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "straight-arm-pulldown-cable",
+   "id": "exr302toc145",
+   "name": "Close-grip lat pulldown",
+   "aliases": [
+    "V-handle pulldown"
+   ],
+   "formerNames": [],
+   "movement": "exf000tbo941",
+   "attributes": {
+    "position": "Seated",
+    "implement": "Cable",
+    "attachment": "V-Handle"
+   },
+   "primary": [
+    "lats"
+   ],
+   "secondary": [
+    "biceps",
+    "upper back"
+   ],
+   "level": "beginner",
+   "harder": [],
+   "cautions": {
+    "joints": [],
+    "flags": []
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
+  },
+  {
+   "id": "exr890csr023",
    "name": "Straight-arm pulldown",
    "aliases": [],
-   "movement": "straight-arm-pulldown",
+   "formerNames": [],
+   "movement": "exf862mgs616",
    "attributes": {
     "implement": "Cable"
    },
@@ -4457,26 +4120,24 @@
     "triceps",
     "core"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
-   "harder": [],
+   "harder": [
+    "exr752lpg677"
+   ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "straight-arm-pulldown-band",
+   "id": "exr686rwx265",
    "name": "Banded straight-arm pulldown",
    "aliases": [],
-   "movement": "straight-arm-pulldown",
+   "formerNames": [],
+   "movement": "exf862mgs616",
    "attributes": {
     "implement": "Band"
    },
@@ -4487,32 +4148,27 @@
     "triceps",
     "core"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pull-up-machine-assisted",
+   "id": "exr564wuh278",
    "name": "Assisted pull-up",
-   "aliases": [
-    "band-assisted pull-up"
-   ],
-   "movement": "pull-up",
+   "aliases": [],
+   "formerNames": [],
+   "movement": "exf353qts799",
    "attributes": {
     "implement": "Machine",
     "load": "Assisted"
    },
+   "piece": "Assisted pull-up machine",
    "primary": [
     "lats"
    ],
@@ -4520,34 +4176,29 @@
     "biceps",
     "upper back"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Assisted pull-up machine"
-   },
    "level": "beginner",
-   "easier": [
-    "lat-pulldown-seated-machine"
-   ],
    "harder": [
-    "pull-up-bodyweight-eccentric",
-    "pull-up-bodyweight"
+    "exr196pqa113",
+    "exr579odp172"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pull-up-band-assisted",
+   "id": "exr784hmv613",
    "name": "Banded assisted pull-up",
-   "aliases": [],
-   "movement": "pull-up",
+   "aliases": [
+    "band-assisted pull-up"
+   ],
+   "formerNames": [],
+   "movement": "exf353qts799",
    "attributes": {
     "implement": "Band",
     "load": "Assisted"
@@ -4559,33 +4210,26 @@
     "biceps",
     "upper back"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "lat-pulldown-seated-machine"
-   ],
    "harder": [
-    "pull-up-bodyweight-eccentric",
-    "pull-up-bodyweight"
+    "exr196pqa113"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "scapular-pull-up-hanging",
+   "id": "exr516bap095",
    "name": "Scapular pull-up",
    "aliases": [],
-   "movement": "scapular-pull-up",
+   "formerNames": [],
+   "movement": "exf218elk821",
    "attributes": {
     "position": "Hanging",
     "implement": "Bodyweight"
@@ -4597,18 +4241,8 @@
    "secondary": [
     "forearms"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "pullup"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
-   "harder": [
-    "pull-up-bodyweight-eccentric"
-   ],
+   "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
@@ -4616,57 +4250,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pull-up-bodyweight-eccentric",
-   "name": "Negative pull-up",
-   "aliases": [],
-   "movement": "pull-up",
-   "attributes": {
-    "implement": "Bodyweight",
-    "velocity": "Eccentric"
-   },
-   "primary": [
-    "lats"
-   ],
-   "secondary": [
-    "biceps",
-    "upper back",
-    "forearms"
-   ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "pullup"
-    ],
-    "oneOf": [
-     "box",
-     "bench"
-    ]
-   },
-   "level": "intermediate",
-   "easier": [
-    "pull-up-machine-assisted"
-   ],
-   "harder": [
-    "pull-up-bodyweight"
-   ],
-   "cautions": {
-    "joints": [
-     "shoulders",
-     "elbows"
-    ],
-    "flags": [
-     "grip"
-    ]
-   }
-  },
-  {
-   "id": "pull-up-bodyweight-supinated-grip",
+   "id": "exr579odp172",
    "name": "Chin-up",
    "aliases": [],
-   "movement": "pull-up",
+   "formerNames": [],
+   "movement": "exf353qts799",
    "attributes": {
     "implement": "Bodyweight",
     "grip": "Supinated-Grip"
@@ -4679,20 +4273,9 @@
     "upper back",
     "forearms"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "pullup"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "pull-up-bodyweight-eccentric",
-    "pull-up-machine-assisted"
-   ],
    "harder": [
-    "pull-up-bodyweight"
+    "exr196pqa113"
    ],
    "cautions": {
     "joints": [
@@ -4702,13 +4285,19 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pull-up-bodyweight",
+   "id": "exr196pqa113",
    "name": "Pull-up",
-   "aliases": [],
-   "movement": "pull-up",
+   "aliases": [
+    "negative pull-up"
+   ],
+   "formerNames": [],
+   "movement": "exf353qts799",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -4720,19 +4309,7 @@
     "upper back",
     "forearms"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "pullup"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "pull-up-bodyweight-supinated-grip",
-    "pull-up-bodyweight-eccentric",
-    "pull-up-machine-assisted"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -4742,13 +4319,17 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pullover-supine-bench-dumbbell",
+   "id": "exr752lpg677",
    "name": "Dumbbell pullover",
    "aliases": [],
-   "movement": "pullover",
+   "formerNames": [],
+   "movement": "exf852hgk761",
    "attributes": {
     "position": "Supine",
     "support": "Bench",
@@ -4761,16 +4342,7 @@
    "secondary": [
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -4780,15 +4352,19 @@
      "lying-on-back",
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-dumbbell-farmer",
+   "id": "exr297bgv327",
    "name": "Farmer's carry",
    "aliases": [
     "farmer's walk"
    ],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
     "implement": "Dumbbell",
     "load": "Farmer"
@@ -4800,33 +4376,32 @@
    ],
    "secondary": [
     "glutes",
-    "calves"
+    "calves",
+    "traps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "carry-single-arm-dumbbell-suitcase",
-    "carry-kettlebell-front-rack"
+    "exr873gvy480",
+    "exr427xub714",
+    "exr784tjn061",
+    "exr080xgy505"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-kettlebell-farmer",
+   "id": "exr405mtp921",
    "name": "Kettlebell farmer's carry",
    "aliases": [],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
     "implement": "Kettlebell",
     "load": "Farmer"
@@ -4838,107 +4413,94 @@
    ],
    "secondary": [
     "glutes",
-    "calves"
+    "calves",
+    "traps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "carry-single-arm-dumbbell-suitcase",
-    "carry-kettlebell-front-rack"
+    "exr873gvy480",
+    "exr427xub714"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-single-arm-dumbbell-suitcase",
+   "id": "exr873gvy480",
    "name": "Suitcase carry",
    "aliases": [],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
-    "limbs": "Single-Arm",
     "implement": "Dumbbell",
     "load": "Suitcase"
    },
+   "perSide": true,
    "primary": [
     "core",
-    "forearms"
+    "forearms",
+    "obliques"
    ],
    "secondary": [
     "upper back",
     "glutes"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "carry-dumbbell-farmer"
-   ],
    "harder": [],
    "cautions": {
     "joints": [],
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-single-arm-kettlebell-suitcase",
+   "id": "exr784tjn061",
    "name": "Kettlebell suitcase carry",
    "aliases": [],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
-    "limbs": "Single-Arm",
     "implement": "Kettlebell",
     "load": "Suitcase"
    },
+   "perSide": true,
    "primary": [
     "core",
-    "forearms"
+    "forearms",
+    "obliques"
    ],
    "secondary": [
     "upper back",
     "glutes"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "carry-dumbbell-farmer"
-   ],
    "harder": [],
    "cautions": {
     "joints": [],
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-kettlebell-front-rack",
+   "id": "exr427xub714",
    "name": "Front-rack carry",
    "aliases": [],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
     "implement": "Kettlebell",
     "load": "Front-Rack"
@@ -4948,55 +4510,41 @@
     "upper back"
    ],
    "secondary": [
-    "shoulders"
+    "front delts"
    ],
-   "modality": "kettlebell",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "carry-dumbbell-farmer"
-   ],
    "harder": [
-    "carry-kettlebell-overhead"
+    "exr233ses818",
+    "exr080xgy505"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-kettlebell-overhead",
+   "id": "exr233ses818",
    "name": "Overhead carry",
    "aliases": [],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
     "implement": "Kettlebell",
     "load": "Overhead"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "core"
    ],
    "secondary": [
     "upper back",
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "kettlebells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "carry-kettlebell-front-rack"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5005,36 +4553,31 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "carry-dumbbell-overhead",
+   "id": "exr080xgy505",
    "name": "Dumbbell overhead carry",
    "aliases": [],
-   "movement": "carry",
+   "formerNames": [],
+   "movement": "exf138cqj741",
    "attributes": {
     "implement": "Dumbbell",
     "load": "Overhead"
    },
    "primary": [
-    "shoulders",
+    "front delts",
+    "side delts",
     "core"
    ],
    "secondary": [
     "upper back",
     "triceps"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "carry-kettlebell-front-rack"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5043,13 +4586,17 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "sled-push",
+   "id": "exr048yac735",
    "name": "Sled push",
    "aliases": [],
-   "movement": "sled-push",
+   "formerNames": [],
+   "movement": "exf616rqh640",
    "attributes": {
     "implement": "Sled"
    },
@@ -5062,30 +4609,24 @@
     "chest",
     "core"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [
-     "sled"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "sled-drag"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "sled-drag",
+   "id": "exr536rxd701",
    "name": "Sled drag",
    "aliases": [],
-   "movement": "sled-drag",
+   "formerNames": [],
+   "movement": "exf431khz185",
    "attributes": {
     "implement": "Sled"
    },
@@ -5098,28 +4639,24 @@
     "calves",
     "upper back"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [
-     "sled"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "sled-push"
+    "exr048yac735"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "dead-bug",
+   "id": "exr749kgz313",
    "name": "Dead bug",
    "aliases": [],
-   "movement": "dead-bug",
+   "formerNames": [],
+   "movement": "exf512tze520",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5129,18 +4666,12 @@
    "secondary": [
     "hip flexors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "hollow-hold",
-    "plank"
+    "exr865kqc106",
+    "exr700kkl254",
+    "exr789pes144",
+    "exr062hjf995"
    ],
    "cautions": {
     "joints": [],
@@ -5148,13 +4679,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "bird-dog",
+   "id": "exr119mdp546",
    "name": "Bird dog",
    "aliases": [],
-   "movement": "bird-dog",
+   "formerNames": [],
+   "movement": "exf777ylb371",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5164,19 +4699,13 @@
    ],
    "secondary": [
     "glutes",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "plank"
+    "exr779pyk498",
+    "exr700kkl254",
+    "exr935snl282"
    ],
    "cautions": {
     "joints": [
@@ -5185,13 +4714,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "plank-incline",
+   "id": "exr335qmv806",
    "name": "Incline plank",
    "aliases": [],
-   "movement": "plank",
+   "formerNames": [],
+   "movement": "exf501hpj264",
    "attributes": {
     "support": "Incline",
     "implement": "Bodyweight"
@@ -5200,36 +4733,32 @@
     "core"
    ],
    "secondary": [
-    "shoulders"
+    "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": [
-     "bench",
-     "box"
-    ]
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "plank"
+    "exr700kkl254",
+    "exr020zuw521"
    ],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "plank",
+   "id": "exr700kkl254",
    "name": "Plank",
    "aliases": [
     "front plank",
     "forearm plank"
    ],
-   "movement": "plank",
+   "formerNames": [],
+   "movement": "exf501hpj264",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5237,24 +4766,14 @@
     "core"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "glutes"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "plank-incline",
-    "dead-bug"
-   ],
    "harder": [
-    "rollout-kneeling-stability-ball",
-    "stir-the-pot-stability-ball"
+    "exr551lpq854",
+    "exr264gsz350",
+    "exr146cnq939"
    ],
    "cautions": {
     "joints": [
@@ -5264,34 +4783,31 @@
      "breath-hold",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "side-plank-kneeling",
+   "id": "exr043qbr568",
    "name": "Side plank from the knees",
    "aliases": [],
-   "movement": "side-plank",
+   "formerNames": [],
+   "movement": "exf015myi089",
    "attributes": {
     "position": "Kneeling",
     "implement": "Bodyweight"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
     "glutes"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "side-plank"
+    "exr838mmb262"
    ],
    "cautions": {
     "joints": [
@@ -5300,36 +4816,31 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "side-plank",
+   "id": "exr838mmb262",
    "name": "Side plank",
    "aliases": [],
-   "movement": "side-plank",
+   "formerNames": [],
+   "movement": "exf015myi089",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
     "glutes",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "side-plank-kneeling"
-   ],
    "harder": [
-    "copenhagen-plank-bench"
+    "exr016oxe691"
    ],
    "cautions": {
     "joints": [
@@ -5338,75 +4849,73 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "anti-rotation-press-cable",
+   "id": "exr737mze436",
    "name": "Pallof press",
    "aliases": [],
-   "movement": "anti-rotation-press",
+   "formerNames": [],
+   "movement": "exf581lfg342",
    "attributes": {
     "implement": "Cable"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
-    "shoulders"
+    "front delts"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "woodchop-cable"
+    "exr501krp990"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "anti-rotation-press-band",
+   "id": "exr650dxu912",
    "name": "Banded Pallof press",
    "aliases": [],
-   "movement": "anti-rotation-press",
+   "formerNames": [],
+   "movement": "exf581lfg342",
    "attributes": {
     "implement": "Band"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
-    "shoulders"
+    "front delts"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "woodchop-cable"
+    "exr390voc367"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hollow-hold",
+   "id": "exr865kqc106",
    "name": "Hollow hold",
    "aliases": [],
-   "movement": "hollow-hold",
+   "formerNames": [],
+   "movement": "exf624gsj508",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5416,17 +4925,7 @@
    "secondary": [
     "hip flexors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "dead-bug"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5436,13 +4935,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "rollout-kneeling-stability-ball",
+   "id": "exr264gsz350",
    "name": "Stability ball rollout",
    "aliases": [],
-   "movement": "rollout",
+   "formerNames": [],
+   "movement": "exf345tyd591",
    "attributes": {
     "position": "Kneeling",
     "implement": "Stability Ball"
@@ -5452,21 +4955,11 @@
    ],
    "secondary": [
     "lats",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "stabilityball"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "plank"
-   ],
    "harder": [
-    "rollout-kneeling-ab-wheel"
+    "exr272qej329"
    ],
    "cautions": {
     "joints": [
@@ -5476,36 +4969,30 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "rollout-kneeling-ab-wheel",
+   "id": "exr272qej329",
    "name": "Ab wheel rollout",
    "aliases": [],
-   "movement": "rollout",
+   "formerNames": [],
+   "movement": "exf345tyd591",
    "attributes": {
     "position": "Kneeling",
     "implement": "Ab Wheel"
    },
+   "piece": "Ab wheel",
    "primary": [
     "core"
    ],
    "secondary": [
     "lats",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": [],
-    "piece": "Ab wheel"
-   },
    "level": "advanced",
-   "easier": [
-    "rollout-kneeling-stability-ball"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5515,13 +5002,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "stir-the-pot-stability-ball",
+   "id": "exr146cnq939",
    "name": "Stir the pot",
    "aliases": [],
-   "movement": "stir-the-pot",
+   "formerNames": [],
+   "movement": "exf453tli247",
    "attributes": {
     "implement": "Stability Ball"
    },
@@ -5529,19 +5020,9 @@
     "core"
    ],
    "secondary": [
-    "shoulders"
+    "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "stabilityball"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "plank"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5549,13 +5030,17 @@
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "crunch",
+   "id": "exr461eun663",
    "name": "Crunch",
    "aliases": [],
-   "movement": "crunch",
+   "formerNames": [],
+   "movement": "exf383wpc752",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5563,17 +5048,10 @@
     "core"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "reverse-crunch"
+    "exr789pes144",
+    "exr783emz762"
    ],
    "cautions": {
     "joints": [
@@ -5584,13 +5062,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "reverse-crunch",
+   "id": "exr789pes144",
    "name": "Reverse crunch",
    "aliases": [],
-   "movement": "reverse-crunch",
+   "formerNames": [],
+   "movement": "exf852cac572",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5600,19 +5082,9 @@
    "secondary": [
     "hip flexors"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "dead-bug"
-   ],
    "harder": [
-    "knee-raise-hanging"
+    "exr856hpi618"
    ],
    "cautions": {
     "joints": [
@@ -5623,13 +5095,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "knee-raise-hanging",
+   "id": "exr856hpi618",
    "name": "Hanging knee raise",
    "aliases": [],
-   "movement": "knee-raise",
+   "formerNames": [],
+   "movement": "exf900afr280",
    "attributes": {
     "position": "Hanging",
     "implement": "Bodyweight"
@@ -5641,19 +5117,9 @@
    "secondary": [
     "forearms"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "pullup"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "reverse-crunch"
-   ],
    "harder": [
-    "leg-raise-hanging"
+    "exr322iei582"
    ],
    "cautions": {
     "joints": [
@@ -5663,13 +5129,17 @@
      "grip",
      "spinal-flexion"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "leg-raise-hanging",
+   "id": "exr322iei582",
    "name": "Hanging leg raise",
    "aliases": [],
-   "movement": "leg-raise",
+   "formerNames": [],
+   "movement": "exf243aat568",
    "attributes": {
     "position": "Hanging",
     "implement": "Bodyweight"
@@ -5682,17 +5152,7 @@
     "forearms",
     "lats"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "pullup"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "knee-raise-hanging"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5703,35 +5163,32 @@
      "grip",
      "spinal-flexion"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "woodchop-cable",
+   "id": "exr501krp990",
    "name": "Cable woodchop",
    "aliases": [],
-   "movement": "woodchop",
+   "formerNames": [],
+   "movement": "exf972luq220",
    "attributes": {
     "implement": "Cable"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "glutes"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "anti-rotation-press-cable"
+   "harder": [
+    "exr933lkl857"
    ],
-   "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
@@ -5739,34 +5196,29 @@
     "flags": [
      "spinal-rotation"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "woodchop-band",
+   "id": "exr390voc367",
    "name": "Banded woodchop",
    "aliases": [],
-   "movement": "woodchop",
+   "formerNames": [],
+   "movement": "exf972luq220",
    "attributes": {
     "implement": "Band"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "glutes"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "anti-rotation-press-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5775,28 +5227,30 @@
     "flags": [
      "spinal-rotation"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "russian-twist-bodyweight",
+   "id": "exr783emz762",
    "name": "Russian twist",
    "aliases": [],
-   "movement": "russian-twist",
+   "formerNames": [],
+   "movement": "exf781cvb258",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
-   "harder": [],
+   "harder": [
+    "exr913fjp323",
+    "exr386vey462"
+   ],
    "cautions": {
     "joints": [
      "lower-back"
@@ -5806,29 +5260,26 @@
      "spinal-rotation",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "russian-twist-medicine-ball",
+   "id": "exr913fjp323",
    "name": "Medicine ball Russian twist",
    "aliases": [],
-   "movement": "russian-twist",
+   "formerNames": [],
+   "movement": "exf781cvb258",
    "attributes": {
     "implement": "Medicine Ball"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "medball"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5839,29 +5290,26 @@
      "spinal-rotation",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "russian-twist-dumbbell",
+   "id": "exr386vey462",
    "name": "Dumbbell Russian twist",
    "aliases": [],
-   "movement": "russian-twist",
+   "formerNames": [],
+   "movement": "exf781cvb258",
    "attributes": {
     "implement": "Dumbbell"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5872,33 +5320,28 @@
      "spinal-rotation",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "copenhagen-plank-bench",
+   "id": "exr016oxe691",
    "name": "Copenhagen plank",
    "aliases": [],
-   "movement": "copenhagen-plank",
+   "formerNames": [],
+   "movement": "exf134foi103",
    "attributes": {
     "support": "Bench",
     "implement": "Bodyweight"
    },
    "primary": [
     "adductors",
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "bench"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "side-plank"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5906,13 +5349,17 @@
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "the-hundred",
+   "id": "exr062hjf995",
    "name": "The hundred (Pilates)",
    "aliases": [],
-   "movement": "hundred",
+   "formerNames": [],
+   "movement": "exf460lbo035",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -5922,17 +5369,7 @@
    "secondary": [
     "hip flexors"
    ],
-   "modality": "pilates",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "dead-bug"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -5944,13 +5381,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-dumbbell",
+   "id": "exr680dmg113",
    "name": "Dumbbell curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -5960,32 +5401,26 @@
    "secondary": [
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "curl-band"
-   ],
    "harder": [
-    "curl-barbell"
+    "exr955btr829"
    ],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-dumbbell-neutral-grip",
+   "id": "exr727wyt643",
    "name": "Hammer curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "implement": "Dumbbell",
     "grip": "Neutral-Grip"
@@ -5995,28 +5430,24 @@
     "forearms"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-band",
+   "id": "exr152rfw121",
    "name": "Banded curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "implement": "Band"
    },
@@ -6024,30 +5455,26 @@
     "biceps"
    ],
    "secondary": [],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "curl-dumbbell"
+    "exr680dmg113"
    ],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-cable",
+   "id": "exr007iwl246",
    "name": "Cable curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "implement": "Cable"
    },
@@ -6057,28 +5484,24 @@
    "secondary": [
     "forearms"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-barbell",
+   "id": "exr955btr829",
    "name": "Barbell curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "implement": "Barbell"
    },
@@ -6088,17 +5511,7 @@
    "secondary": [
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "curl-dumbbell"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6106,45 +5519,45 @@
      "wrists"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-seated-preacher-bench-machine",
+   "id": "exr677bgl434",
    "name": "Preacher curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "position": "Seated",
     "support": "Preacher Bench",
     "implement": "Machine"
    },
+   "piece": "Preacher curl bench",
    "primary": [
     "biceps"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Preacher curl bench"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "curl-seated-preacher-bench-dumbbell",
+   "id": "exr403rww574",
    "name": "Dumbbell preacher curl",
    "aliases": [],
-   "movement": "curl",
+   "formerNames": [],
+   "movement": "exf545ipz790",
    "attributes": {
     "position": "Seated",
     "support": "Preacher Bench",
@@ -6154,28 +5567,24 @@
     "biceps"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-pushdown-cable",
+   "id": "exr712opo131",
    "name": "Triceps pushdown",
    "aliases": [],
-   "movement": "triceps-pushdown",
+   "formerNames": [],
+   "movement": "exf646jor278",
    "attributes": {
     "implement": "Cable"
    },
@@ -6183,28 +5592,58 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
+   "harder": [
+    "exr027tgt184",
+    "exr292asv084",
+    "exr904jpx367",
+    "exr911clb342",
+    "exr338qjn869"
+   ],
+   "cautions": {
+    "joints": [
+     "elbows"
+    ],
+    "flags": []
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
+  },
+  {
+   "id": "exr114dxf646",
+   "name": "Rope triceps pushdown",
+   "aliases": [
+    "rope pushdown"
+   ],
+   "formerNames": [],
+   "movement": "exf646jor278",
+   "attributes": {
+    "implement": "Cable",
+    "attachment": "Rope"
+   },
+   "primary": [
+    "triceps"
+   ],
+   "secondary": [],
+   "level": "beginner",
    "harder": [],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-pushdown-band",
+   "id": "exr722ixd264",
    "name": "Banded triceps pushdown",
    "aliases": [],
-   "movement": "triceps-pushdown",
+   "formerNames": [],
+   "movement": "exf646jor278",
    "attributes": {
     "implement": "Band"
    },
@@ -6212,28 +5651,26 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
-   "harder": [],
+   "harder": [
+    "exr042euz993"
+   ],
    "cautions": {
     "joints": [
      "elbows"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-extension-dumbbell-overhead",
+   "id": "exr027tgt184",
    "name": "Overhead triceps extension",
    "aliases": [],
-   "movement": "triceps-extension",
+   "formerNames": [],
+   "movement": "exf551ogz513",
    "attributes": {
     "implement": "Dumbbell",
     "load": "Overhead"
@@ -6242,17 +5679,7 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "triceps-pushdown-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6262,13 +5689,17 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-extension-cable-overhead",
+   "id": "exr292asv084",
    "name": "Cable overhead triceps extension",
    "aliases": [],
-   "movement": "triceps-extension",
+   "formerNames": [],
+   "movement": "exf551ogz513",
    "attributes": {
     "implement": "Cable",
     "load": "Overhead"
@@ -6277,17 +5708,7 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "triceps-pushdown-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6297,13 +5718,17 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-extension-band-overhead",
+   "id": "exr042euz993",
    "name": "Banded overhead triceps extension",
    "aliases": [],
-   "movement": "triceps-extension",
+   "formerNames": [],
+   "movement": "exf551ogz513",
    "attributes": {
     "implement": "Band",
     "load": "Overhead"
@@ -6312,17 +5737,7 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "triceps-pushdown-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6332,15 +5747,19 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-extension-supine-bench-barbell",
+   "id": "exr904jpx367",
    "name": "Skull crusher",
    "aliases": [
     "lying triceps extension"
    ],
-   "movement": "triceps-extension",
+   "formerNames": [],
+   "movement": "exf551ogz513",
    "attributes": {
     "position": "Supine",
     "support": "Bench",
@@ -6350,18 +5769,7 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "triceps-pushdown-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6370,13 +5778,17 @@
     "flags": [
      "lying-on-back"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "triceps-extension-supine-bench-dumbbell",
+   "id": "exr911clb342",
    "name": "Dumbbell skull crusher",
    "aliases": [],
-   "movement": "triceps-extension",
+   "formerNames": [],
+   "movement": "exf551ogz513",
    "attributes": {
     "position": "Supine",
     "support": "Bench",
@@ -6386,18 +5798,7 @@
     "triceps"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bench",
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "triceps-pushdown-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6406,13 +5807,17 @@
     "flags": [
      "lying-on-back"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "dip-bench",
+   "id": "exr338qjn869",
    "name": "Bench dip",
    "aliases": [],
-   "movement": "dip",
+   "formerNames": [],
+   "movement": "exf277uys856",
    "attributes": {
     "support": "Bench",
     "implement": "Bodyweight"
@@ -6424,19 +5829,9 @@
     "chest",
     "front delts"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "bench"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "triceps-pushdown-cable"
-   ],
    "harder": [
-    "dip-parallel-bars"
+    "exr738gka485"
    ],
    "cautions": {
     "joints": [
@@ -6444,15 +5839,19 @@
      "wrists"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "push-up-close-grip",
+   "id": "exr544tgi593",
    "name": "Close-grip push-up",
    "aliases": [
     "diamond push-up"
    ],
-   "movement": "push-up",
+   "formerNames": [],
+   "movement": "exf871tpe308",
    "attributes": {
     "implement": "Bodyweight",
     "grip": "Close-Grip"
@@ -6465,15 +5864,7 @@
     "front delts",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "push-up-incline"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6483,15 +5874,19 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-raise-dumbbell",
+   "id": "exr720lfq059",
    "name": "Lateral raise",
    "aliases": [
     "side raise"
    ],
-   "movement": "lateral-raise",
+   "formerNames": [],
+   "movement": "exf490axk129",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -6501,28 +5896,24 @@
    "secondary": [
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-raise-cable",
+   "id": "exr274qel316",
    "name": "Cable lateral raise",
    "aliases": [],
-   "movement": "lateral-raise",
+   "formerNames": [],
+   "movement": "exf490axk129",
    "attributes": {
     "implement": "Cable"
    },
@@ -6532,28 +5923,24 @@
    "secondary": [
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-raise-band",
+   "id": "exr380jfb785",
    "name": "Banded lateral raise",
    "aliases": [],
-   "movement": "lateral-raise",
+   "formerNames": [],
+   "movement": "exf490axk129",
    "attributes": {
     "implement": "Band"
    },
@@ -6563,59 +5950,51 @@
    "secondary": [
     "upper back"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-raise-seated-machine",
+   "id": "exr469fct457",
    "name": "Machine lateral raise",
    "aliases": [],
-   "movement": "lateral-raise",
+   "formerNames": [],
+   "movement": "exf490axk129",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Lateral raise machine",
    "primary": [
     "side delts"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Lateral raise machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "front-raise-dumbbell",
+   "id": "exr757vdz332",
    "name": "Front raise",
    "aliases": [],
-   "movement": "front-raise",
+   "formerNames": [],
+   "movement": "exf725rtm449",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -6623,28 +6002,24 @@
     "front delts"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "front-raise-cable",
+   "id": "exr469lrm122",
    "name": "Cable front raise",
    "aliases": [],
-   "movement": "front-raise",
+   "formerNames": [],
+   "movement": "exf725rtm449",
    "attributes": {
     "implement": "Cable"
    },
@@ -6652,28 +6027,24 @@
     "front delts"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "front-raise-band",
+   "id": "exr019abb103",
    "name": "Banded front raise",
    "aliases": [],
-   "movement": "front-raise",
+   "formerNames": [],
+   "movement": "exf725rtm449",
    "attributes": {
     "implement": "Band"
    },
@@ -6681,48 +6052,36 @@
     "front delts"
    ],
    "secondary": [],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "shrug-dumbbell",
+   "id": "exr813wej412",
    "name": "Shrug",
    "aliases": [
     "trap shrug"
    ],
-   "movement": "shrug",
+   "formerNames": [],
+   "movement": "exf006ijq093",
    "attributes": {
     "implement": "Dumbbell"
    },
    "primary": [
-    "upper back"
+    "traps"
    ],
    "secondary": [
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6731,31 +6090,27 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "shrug-barbell",
+   "id": "exr799kaa244",
    "name": "Barbell shrug",
    "aliases": [],
-   "movement": "shrug",
+   "formerNames": [],
+   "movement": "exf006ijq093",
    "attributes": {
     "implement": "Barbell"
    },
    "primary": [
-    "upper back"
+    "traps"
    ],
    "secondary": [
     "forearms"
    ],
-   "modality": "free weights",
-   "equipment": {
-    "needs": [
-     "barbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6764,109 +6119,101 @@
     "flags": [
      "grip"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "leg-extension-machine",
+   "id": "exr333fje674",
    "name": "Leg extension",
    "aliases": [],
-   "movement": "leg-extension",
+   "formerNames": [],
+   "movement": "exf158bpq402",
    "attributes": {
     "implement": "Machine"
    },
+   "piece": "Leg extension machine",
    "primary": [
     "quads"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Leg extension machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "leg-curl-prone-machine",
+   "id": "exr648vxx966",
    "name": "Lying leg curl",
    "aliases": [],
-   "movement": "leg-curl",
+   "formerNames": [],
+   "movement": "exf601nbp895",
    "attributes": {
     "position": "Prone",
     "implement": "Machine"
    },
+   "piece": "Lying leg curl machine",
    "primary": [
     "hamstrings"
    ],
    "secondary": [
     "calves"
    ],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Lying leg curl machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "nordic-curl-kneeling"
+    "exr292sye767"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "lying-face-down"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "leg-curl-seated-machine",
+   "id": "exr798lqp679",
    "name": "Seated leg curl",
    "aliases": [],
-   "movement": "leg-curl",
+   "formerNames": [],
+   "movement": "exf601nbp895",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Seated leg curl machine",
    "primary": [
     "hamstrings"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Seated leg curl machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "nordic-curl-kneeling"
+    "exr292sye767"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "leg-curl-supine-stability-ball",
+   "id": "exr020kwh637",
    "name": "Stability ball hamstring curl",
    "aliases": [],
-   "movement": "leg-curl",
+   "formerNames": [],
+   "movement": "exf601nbp895",
    "attributes": {
     "position": "Supine",
     "implement": "Stability Ball"
@@ -6878,19 +6225,9 @@
     "glutes",
     "core"
    ],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "stabilityball"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "glute-bridge"
-   ],
    "harder": [
-    "nordic-curl-kneeling"
+    "exr292sye767"
    ],
    "cautions": {
     "joints": [],
@@ -6898,13 +6235,17 @@
      "lying-on-back",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "nordic-curl-kneeling",
+   "id": "exr292sye767",
    "name": "Nordic hamstring curl",
    "aliases": [],
-   "movement": "nordic-curl",
+   "formerNames": [],
+   "movement": "exf658gbm240",
    "attributes": {
     "position": "Kneeling",
     "implement": "Bodyweight"
@@ -6913,18 +6254,7 @@
     "hamstrings"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "leg-curl-supine-stability-ball",
-    "leg-curl-prone-machine"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -6933,13 +6263,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-bodyweight",
+   "id": "exr704lrb524",
    "name": "Standing calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -6947,17 +6281,13 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": [
-     "box"
-    ]
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "calf-raise-single-leg-bodyweight"
+    "exr513asd780",
+    "exr023txr849",
+    "exr027xcn093",
+    "exr114rrl610",
+    "exr757uam568"
    ],
    "cautions": {
     "joints": [
@@ -6966,13 +6296,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-dumbbell",
+   "id": "exr114rrl610",
    "name": "Dumbbell standing calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "implement": "Dumbbell"
    },
@@ -6980,19 +6314,9 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": [
-     "box"
-    ]
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "calf-raise-single-leg-bodyweight"
+    "exr513asd780"
    ],
    "cautions": {
     "joints": [
@@ -7001,13 +6325,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-machine",
+   "id": "exr757uam568",
    "name": "Machine standing calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "implement": "Machine"
    },
@@ -7015,19 +6343,9 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [
-     "box"
-    ]
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "calf-raise-single-leg-bodyweight"
+    "exr513asd780"
    ],
    "cautions": {
     "joints": [
@@ -7036,13 +6354,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-single-leg-bodyweight",
+   "id": "exr513asd780",
    "name": "Single-leg calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "limbs": "Single-Leg",
     "implement": "Bodyweight"
@@ -7051,18 +6373,10 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [],
-    "oneOf": [
-     "box"
-    ]
-   },
    "level": "intermediate",
-   "easier": [
-    "calf-raise-bodyweight"
+   "harder": [
+    "exr023txr849"
    ],
-   "harder": [],
    "cautions": {
     "joints": [
      "ankles"
@@ -7070,13 +6384,17 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-single-leg-dumbbell",
+   "id": "exr023txr849",
    "name": "Dumbbell single-leg calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "limbs": "Single-Leg",
     "implement": "Dumbbell"
@@ -7085,19 +6403,7 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "bodyweight",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": [
-     "box"
-    ]
-   },
    "level": "intermediate",
-   "easier": [
-    "calf-raise-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7106,44 +6412,44 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-seated-machine",
+   "id": "exr045nkq393",
    "name": "Seated calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Seated calf machine",
    "primary": [
     "calves"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Seated calf machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "ankles"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "calf-raise-seated-dumbbell",
+   "id": "exr351adf803",
    "name": "Dumbbell seated calf raise",
    "aliases": [],
-   "movement": "calf-raise",
+   "formerNames": [],
+   "movement": "exf809rhq817",
    "attributes": {
     "position": "Seated",
     "implement": "Dumbbell"
@@ -7152,195 +6458,175 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "dumbbells"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "ankles"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hip-abduction-seated-machine",
+   "id": "exr682kcf949",
    "name": "Hip abduction machine",
    "aliases": [],
-   "movement": "hip-abduction",
+   "formerNames": [],
+   "movement": "exf491rcl679",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Hip abduction machine",
    "primary": [
+    "abductors",
     "glutes"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Hip abduction machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hip-adduction-seated-machine",
+   "id": "exr706dnq201",
    "name": "Hip adduction machine",
    "aliases": [],
-   "movement": "hip-adduction",
+   "formerNames": [],
+   "movement": "exf404unr062",
    "attributes": {
     "position": "Seated",
     "implement": "Machine"
    },
+   "piece": "Hip adduction machine",
    "primary": [
     "adductors"
    ],
    "secondary": [],
-   "modality": "machine",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": [],
-    "piece": "Hip adduction machine"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "copenhagen-plank-bench"
+    "exr016oxe691"
    ],
    "cautions": {
     "joints": [
      "hips"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "lateral-walk-band",
+   "id": "exr464fol488",
    "name": "Banded side walk",
    "aliases": [
     "monster walk",
     "lateral band walk"
    ],
-   "movement": "lateral-walk",
+   "formerNames": [],
+   "movement": "exf744tla243",
    "attributes": {
     "implement": "Band"
    },
    "primary": [
+    "abductors",
     "glutes"
    ],
    "secondary": [
     "quads"
    ],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "lateral-lunge-bodyweight"
+    "exr351awc716"
    ],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "clamshell-side-lying-bodyweight",
+   "id": "exr614art108",
    "name": "Clamshell",
    "aliases": [],
-   "movement": "clamshell",
+   "formerNames": [],
+   "movement": "exf010zki205",
    "attributes": {
     "position": "Side-Lying",
     "implement": "Bodyweight"
    },
    "primary": [
+    "abductors",
     "glutes"
    ],
    "secondary": [],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "lateral-walk-band"
+    "exr464fol488",
+    "exr704tuq543"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "clamshell-side-lying-band",
+   "id": "exr704tuq543",
    "name": "Banded clamshell",
    "aliases": [],
-   "movement": "clamshell",
+   "formerNames": [],
+   "movement": "exf010zki205",
    "attributes": {
     "position": "Side-Lying",
     "implement": "Band"
    },
    "primary": [
+    "abductors",
     "glutes"
    ],
    "secondary": [],
-   "modality": "band",
-   "equipment": {
-    "needs": [
-     "mat",
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "lateral-walk-band"
+    "exr464fol488"
    ],
    "cautions": {
     "joints": [],
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "glute-kickback-cable",
+   "id": "exr351jaz658",
    "name": "Glute kickback",
    "aliases": [
     "cable kickback"
    ],
-   "movement": "glute-kickback",
+   "formerNames": [],
+   "movement": "exf833uxe036",
    "attributes": {
     "implement": "Cable"
    },
@@ -7350,28 +6636,24 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "cables"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "glute-kickback-band",
+   "id": "exr661oot395",
    "name": "Banded glute kickback",
    "aliases": [],
-   "movement": "glute-kickback",
+   "formerNames": [],
+   "movement": "exf833uxe036",
    "attributes": {
     "implement": "Band"
    },
@@ -7381,28 +6663,24 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "bands"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "glute-kickback-machine",
+   "id": "exr671vgx530",
    "name": "Machine glute kickback",
    "aliases": [],
-   "movement": "glute-kickback",
+   "formerNames": [],
+   "movement": "exf833uxe036",
    "attributes": {
     "implement": "Machine"
    },
@@ -7412,28 +6690,24 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "cable",
-   "equipment": {
-    "needs": [
-     "machines"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "chest-pass-medicine-ball",
+   "id": "exr197bcs550",
    "name": "Medicine ball chest pass",
    "aliases": [],
-   "movement": "chest-pass",
+   "formerNames": [],
+   "movement": "exf159xmt234",
    "attributes": {
     "implement": "Medicine Ball"
    },
@@ -7442,31 +6716,29 @@
     "triceps"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "core"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [
-     "medball"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
-   "harder": [],
+   "harder": [
+    "exr514isq450"
+   ],
    "cautions": {
     "joints": [
      "wrists"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "slam-medicine-ball",
+   "id": "exr514isq450",
    "name": "Medicine ball slam",
    "aliases": [],
-   "movement": "slam",
+   "formerNames": [],
+   "movement": "exf767mzg285",
    "attributes": {
     "implement": "Medicine Ball"
    },
@@ -7475,18 +6747,10 @@
     "lats"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "glutes"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [
-     "medball"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7497,34 +6761,29 @@
      "overhead",
      "spinal-flexion"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "rotational-throw-medicine-ball",
+   "id": "exr933lkl857",
    "name": "Rotational medicine ball throw",
    "aliases": [],
-   "movement": "rotational-throw",
+   "formerNames": [],
+   "movement": "exf600kzn372",
    "attributes": {
     "implement": "Medicine Ball"
    },
    "primary": [
-    "core"
+    "core",
+    "obliques"
    ],
    "secondary": [
     "glutes",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [
-     "medball"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "woodchop-cable"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7533,13 +6792,17 @@
     "flags": [
      "spinal-rotation"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "pogo-hop",
+   "id": "exr027xcn093",
    "name": "Pogo hops",
    "aliases": [],
-   "movement": "pogo-hop",
+   "formerNames": [],
+   "movement": "exf553xvj586",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -7549,15 +6812,7 @@
    "secondary": [
     "quads"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "calf-raise-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7567,13 +6822,17 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "squat-bodyweight-jumping",
+   "id": "exr980zoo766",
    "name": "Jump squat",
    "aliases": [],
-   "movement": "squat",
+   "formerNames": [],
+   "movement": "exf991xkm808",
    "attributes": {
     "implement": "Bodyweight",
     "velocity": "Jumping"
@@ -7585,18 +6844,10 @@
    "secondary": [
     "calves"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "squat-bodyweight"
-   ],
    "harder": [
-    "box-jump",
-    "broad-jump"
+    "exr779hhq748",
+    "exr411tmu027"
    ],
    "cautions": {
     "joints": [
@@ -7606,13 +6857,17 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "box-jump",
+   "id": "exr779hhq748",
    "name": "Box jump",
    "aliases": [],
-   "movement": "box-jump",
+   "formerNames": [],
+   "movement": "exf921ogc614",
    "attributes": {
     "implement": "Plyo Box"
    },
@@ -7623,17 +6878,7 @@
    "secondary": [
     "calves"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [
-     "box"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "squat-bodyweight-jumping"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7643,13 +6888,17 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "broad-jump",
+   "id": "exr411tmu027",
    "name": "Broad jump",
    "aliases": [],
-   "movement": "broad-jump",
+   "formerNames": [],
+   "movement": "exf740opf670",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -7661,15 +6910,7 @@
     "hamstrings",
     "calves"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "squat-bodyweight-jumping"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7679,15 +6920,19 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "skater-jump",
+   "id": "exr791vdn578",
    "name": "Skater jump",
    "aliases": [
     "lateral bound"
    ],
-   "movement": "skater-jump",
+   "formerNames": [],
+   "movement": "exf015uzx616",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -7699,15 +6944,7 @@
     "adductors",
     "calves"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "lateral-lunge-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7718,15 +6955,19 @@
      "high-impact",
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "split-squat-alternating-bodyweight-jumping",
+   "id": "exr916pxm389",
    "name": "Jumping lunge",
    "aliases": [
     "split jump"
    ],
-   "movement": "split-squat",
+   "formerNames": [],
+   "movement": "exf355fyl622",
    "attributes": {
     "limbs": "Alternating",
     "implement": "Bodyweight",
@@ -7739,15 +6980,7 @@
    "secondary": [
     "calves"
    ],
-   "modality": "plyometric",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "walking-lunge-bodyweight"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7758,17 +6991,20 @@
      "high-impact",
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "march-in-place",
+   "id": "exr338xut822",
    "name": "Marching in place",
    "aliases": [
     "low-impact march"
    ],
-   "movement": "march",
+   "formerNames": [],
+   "movement": "exf718wta997",
    "attributes": {
-    "position": "In Place",
     "implement": "Bodyweight"
    },
    "primary": [
@@ -7778,82 +7014,69 @@
    "secondary": [
     "core"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "high-knees",
-    "step-jack"
+    "exr958uem288",
+    "exr393alg169"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "step-jack",
+   "id": "exr393alg169",
    "name": "Step jack",
    "aliases": [
     "low-impact jumping jack"
    ],
-   "movement": "step-jack",
+   "formerNames": [],
+   "movement": "exf039hmk639",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
     "calves",
-    "shoulders"
+    "front delts"
    ],
    "secondary": [
     "glutes"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "march-in-place"
-   ],
    "harder": [
-    "jumping-jack"
+    "exr611afx101",
+    "exr402alh519"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "jumping-jack",
+   "id": "exr611afx101",
    "name": "Jumping jack",
    "aliases": [],
-   "movement": "jumping-jack",
+   "formerNames": [],
+   "movement": "exf261dee405",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
     "calves",
-    "shoulders"
+    "front delts"
    ],
    "secondary": [
     "glutes"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [
-    "step-jack"
-   ],
    "harder": [
-    "burpee"
+    "exr402alh519"
    ],
    "cautions": {
     "joints": [
@@ -7863,13 +7086,17 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "high-knees",
+   "id": "exr958uem288",
    "name": "High knees",
    "aliases": [],
-   "movement": "high-knees",
+   "formerNames": [],
+   "movement": "exf969vvj077",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -7881,15 +7108,7 @@
     "quads",
     "core"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "march-in-place"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7899,13 +7118,17 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "mountain-climber",
+   "id": "exr020zuw521",
    "name": "Mountain climber",
    "aliases": [],
-   "movement": "mountain-climber",
+   "formerNames": [],
+   "movement": "exf473xel364",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -7914,19 +7137,13 @@
     "hip flexors"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "quads"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "plank-incline"
+   "harder": [
+    "exr402alh519"
    ],
-   "harder": [],
    "cautions": {
     "joints": [
      "wrists",
@@ -7935,32 +7152,28 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "bear-crawl",
+   "id": "exr935snl282",
    "name": "Bear crawl",
    "aliases": [],
-   "movement": "bear-crawl",
+   "formerNames": [],
+   "movement": "exf060nlr227",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
     "core",
-    "shoulders"
+    "front delts"
    ],
    "secondary": [
     "quads"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "bird-dog"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -7970,13 +7183,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "burpee",
+   "id": "exr402alh519",
    "name": "Burpee",
    "aliases": [],
-   "movement": "burpee",
+   "formerNames": [],
+   "movement": "exf643psl393",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -7986,19 +7203,10 @@
     "core"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "calves"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "advanced",
-   "easier": [
-    "step-jack",
-    "mountain-climber"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8010,48 +7218,51 @@
      "high-impact",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "shadow-boxing",
+   "id": "exr975jdx581",
    "name": "Shadow boxing",
    "aliases": [],
-   "movement": "shadow-boxing",
+   "formerNames": [],
+   "movement": "exf315hqm419",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
-    "shoulders"
+    "front delts"
    ],
    "secondary": [
     "core",
     "calves"
    ],
-   "modality": "conditioning",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "shoulders"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "walk-treadmill",
+   "id": "exr383ggj899",
    "name": "Treadmill walk",
    "aliases": [
     "walking"
    ],
-   "movement": "walk",
+   "formerNames": [],
+   "movement": "exf899cpc069",
    "attributes": {
     "implement": "Treadmill"
    },
+   "piece": "Treadmill",
    "primary": [
     "quads",
     "calves"
@@ -8059,34 +7270,30 @@
    "secondary": [
     "glutes"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Treadmill"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "walk-incline-treadmill",
-    "run-treadmill"
+    "exr578dcv047",
+    "exr942uza490"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "walk-incline-treadmill",
+   "id": "exr578dcv047",
    "name": "Incline walk",
    "aliases": [],
-   "movement": "walk",
+   "formerNames": [],
+   "movement": "exf899cpc069",
    "attributes": {
     "support": "Incline",
     "implement": "Treadmill"
    },
+   "piece": "Treadmill",
    "primary": [
     "glutes",
     "calves"
@@ -8094,38 +7301,32 @@
    "secondary": [
     "hamstrings"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Treadmill"
-   },
    "level": "beginner",
-   "easier": [
-    "walk-treadmill"
-   ],
    "harder": [
-    "stair-climber"
+    "exr818ndn344"
    ],
    "cautions": {
     "joints": [
      "ankles"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "run-treadmill",
+   "id": "exr942uza490",
    "name": "Treadmill run",
    "aliases": [
     "running"
    ],
-   "movement": "run",
+   "formerNames": [],
+   "movement": "exf062mwy558",
    "attributes": {
     "implement": "Treadmill"
    },
+   "piece": "Treadmill",
    "primary": [
     "quads",
     "calves"
@@ -8134,18 +7335,7 @@
     "glutes",
     "hamstrings"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Treadmill"
-   },
    "level": "intermediate",
-   "easier": [
-    "walk-treadmill"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8156,19 +7346,24 @@
     "flags": [
      "high-impact"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "cycling-stationary-bike",
+   "id": "exr178anf463",
    "name": "Stationary bike",
    "aliases": [
     "exercise bike",
     "spin bike"
    ],
-   "movement": "cycling",
+   "formerNames": [],
+   "movement": "exf834nuw800",
    "attributes": {
     "implement": "Stationary Bike"
    },
+   "piece": "Stationary bike",
    "primary": [
     "quads"
    ],
@@ -8176,109 +7371,96 @@
     "glutes",
     "calves"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Stationary bike"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "cycling-air-bike"
+    "exr725akb747",
+    "exr428vkk917"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "cycling-air-bike",
+   "id": "exr725akb747",
    "name": "Air bike",
    "aliases": [
     "assault bike",
     "fan bike"
    ],
-   "movement": "cycling",
+   "formerNames": [],
+   "movement": "exf834nuw800",
    "attributes": {
     "implement": "Air Bike"
    },
+   "piece": "Air bike",
    "primary": [
     "quads",
-    "shoulders"
+    "front delts"
    ],
    "secondary": [
     "glutes",
     "chest",
     "upper back"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Air bike"
-   },
    "level": "intermediate",
-   "easier": [
-    "cycling-stationary-bike"
-   ],
    "harder": [],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "elliptical",
+   "id": "exr818afj557",
    "name": "Elliptical",
    "aliases": [
     "cross trainer"
    ],
-   "movement": "elliptical",
+   "formerNames": [],
+   "movement": "exf349vez115",
    "attributes": {
     "implement": "Elliptical"
    },
+   "piece": "Elliptical",
    "primary": [
     "quads",
     "glutes"
    ],
    "secondary": [
     "calves",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Elliptical"
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [
-    "rowing-machine"
+    "exr428vkk917"
    ],
    "cautions": {
     "joints": [],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "rowing-machine",
+   "id": "exr428vkk917",
    "name": "Rowing machine",
    "aliases": [
     "erg",
     "rowing ergometer"
    ],
-   "movement": "rowing-machine",
+   "formerNames": [],
+   "movement": "exf096lkq002",
    "attributes": {
     "implement": "Rowing Machine"
    },
+   "piece": "Rowing machine",
    "primary": [
     "lats",
     "upper back",
@@ -8289,36 +7471,32 @@
     "biceps",
     "core"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Rowing machine"
-   },
    "level": "intermediate",
-   "easier": [
-    "cycling-stationary-bike"
+   "harder": [
+    "exr458rnu704"
    ],
-   "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "stair-climber",
+   "id": "exr818ndn344",
    "name": "Stair climber",
    "aliases": [
     "StairMaster"
    ],
-   "movement": "stair-climber",
+   "formerNames": [],
+   "movement": "exf496pil074",
    "attributes": {
     "implement": "Stair Climber"
    },
+   "piece": "Stair climber",
    "primary": [
     "glutes",
     "quads"
@@ -8326,34 +7504,28 @@
    "secondary": [
     "calves"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Stair climber"
-   },
    "level": "intermediate",
-   "easier": [
-    "walk-incline-treadmill"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
      "knees"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "ski-erg",
+   "id": "exr458rnu704",
    "name": "Ski erg",
    "aliases": [],
-   "movement": "ski-erg",
+   "formerNames": [],
+   "movement": "exf947wxf641",
    "attributes": {
     "implement": "Ski Erg"
    },
+   "piece": "Ski erg",
    "primary": [
     "lats",
     "triceps",
@@ -8361,18 +7533,9 @@
    ],
    "secondary": [
     "glutes",
-    "shoulders"
+    "front delts"
    ],
-   "modality": "cardio",
-   "equipment": {
-    "needs": [
-     "cardio"
-    ],
-    "oneOf": [],
-    "piece": "Ski erg"
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8382,13 +7545,17 @@
     "flags": [
      "spinal-flexion"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "cat-cow",
+   "id": "exr603fbp362",
    "name": "Cat-cow",
    "aliases": [],
-   "movement": "cat-cow",
+   "formerNames": [],
+   "movement": "exf374lbv392",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -8398,15 +7565,7 @@
    "secondary": [
     "core"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8415,13 +7574,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "childs-pose",
+   "id": "exr689phd625",
    "name": "Child's pose",
    "aliases": [],
-   "movement": "childs-pose",
+   "formerNames": [],
+   "movement": "exf976spd356",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -8432,16 +7595,10 @@
    "secondary": [
     "glutes"
    ],
-   "modality": "yoga",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
-   "harder": [],
+   "harder": [
+    "exr394vcr162"
+   ],
    "cautions": {
     "joints": [
      "knees"
@@ -8449,31 +7606,27 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "downward-dog",
+   "id": "exr394vcr162",
    "name": "Downward dog",
    "aliases": [],
-   "movement": "downward-dog",
+   "formerNames": [],
+   "movement": "exf430lvh137",
    "attributes": {
     "implement": "Bodyweight"
    },
    "primary": [
     "hamstrings",
     "calves",
-    "shoulders"
+    "front delts"
    ],
    "secondary": [],
-   "modality": "yoga",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8484,13 +7637,17 @@
      "inverted",
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hip-flexor-stretch-half-kneeling",
+   "id": "exr973hsy586",
    "name": "Half-kneeling hip flexor stretch",
    "aliases": [],
-   "movement": "hip-flexor-stretch",
+   "formerNames": [],
+   "movement": "exf344qil145",
    "attributes": {
     "position": "Half-Kneeling",
     "implement": "Bodyweight"
@@ -8501,16 +7658,10 @@
    "secondary": [
     "quads"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
-   "harder": [],
+   "harder": [
+    "exr762nlb415"
+   ],
    "cautions": {
     "joints": [
      "knees"
@@ -8518,13 +7669,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "worlds-greatest-stretch",
+   "id": "exr762nlb415",
    "name": "World's greatest stretch",
    "aliases": [],
-   "movement": "worlds-greatest-stretch",
+   "formerNames": [],
+   "movement": "exf928icm063",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -8536,15 +7691,7 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "intermediate",
-   "easier": [
-    "hip-flexor-stretch-half-kneeling"
-   ],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8554,13 +7701,17 @@
      "floor-transfer",
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "90-90-hip-switch",
+   "id": "exr705gls411",
    "name": "90/90 hip switch",
    "aliases": [],
-   "movement": "ninety-ninety",
+   "formerNames": [],
+   "movement": "exf058ntt604",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -8571,15 +7722,7 @@
    "secondary": [
     "adductors"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8589,13 +7732,17 @@
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "open-book-side-lying",
+   "id": "exr793hgh515",
    "name": "Open book (thoracic rotation)",
    "aliases": [],
-   "movement": "open-book",
+   "formerNames": [],
+   "movement": "exf261cmq594",
    "attributes": {
     "position": "Side-Lying",
     "implement": "Bodyweight"
@@ -8606,44 +7753,35 @@
    "secondary": [
     "chest"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
-    "joints": [],
+    "joints": [
+     "upper-back"
+    ],
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "wall-slide-wall",
+   "id": "exr475qqt672",
    "name": "Wall slide",
    "aliases": [],
-   "movement": "wall-slide",
+   "formerNames": [],
+   "movement": "exf690hwl361",
    "attributes": {
-    "support": "Wall",
     "implement": "Bodyweight"
    },
    "primary": [
-    "shoulders",
+    "front delts",
     "upper back"
    ],
    "secondary": [],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8652,13 +7790,17 @@
     "flags": [
      "overhead"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "ankle-mobilization-half-kneeling-wall",
+   "id": "exr237dyw584",
    "name": "Knee-to-wall ankle mobilization",
    "aliases": [],
-   "movement": "ankle-mobilization",
+   "formerNames": [],
+   "movement": "exf658crt197",
    "attributes": {
     "position": "Half-Kneeling",
     "support": "Wall",
@@ -8668,26 +7810,24 @@
     "calves"
    ],
    "secondary": [],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "ankles"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "hamstring-stretch-box",
+   "id": "exr707cdl246",
    "name": "Standing hamstring stretch",
    "aliases": [],
-   "movement": "hamstring-stretch",
+   "formerNames": [],
+   "movement": "exf624sfc027",
    "attributes": {
     "support": "Box",
     "implement": "Bodyweight"
@@ -8698,31 +7838,26 @@
    "secondary": [
     "calves"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [],
-    "oneOf": [
-     "bench",
-     "box"
-    ]
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
      "lower-back"
     ],
     "flags": []
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "foam-rolling",
+   "id": "exr220hku763",
    "name": "Foam rolling",
    "aliases": [
     "self-massage"
    ],
-   "movement": "foam-rolling",
+   "formerNames": [],
+   "movement": "exf395twk688",
    "attributes": {
     "implement": "Foam Roller"
    },
@@ -8735,28 +7870,24 @@
     "calves",
     "glutes"
    ],
-   "modality": "mobility",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [],
     "flags": [
      "floor-transfer"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   },
   {
-   "id": "warrior-ii",
+   "id": "exr454htk140",
    "name": "Warrior II",
    "aliases": [],
-   "movement": "warrior-two",
+   "formerNames": [],
+   "movement": "exf384bur552",
    "attributes": {
     "implement": "Bodyweight"
    },
@@ -8765,18 +7896,10 @@
     "adductors"
    ],
    "secondary": [
-    "shoulders",
+    "front delts",
     "glutes"
    ],
-   "modality": "yoga",
-   "equipment": {
-    "needs": [
-     "mat"
-    ],
-    "oneOf": []
-   },
    "level": "beginner",
-   "easier": [],
    "harder": [],
    "cautions": {
     "joints": [
@@ -8785,7 +7908,10 @@
     "flags": [
      "balance"
     ]
-   }
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null
   }
  ]
 }

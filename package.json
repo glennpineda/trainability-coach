@@ -1,7 +1,7 @@
 {
   "name": "trainability-coach",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "codename": "Caesious",
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "server": "node server/index.js",
     "start": "npm run build && node server/index.js",
     "manual": "node scripts/manual.mjs",
-    "check-docs": "node scripts/manual.mjs --check",
+    "check-docs": "node scripts/manual.mjs --check && node scripts/iq.mjs --check",
     "screenshots": "node scripts/screenshots.mjs",
     "iq": "node scripts/iq.mjs",
     "check-iq": "node scripts/iq.mjs --check"

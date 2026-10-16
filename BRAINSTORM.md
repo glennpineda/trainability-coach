@@ -27,7 +27,8 @@ _Things actually ready to do._
 _From the ideas audit of Coach IQ (16 Oct 2026). Glenn went through all 25 one
 by one the same day: all 25 to build, none parked or dropped. Numbers are the
 audit's; sizes are the auditor's (S an hour or two, M a day or so). Grouped
-into batches in building order; each item is struck from here as it is built._
+into batches in building order; each item is struck from here as it is built.
+Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4._
 
 **Record ids, Studio's way.** Every new record id is a 3-letter tag, 3 digits,
 3 letters, 3 digits, lowercase (Studio's `server/db.js`, `newId`), with the tag
@@ -36,52 +37,6 @@ exercise (a trainer's private exercise shares it), **exf** an exercise family,
 **eqp** an equipment answer (replacing the made-up `eq_` ids), **exx** a
 trainer's own name for an exercise, **tpl** a trainer's own place, **lim** a
 client's limitation. Any other new kind means asking him first.
-
-Batch A — the library's foundations:
-
-1. **Permanent exercise ids** (S). Every exercise and family gets a Studio-style
-   id (exr…, exf…) that never changes, whatever happens to its name; master
-   names are still checked for clashes, and a "formerly called" list keeps
-   anything renamed, merged or split.
-5. **Modality and equipment worked out from the exercise's equipment**, not
-   typed twice (S). Fixes the ~40 that disagree (the dumbbell Cossack squat
-   says "bodyweight"; the one-arm dumbbell row is named with a bench but
-   doesn't need one).
-9. **Level means skill and strength needed, whatever the weight** (S). Impact
-   stays its own fact. Written into the README and the levels checked.
-10. **Origin, review mark and status on every exercise** (S): from the starter
-    list, a book (private) or a trainer; the date Glenn reviewed it; draft,
-    reviewed or retired. Retire, never delete.
-11. **Tempo and slow lowering leave the names** (S); they are how a set is
-    prescribed (with idea 2). Out of the velocity words: Tempo, Eccentric,
-    Low-Impact; "In Place" out of positions. The negative pull-up becomes a
-    pull-up done with slow lowering.
-12. **Name fixes and new slots** (S). A movement's own name may cover its
-    support, as it can its equipment ("Wall Sit", not "Wall Sit — Wall"); no
-    limb said twice ("Carry — Dumbbell, Suitcase"); where the dumbbells are
-    held. New: an **attachment** slot right after the equipment (Glenn:
-    "After the equipment": *Triceps Pushdown — Cable, Rope*); a **Decline
-    Bench**; **Deficit** under support; stance widths. Pause and partial range
-    are prescription (idea 2), not names. README's old word order corrected.
-13. **No two exercises share a common name or alias** (S), ignoring capitals,
-    hyphens and plurals; the machine-assisted pull-up's wrong alias fixed.
-14. **Merge the lunges, and widen alternatives** (S). One Lunge family with a
-    **direction** word, said first (Glenn: "First": *Lunge — Reverse,
-    Dumbbell*); and the alternatives search widens to the movement pattern and
-    main muscles when the family has nothing suitable.
-17. **Finer muscle and joint words** (S–M): obliques, traps, abductors,
-    rotator cuff, tibialis, pelvic floor; "shoulders" no longer both a muscle
-    and a joint; thoracic spine and feet as joints. Re-tag the library.
-7. **"Harder" stored once, "easier" worked out** (S–M); fill the 46 with no
-   links; links stay within the exercise's own equipment where possible.
-2. **How each exercise is measured** (S): reps, time, distance or calories;
-   per side; tempo and pauses as prescription. **Pounds by default** (Glenn:
-   "Pounds (lb)"), dumbbells counted per hand; a trainer may write kilograms
-   and Coach converts.
-25. **The checker checks more and always runs** (S): modality and equipment
-    against the exercise's equipment, links both ways and levels in order,
-    name and alias clashes, a beginner way into every family, no loops; and
-    `check-docs` runs `check-iq` too.
 
 Batch B — the equipment memory, before trainers fill it in:
 
@@ -138,9 +93,11 @@ Batch E — names and Billy's tools:
    library or kept as a private exercise (exr…); a way to suggest one to
    Glenn for the shared library.
 4. **Billy's library tools, filtering in code** (M): "find this exercise"
-   (any name, alias or trainer's own name) and "find alternatives" (an
-   exercise plus the client's equipment, level and limitations; only options
-   that pass come back).
+   (any name, alias, former name or trainer's own name) and "find
+   alternatives" (an exercise plus the client's equipment, level and
+   limitations; only options that pass come back). Alternatives look in the
+   family first, and widen to the movement pattern and main muscles when the
+   family has nothing suitable (the second half of 14).
 
 Batch F — review:
 

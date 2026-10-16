@@ -92,8 +92,8 @@ Every exercise has three kinds of name:
 
 1. **A master name**, Trainability's own, made from the exercise's attributes
    in a fixed order and never typed by hand, so it explains the exercise and
-   no two can share one. The attributes: position, support, limbs, equipment,
-   load or grip, movement, plane, velocity.
+   no two can share one. The attributes, in order: direction, position,
+   support, limbs, equipment, attachment, load, grip, velocity, plane.
 2. **A common name**, what most trainers call it, shown by default.
 3. **Each trainer's own names**, kept in their personal memory. Coach shows a
    trainer their own name, Billy and the program reader understand all of
@@ -109,16 +109,57 @@ and for people with limitations ("Families would be great, also perfect for
 finding alternative exercises, and people with limitations"). The order
 (Glenn: "I'd go with C"): the movement first, then the attributes,
 
-    Movement — position, support, limbs, equipment, load, grip, velocity, plane
+    Movement — direction, position, support, limbs, equipment, attachment,
+               load, grip, velocity, plane
 
-as in *Split Squat — Rear-Foot-Elevated, Dumbbell* or *Pull-Up — Bodyweight,
-Supinated-Grip* (common name: chin-up). Velocity is named only when it is not
+as in *Split Squat — Rear-Foot-Elevated, Dumbbell*, *Pull-Up — Bodyweight,
+Supinated-Grip* (common name: chin-up), *Lunge — Reverse, Dumbbell* or
+*Triceps Pushdown — Cable, Rope*. The direction comes first (Glenn: "First")
+and the attachment right after the equipment ("After the equipment"), both
+from the ideas audit. Velocity is named only when it is not
 that movement's usual (Glenn: "name the velocity only when it differs from the
 exercise's usual"): *Swing — Kettlebell*, not "Ballistic". Equipment is
 always named, except Bodyweight in a family that is only ever bodyweight, and
-where the movement's own name already says it (*Leg Press*, *Box Jump*). The
+where the movement's own name already says it (*Leg Press*, *Box Jump*); a
+support the movement's name already says is left out too (*Wall Sit*). The
 rules and their words are in `server/coach-iq.js`, shared by the checker and,
 later, by Billy.
+
+From the ideas audit (Glenn, 16 Oct 2026, all to build):
+
+- **Ids are permanent.** Every exercise has an `exr…` id and every family an
+  `exf…` id, Studio's kind of id with Glenn's tags (`server/ids.js`). A name
+  may change; an id never does. A renamed exercise keeps its old names in
+  `formerNames`, so a scan in the old words still finds it. An exercise is
+  retired (`status: "retired"`, with `replacedBy` when something takes its
+  place), never deleted, so old programs still find it.
+- **What a set is, is not a name.** A tempo, a pause, slow lowering, a partial
+  range and the weight are the program's to say. So the negative pull-up is a
+  pull-up done with slow lowering ("negative pull-up" is one of its names),
+  and the velocity words are only those that change the movement: Explosive,
+  Ballistic, Isometric, Jumping.
+- **How an exercise is counted**: reps, time, distance or calories (several
+  where a program might use either, the usual first), and whether the numbers
+  are per side. Weights are in **pounds** unless written otherwise (Glenn:
+  "Pounds (lb)"), and dumbbells and kettlebells are counted per hand.
+- **Level is the skill and strength an exercise needs, whatever the weight**
+  (Glenn: "Skill and strength"). How hard it is on the body is told by its
+  facts (high-impact, spinal-load …), not by its level.
+- **Equipment is worked out, not typed.** What an exercise needs comes from
+  its equipment, its support and its position (a seated dumbbell press needs
+  a bench; hanging needs a pull-up bar), plus anything its family always
+  needs. Only a particular piece (`piece`, such as "Low row machine") is
+  written by hand.
+- **Easier and harder.** Only the harder steps are written; the easier ones
+  are worked out from them. A step stays on the same equipment where the next
+  family has it, never goes down a level, and never loops; a bodyweight
+  version leads to its loaded siblings. Everything above beginner has a way
+  in from something easier.
+- **No two exercises answer to the same name**, ignoring capitals, hyphens
+  and plurals, across common names, other names and former names.
+- **Every exercise says where it came from and whether Glenn has passed it**:
+  `origin` (starter, book or trainer), `status` (draft, reviewed or retired)
+  and `reviewed` (the date). All 230 are drafts until he reviews them.
 
 ## The rules (Glenn, 16 Oct 2026)
 
@@ -151,16 +192,17 @@ later, by Billy.
 - `READ.md`: the books read into Coach IQ so far, for Glenn. Not shown to
   trainers and not given to Billy.
 - `exercises.json`: the exercise library, the list Billy will read: its
-  families (`movements`) and their versions (`exercises`), each version with
-  its attributes, one piece of equipment, common name, muscles, level, easier
-  and harder versions and cautions. Its id is its master name in lowercase.
-  The starter list (177 exercises drafted by Claude from general knowledge, 16
-  Oct 2026) became 109 families and 229 versions, one per piece of equipment;
-  for Glenn to review, and the books add to it.
+  families (`movements`, keyed by exf… id, with how they are usually counted
+  and anything they always need) and their versions (`exercises`, each with a
+  permanent exr… id, its attributes, common and other names, muscles, level,
+  harder steps, cautions, origin and review status). The starter list (177
+  exercises drafted by Claude, 16 Oct 2026) became 106 families and 230
+  versions after the ideas audit; for Glenn to review, and the books add to it.
 - `EXERCISES.md`: the same library as tables, for reading and review. Written
-  by `npm run iq`; never edited by hand. `npm run check-iq` fails when the
-  library has a word not on its lists, an easier or harder version that does
-  not exist, or when this page is behind.
+  by `npm run iq`; never edited by hand. `npm run check-iq` (and
+  `npm run check-docs`, which runs it) fails when an id, a word or a name is
+  wrong or shared, a harder step is missing, lower, or loops, something above
+  beginner has no way in, or this page is behind.
 - One file per topic, made from the first book's outline.
 
 Not to be confused with `NEURALBRAIN.md`, which is the project's own memory

@@ -1,5 +1,5 @@
-import crypto from "node:crypto";
 import { all, get, run } from "./db.js";
+import { insertWithNewId } from "./ids.js";
 
 /**
  * The equipment a trainer has: the first part of their personal memory
@@ -70,10 +70,11 @@ async function save(trainerId, kind, name, fields) {
     await run(`UPDATE coach_equipment SET name = ?, category = ?, has = ?, where_note = ?, source = ?, updated_at = ? WHERE id = ?`, [...row, had.id]);
     return had.id;
   }
-  const id = `eq_${crypto.randomUUID()}`;
-  await run(`INSERT INTO coach_equipment (id, trainer_id, kind, name_key, name, category, has, where_note, source, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [id, trainerId, kind, nameKey, ...row]);
-  return id;
+  /* Studio's kind of id, with Glenn's tag (ids.js). Rows made before it,
+     with an "eq_" id, keep theirs: an id is never changed. */
+  return insertWithNewId("equipment", (id) => run(
+    `INSERT INTO coach_equipment (id, trainer_id, kind, name_key, name, category, has, where_note, source, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [id, trainerId, kind, nameKey, ...row]));
 }
 
 /** A checklist answer: true, false, or null to take it back. */
