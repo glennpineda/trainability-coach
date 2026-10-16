@@ -3,7 +3,7 @@
 Written by `npm run iq` from `exercises.json`. Do not edit this page: change
 `exercises.json` and run it again.
 
-106 families, 230 versions (230 draft, 0 reviewed, 0 retired). Each version's master name is the
+106 families, 231 versions (231 draft, 0 reviewed, 0 retired). Each version's master name is the
 family, then its attributes in a fixed order: direction, position, support, limbs, equipment, attachment, load,
 grip, velocity, plane. An attribute at its usual setting is left out (standing, both sides, controlled), and so is
 equipment in a family that is only ever bodyweight. The common name is what most trainers call it.
@@ -38,7 +38,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Sit to Stand — Bench** | Sit to stand (chair stand) | quads, glutes; also core | Bench | reps | beginner |  | Squat — Box, Bodyweight; Squat — Bodyweight; Step-Up — Box, Bodyweight; Step-Up — Box, Dumbbell; Step-Up — Box, Kettlebell | knees |
+| **Sit to Stand — Bench** | Sit to stand (chair stand) | quads, glutes; also core | Flat bench | reps | beginner |  | Squat — Box, Bodyweight; Squat — Bodyweight; Step-Up — Box, Bodyweight; Step-Up — Box, Dumbbell; Step-Up — Box, Kettlebell | knees |
 
 ### Wall Sit
 
@@ -91,8 +91,8 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Hip Thrust — Bench, Barbell** | Hip thrust | glutes; also hamstrings, quads | Barbells and a rack + Bench | reps | intermediate | Glute Bridge; Glute Bridge — Single-Leg |  | lower-back |
-| **Hip Thrust — Bench, Dumbbell** | Dumbbell hip thrust | glutes; also hamstrings, quads | Dumbbells + Bench | reps | intermediate | Glute Bridge |  | lower-back |
+| **Hip Thrust — Bench, Barbell** | Hip thrust | glutes; also hamstrings, quads | Barbells and a rack + Flat bench | reps | intermediate | Glute Bridge; Glute Bridge — Single-Leg |  | lower-back |
+| **Hip Thrust — Bench, Dumbbell** | Dumbbell hip thrust | glutes; also hamstrings, quads | Dumbbells + Flat bench | reps | intermediate | Glute Bridge |  | lower-back |
 
 ### Pull-Through
 
@@ -137,7 +137,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Back Extension — Prone** | Back extension (hyperextension, 45-degree back extension) | lower back, glutes; also hamstrings | Back extension bench, Weight machines | reps | beginner | Bird Dog |  | lower-back, lying-face-down |
+| **Back Extension — Prone** | Back extension (hyperextension, 45-degree back extension) | lower back, glutes; also hamstrings | Back extension bench, Gym stations: a dip station, back extension or preacher bench | reps | beginner | Bird Dog |  | lower-back, lying-face-down |
 
 ## Lunge and single leg
 
@@ -149,9 +149,9 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Split Squat — Bodyweight** | Split squat | quads, glutes; also adductors | None | reps, per side | beginner | Split Squat — Suspension Trainer, Assisted | Split Squat — Rear-Foot-Elevated, Bodyweight; Lunge — Reverse, Bodyweight; Split Squat — Rear-Foot-Elevated, Dumbbell; Split Squat — Rear-Foot-Elevated, Kettlebell; Split Squat — Dumbbell; Split Squat — Kettlebell | knees, balance |
 | **Split Squat — Dumbbell** | Dumbbell split squat | quads, glutes; also adductors | Dumbbells | reps, per side | beginner | Split Squat — Suspension Trainer, Assisted; Split Squat — Bodyweight | Split Squat — Rear-Foot-Elevated, Bodyweight; Lunge — Reverse, Dumbbell | knees, balance |
 | **Split Squat — Kettlebell** | Kettlebell split squat | quads, glutes; also adductors | Kettlebells | reps, per side | beginner | Split Squat — Suspension Trainer, Assisted; Split Squat — Bodyweight | Split Squat — Rear-Foot-Elevated, Bodyweight; Lunge — Reverse, Kettlebell | knees, balance |
-| **Split Squat — Rear-Foot-Elevated, Bodyweight** | Rear-foot-elevated split squat (Bulgarian split squat) | quads, glutes; also adductors | Bench or Plyo box or step | reps, per side | intermediate | Split Squat — Bodyweight; Split Squat — Dumbbell; Split Squat — Kettlebell; Step-Up — Box, Bodyweight | Pistol Squat; Split Squat — Rear-Foot-Elevated, Dumbbell; Split Squat — Rear-Foot-Elevated, Kettlebell | knees, balance |
-| **Split Squat — Rear-Foot-Elevated, Dumbbell** | Dumbbell rear-foot-elevated split squat | quads, glutes; also adductors | Dumbbells, with Bench or Plyo box or step | reps, per side | intermediate | Split Squat — Bodyweight; Step-Up — Box, Dumbbell; Split Squat — Rear-Foot-Elevated, Bodyweight | Pistol Squat | knees, balance |
-| **Split Squat — Rear-Foot-Elevated, Kettlebell** | Kettlebell rear-foot-elevated split squat | quads, glutes; also adductors | Kettlebells, with Bench or Plyo box or step | reps, per side | intermediate | Split Squat — Bodyweight; Step-Up — Box, Kettlebell; Split Squat — Rear-Foot-Elevated, Bodyweight | Pistol Squat | knees, balance |
+| **Split Squat — Rear-Foot-Elevated, Bodyweight** | Rear-foot-elevated split squat (Bulgarian split squat) | quads, glutes; also adductors | Flat bench or Plyo box or step | reps, per side | intermediate | Split Squat — Bodyweight; Split Squat — Dumbbell; Split Squat — Kettlebell; Step-Up — Box, Bodyweight | Pistol Squat; Split Squat — Rear-Foot-Elevated, Dumbbell; Split Squat — Rear-Foot-Elevated, Kettlebell | knees, balance |
+| **Split Squat — Rear-Foot-Elevated, Dumbbell** | Dumbbell rear-foot-elevated split squat | quads, glutes; also adductors | Dumbbells, with Flat bench or Plyo box or step | reps, per side | intermediate | Split Squat — Bodyweight; Step-Up — Box, Dumbbell; Split Squat — Rear-Foot-Elevated, Bodyweight | Pistol Squat | knees, balance |
+| **Split Squat — Rear-Foot-Elevated, Kettlebell** | Kettlebell rear-foot-elevated split squat | quads, glutes; also adductors | Kettlebells, with Flat bench or Plyo box or step | reps, per side | intermediate | Split Squat — Bodyweight; Step-Up — Box, Kettlebell; Split Squat — Rear-Foot-Elevated, Bodyweight | Pistol Squat | knees, balance |
 | **Split Squat — Alternating, Bodyweight, Jumping** | Jumping lunge (split jump) | quads, glutes; also calves | None | reps, per side | advanced | Lunge — Walking, Bodyweight; Lunge — Walking, Dumbbell; Lunge — Walking, Kettlebell |  | knees, ankles, high-impact, balance |
 
 ### Step-Up
@@ -172,9 +172,9 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Lunge — Forward, Bodyweight** | Forward lunge | quads, glutes; also hamstrings | None | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Reverse, Dumbbell; Lunge — Reverse, Kettlebell | Lunge — Walking, Bodyweight; Lunge — Forward, Dumbbell; Lunge — Forward, Kettlebell | knees, balance |
 | **Lunge — Forward, Dumbbell** | Dumbbell forward lunge | quads, glutes; also hamstrings | Dumbbells | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Forward, Bodyweight | Lunge — Walking, Bodyweight | knees, balance |
 | **Lunge — Forward, Kettlebell** | Kettlebell forward lunge | quads, glutes; also hamstrings | Kettlebells | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Forward, Bodyweight | Lunge — Walking, Bodyweight | knees, balance |
-| **Lunge — Walking, Bodyweight** | Walking lunge | quads, glutes; also hamstrings, core | None | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Reverse, Dumbbell; Lunge — Reverse, Kettlebell; Lunge — Forward, Bodyweight; Lunge — Forward, Dumbbell; Lunge — Forward, Kettlebell | Split Squat — Alternating, Bodyweight, Jumping; Lunge — Walking, Dumbbell; Lunge — Walking, Kettlebell | knees, balance |
-| **Lunge — Walking, Dumbbell** | Dumbbell walking lunge | quads, glutes; also hamstrings, core | Dumbbells | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Walking, Bodyweight | Split Squat — Alternating, Bodyweight, Jumping | knees, balance |
-| **Lunge — Walking, Kettlebell** | Kettlebell walking lunge | quads, glutes; also hamstrings, core | Kettlebells | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Walking, Bodyweight | Split Squat — Alternating, Bodyweight, Jumping | knees, balance |
+| **Lunge — Walking, Bodyweight** | Walking lunge | quads, glutes; also hamstrings, core | Room to move: walking lunges, sprints | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Reverse, Dumbbell; Lunge — Reverse, Kettlebell; Lunge — Forward, Bodyweight; Lunge — Forward, Dumbbell; Lunge — Forward, Kettlebell | Split Squat — Alternating, Bodyweight, Jumping; Lunge — Walking, Dumbbell; Lunge — Walking, Kettlebell | knees, balance |
+| **Lunge — Walking, Dumbbell** | Dumbbell walking lunge | quads, glutes; also hamstrings, core | Dumbbells + Room to move: walking lunges, sprints | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Walking, Bodyweight | Split Squat — Alternating, Bodyweight, Jumping | knees, balance |
+| **Lunge — Walking, Kettlebell** | Kettlebell walking lunge | quads, glutes; also hamstrings, core | Kettlebells + Room to move: walking lunges, sprints | reps, per side | intermediate | Lunge — Reverse, Bodyweight; Lunge — Walking, Bodyweight | Split Squat — Alternating, Bodyweight, Jumping | knees, balance |
 | **Lunge — Lateral, Bodyweight** | Lateral lunge (side lunge) | adductors, quads, glutes | None | reps, per side | intermediate | Lateral Walk — Band | Cossack Squat — Bodyweight; Skater Jump; Lunge — Lateral, Dumbbell; Lunge — Lateral, Kettlebell | knees, hips |
 | **Lunge — Lateral, Dumbbell** | Dumbbell lateral lunge | adductors, quads, glutes | Dumbbells | reps, per side | intermediate | Lunge — Lateral, Bodyweight | Cossack Squat — Dumbbell | knees, hips |
 | **Lunge — Lateral, Kettlebell** | Kettlebell lateral lunge | adductors, quads, glutes | Kettlebells | reps, per side | intermediate | Lunge — Lateral, Bodyweight | Cossack Squat — Kettlebell | knees, hips |
@@ -186,9 +186,9 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Push-Up — Wall** | Wall push-up | chest, triceps; also front delts, core | None | reps | beginner |  | Push-Up — Incline | wrists, shoulders |
-| **Push-Up — Incline** | Incline push-up | chest, triceps; also front delts, core | Bench or Plyo box or step | reps | beginner | Push-Up — Wall | Push-Up; Push-Up — Close-Grip | wrists, shoulders |
+| **Push-Up — Incline** | Incline push-up | chest, triceps; also front delts, core | Flat bench or Plyo box or step | reps | beginner | Push-Up — Wall | Push-Up; Push-Up — Close-Grip | wrists, shoulders |
 | **Push-Up** | Push-up (press-up) | chest, triceps; also front delts, core | None | reps | intermediate | Push-Up — Incline; Chest Press — Suspension Trainer | Push-Up — Feet-Elevated; Pike Push-Up | wrists, shoulders, floor-transfer |
-| **Push-Up — Feet-Elevated** | Decline push-up | chest, front delts; also triceps, core | Bench or Plyo box or step | reps | advanced | Push-Up |  | wrists, shoulders, inverted, floor-transfer |
+| **Push-Up — Feet-Elevated** | Decline push-up | chest, front delts; also triceps, core | Flat bench or Plyo box or step | reps | advanced | Push-Up |  | wrists, shoulders, inverted, floor-transfer |
 | **Push-Up — Close-Grip** | Close-grip push-up (diamond push-up) | triceps, chest; also front delts, core | None | reps | intermediate | Push-Up — Incline |  | wrists, elbows, floor-transfer |
 
 ### Chest Press
@@ -200,17 +200,17 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Chest Press — Seated, Machine** | Machine chest press | chest, triceps; also front delts | Chest press machine, Weight machines | reps | beginner |  | Chest Press — Bench, Dumbbell; Chest Press — Incline Bench, Dumbbell; Dip — Parallel Bars | shoulders |
 | **Chest Press — Cable** | Cable chest press | chest, triceps; also front delts, core | Cables | reps | beginner |  | Chest Press — Bench, Dumbbell | shoulders |
 | **Chest Press — Supine, Dumbbell** | Dumbbell floor press | chest, triceps; also front delts | Dumbbells | reps | beginner |  | Chest Press — Bench, Dumbbell | elbows, lying-on-back, floor-transfer |
-| **Chest Press — Bench, Dumbbell** | Dumbbell bench press | chest, triceps; also front delts | Dumbbells + Bench | reps | beginner | Chest Press — Band; Chest Press — Seated, Machine; Chest Press — Cable; Chest Press — Supine, Dumbbell | Chest Press — Bench, Barbell | shoulders, lying-on-back |
-| **Chest Press — Incline Bench, Dumbbell** | Incline dumbbell press | chest, front delts; also triceps | Dumbbells + Bench | reps | beginner | Chest Press — Seated, Machine | Chest Press — Incline Bench, Barbell | shoulders |
-| **Chest Press — Bench, Barbell** | Barbell bench press | chest, triceps; also front delts | Barbells and a rack + Bench | reps | intermediate | Chest Press — Bench, Dumbbell |  | shoulders, elbows, lying-on-back, breath-hold |
-| **Chest Press — Incline Bench, Barbell** | Incline barbell press | chest, front delts; also triceps | Barbells and a rack + Bench | reps | intermediate | Chest Press — Incline Bench, Dumbbell |  | shoulders, breath-hold |
+| **Chest Press — Bench, Dumbbell** | Dumbbell bench press | chest, triceps; also front delts | Dumbbells + Flat bench | reps | beginner | Chest Press — Band; Chest Press — Seated, Machine; Chest Press — Cable; Chest Press — Supine, Dumbbell | Chest Press — Bench, Barbell | shoulders, lying-on-back |
+| **Chest Press — Incline Bench, Dumbbell** | Incline dumbbell press | chest, front delts; also triceps | Dumbbells + Adjustable bench (incline and decline) | reps | beginner | Chest Press — Seated, Machine | Chest Press — Incline Bench, Barbell | shoulders |
+| **Chest Press — Bench, Barbell** | Barbell bench press | chest, triceps; also front delts | Barbells and a rack + Flat bench | reps | intermediate | Chest Press — Bench, Dumbbell |  | shoulders, elbows, lying-on-back, breath-hold |
+| **Chest Press — Incline Bench, Barbell** | Incline barbell press | chest, front delts; also triceps | Barbells and a rack + Adjustable bench (incline and decline) | reps | intermediate | Chest Press — Incline Bench, Dumbbell |  | shoulders, breath-hold |
 
 ### Dip
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Dip — Parallel Bars** | Dip (parallel bar dip) | chest, triceps; also front delts | Weight machines | reps | advanced | Chest Press — Seated, Machine; Dip — Bench |  | shoulders, elbows |
-| **Dip — Bench** | Bench dip | triceps; also chest, front delts | Bench | reps | intermediate | Triceps Pushdown — Cable | Dip — Parallel Bars | shoulders, wrists |
+| **Dip — Parallel Bars** | Dip (parallel bar dip) | chest, triceps; also front delts | Gym stations: a dip station, back extension or preacher bench | reps | advanced | Chest Press — Seated, Machine; Dip — Bench |  | shoulders, elbows |
+| **Dip — Bench** | Bench dip | triceps; also chest, front delts | Flat bench | reps | intermediate | Triceps Pushdown — Cable | Dip — Parallel Bars | shoulders, wrists |
 
 ## Push, overhead
 
@@ -221,7 +221,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Overhead Press — Band** | Banded overhead press | front delts, side delts, triceps; also core | Resistance bands | reps | beginner |  | Overhead Press — Seated, Dumbbell | shoulders, overhead |
 | **Overhead Press — Half-Kneeling, Single-Arm, Landmine** | Landmine press (half-kneeling landmine press) | front delts, chest; also triceps, core | Landmine, Barbells and a rack | reps, per side | beginner |  | Overhead Press — Barbell; Overhead Press — Seated, Dumbbell | shoulders |
 | **Overhead Press — Seated, Machine** | Machine shoulder press | front delts, side delts, triceps | Shoulder press machine, Weight machines | reps | beginner |  | Overhead Press — Seated, Dumbbell | shoulders, overhead |
-| **Overhead Press — Seated, Dumbbell** | Seated dumbbell shoulder press | front delts, side delts, triceps; also upper back | Dumbbells + Bench | reps | beginner | Overhead Press — Band; Overhead Press — Half-Kneeling, Single-Arm, Landmine; Overhead Press — Seated, Machine | Overhead Press — Barbell; Arnold Press — Seated, Dumbbell; Overhead Press — Single-Arm, Kettlebell | shoulders, overhead |
+| **Overhead Press — Seated, Dumbbell** | Seated dumbbell shoulder press | front delts, side delts, triceps; also upper back | Dumbbells + Flat bench | reps | beginner | Overhead Press — Band; Overhead Press — Half-Kneeling, Single-Arm, Landmine; Overhead Press — Seated, Machine | Overhead Press — Barbell; Arnold Press — Seated, Dumbbell; Overhead Press — Single-Arm, Kettlebell | shoulders, overhead |
 | **Overhead Press — Single-Arm, Kettlebell** | Kettlebell press | front delts, side delts, triceps; also core | Kettlebells | reps, per side | intermediate | Overhead Press — Seated, Dumbbell |  | shoulders, wrists, overhead |
 | **Overhead Press — Barbell** | Standing barbell overhead press (military press, OHP) | front delts, side delts, triceps; also core, upper back | Barbells and a rack | reps | intermediate | Overhead Press — Half-Kneeling, Single-Arm, Landmine; Overhead Press — Seated, Dumbbell |  | shoulders, lower-back, overhead, spinal-load, breath-hold |
 
@@ -229,7 +229,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Arnold Press — Seated, Dumbbell** | Arnold press | front delts, side delts; also triceps | Dumbbells + Bench | reps | intermediate | Overhead Press — Seated, Dumbbell |  | shoulders, overhead |
+| **Arnold Press — Seated, Dumbbell** | Arnold press | front delts, side delts; also triceps | Dumbbells + Flat bench | reps | intermediate | Overhead Press — Seated, Dumbbell |  | shoulders, overhead |
 
 ### Pike Push-Up
 
@@ -250,12 +250,12 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Row — Band** | Banded row | upper back, lats; also biceps, rear delts | Resistance bands | reps | beginner |  | Row — Seated, Cable; Row — Bent-Over, Bench, Single-Arm, Dumbbell; Row — Bent-Over, Bench, Single-Arm, Kettlebell |  |
-| **Row — Suspension Trainer** | Suspension row (TRX row) | upper back, lats; also biceps, rear delts, core | Suspension trainer (TRX) | reps | beginner |  | Inverted Row — Barbell |  |
+| **Row — Suspension Trainer** | Suspension row (TRX row) | upper back, lats; also biceps, rear delts, core | Suspension trainer (TRX) | reps | beginner |  | Inverted Row — Barbell; Inverted Row — Smith Machine |  |
 | **Row — Seated, Machine** | Low row machine (seated row machine) | upper back, lats; also biceps, rear delts | Low row machine, Weight machines | reps | beginner |  | Row — Bent-Over, Bench, Single-Arm, Dumbbell; Row — Bent-Over, Bench, Single-Arm, Kettlebell |  |
 | **Row — Seated, Cable** | Seated cable row | upper back, lats; also biceps, rear delts | Cables | reps | beginner | Row — Band | Row — Bent-Over, Barbell; Row — Bent-Over, Dumbbell |  |
-| **Row — Prone, Incline Bench, Dumbbell** | Chest-supported dumbbell row | upper back, lats; also biceps, rear delts | Dumbbells + Bench | reps | beginner |  | Row — Bent-Over, Barbell; Row — Bent-Over, Dumbbell | lying-face-down |
-| **Row — Bent-Over, Bench, Single-Arm, Dumbbell** | One-arm dumbbell row | lats, upper back; also biceps, rear delts | Dumbbells + Bench | reps, per side | beginner | Row — Band; Row — Seated, Machine | Row — Bent-Over, Barbell; Renegade Row — Alternating, Dumbbell | grip |
-| **Row — Bent-Over, Bench, Single-Arm, Kettlebell** | One-arm kettlebell row | lats, upper back; also biceps, rear delts | Kettlebells + Bench | reps, per side | beginner | Row — Band; Row — Seated, Machine | Row — Bent-Over, Barbell | grip |
+| **Row — Prone, Incline Bench, Dumbbell** | Chest-supported dumbbell row | upper back, lats; also biceps, rear delts | Dumbbells + Adjustable bench (incline and decline) | reps | beginner |  | Row — Bent-Over, Barbell; Row — Bent-Over, Dumbbell | lying-face-down |
+| **Row — Bent-Over, Bench, Single-Arm, Dumbbell** | One-arm dumbbell row | lats, upper back; also biceps, rear delts | Dumbbells + Flat bench | reps, per side | beginner | Row — Band; Row — Seated, Machine | Row — Bent-Over, Barbell; Renegade Row — Alternating, Dumbbell | grip |
+| **Row — Bent-Over, Bench, Single-Arm, Kettlebell** | One-arm kettlebell row | lats, upper back; also biceps, rear delts | Kettlebells + Flat bench | reps, per side | beginner | Row — Band; Row — Seated, Machine | Row — Bent-Over, Barbell | grip |
 | **Row — Bent-Over, Barbell** | Bent-over barbell row | upper back, lats; also biceps, lower back | Barbells and a rack | reps | intermediate | Row — Seated, Cable; Row — Prone, Incline Bench, Dumbbell; Row — Bent-Over, Bench, Single-Arm, Dumbbell; Row — Bent-Over, Bench, Single-Arm, Kettlebell |  | lower-back, grip |
 | **Row — Bent-Over, Dumbbell** | Bent-over dumbbell row | upper back, lats; also biceps, lower back | Dumbbells | reps | intermediate | Row — Seated, Cable; Row — Prone, Incline Bench, Dumbbell |  | lower-back, grip |
 
@@ -264,6 +264,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Inverted Row — Barbell** | Inverted row (bodyweight row, Australian pull-up) | upper back, lats; also biceps, core | Barbells and a rack | reps | intermediate | Row — Suspension Trainer | Pull-Up — Bodyweight |  |
+| **Inverted Row — Smith Machine** | Smith machine inverted row | upper back, lats; also biceps, core | Smith machine, Weight machines | reps | intermediate | Row — Suspension Trainer | Pull-Up — Bodyweight |  |
 
 ### Renegade Row
 
@@ -302,7 +303,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Pull-Up — Machine, Assisted** | Assisted pull-up | lats; also biceps, upper back | Assisted pull-up machine, Weight machines | reps | beginner | Lat Pulldown — Seated, Machine; Lat Pulldown — Seated, Cable | Pull-Up — Bodyweight; Pull-Up — Bodyweight, Supinated-Grip | shoulders |
 | **Pull-Up — Band, Assisted** | Banded assisted pull-up (band-assisted pull-up) | lats; also biceps, upper back | Resistance bands + Pull-up bar | reps | beginner | Lat Pulldown — Seated, Machine | Pull-Up — Bodyweight | shoulders |
 | **Pull-Up — Bodyweight, Supinated-Grip** | Chin-up | lats, biceps; also upper back, forearms | Pull-up bar | reps | intermediate | Pull-Up — Machine, Assisted | Pull-Up — Bodyweight | shoulders, elbows, grip |
-| **Pull-Up — Bodyweight** | Pull-up (negative pull-up) | lats; also biceps, upper back, forearms | Pull-up bar | reps | advanced | Inverted Row — Barbell; Lat Pulldown — Seated, Machine; Lat Pulldown — Seated, Cable; Pull-Up — Machine, Assisted; Pull-Up — Band, Assisted; Pull-Up — Bodyweight, Supinated-Grip |  | shoulders, elbows, grip |
+| **Pull-Up — Bodyweight** | Pull-up (negative pull-up) | lats; also biceps, upper back, forearms | Pull-up bar | reps | advanced | Inverted Row — Barbell; Inverted Row — Smith Machine; Lat Pulldown — Seated, Machine; Lat Pulldown — Seated, Cable; Pull-Up — Machine, Assisted; Pull-Up — Band, Assisted; Pull-Up — Bodyweight, Supinated-Grip |  | shoulders, elbows, grip |
 
 ### Scapular Pull-Up
 
@@ -348,7 +349,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Plank — Incline** | Incline plank | core; also front delts | Bench or Plyo box or step | time | beginner |  | Plank; Mountain Climber | shoulders |
+| **Plank — Incline** | Incline plank | core; also front delts | Flat bench or Plyo box or step | time | beginner |  | Plank; Mountain Climber | shoulders |
 | **Plank** | Plank (front plank, forearm plank) | core; also front delts, glutes | None | time | beginner | Dead Bug; Bird Dog; Plank — Incline | Renegade Row — Alternating, Dumbbell; Rollout — Kneeling, Stability Ball; Stir the Pot — Stability Ball | shoulders, breath-hold, floor-transfer |
 
 ### Hollow Hold
@@ -362,7 +363,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Rollout — Kneeling, Stability Ball** | Stability ball rollout | core; also lats, front delts | Stability ball | reps | intermediate | Plank | Rollout — Kneeling, Ab Wheel | lower-back, shoulders, floor-transfer |
-| **Rollout — Kneeling, Ab Wheel** | Ab wheel rollout | core; also lats, front delts | Ab wheel, Mats and foam rollers | reps | advanced | Rollout — Kneeling, Stability Ball |  | lower-back, shoulders, floor-transfer |
+| **Rollout — Kneeling, Ab Wheel** | Ab wheel rollout | core; also lats, front delts | Ab wheel, Small tools: an ab wheel, sliders, a jump rope, a foam roller | reps | advanced | Rollout — Kneeling, Stability Ball |  | lower-back, shoulders, floor-transfer |
 
 ### Stir the Pot
 
@@ -398,7 +399,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Copenhagen Plank — Bench** | Copenhagen plank | adductors, core, obliques | Bench | time, per side | advanced | Side Plank; Hip Adduction — Seated, Machine |  | knees, hips |
+| **Copenhagen Plank — Bench** | Copenhagen plank | adductors, core, obliques | Flat bench | time, per side | advanced | Side Plank; Hip Adduction — Seated, Machine |  | knees, hips |
 
 ## Core: bending
 
@@ -461,9 +462,9 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Fly — Bench, Dumbbell** | Dumbbell fly | chest; also front delts | Dumbbells + Bench | reps | intermediate | Fly — Seated, Machine |  | shoulders, lying-on-back |
+| **Fly — Bench, Dumbbell** | Dumbbell fly | chest; also front delts | Dumbbells + Flat bench | reps | intermediate | Fly — Seated, Machine |  | shoulders, lying-on-back |
 | **Fly — Cable** | Cable fly (cable crossover) | chest; also front delts | Cables | reps | beginner |  |  | shoulders |
-| **Fly — Seated, Machine** | Pec deck (machine fly) | chest; also front delts | Pec deck machine, Weight machines | reps | beginner |  | Fly — Bench, Dumbbell | shoulders |
+| **Fly — Seated, Machine** | Pec deck (machine fly) | chest; also front delts | Pec deck, Weight machines | reps | beginner |  | Fly — Bench, Dumbbell | shoulders |
 
 ### Reverse Fly
 
@@ -482,7 +483,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Pullover — Supine, Bench, Dumbbell** | Dumbbell pullover | lats, chest; also triceps | Dumbbells + Bench | reps | intermediate | Straight-Arm Pulldown — Cable |  | shoulders, lying-on-back, overhead |
+| **Pullover — Supine, Bench, Dumbbell** | Dumbbell pullover | lats, chest; also triceps | Dumbbells + Flat bench | reps | intermediate | Straight-Arm Pulldown — Cable |  | shoulders, lying-on-back, overhead |
 
 ### Curl
 
@@ -493,8 +494,8 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Curl — Band** | Banded curl | biceps | Resistance bands | reps | beginner |  | Curl — Dumbbell | elbows |
 | **Curl — Cable** | Cable curl | biceps; also forearms | Cables | reps | beginner |  |  | elbows |
 | **Curl — Barbell** | Barbell curl | biceps; also forearms | Barbells and a rack | reps | intermediate | Curl — Dumbbell |  | elbows, wrists |
-| **Curl — Seated, Preacher Bench, Machine** | Preacher curl | biceps | Preacher curl bench, Weight machines | reps | beginner |  |  | elbows |
-| **Curl — Seated, Preacher Bench, Dumbbell** | Dumbbell preacher curl | biceps | Dumbbells + Weight machines | reps | beginner |  |  | elbows |
+| **Curl — Seated, Preacher Bench, Machine** | Preacher curl | biceps | Preacher curl bench, Weight machines + Gym stations: a dip station, back extension or preacher bench | reps | beginner |  |  | elbows |
+| **Curl — Seated, Preacher Bench, Dumbbell** | Dumbbell preacher curl | biceps | Dumbbells + Gym stations: a dip station, back extension or preacher bench | reps | beginner |  |  | elbows |
 
 ### Triceps Pushdown
 
@@ -511,8 +512,8 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Triceps Extension — Dumbbell, Overhead** | Overhead triceps extension | triceps | Dumbbells | reps | intermediate | Triceps Pushdown — Cable |  | elbows, shoulders, overhead |
 | **Triceps Extension — Cable, Overhead** | Cable overhead triceps extension | triceps | Cables | reps | intermediate | Triceps Pushdown — Cable |  | elbows, shoulders, overhead |
 | **Triceps Extension — Band, Overhead** | Banded overhead triceps extension | triceps | Resistance bands | reps | intermediate | Triceps Pushdown — Band |  | elbows, shoulders, overhead |
-| **Triceps Extension — Supine, Bench, Barbell** | Skull crusher (lying triceps extension) | triceps | Barbells and a rack + Bench | reps | intermediate | Triceps Pushdown — Cable |  | elbows, lying-on-back |
-| **Triceps Extension — Supine, Bench, Dumbbell** | Dumbbell skull crusher | triceps | Dumbbells + Bench | reps | intermediate | Triceps Pushdown — Cable |  | elbows, lying-on-back |
+| **Triceps Extension — Supine, Bench, Barbell** | Skull crusher (lying triceps extension) | triceps | Barbells and a rack + Flat bench | reps | intermediate | Triceps Pushdown — Cable |  | elbows, lying-on-back |
+| **Triceps Extension — Supine, Bench, Dumbbell** | Dumbbell skull crusher | triceps | Dumbbells + Flat bench | reps | intermediate | Triceps Pushdown — Cable |  | elbows, lying-on-back |
 
 ### Lateral Raise
 
@@ -568,7 +569,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | **Calf Raise — Single-Leg, Bodyweight** | Single-leg calf raise | calves | None | reps, per side | intermediate | Calf Raise — Bodyweight; Calf Raise — Dumbbell; Calf Raise — Machine | Calf Raise — Single-Leg, Dumbbell | ankles, balance |
 | **Calf Raise — Single-Leg, Dumbbell** | Dumbbell single-leg calf raise | calves | Dumbbells | reps, per side | intermediate | Calf Raise — Bodyweight; Calf Raise — Single-Leg, Bodyweight |  | ankles, balance |
 | **Calf Raise — Seated, Machine** | Seated calf raise | calves | Seated calf machine, Weight machines | reps | beginner |  |  | ankles |
-| **Calf Raise — Seated, Dumbbell** | Dumbbell seated calf raise | calves | Dumbbells + Bench | reps | beginner |  |  | ankles |
+| **Calf Raise — Seated, Dumbbell** | Dumbbell seated calf raise | calves | Dumbbells + Flat bench | reps | beginner |  |  | ankles |
 
 ### Hip Abduction
 
@@ -696,7 +697,7 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Walk — Treadmill** | Treadmill walk (walking) | quads, calves; also glutes | Treadmill, Cardio machines | time or distance | beginner |  | Walk — Incline, Treadmill; Run — Treadmill |  |
-| **Walk — Incline, Treadmill** | Incline walk | glutes, calves; also hamstrings | Treadmill, Cardio machines, with Bench or Plyo box or step | time or distance | beginner | Walk — Treadmill | Stair Climber | ankles |
+| **Walk — Incline, Treadmill** | Incline walk | glutes, calves; also hamstrings | Treadmill, Cardio machines, with Flat bench or Plyo box or step | time or distance | beginner | Walk — Treadmill | Stair Climber | ankles |
 
 ### Run
 
@@ -807,4 +808,4 @@ is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Foam Rolling** | Foam rolling (self-massage) | quads, hamstrings, upper back; also calves, glutes | Mats and foam rollers | time | beginner |  |  | floor-transfer |
+| **Foam Rolling** | Foam rolling (self-massage) | quads, hamstrings, upper back; also calves, glutes | Small tools: an ab wheel, sliders, a jump rope, a foam roller | time | beginner |  |  | floor-transfer |

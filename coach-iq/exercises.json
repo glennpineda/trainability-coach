@@ -70,7 +70,10 @@
   "exf159vci167": {
    "label": "Back Extension",
    "pattern": "hinge",
-   "implementInName": true
+   "implementInName": true,
+   "needs": [
+    "stations"
+   ]
   },
   "exf355fyl622": {
    "label": "Split Squat",
@@ -894,7 +897,7 @@
    "attributes": {
     "implement": "Landmine"
    },
-   "piece": "Landmine",
+   "piece": "landmine",
    "primary": [
     "quads",
     "glutes"
@@ -925,7 +928,7 @@
    "attributes": {
     "implement": "Machine"
    },
-   "piece": "Leg press machine",
+   "piece": "leg-press-machine",
    "primary": [
     "quads",
     "glutes"
@@ -959,7 +962,7 @@
    "attributes": {
     "implement": "Smith Machine"
    },
-   "piece": "Smith machine",
+   "piece": "smith-machine",
    "primary": [
     "quads",
     "glutes"
@@ -993,7 +996,7 @@
    "attributes": {
     "implement": "Machine"
    },
-   "piece": "Hack squat machine",
+   "piece": "hack-squat-machine",
    "primary": [
     "quads"
    ],
@@ -1696,7 +1699,7 @@
    "attributes": {
     "implement": "Trap Bar"
    },
-   "piece": "Trap bar",
+   "piece": "trap-bar",
    "primary": [
     "glutes",
     "quads",
@@ -1869,9 +1872,9 @@
    "movement": "exf159vci167",
    "attributes": {
     "position": "Prone",
-    "implement": "Machine"
+    "implement": "Bodyweight"
    },
-   "piece": "Back extension bench",
+   "piece": "back-extension-bench",
    "primary": [
     "lower back",
     "glutes"
@@ -2858,7 +2861,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Chest press machine",
+   "piece": "chest-press-machine",
    "primary": [
     "chest",
     "triceps"
@@ -3178,7 +3181,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Pec deck machine",
+   "piece": "pec-deck",
    "primary": [
     "chest"
    ],
@@ -3245,7 +3248,7 @@
     "limbs": "Single-Arm",
     "implement": "Landmine"
    },
-   "piece": "Landmine",
+   "piece": "landmine",
    "primary": [
     "front delts",
     "chest"
@@ -3279,7 +3282,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Shoulder press machine",
+   "piece": "shoulder-press-machine",
    "primary": [
     "front delts",
     "side delts",
@@ -3561,7 +3564,8 @@
    ],
    "level": "beginner",
    "harder": [
-    "exr783rpx793"
+    "exr783rpx793",
+    "exr732cra944"
    ],
    "cautions": {
     "joints": [],
@@ -3583,7 +3587,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Low row machine",
+   "piece": "low-row-machine",
    "primary": [
     "upper back",
     "lats"
@@ -3770,6 +3774,36 @@
    "origin": "starter",
    "status": "draft",
    "reviewed": null
+  },
+  {
+   "id": "exr732cra944",
+   "name": "Smith machine inverted row",
+   "aliases": [],
+   "formerNames": [],
+   "movement": "exf022maf979",
+   "attributes": {
+    "implement": "Smith Machine"
+   },
+   "primary": [
+    "upper back",
+    "lats"
+   ],
+   "secondary": [
+    "biceps",
+    "core"
+   ],
+   "level": "intermediate",
+   "harder": [
+    "exr196pqa113"
+   ],
+   "cautions": {
+    "joints": [],
+    "flags": []
+   },
+   "origin": "starter",
+   "status": "draft",
+   "reviewed": null,
+   "piece": "smith-machine"
   },
   {
    "id": "exr376sbd398",
@@ -4021,7 +4055,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Lat pulldown",
+   "piece": "lat-pulldown",
    "primary": [
     "lats"
    ],
@@ -4168,7 +4202,7 @@
     "implement": "Machine",
     "load": "Assisted"
    },
-   "piece": "Assisted pull-up machine",
+   "piece": "assisted-pull-up-machine",
    "primary": [
     "lats"
    ],
@@ -4984,7 +5018,7 @@
     "position": "Kneeling",
     "implement": "Ab Wheel"
    },
-   "piece": "Ab wheel",
+   "piece": "ab-wheel",
    "primary": [
     "core"
    ],
@@ -5535,7 +5569,7 @@
     "support": "Preacher Bench",
     "implement": "Machine"
    },
-   "piece": "Preacher curl bench",
+   "piece": "preacher-bench",
    "primary": [
     "biceps"
    ],
@@ -5972,7 +6006,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Lateral raise machine",
+   "piece": "lateral-raise-machine",
    "primary": [
     "side delts"
    ],
@@ -6133,7 +6167,7 @@
    "attributes": {
     "implement": "Machine"
    },
-   "piece": "Leg extension machine",
+   "piece": "leg-extension-machine",
    "primary": [
     "quads"
    ],
@@ -6160,7 +6194,7 @@
     "position": "Prone",
     "implement": "Machine"
    },
-   "piece": "Lying leg curl machine",
+   "piece": "lying-leg-curl-machine",
    "primary": [
     "hamstrings"
    ],
@@ -6191,7 +6225,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Seated leg curl machine",
+   "piece": "seated-leg-curl-machine",
    "primary": [
     "hamstrings"
    ],
@@ -6427,7 +6461,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Seated calf machine",
+   "piece": "seated-calf-machine",
    "primary": [
     "calves"
    ],
@@ -6480,7 +6514,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Hip abduction machine",
+   "piece": "hip-abduction-machine",
    "primary": [
     "abductors",
     "glutes"
@@ -6508,7 +6542,7 @@
     "position": "Seated",
     "implement": "Machine"
    },
-   "piece": "Hip adduction machine",
+   "piece": "hip-adduction-machine",
    "primary": [
     "adductors"
    ],
@@ -7262,7 +7296,7 @@
    "attributes": {
     "implement": "Treadmill"
    },
-   "piece": "Treadmill",
+   "piece": "treadmill",
    "primary": [
     "quads",
     "calves"
@@ -7293,7 +7327,7 @@
     "support": "Incline",
     "implement": "Treadmill"
    },
-   "piece": "Treadmill",
+   "piece": "treadmill",
    "primary": [
     "glutes",
     "calves"
@@ -7326,7 +7360,7 @@
    "attributes": {
     "implement": "Treadmill"
    },
-   "piece": "Treadmill",
+   "piece": "treadmill",
    "primary": [
     "quads",
     "calves"
@@ -7363,7 +7397,7 @@
    "attributes": {
     "implement": "Stationary Bike"
    },
-   "piece": "Stationary bike",
+   "piece": "stationary-bike",
    "primary": [
     "quads"
    ],
@@ -7396,7 +7430,7 @@
    "attributes": {
     "implement": "Air Bike"
    },
-   "piece": "Air bike",
+   "piece": "air-bike",
    "primary": [
     "quads",
     "front delts"
@@ -7427,7 +7461,7 @@
    "attributes": {
     "implement": "Elliptical"
    },
-   "piece": "Elliptical",
+   "piece": "elliptical",
    "primary": [
     "quads",
     "glutes"
@@ -7460,7 +7494,7 @@
    "attributes": {
     "implement": "Rowing Machine"
    },
-   "piece": "Rowing machine",
+   "piece": "rowing-machine",
    "primary": [
     "lats",
     "upper back",
@@ -7496,7 +7530,7 @@
    "attributes": {
     "implement": "Stair Climber"
    },
-   "piece": "Stair climber",
+   "piece": "stair-climber",
    "primary": [
     "glutes",
     "quads"
@@ -7525,7 +7559,7 @@
    "attributes": {
     "implement": "Ski Erg"
    },
-   "piece": "Ski erg",
+   "piece": "ski-erg",
    "primary": [
     "lats",
     "triceps",

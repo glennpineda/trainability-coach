@@ -28,7 +28,8 @@ _From the ideas audit of Coach IQ (16 Oct 2026). Glenn went through all 25 one
 by one the same day: all 25 to build, none parked or dropped. Numbers are the
 audit's; sizes are the auditor's (S an hour or two, M a day or so). Grouped
 into batches in building order; each item is struck from here as it is built.
-Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4._
+Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4. Batch B (6, 18,
+19, 20) is built: build 1.0.5._
 
 **Record ids, Studio's way.** Every new record id is a 3-letter tag, 3 digits,
 3 letters, 3 digits, lowercase (Studio's `server/db.js`, `newId`), with the tag
@@ -37,24 +38,6 @@ exercise (a trainer's private exercise shares it), **exf** an exercise family,
 **eqp** an equipment answer (replacing the made-up `eq_` ids), **exx** a
 trainer's own name for an exercise, **tpl** a trainer's own place, **lim** a
 client's limitation. Any other new kind means asking him first.
-
-Batch B — the equipment memory, before trainers fill it in:
-
-19. **Fix the checklist's kinds before they are fixed forever** (S): benches
-    are not machines; flat or adjustable bench; ab wheel and foam roller out
-    of mats; the inverted row by bar, Smith machine or TRX; add a dip station,
-    sliders, a jump rope, battle ropes, a weighted vest or sandbag, and room
-    to move.
-6. **One fixed list of particular pieces** (S), each with its kind and other
-   names, shared by the library and My equipment, the trainer's own wording
-   kept beside it.
-18. **Equipment per place inside the trainer's memory** (M). A trainer names
-    places (tpl…: the studio, a client's home, the park, online) and answers
-    the checklist for each; a program picks its place. Equipment stays the
-    trainer's (Glenn's earlier decision).
-20. **Billy never silently overwrites a trainer's own answer** (S). He says so
-    and confirms ("you'd told me no; changing to yes"), earlier answers are
-    kept in a history, and "not answered" is unknown, not no.
 
 Batch C — library content (a starter set now; the books refine it):
 

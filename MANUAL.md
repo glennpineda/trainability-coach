@@ -299,24 +299,35 @@ and light otherwise. There is nothing to set in the app.
 
 ### 3.7 My equipment
 
-Coach keeps a list of the equipment you have, so Billy suggests exercises you
-can actually do. It is yours alone: nobody else sees it.
+Coach keeps a list of the equipment you have, place by place, so Billy suggests
+exercises you can actually do where you are training. It is yours alone:
+nobody else sees it.
 
 1. Tap your photo or initials in the top right corner, then **My equipment**.
-2. Under **The basics**, answer each line — **Dumbbells**, **Barbells and a
-   rack**, **Kettlebells**, **Weight machines** and so on — by tapping **Yes**
-   or **No**. Your answer is saved as you tap. To take an answer back, tap it
-   again.
-3. Under **Particular pieces** are machines and other pieces a program has
-   asked about, such as a low row machine. Each says what kind it is, and where
-   it is if you said. Tap **Yes** or **No** to change whether you have it, or
-   the bin to remove it.
-4. To add a piece yourself, fill in **Add a piece** at the bottom: its name,
-   **What kind is it?**, where it is if you like, and **Do you have it?** Then
-   tap **Add**.
+2. Across the top are your places. You start with one, **Where I usually
+   train**. Tap a place to see its equipment.
+   - To add one, such as a client's home or the park, tap **+ Add a place**,
+     type its name and tap the tick.
+   - To change a place's name, choose it and tap **Rename**.
+   - To put a place away, choose it and tap **Remove this place**. You always
+     keep at least one.
+3. Under **The basics**, answer each line for the place you chose —
+   **Dumbbells**, **Barbells and a rack**, **A flat bench**, **An adjustable
+   bench (incline and decline)**, **Room to move** and so on — by tapping
+   **Yes** or **No**. Your answer is saved as you tap. To take an answer back,
+   tap it again. An adjustable bench counts as a flat bench too.
+4. Under **Particular pieces** are machines and other pieces a program has
+   asked about, such as a low row machine. Each says what kind it is, and your
+   note if you wrote one. Tap **Yes** or **No** to change whether you have it,
+   or the bin to remove it.
+5. To add a piece yourself, fill in **Add a piece** at the bottom: its name,
+   **What kind is it?**, a note if you like, and **Do you have it?** Then tap
+   **Add**. Coach knows many pieces by name, whatever you call them — a
+   "gravitron" is the assisted pull-up machine — and fills in the kind for you.
 
 A piece Billy wrote down from something you told him says **Noted by Billy**.
-Change or remove it here like any other.
+Change or remove it here like any other. If Billy is told something different
+from an answer you gave yourself, he asks you before changing it.
 
 <div style="page-break-after: always;"></div>
 
@@ -471,7 +482,9 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 - **He changes nothing, apart from noting your equipment.** When you tell him
   what you have — "there's no low row machine" — he writes it down on your
-  equipment list (3.7), marked **Noted by Billy**. Otherwise he cannot add or
+  equipment list (3.7), marked **Noted by Billy**. If you have more than one
+  place, he asks which. If you had given a different answer yourself, he
+  tells you what you had said and changes it only if you say so. Otherwise he cannot add or
   change a client, book or cancel a session, send a message or charge anybody.
   Clients are added and changed in Studio (4.6).
 - **He only knows your own clients**, the same people as on your Clients page.

@@ -102,6 +102,40 @@ const SCHEMA = [
     updated_at VARCHAR(32) NOT NULL,
     UNIQUE (trainer_id, kind, name_key)
   )`,
+  /* Places inside a trainer's memory (ideas audit, 18), and their equipment
+     answers, which replace coach_equipment above: its rows are moved into
+     each trainer's first place on start (equipment.js, adoptOldAnswers) and
+     it is otherwise left alone. */
+  `CREATE TABLE IF NOT EXISTS coach_places (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    name VARCHAR(80) NOT NULL,
+    archived INTEGER NOT NULL DEFAULT 0,
+    created_at VARCHAR(32) NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS coach_place_equipment (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    place_id VARCHAR(40) NOT NULL,
+    kind VARCHAR(16) NOT NULL,
+    name_key VARCHAR(120) NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    category VARCHAR(40) NOT NULL,
+    piece_key VARCHAR(40) NOT NULL DEFAULT '',
+    has INTEGER NOT NULL,
+    note VARCHAR(200) NOT NULL DEFAULT '',
+    source VARCHAR(16) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL,
+    UNIQUE (place_id, kind, name_key)
+  )`,
+  /* Every change to an answer, so a correction is never a loss (ideas
+     audit, 20). has is 1, 0, or -1 for taken back. */
+  `CREATE TABLE IF NOT EXISTS coach_equipment_history (
+    equipment_id VARCHAR(40) NOT NULL,
+    changed_at VARCHAR(32) NOT NULL,
+    has INTEGER NOT NULL,
+    source VARCHAR(16) NOT NULL
+  )`,
 ];
 
 export async function migrate() {

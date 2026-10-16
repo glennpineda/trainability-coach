@@ -101,18 +101,72 @@ export const MEASURES = ["reps", "time", "distance", "calories"];
 export const ORIGINS = ["starter", "book", "trainer"];
 export const STATUSES = ["draft", "reviewed", "retired"];
 
+/**
+ * The particular pieces of equipment Coach knows by name (ideas audit, 6),
+ * shared by the library (an exercise's `piece`) and a trainer's equipment, so
+ * "gravitron" and "Assisted pull-up machine" are the same piece. Each belongs
+ * to one checklist kind. Keys are kept forever; labels and other names may
+ * grow.
+ */
+export const PIECES = {
+  "low-row-machine": { label: "Low row machine", kind: "machines", aliases: ["seated row machine", "seated row"] },
+  "leg-press-machine": { label: "Leg press machine", kind: "machines", aliases: ["leg press", "leg sled"] },
+  "hack-squat-machine": { label: "Hack squat machine", kind: "machines", aliases: ["hack squat"] },
+  "smith-machine": { label: "Smith machine", kind: "machines", aliases: ["smith rack"] },
+  "chest-press-machine": { label: "Chest press machine", kind: "machines", aliases: ["chest press"] },
+  "pec-deck": { label: "Pec deck", kind: "machines", aliases: ["pec deck machine", "pec fly machine", "fly machine", "rear delt machine"] },
+  "shoulder-press-machine": { label: "Shoulder press machine", kind: "machines", aliases: ["shoulder press"] },
+  "lat-pulldown": { label: "Lat pulldown", kind: "machines", aliases: ["lat pulldown machine", "pulldown machine", "lat machine"] },
+  "assisted-pull-up-machine": { label: "Assisted pull-up machine", kind: "machines", aliases: ["gravitron", "assisted pull-up", "assisted dip machine"] },
+  "lateral-raise-machine": { label: "Lateral raise machine", kind: "machines", aliases: ["side raise machine"] },
+  "leg-extension-machine": { label: "Leg extension machine", kind: "machines", aliases: ["leg extension"] },
+  "lying-leg-curl-machine": { label: "Lying leg curl machine", kind: "machines", aliases: ["lying leg curl", "prone leg curl"] },
+  "seated-leg-curl-machine": { label: "Seated leg curl machine", kind: "machines", aliases: ["seated leg curl"] },
+  "seated-calf-machine": { label: "Seated calf machine", kind: "machines", aliases: ["seated calf raise", "calf machine"] },
+  "hip-abduction-machine": { label: "Hip abduction machine", kind: "machines", aliases: ["abductor machine", "outer thigh machine"] },
+  "hip-adduction-machine": { label: "Hip adduction machine", kind: "machines", aliases: ["adductor machine", "inner thigh machine"] },
+  "cable-station": { label: "Cable station", kind: "cables", aliases: ["cable machine", "cable crossover", "functional trainer", "cable row station", "cable tower"] },
+  "preacher-bench": { label: "Preacher curl bench", kind: "stations", aliases: ["preacher bench", "preacher curl"] },
+  "back-extension-bench": { label: "Back extension bench", kind: "stations", aliases: ["hyperextension bench", "45 degree back extension", "roman chair", "back extension"] },
+  "dip-station": { label: "Dip station", kind: "stations", aliases: ["dip bars", "parallel bars", "dip stand"] },
+  "landmine": { label: "Landmine", kind: "barbells", aliases: ["landmine attachment"] },
+  "trap-bar": { label: "Trap bar", kind: "barbells", aliases: ["hex bar"] },
+  "ab-wheel": { label: "Ab wheel", kind: "smalltools", aliases: ["ab roller"] },
+  "sliders": { label: "Sliders", kind: "smalltools", aliases: ["gliders", "slider discs"] },
+  "jump-rope": { label: "Jump rope", kind: "smalltools", aliases: ["skipping rope"] },
+  "foam-roller": { label: "Foam roller", kind: "smalltools", aliases: [] },
+  "treadmill": { label: "Treadmill", kind: "cardio", aliases: [] },
+  "stationary-bike": { label: "Stationary bike", kind: "cardio", aliases: ["exercise bike", "spin bike", "upright bike", "recumbent bike"] },
+  "air-bike": { label: "Air bike", kind: "cardio", aliases: ["assault bike", "fan bike", "echo bike"] },
+  "elliptical": { label: "Elliptical", kind: "cardio", aliases: ["cross trainer"] },
+  "rowing-machine": { label: "Rowing machine", kind: "cardio", aliases: ["rower", "erg", "rowing ergometer", "concept2"] },
+  "stair-climber": { label: "Stair climber", kind: "cardio", aliases: ["stairmaster", "stepmill"] },
+  "ski-erg": { label: "Ski erg", kind: "cardio", aliases: ["skierg"] },
+};
+
+/** The piece a name means, by its label or any of its other names; or null. */
+export function pieceFor(name) {
+  const key = nameKey(name);
+  for (const [k, p] of Object.entries(PIECES)) {
+    if ([p.label, ...p.aliases].some(n => nameKey(n) === key)) return k;
+  }
+  return null;
+}
+
 /* The equipment checklist kind (server/equipment.js) each piece of equipment
    and each support needs. Worked out, never typed (ideas audit, 5). */
 const IMPLEMENT_KIND = {
   "Dumbbell": "dumbbells", "Kettlebell": "kettlebells", "Barbell": "barbells", "Trap Bar": "barbells", "Landmine": "barbells",
   "Smith Machine": "machines", "Machine": "machines", "Cable": "cables", "Band": "bands", "Suspension Trainer": "suspension",
-  "Medicine Ball": "medball", "Stability Ball": "stabilityball", "Ab Wheel": "mat", "Sled": "sled", "Foam Roller": "mat",
+  "Medicine Ball": "medball", "Stability Ball": "stabilityball", "Ab Wheel": "smalltools", "Sled": "sled", "Foam Roller": "smalltools",
   "Treadmill": "cardio", "Stationary Bike": "cardio", "Air Bike": "cardio", "Elliptical": "cardio", "Rowing Machine": "cardio",
   "Stair Climber": "cardio", "Ski Erg": "cardio", "Plyo Box": "box",
 };
+/* An incline or decline needs an adjustable bench; benches and bars that are
+   stations, not machines, are stations (ideas audit, 19). */
 const SUPPORT_NEEDS = {
-  "Bench": ["bench"], "Incline Bench": ["bench"], "Decline Bench": ["bench"], "Preacher Bench": ["machines"],
-  "Box": ["box"], "Deficit": ["box"], "Parallel Bars": ["machines"], "Stability Ball": ["stabilityball"],
+  "Bench": ["bench"], "Incline Bench": ["benchadjustable"], "Decline Bench": ["benchadjustable"], "Preacher Bench": ["stations"],
+  "Box": ["box"], "Deficit": ["box"], "Parallel Bars": ["stations"], "Stability Ball": ["stabilityball"],
 };
 const SUPPORT_ONE_OF = { "Incline": ["bench", "box"], "Feet-Elevated": ["bench", "box"], "Rear-Foot-Elevated": ["bench", "box"] };
 const FREE = new Set(["Dumbbell", "Kettlebell", "Barbell", "Band", "Medicine Ball"]);
@@ -128,6 +182,8 @@ export function equipmentFor(x, family) {
   if (kind) needs.add(kind);
   for (const k of SUPPORT_NEEDS[a.support] || []) needs.add(k);
   if (a.position === "Hanging") needs.add("pullup");
+  /* Walking lunges and the like need room to move. */
+  if (a.direction === "Walking") needs.add("space");
   /* Seated with a free weight wants something to sit on. */
   if (a.position === "Seated" && FREE.has(a.implement) && !a.support) needs.add("bench");
   /* What the family itself always needs, such as a pull-up bar, unless a

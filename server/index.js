@@ -170,18 +170,50 @@ app.get("/api/equipment", asSignedIn("GET /equipment", async (_req, res, user) =
   res.json(await equipment.equipmentOf(user.id));
 }));
 
-app.put("/api/equipment/categories/:key", asSignedIn("PUT /equipment/categories", async (req, res, user) => {
-  const has = req.body?.has;
-  if (!equipment.isCategory(req.params.key)) return res.status(404).json({ error: "Not found", code: "not_found" });
-  if (has !== true && has !== false && has !== null) return res.status(400).json({ error: "Say yes, no, or not answered.", code: "invalid" });
-  await equipment.setCategory(user.id, req.params.key, has);
+/* A place of the trainer's own, or a 404: never another trainer's. */
+const ownPlace = async (req, res, user) => {
+  const place = await equipment.placeOf(user.id, req.params.place);
+  if (!place) res.status(404).json({ error: "Not found", code: "not_found" });
+  return place;
+};
+
+app.post("/api/places", asSignedIn("POST /places", async (req, res, user) => {
+  const wrong = equipment.checkPlaceName(req.body?.name);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await equipment.addPlace(user.id, req.body.name);
   res.json(await equipment.equipmentOf(user.id));
 }));
 
-app.post("/api/equipment/items", asSignedIn("POST /equipment/items", async (req, res, user) => {
+app.patch("/api/places/:place", asSignedIn("PATCH /places", async (req, res, user) => {
+  if (!await ownPlace(req, res, user)) return;
+  const wrong = equipment.checkPlaceName(req.body?.name);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await equipment.renamePlace(user.id, req.params.place, req.body.name);
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
+app.delete("/api/places/:place", asSignedIn("DELETE /places", async (req, res, user) => {
+  if (!await ownPlace(req, res, user)) return;
+  if (!await equipment.archivePlace(user.id, req.params.place)) {
+    return res.status(400).json({ error: "Keep at least one place.", code: "last_place" });
+  }
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
+app.put("/api/places/:place/categories/:key", asSignedIn("PUT /places/categories", async (req, res, user) => {
+  if (!await ownPlace(req, res, user)) return;
+  const has = req.body?.has;
+  if (!equipment.isCategory(req.params.key)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  if (has !== true && has !== false && has !== null) return res.status(400).json({ error: "Say yes, no, or not answered.", code: "invalid" });
+  await equipment.setCategory(user.id, req.params.place, req.params.key, has);
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
+app.post("/api/places/:place/items", asSignedIn("POST /places/items", async (req, res, user) => {
+  if (!await ownPlace(req, res, user)) return;
   const wrong = equipment.checkItem(req.body);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
-  await equipment.setItem(user.id, req.body);
+  await equipment.setItem(user.id, req.params.place, req.body);
   res.json(await equipment.equipmentOf(user.id));
 }));
 
@@ -225,20 +257,36 @@ app.post("/api/assistant", async (req, res) => {
   try {
     const out = await billy.answer(user, history, {
       my_clients: async () => ({ clients: await myClients(req, user) }),
-      my_equipment: async () => equipment.equipmentOf(user.id),
+      my_equipment: async () => {
+        const { places } = await equipment.equipmentOf(user.id);
+        return { places: places.map(p => ({ name: p.name, checklist: p.categories.map(c => ({ kind: c.key, label: c.label, has: c.has })), pieces: p.items })) };
+      },
       /* Only what the trainer has just told him (Glenn, 16 Oct 2026: "Yes"),
-         marked as Billy's, on view on their equipment page to correct. */
+         marked as Billy's, on view on their equipment page to correct. A
+         trainer's own answer is never changed without asking them first
+         (ideas audit, 20: "Billy confirms before changing a trainer's own
+         answer"). */
       remember_equipment: async (input) => {
-        if (input?.kind === "category") {
-          if (!equipment.isCategory(input.category)) return { error: "That isn't one of the checklist's kinds of equipment." };
-          await equipment.setCategory(user.id, input.category, !!input.has, "billy");
-        } else {
-          const piece = { name: input?.name, category: input?.category, has: input?.has, where: input?.where || "" };
+        const places = await equipment.placesOf(user.id);
+        const place = input?.place
+          ? places.find(p => p.name.trim().toLowerCase() === String(input.place).trim().toLowerCase())
+          : places.length === 1 ? places[0] : null;
+        if (!place) return { error: `Ask which place this is: ${places.map(p => p.name).join(", ")}.` };
+        const isKind = input?.kind === "category";
+        if (isKind && !equipment.isCategory(input.category)) return { error: "That isn't one of the checklist's kinds of equipment." };
+        const piece = { name: input?.name, category: input?.category, has: input?.has, note: input?.note || "" };
+        if (!isKind) {
           const wrong = equipment.checkItem(piece);
           if (wrong) return { error: wrong };
-          await equipment.setItem(user.id, piece, "billy");
         }
-        return { saved: true };
+        const before = await equipment.answerFor(place.id, isKind ? "category" : "item", isKind ? input.category : input.name);
+        if (before && before.source === "trainer" && before.has !== !!input.has && input.confirmed !== true) {
+          return { needsConfirmation: true, place: place.name, current: before.has ? "yes" : "no",
+            say: "They answered this themselves before. Tell them what they had said, and change it only if they confirm; then call again with confirmed: true." };
+        }
+        if (isKind) await equipment.setCategory(user.id, place.id, input.category, !!input.has, "billy");
+        else await equipment.setItem(user.id, place.id, piece, "billy");
+        return { saved: true, place: place.name };
       },
     });
     res.set("Cache-Control", "private, no-store");
@@ -291,6 +339,7 @@ if (existsSync(DIST)) {
    still starts, so sign-in and the Clients tab keep working. */
 try {
   await db.migrate();
+  await equipment.adoptOldAnswers();
   console.log(`Database: ${db.describe()}`);
 } catch (err) {
   console.error(`Database not ready (${db.describe()}): ${err.message}`);

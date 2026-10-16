@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { CATEGORIES } from "../server/equipment.js";
 import { isId } from "../server/ids.js";
 import {
-  ORDER, WORDS, PATTERNS, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES, ORIGINS, STATUSES,
+  ORDER, WORDS, PATTERNS, PIECES, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES, ORIGINS, STATUSES,
   masterName, bodyweightFamilies, equipmentFor, measureOf, perSideOf, nameKey,
 } from "../server/coach-iq.js";
 
@@ -76,6 +76,12 @@ for (const x of list) {
   for (const m of x.measure || []) if (!MEASURES.includes(m)) wrong(`unknown measure "${m}"`);
   for (const j of x.cautions?.joints || []) if (!JOINTS.includes(j)) wrong(`unknown joint "${j}"`);
   for (const f of x.cautions?.flags || []) if (!FLAGS[f]) wrong(`unknown flag "${f}"`);
+  if (x.piece) {
+    const piece = PIECES[x.piece];
+    const e = equipmentFor(x, family);
+    if (!piece) wrong(`unknown piece "${x.piece}"`);
+    else if (![...e.needs, ...e.oneOf].includes(piece.kind)) wrong(`its piece (${piece.label}) is ${piece.kind}, which it doesn't need`);
+  }
   if (!ORIGINS.includes(x.origin)) wrong(`unknown origin "${x.origin}"`);
   if (!STATUSES.includes(x.status)) wrong(`unknown status "${x.status}"`);
   if (x.status === "reviewed" && !/^\d{4}-\d{2}-\d{2}$/.test(x.reviewed || "")) wrong("reviewed, but with no date");
@@ -117,7 +123,7 @@ const words = (a) => a.join(", ");
 const equipmentText = (x) => {
   const e = equipmentFor(x, movements[x.movement]);
   const parts = [];
-  if (x.piece) parts.push(x.piece);
+  if (x.piece) parts.push(PIECES[x.piece]?.label || x.piece);
   if (e.needs.length) parts.push(e.needs.map(k => KIND_LABEL[k]).join(" + "));
   if (e.oneOf.length) parts.push((parts.length ? "with " : "") + e.oneOf.map(k => KIND_LABEL[k]).join(" or "));
   return parts.join(", ") || "None";
