@@ -61,6 +61,15 @@ try {
   await page.waitForSelector("h1", { timeout: 10000 });
   await shot("02-home");
 
+  await page.click(".cx-logo-badge");
+  await page.waitForSelector(".cx-appdrawer-open");
+  await shot("03-apps");
+  await page.keyboard.press("Escape");
+
+  await page.click('[data-tab="profile"]');
+  await page.waitForFunction(() => document.querySelector("h1")?.textContent === "Profile");
+  await shot("04-profile");
+
   /* Signed out again, so the next run starts from the sign-in screen. */
   await page.evaluate(() => fetch("/api/auth/logout", { method: "POST", credentials: "include" }));
 } finally {

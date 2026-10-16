@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Studio's header and tab bar, and the logo as the app switcher** (16 Oct 2026; Glenn: "some housekeeping lets copy the header bar and the nav bar from Studio, including the way the logo is shown. When you click on the logo now, the panel that folds out shoudl show Coach and Studio, this is a quick way to switch between apps if you have trainer account on Studio."). Copied from Studio's current code (src/chrome/Header.jsx, BottomNav.jsx, useFloatingBar.js and the theme.jsx rules behind them), not from its older screenshots, which still show a hexagon-ended bar: it has since become a pill with a lit circle. **Header** (`src/chrome/Header.jsx`): sticky, on the page's own background with a hairline under it, everything one 36px badge tall. The logo is `.cx-logo-badge`, anchored in the corner as Studio's `.iw-logo-badge` is, with two marks in one slot: the logo kit's badge at rest (cerulean on light, white on dark, through `<picture>`), and the app icon opened out, with COACH sliding out beside it. COACH is the lockup's own outline, cut out into `src/chrome/CoachWordmark.jsx` in `currentColor` (`--wordmark`: cerulean, sky in dark), as Studio sets STUDIO 3 with StudioLockupArt. It opens out under a pointer that can hover (`@media (hover: hover)`, so a tap on a phone does not leave it stuck open), on keyboard focus, and while its panel is open. **The switcher** is new rather than copied: clicking the logo folds down `.cx-apppanel`, built the way Studio's picker panel and Billy's join their buttons, with one fill and one outline, the badge squared off underneath (`.cx-logo-badge-open`). It slides on `max-height` with Studio's 220 ms put-on-the-page-a-frame-early trick, and closes on Escape (focus back to the logo), a press outside, or picking Coach. Rows: Coach ("You're here", a tick, `aria-current`) and Studio ("Schedule, clients and payments", a link to `STUDIO_URL`, with Studio's own `icon-192.png` copied in as `src/assets/studio-app-icon.png`). Always both, since every Coach account is a Studio account. The right of the header has Studio's role badges: a shield opening out to Admin, Master or Primary Master (gold, with Studio's sparkles), and none for a trainer. **Tab bar** (`src/chrome/BottomNav.jsx`): fixed at the bottom, a frosted pill (chalk at 72% with an 18px blur, at most 28rem wide) with a softening blur above it, icons only (names as `aria-label` and tooltip), and the lit tab a cerulean-to-sky circle (`.cx-nav-lit`) measured from the tab's box and slid with Studio's easing. Profile wears the photo or initials. Studio's drag-the-pill, groups and landscape rail are left out: five tabs need none of them. Tabs: Home, Clients, Programs, Messages, Profile (`src/Shell.jsx`; the tab is remembered in sessionStorage for the browser tab). The account dropdown went: as in Studio, who you are, Open Studio, Log out and the version are on **Profile** (`src/tabs/ProfileTab.jsx`). Clients, Programs and Messages open Coming soon pages, and their Home cards open those tabs too. `src/home/` became `src/tabs/` and `src/chrome/`. Checked in the browser at phone width in light and dark, and measured at 1280 wide (bar centred, 448 px): the panel opens, Escape closes it with focus back on the logo, and the tabs switch. Profile said "Master" where the header said "Primary Master", so it was made to match. Manual chapter 3 rewritten as "Finding your way around" (the top bar, switching apps, the bottom bar, Home, Profile, light or dark), sign-out in 2.5 now goes through Profile, and `npm run screenshots` takes two more pictures (`03-apps`, `04-profile`). CHANGELOG 1.0 updated.
+
 - **Vite 8 and Tailwind 4; npm audit to zero** (16 Oct 2026; was in Ideas, from the first cloud session's 9 advisories; Glenn: "let's upgrade Vite 8 and Tailwind then"). Coach only: Studio is on the same versions and still carries the warnings. Tailwind first, with its own `@tailwindcss/upgrade@4.3.3` on a clean tree: it renamed `min-h-[100dvh]` to `min-h-dvh`, `max-w-[12rem]` to `max-w-48` and `hover:bg-[var(--ghost-fill)]` to `hover:bg-(--ghost-fill)`, deleted `tailwind.config.js` (v4 is configured in CSS), and turned the `cx-` classes into `@utility` blocks. It also stripped every comment from `src/index.css` and reformatted it, so that file was rewritten by hand in v4 form with its comments kept. Two Tailwind 3 defaults that v4 drops were put back in `@layer base`: a border with no color of its own is `--iron-line` (v4 makes it the text color), and buttons show the pointing hand (v4 leaves the arrow). Then Vite 5.4 → 8.3.4 and `@vitejs/plugin-react` 4 → 6.1.2, with Tailwind through `@tailwindcss/vite` instead of PostCSS, so `postcss.config.js`, `postcss` and `autoprefixer` went (Tailwind 4 adds browser prefixes itself). Vite 8 needs Node 22.12 or newer, so `engines` went from `>=22.5` to `>=22.12`, and `/api/health` now reports `node` so the version Airo runs can be checked after the deploy (a deploy builds on the host, and an older Node there would fail the build). `npm audit`: 9 → 0. Checked: the build passes; the manual's two screenshots retaken on the new build and put beside the old ones, which look identical; the Vite 8 dev server serves the app, and in dark mode at phone width the home screen, the account menu, the pointer on every button and the divider's soft line were all correct.
 
 - **The first cloud session: install, build and check-docs pass** (16 Oct 2026; Glenn: "Start a cloud test session that clones the repo, installs, builds and runs check-docs, without changing anything", after "push"). The first push for it never reached GitHub: Glenn ran it, but `git ls-remote` still showed `216cbcd`, three commits behind, so the session was held back rather than started on a copy without CLAUDE.md. That led to the standing rule that "push" means Claude pushes and confirms (`push-on-command`, and CLAUDE.md). Pushed `216cbcd..d0cb0d9`, confirmed, then the cloud session ran on the Default environment. It cloned the private repo at `d0cb0d9` (so Claude's GitHub app can reach it) and read CLAUDE.md. Node v22.22.0, npm 10.9.4. `npm ci`, `npm run build` (Vite 5.4.21, 1,583 modules, 164 kB JS) and `npm run check-docs` all passed. `node server/index.js` on 4800 answered `/api/health` with `"version":"1.0.0","codename":"Caesious"`, and `/` with 200. With no `STUDIO_ORIGIN` in the environment, it fell back to `http://localhost:4242`, with nothing there, so nothing reached a live site. Nothing changed, and git status stayed clean. Not testable in the cloud: sign-in end to end (no Studio fixture), anything behind a sign-in, and the screens in a browser. `npm ci` reported 9 advisories (6 high, 3 moderate), all in build and dev-server tooling; they are in Ideas.
@@ -89,11 +91,13 @@ here as it arrives.
    - [2.3 If you have forgotten your password](#23-if-you-have-forgotten-your-password)
    - [2.4 Signed in with a temporary password](#24-signed-in-with-a-temporary-password)
    - [2.5 Signing out](#25-signing-out)
-3. [The home screen](#3-the-home-screen)
-   - [3.1 Reading the screen](#31-reading-the-screen)
-   - [3.2 Your account menu](#32-your-account-menu)
-   - [3.3 Going to Studio](#33-going-to-studio)
-   - [3.4 Light or dark](#34-light-or-dark)
+3. [Finding your way around](#3-finding-your-way-around)
+   - [3.1 The bar at the top](#31-the-bar-at-the-top)
+   - [3.2 Switching between Coach and Studio](#32-switching-between-coach-and-studio)
+   - [3.3 The bar at the bottom](#33-the-bar-at-the-bottom)
+   - [3.4 The home screen](#34-the-home-screen)
+   - [3.5 Your profile](#35-your-profile)
+   - [3.6 Light or dark](#36-light-or-dark)
 4. [Words this app uses](#4-words-this-app-uses)
 5. [When something goes wrong](#5-when-something-goes-wrong)
 
@@ -109,7 +113,7 @@ Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
 programs you build for them, and your messages with them. Those parts are
-still being built — the home screen shows them as **Coming soon** (3.1).
+still being built — the app shows them as **Coming soon** (3.3).
 
 #### One account for every Trainability app
 
@@ -160,7 +164,7 @@ by Studio, so:
 6. Tap the blue **Log in** button. It says **Signing in…** for a moment while
    the app checks.
 
-You are now signed in, and you land on the home screen (chapter 3).
+You are now signed in, and you land on the home screen (3.4).
 
 If the email and password do not match, the box says *That email and password
 don't match.* in red under **Keep me logged in**, and nothing else happens.
@@ -220,7 +224,7 @@ time you sign in to Coach.
 
 #### 2.5 Signing out
 
-1. Tap your initials (or your photo) in the top right corner.
+1. Tap **Profile** — your photo or initials, last on the bar at the bottom.
 2. Tap **Log out**.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
@@ -230,19 +234,72 @@ of Studio.
 
 ---
 
-### 3. The home screen
+### 3. Finding your way around
 
-#### 3.1 Reading the screen
+#### 3.1 The bar at the top
 
-![The home screen](docs/images/02-home.png)
+![The home screen, with the bar at the top and the bar at the bottom](docs/images/02-home.png)
 
-*The home screen*
+*The home screen, with the bar at the top and the bar at the bottom*
 
-From top to bottom:
+Across the top of every screen:
 
-- **The dark bar across the top.** The Coach logo and the words
-  **TRAINABILITY® COACH** on the left; your initials (or your photo) on the
-  right, which opens your account menu (3.2).
+- **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
+  **COACH** beside it. Tapping the logo opens the apps panel (3.2).
+- **On the right**, an Admin or Master account has a small shield, gold for a
+  Master. On a computer, point at it and it says which: **Admin**, **Master**
+  or **Primary Master**. A trainer's account has no shield.
+
+The bar stays at the top as you scroll.
+
+#### 3.2 Switching between Coach and Studio
+
+![The apps panel, open from the logo](docs/images/03-apps.png)
+
+*The apps panel, open from the logo*
+
+Coach and Studio are two apps with one account, and the logo is the quick way
+between them.
+
+1. Tap the Coach logo in the top left corner. It opens out into the Coach app
+   icon with **COACH** beside it, and a panel folds down underneath with the
+   heading **TRAINABILITY APPS**.
+2. The panel lists both apps:
+   - **Coach** — *You're here*, with a tick.
+   - **Studio** — *Schedule, clients and payments*.
+3. Tap **Studio** to go to Studio. If you are not signed in there, sign in with
+   the same email and password.
+
+To close the panel without going anywhere, tap the logo again, tap anywhere
+else on the screen, or press Esc on a keyboard.
+
+On a computer, just pointing at the logo opens it out to show the app icon and
+**COACH**; it only folds down the panel when you click.
+
+#### 3.3 The bar at the bottom
+
+The rounded bar floating at the bottom of the screen moves you between the
+parts of Coach. It has five buttons, as pictures with no words:
+
+| Button | Picture | Goes to |
+|---|---|---|
+| **Home** | A house | The home screen (3.4). |
+| **Clients** | Two people | Clients — coming soon. |
+| **Programs** | A clipboard with a list | Programs — coming soon. |
+| **Messages** | A speech bubble | Messages — coming soon. |
+| **Profile** | Your photo, or your initials | Your profile (3.5). |
+
+The one you are on sits in a filled blue circle, which slides across when you
+tap another. On a computer, pointing at a button shows its name.
+
+**Clients**, **Programs** and **Messages** are not built yet. Each opens a page
+with its name at the top, a card saying what it will be for, and *This part of
+Coach is being built. It will appear here when it's ready.*
+
+#### 3.4 The home screen
+
+Coach opens on Home. From the top:
+
 - **The blue band.** Today's date, and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.
@@ -255,32 +312,31 @@ From top to bottom:
 | **Programs** | Workouts and plans you build and assign. |
 | **Messages** | Check-ins and notes between you and your clients. |
 
-Each card is marked **Coming soon** for now, and tapping it does nothing yet.
+Each is marked **Coming soon**. Tapping **Clients**, **Programs** or
+**Messages** opens its page, the same as its button on the bottom bar;
+**Today** will live on Home itself.
 
-#### 3.2 Your account menu
+If you are signed in with a temporary password, a box at the top of Home says
+so — see 2.4.
 
-1. Tap your initials (or your photo) in the top right corner.
-2. A small panel opens with your name, your email address and what kind of
-   account you have: **Trainer**, **Admin**, **Master** or **Front desk** —
-   the same as in Studio.
-3. Under that are **Open Studio** (3.3) and **Log out** (2.5).
-4. The last line is the version the app is on, such as
-   *Version 1.0.0 · Caesious*. If you ever report a problem, say which
-   version it was.
+#### 3.5 Your profile
 
-To close the panel without choosing anything, tap anywhere outside it, or
-press Esc on a keyboard.
+![Profile](docs/images/04-profile.png)
 
-#### 3.3 Going to Studio
+*Profile*
 
-Tap your initials, then **Open Studio**. Studio opens at
-trainabilitystudio.com. If you are not signed in there, sign in with the same
-email and password.
+Tap **Profile** — your photo or initials, last on the bottom bar.
 
-You can also get there from the sign-in screen: **Open Studio** is under the
-white box, after *Part of the Trainability family*.
+- **The card at the top** has your name, your email address and what kind of
+  account you have: **Trainer**, **Admin**, **Master**, **Primary Master** or
+  **Front desk** — the same as in Studio.
+- **Open Studio** goes to Studio, at trainabilitystudio.com.
+- **Log out** signs you out (2.5).
+- **The last line** is the version the app is on, such as
+  *Version 1.0.0 · Caesious*. If you ever report a problem, say which version
+  it was.
 
-#### 3.4 Light or dark
+#### 3.6 Light or dark
 
 Coach follows your phone or computer. If your device is set to dark mode,
 Coach is dark too — a navy background with white and light blue words —
@@ -299,7 +355,9 @@ and light otherwise. There is nothing to set in the app.
 | **Temporary password** | A password emailed to you when yours is reset or forgotten. Use it once, then choose your own in Studio (2.4). |
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and in your account menu. |
+| **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
+| **Profile** | The last button on the bottom bar: who is signed in, Open Studio and Log out (3.5). |
+| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of Profile. |
 
 <div style="page-break-after: always;"></div>
 

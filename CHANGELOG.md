@@ -16,6 +16,11 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **The home screen.** Today's date and a greeting by name, and the four parts
   of Coach on the way: Today, Clients, Programs and Messages, each marked
   Coming soon.
-- **Your account menu.** Your name, email and kind of account, a way to Studio,
-  and Log out.
+- **Studio's header and tab bar.** The Coach logo and name across the top,
+  and a floating bar at the bottom for Home, Clients, Programs, Messages and
+  Profile.
+- **Switch between Coach and Studio.** Tap the Coach logo and a panel folds
+  down with both apps; Studio is one tap away.
+- **Profile.** Your name, email and kind of account, Open Studio, Log out and
+  the version.
 - **Light or dark,** following your phone or computer.
