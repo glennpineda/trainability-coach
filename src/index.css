@@ -191,7 +191,32 @@
   .cx-card-press { transition: transform .15s ease, box-shadow .15s ease; }
   .cx-card-press:hover { transform: translateY(-1px); }
 
+  /* ---------------------------------------------------------------- Billy
+     His button beside the badges, Studio's: a square the badges' size in a
+     wash of his own lilac, his face in it. His panel hangs from the header's
+     right-hand corner, the width of a phone at most. */
+  .cx-billy-button { position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+    border-radius: 10px; flex-shrink: 0; background: rgba(201, 162, 220, 0.16); color: var(--ink); transition: background-color .15s ease; }
+  .cx-billy-button:hover, .cx-billy-button-open { background: rgba(201, 162, 220, 0.32); }
+  .cx-billy-dot { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 999px;
+    background: var(--cerulean); box-shadow: 0 0 0 2px var(--paper); }
+  .cx-billy-panel { position: absolute; right: 0; top: calc(100% + 0.75rem + 6px); z-index: 40; width: min(26rem, calc(100vw - 2rem));
+    display: flex; flex-direction: column; max-height: calc(100vh - 12rem); max-height: calc(100dvh - 12rem);
+    background: var(--chalk); color: var(--ink); border: 1px solid var(--iron-line); border-radius: 16px;
+    box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.4); }
+  .cx-billy-thread { flex: 1; min-height: 4rem; overflow-y: auto; padding: 0 1rem; overscroll-behavior: contain; }
+  .cx-billy-you { max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 14px 14px 4px 14px; font-size: 0.875rem;
+    background: var(--accent-soft); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cx-billy-says { overflow-wrap: anywhere; }
+  .cx-billy-file { display: inline-flex; align-items: center; gap: 8px; max-width: 85%; padding: 4px 6px 4px 4px;
+    border: 1px solid var(--iron-line); border-radius: 10px; font-size: 0.8125rem; background: var(--chalk); }
+  .cx-billy-icon { width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; color: var(--iron); transition: background-color .15s ease, color .15s ease; }
+  .cx-billy-icon:hover { background: var(--ghost-fill); color: var(--accent); }
+  .cx-billy-icon:disabled { opacity: .45; }
+
   @media (prefers-reduced-motion: reduce) {
-    .cx-appdrawer, .cx-badge, .cx-nav-lit, .cx-navbtn, .cx-card-press { transition: none; }
+    .cx-appdrawer, .cx-badge, .cx-nav-lit, .cx-navbtn, .cx-card-press, .cx-billy-button { transition: none; }
+    .cx-billy * { animation: none !important; }
   }
 }

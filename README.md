@@ -35,6 +35,31 @@ email. Relayed requests all come from Coach's server, so that per-IP budget is
 shared by everybody signing in through Coach. Fine at today's numbers; the fix,
 when it matters, is for Studio to trust a forwarded address from Coach alone.
 
+## Billy
+
+Billy, Studio's assistant, is in Coach too: his face is the button beside the
+badges in the header, and his panel hangs under it. He knows the signed-in
+trainer's own clients (through the same `/api/clients` path the Clients tab
+uses, with the same session, so he sees nothing they can't), and he reads a
+photo or a PDF given to him. He changes nothing.
+
+`server/billy.js` asks Claude through Anthropic's SDK; the key stays on the
+server, and the conversation is kept by the browser tab and sent whole with
+each question, so Coach stores none of it. Set up like Studio's, with the same
+names:
+
+| Variable | What it does |
+|---|---|
+| `ANTHROPIC_API_KEY` | Unset, Billy is not offered: no button, and `/api/assistant` answers 503. |
+| `ASSISTANT_MODEL` | Which model answers. Unset: `claude-opus-5-5`. |
+| `ASSISTANT_TRACE` | Logs each turn while debugging. Leave off: the questions are about real clients. |
+| `ASSISTANT_API_BASE` | Never on a host. Points Billy at a stand-in on this machine for testing; only `http://localhost` or `http://127.0.0.1` with a port is taken. |
+
+A photo is shrunk in the browser to 1600 pixels on its longest side and sent
+as a JPEG (a GIF goes as it is); a PDF goes as it is, up to 15 MB. His route
+takes up to 32 MB, Claude's own limit for one request; every other route keeps
+its 20 kB limit.
+
 ## Running it locally
 
 Three terminals. Studio's API on its throwaway fixture database, so nothing

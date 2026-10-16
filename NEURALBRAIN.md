@@ -87,7 +87,7 @@ is written out step by step. Where a step says **tap**, you can also click with 
 mouse — they mean the same thing here.
 
 Coach is new, and so is this manual. It covers what the app does today:
-signing in, finding your way around, and your list of clients. Each new part
+signing in, finding your way around, your list of clients, and Billy. Each new part
 of the app gets its own chapter here as it arrives.
 
 ---
@@ -115,8 +115,14 @@ of the app gets its own chapter here as it arrives.
    - [4.4 Finding a client](#44-finding-a-client)
    - [4.5 Archived clients](#45-archived-clients)
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
-5. [Words this app uses](#5-words-this-app-uses)
-6. [When something goes wrong](#6-when-something-goes-wrong)
+5. [Asking Billy](#5-asking-billy)
+   - [5.1 Opening Billy](#51-opening-billy)
+   - [5.2 Asking a question](#52-asking-a-question)
+   - [5.3 Giving Billy a photo or a PDF](#53-giving-billy-a-photo-or-a-pdf)
+   - [5.4 Starting again](#54-starting-again)
+   - [5.5 What Billy can't do](#55-what-billy-cant-do)
+6. [Words this app uses](#6-words-this-app-uses)
+7. [When something goes wrong](#7-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -267,6 +273,8 @@ Across the top of every screen:
 - **On the right**, an Admin or Master account has a small shield, gold for a
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
+- **Billy's face**, in a lilac square, when Billy is set up for your
+  business — tap it to ask him something (chapter 5).
 - **In the corner**, your photo (or your initials) with a small arrow
   pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
@@ -464,7 +472,72 @@ client or change their details, open Studio.*
 
 ---
 
-### 5. Words this app uses
+### 5. Asking Billy
+
+Billy is the assistant you may know from Studio. In Coach he can tell you
+about the clients on your list, and he can read a photo or a PDF you give him
+— a client's food log, a form they filled in, a program — and answer
+questions about it.
+
+If you do not see his face in the bar at the top, Billy has not been set up
+for your business yet.
+
+#### 5.1 Opening Billy
+
+1. Tap **Billy's face** in the bar at the top, next to your photo.
+2. His panel opens under the bar, with a box at the bottom that says
+   **Ask Billy…**
+
+To close the panel, tap the arrow where his face was, or press Esc on a
+keyboard. Closing it keeps the conversation: open it again and it is all
+still there. While it is closed, a small blue dot on his face means he has
+answered and the answer is waiting.
+
+#### 5.2 Asking a question
+
+1. Tap the **Ask Billy…** box and type your question, such as *When did
+   Avery last train?* or *Which of my clients have nothing booked?*
+2. Tap the blue arrow button, or press Enter on a keyboard.
+3. While he works it out, the panel says **Billy is looking…** His answer
+   then appears under your question.
+
+You can carry on asking: he remembers what was said earlier in the same
+conversation, so *What about Jordan?* works after a question about Avery.
+
+#### 5.3 Giving Billy a photo or a PDF
+
+1. Tap the **paper clip** to the left of the **Ask Billy…** box.
+2. Choose a photo or a PDF. On a phone you can take a photo there and then.
+3. It appears above the box with its name. To take it off again, tap the
+   **×** beside it.
+4. Type what you want to know about it, such as *How much protein is in this
+   day?*, and tap the blue arrow. If you type nothing, Billy is asked to have a
+   look at it.
+
+Billy reads JPEG, PNG, GIF and WebP photos, and PDFs up to 15 MB. A large
+photo is made smaller before it is sent, which does not stop him reading it.
+
+#### 5.4 Starting again
+
+Tap the **round arrow** at the top right of the panel (**New conversation**).
+The conversation is cleared and Billy starts fresh. Leaving or reloading the
+page clears it too: Coach does not keep your conversations with Billy.
+
+#### 5.5 What Billy can't do
+
+- **He changes nothing.** He cannot add or change a client, book or cancel a
+  session, send a message or charge anybody. Clients are added and changed in
+  Studio (4.6).
+- **He only knows your own clients**, the same people as on your Clients page.
+- **He is not a doctor or a dietitian.** About pain, an injury or illness, he
+  will say a professional should see it.
+- He can get things wrong, like any assistant. Check anything important.
+
+<div style="page-break-after: always;"></div>
+
+---
+
+### 6. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -474,6 +547,7 @@ client or change their details, open Studio.*
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
+| **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
 | **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
@@ -483,7 +557,7 @@ client or change their details, open Studio.*
 
 ---
 
-### 6. When something goes wrong
+### 7. When something goes wrong
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock
@@ -520,6 +594,21 @@ If it keeps happening, tell whoever looks after the app.
 Coach shows the clients on your own list in Studio. Check that they are under
 your name in Studio, and not archived — an archived client is under
 **Archived** (4.5).
+
+**"Billy reads JPEG, PNG, GIF and WebP photos. On an iPhone, a photo shared from Photos is sent as a JPEG."**
+The photo is in a format Billy cannot read, such as an iPhone's HEIC. Choose
+it again from Photos, or take a screenshot of it and send that.
+
+**"That PDF is too big for Billy. Try one under 15 MB."**
+Send fewer pages: save just the pages you need as a new PDF, or take photos
+of them instead.
+
+**"Billy couldn't answer just now. Try again in a minute."**
+Your question is still in the box. Wait a minute and tap the blue arrow again.
+
+**"Billy isn't working right now: this server's key for him was refused. Tell whoever runs the app."**
+Billy's setup on the server needs fixing. It is not something you did; pass
+the message on.
 
 **You are back on the sign-in screen.**
 Your sign-in ran out while the app was open. Sign in again (2.1).

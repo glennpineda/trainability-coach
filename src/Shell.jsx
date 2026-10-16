@@ -6,6 +6,7 @@ import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
 import { ClientsTab } from "./tabs/ClientsTab";
 import { useClients } from "./hooks/useClients";
+import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
 
 const TABS = [
@@ -29,11 +30,12 @@ export function Shell({ user, onLogout, onSignedOut }) {
   const clients = useClients(onSignedOut);
   const { refresh } = clients;
   useEffect(() => refresh(), [tab, refresh]);
+  const billy = useBilly(onSignedOut);
   const open = (id) => { setTab(id); window.scrollTo({ top: 0 }); };
 
   return (
     <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
-      <Header user={user} onLogout={onLogout} />
+      <Header user={user} onLogout={onLogout} billy={billy} />
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}

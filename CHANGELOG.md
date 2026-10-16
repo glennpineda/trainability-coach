@@ -28,4 +28,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   down with both apps; Studio is one tap away.
 - **Your account menu.** Your photo in the top corner opens a menu with your
   name, email and kind of account, Open Studio, Log out and the version.
+- **Billy.** Studio's assistant, beside the badges in the header: ask him
+  about the clients on your list, or send him a photo or a PDF — a food log,
+  a form, a program — and he reads it. He changes nothing. Shown only where
+  the server has a key for him.
 - **Light or dark,** following your phone or computer.

@@ -2,6 +2,7 @@ import express from "express";
 import path from "node:path";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import * as billy from "./billy.js";
 
 /**
  * Coach's server: the built page, and a relay to Studio for signing in and
@@ -41,6 +42,11 @@ const app = express();
 app.disable("x-powered-by");
 /* One proxy in front on the host, so req.ip is the visitor rather than it. */
 app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
+/* Billy's questions carry a photo or a PDF, base64 inside the JSON, so his
+   route takes up to 32 MB (Claude's own limit for one request); everything
+   else stays small. The first parser to read a body marks it read, so the
+   small one leaves his alone. */
+app.use("/api/assistant", express.json({ limit: "32mb" }));
 app.use("/api", express.json({ limit: "20kb" }));
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN }));
@@ -85,37 +91,112 @@ const unreachable = (res, what, err) => {
  * the people on this account's own list. And only what Coach shows goes to the
  * browser: no card, notes, address or message settings.
  */
+/* Studio's answer when it was not a yes, kept to be passed on as it is. */
+class StudioRefused extends Error {
+  constructor(status, body) { super(`Studio answered ${status}`); this.status = status; this.body = body; }
+}
+
+/* Who is signed in, asked of Studio with this request's session. */
+async function signedIn(req) {
+  const r = await studio(req, "/auth/me");
+  if (!r.ok) throw new StudioRefused(r.status, await r.text());
+  return (await r.json()).user;
+}
+
+/**
+ * The signed-in trainer's own clients, read from Studio each time it is asked.
+ *
+ * Coach keeps no copy, so there is nothing to fall out of step: a client added
+ * or archived in Studio shows here on the next load. Studio's /api/clients
+ * already limits the list to what this account may see; a master or admin is
+ * also sent the clients of everybody they manage, so the list is cut here to
+ * the people on this account's own list. And only what Coach shows goes on:
+ * no card, notes, address or message settings, to the browser or to Billy.
+ */
+async function myClients(req, user) {
+  const r = await studio(req, "/clients");
+  if (!r.ok) throw new StudioRefused(r.status, await r.text());
+  const { clients = [] } = await r.json();
+  return clients
+    .filter(c => !c.bookingOnly && !c.deskOnly && (c.trainerIds || []).includes(user.id))
+    .map(c => ({
+      id: c.id,
+      firstName: c.firstName || "",
+      lastName: c.lastName || "",
+      email: c.email || "",
+      phone: c.phone || "",
+      pronouns: c.pronouns || "",
+      dateOfBirth: c.dateOfBirth || "",
+      /* The day they joined this trainer's list, not the day the record
+         was made: somebody handed on from a colleague is new here. */
+      since: c.linkedAt?.[user.id] || c.createdAt || "",
+      lastSessionOn: c.lastSessionOn || null,
+      latestSessionOn: c.latestSessionOn || null,
+      archived: (c.archivedBy || []).includes(user.id),
+      /* Other trainers they are still training with. */
+      sharedWith: (c.trainerIds || []).filter(t => t !== user.id && !(c.archivedBy || []).includes(t)).length,
+    }));
+}
+
 app.get("/api/clients", async (req, res) => {
   try {
-    const [meRes, listRes] = await Promise.all([studio(req, "/auth/me"), studio(req, "/clients")]);
-    for (const r of [meRes, listRes]) {
-      if (!r.ok) return res.status(r.status).type("application/json").send(await r.text());
-    }
-    const { user } = await meRes.json();
-    const { clients = [] } = await listRes.json();
-    const mine = clients
-      .filter(c => !c.bookingOnly && !c.deskOnly && (c.trainerIds || []).includes(user.id))
-      .map(c => ({
-        id: c.id,
-        firstName: c.firstName || "",
-        lastName: c.lastName || "",
-        email: c.email || "",
-        phone: c.phone || "",
-        pronouns: c.pronouns || "",
-        dateOfBirth: c.dateOfBirth || "",
-        /* The day they joined this trainer's list, not the day the record
-           was made: somebody handed on from a colleague is new here. */
-        since: c.linkedAt?.[user.id] || c.createdAt || "",
-        lastSessionOn: c.lastSessionOn || null,
-        latestSessionOn: c.latestSessionOn || null,
-        archived: (c.archivedBy || []).includes(user.id),
-        /* Other trainers they are still training with. */
-        sharedWith: (c.trainerIds || []).filter(t => t !== user.id && !(c.archivedBy || []).includes(t)).length,
-      }));
+    const clients = await myClients(req, await signedIn(req));
     res.set("Cache-Control", "private, no-store");
-    res.json({ clients: mine });
+    res.json({ clients });
   } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
     unreachable(res, "GET /clients", err);
+  }
+});
+
+/* Whether Billy is here at all, so the header can leave his button out. Asked
+   by somebody signed in, like every other question about Coach's setup. */
+app.get("/api/assistant", async (req, res) => {
+  try {
+    await signedIn(req);
+    res.set("Cache-Control", "private, no-store");
+    res.json({ available: billy.configured(), model: billy.configured() ? billy.model() : null });
+  } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
+    unreachable(res, "GET /assistant", err);
+  }
+});
+
+/**
+ * One question to Billy, as whoever is signed in (server/billy.js). The
+ * conversation is the browser's to keep and comes whole each time; nothing of
+ * it is stored here.
+ */
+app.post("/api/assistant", async (req, res) => {
+  let user;
+  try {
+    user = await signedIn(req);
+  } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
+    return unreachable(res, "POST /assistant", err);
+  }
+  if (!billy.configured()) {
+    return res.status(503).json({ error: "Billy isn't set up on this server yet.", code: "not_configured" });
+  }
+  const history = req.body?.messages;
+  const wrong = billy.checkHistory(history);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  try {
+    const out = await billy.answer(user, history, { my_clients: async () => ({ clients: await myClients(req, user) }) });
+    res.set("Cache-Control", "private, no-store");
+    res.json({ reply: out.reply, messages: out.messages, model: out.model, usage: out.usage });
+  } catch (err) {
+    console.error(`Billy failed: ${err.status || ""} ${err.message}`);
+    /* A refused key is the server's problem, not the trainer's: said so, in
+       words they can pass on. */
+    const status = err.status === 401 || err.status === 403 ? 503 : err.status === 413 ? 413 : err.status === 429 ? 429 : 502;
+    res.status(status).json({
+      error: status === 503 ? "Billy isn't working right now: this server's key for him was refused. Tell whoever runs the app."
+        : status === 413 ? "That file is too big for Billy. Try a smaller photo or a shorter PDF."
+        : status === 429 ? "Billy is getting a lot of questions just now. Try again in a minute."
+        : "Billy couldn't answer just now. Try again in a minute.",
+      code: "assistant_failed",
+    });
   }
 });
 

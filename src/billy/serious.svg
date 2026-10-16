@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -16 128 128" width="512" height="512"><defs>
+ <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="10" y1="92" x2="88" y2="10">
+   <stop offset="0" stop-color="#7B3FC4"/><stop offset="0.55" stop-color="#A646B0"/><stop offset="1" stop-color="#D24E9A"/></linearGradient>
+ <radialGradient id="topglow" cx="34%" cy="20%" r="62%"><stop offset="0" stop-color="#fff" stop-opacity=".20"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+ <linearGradient id="bottomshade" x1="0" y1="0.42" x2="0" y2="1"><stop offset="0" stop-color="#2B0E3A" stop-opacity="0"/><stop offset="1" stop-color="#2B0E3A" stop-opacity=".28"/></linearGradient>
+ <linearGradient id="rim" x1="0" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <linearGradient id="ir" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#FFF3E2"/><stop offset="1" stop-color="#E9CDB4"/></linearGradient>
+ <clipPath id="headclip"><path d="M62.19 10.89 L80.81 21.41 Q93.00 28.30 93.00 42.30 L93.00 57.70 Q93.00 71.70 80.81 78.59 L62.19 89.11 Q50.00 96.00 37.81 89.11 L19.19 78.59 Q7.00 71.70 7.00 57.70 L7.00 42.30 Q7.00 28.30 19.19 21.41 L37.81 10.89 Q50.00 4.00 62.19 10.89 Z"/></clipPath>
+ <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.1"/></filter>
+ <filter id="drop" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="2.4" stdDeviation="2.6" flood-color="#3A1150" flood-opacity=".30"/></filter>
+</defs>
+<style>.head,.eyes,.mouth-wrap{transform-box:view-box}
+
+.head{transform-origin:50px 92px;animation:lean 2.8s infinite}
+.eyes-l{transform-box:fill-box;transform-origin:center;animation:squintL 2.8s infinite}
+.eyes-r{transform-box:fill-box;transform-origin:center;animation:wideR 2.8s infinite}
+.browL,.browR,.flat,.q{transform-box:fill-box;transform-origin:center}
+.browL{animation:browL 2.8s infinite} .browR{animation:browR 2.8s infinite}
+.flat{animation:flat 2.8s infinite} .q{transform-origin:center bottom;animation:qw 2.8s infinite}
+@keyframes lean{0%,40%{transform:rotate(5deg) scale(1);animation-timing-function:ease-in-out} 48%{transform:rotate(6.5deg) scale(1.03)} 56%{transform:rotate(5deg) scale(1)} 64%{transform:rotate(6.5deg) scale(1.03)} 74%,100%{transform:rotate(5deg) scale(1)}}
+@keyframes squintL{0%,40%{transform:translateY(1.4px) scaleY(.56)} 48%{transform:translateY(1.8px) scaleY(.44)} 56%{transform:translateY(1.4px) scaleY(.56)} 64%{transform:translateY(1.8px) scaleY(.44)} 74%,100%{transform:translateY(1.4px) scaleY(.56)}}
+@keyframes wideR{0%,40%{transform:translateY(-1px) scale(1.04)} 48%{transform:translateY(-1.8px) scale(1.08)} 56%{transform:translateY(-1px) scale(1.04)} 64%{transform:translateY(-1.8px) scale(1.08)} 74%,88%{transform:translateY(-1px) scale(1.04)} 91%{transform:translateY(-1px) scale(1.04,.1)} 94%,100%{transform:translateY(-1px) scale(1.04)}}
+@keyframes browL{0%,40%{transform:translateY(0)} 48%{transform:translateY(1px) rotate(3deg)} 56%{transform:translateY(0)} 64%{transform:translateY(1px) rotate(3deg)} 74%,100%{transform:translateY(0)}}
+@keyframes browR{0%,40%{transform:translateY(0)} 48%{transform:translateY(-2.4px)} 56%{transform:translateY(0)} 64%{transform:translateY(-2.4px)} 74%,100%{transform:translateY(0)}}
+@keyframes flat{0%,40%{transform:translateX(2px) rotate(-9deg) scaleX(.8)} 48%{transform:translateX(2.4px) rotate(-12deg) scaleX(.72)} 56%{transform:translateX(2px) rotate(-9deg) scaleX(.8)} 64%{transform:translateX(2.4px) rotate(-12deg) scaleX(.72)} 74%,100%{transform:translateX(2px) rotate(-9deg) scaleX(.8)}}
+@keyframes qw{0%,40%{transform:rotate(0);animation-timing-function:ease-in-out} 48%{transform:translateY(-3px) rotate(-11deg)} 56%{transform:rotate(0)} 64%{transform:translateY(-3px) rotate(11deg)} 74%,100%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+
+<g class="head"><g filter="url(#drop)"><path d="M14 69 L30 83 L10 90 Z" fill="url(#g)" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/><path d="M62.19 10.89 L80.81 21.41 Q93.00 28.30 93.00 42.30 L93.00 57.70 Q93.00 71.70 80.81 78.59 L62.19 89.11 Q50.00 96.00 37.81 89.11 L19.19 78.59 Q7.00 71.70 7.00 57.70 L7.00 42.30 Q7.00 28.30 19.19 21.41 L37.81 10.89 Q50.00 4.00 62.19 10.89 Z" fill="url(#g)"/></g><g clip-path="url(#headclip)"><rect width="100" height="100" fill="url(#topglow)"/><rect width="100" height="100" fill="url(#bottomshade)"/><path d="M62.19 10.89 L80.81 21.41 Q93.00 28.30 93.00 42.30 L93.00 57.70 Q93.00 71.70 80.81 78.59 L62.19 89.11 Q50.00 96.00 37.81 89.11 L19.19 78.59 Q7.00 71.70 7.00 57.70 L7.00 42.30 Q7.00 28.30 19.19 21.41 L37.81 10.89 Q50.00 4.00 62.19 10.89 Z" fill="none" stroke="url(#rim)" stroke-width="2.6"/></g>
+ <g class="eyes"><g class="eyes-l"><ellipse cx="36.6" cy="43.9" rx="8.7" ry="9.8" fill="#2B0E3A" opacity=".18" filter="url(#soft2)"/><ellipse cx="36.6" cy="42.5" rx="8.7" ry="9.8" fill="url(#ir)"/><g class="pup"><ellipse cx="36.6" cy="43.1" rx="4.05" ry="4.53" fill="#2B1731"/><circle cx="38.9" cy="39.5" r="3.0" fill="#fff"/><circle cx="33.9" cy="47.300000000000004" r="1.5" fill="#fff" opacity=".9"/></g></g><g class="eyes-r"><ellipse cx="63.4" cy="43.9" rx="8.7" ry="9.8" fill="#2B0E3A" opacity=".18" filter="url(#soft2)"/><ellipse cx="63.4" cy="42.5" rx="8.7" ry="9.8" fill="url(#ir)"/><g class="pup"><ellipse cx="63.4" cy="43.1" rx="4.05" ry="4.53" fill="#2B1731"/><circle cx="65.7" cy="39.5" r="3.0" fill="#fff"/><circle cx="60.699999999999996" cy="47.300000000000004" r="1.5" fill="#fff" opacity=".9"/></g></g></g>
+ <g class="mouth-wrap"><path class="browL" d="M28.5 28.6 L43 26.8" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><path class="browR" d="M56.5 26.4 Q63 22.6 71.5 26.8" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><path class="flat" d="M44 64.5 L56 64.5" fill="none" stroke="#fff" stroke-width="4.6" stroke-linecap="round"/></g>
+</g>
+<g transform="translate(100 2)"><g class="q"><path d="M-5.5 -6 Q-5.5 -12.5 0 -12.5 Q5.5 -12.5 5.5 -6.5 Q5.5 -2.5 0.5 0 L0.5 3" fill="none" stroke="#D24E9A" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="0.5" cy="9.6" r="2.6" fill="#D24E9A"/></g></g></svg>

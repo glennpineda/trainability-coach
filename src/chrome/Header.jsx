@@ -6,6 +6,7 @@ import coachIcon from "../assets/coach-app-icon.png";
 import studioIcon from "../assets/studio-app-icon.png";
 import { CoachWordmark } from "./CoachWordmark";
 import { AccountMenu } from "./AccountMenu";
+import { BillyButton, BillyPanel } from "../billy/Billy";
 import { STUDIO_URL } from "../lib/api";
 
 /* A badge's square, as in Studio's header: the logo is drawn at it so
@@ -26,7 +27,7 @@ const ROLE = { master: "Master", admin: "Admin" };
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
  */
-export function Header({ user, onLogout }) {
+export function Header({ user, onLogout, billy }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
@@ -147,8 +148,11 @@ export function Header({ user, onLogout }) {
               )}
             </span>
           )}
+          {/* Billy, when this server has him (useBilly). */}
+          {billy?.available && <BillyButton billy={billy} />}
           <AccountMenu user={user} onLogout={onLogout} />
         </div>
+        {billy?.available && <BillyPanel billy={billy} />}
 
         {drawn && (
           <div id="cx-apps" className={`cx-appdrawer${slid && open ? " cx-appdrawer-open" : ""}`} aria-hidden={!open}
