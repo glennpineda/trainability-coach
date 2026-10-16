@@ -12,7 +12,9 @@
     "start": "npm run build && node server/index.js",
     "manual": "node scripts/manual.mjs",
     "check-docs": "node scripts/manual.mjs --check",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "iq": "node scripts/iq.mjs",
+    "check-iq": "node scripts/iq.mjs --check"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",

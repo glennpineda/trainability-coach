@@ -111,6 +111,13 @@ database the Coach app can have on GoDaddy.
 - `README.md`: this page.
 - `READ.md`: the books read into Coach IQ so far, for Glenn. Not shown to
   trainers and not given to Billy.
+- `exercises.json`: the exercise library, the list Billy will read. Its
+  starter list (177 exercises, 16 Oct 2026) was drafted by Claude from general
+  knowledge for Glenn to review; the books add to it.
+- `EXERCISES.md`: the same library as tables, for reading and review. Written
+  by `npm run iq`; never edited by hand. `npm run check-iq` fails when the
+  library has a word not on its lists, an easier or harder version that does
+  not exist, or when this page is behind.
 - One file per topic, made from the first book's outline.
 
 Not to be confused with `NEURALBRAIN.md`, which is the project's own memory

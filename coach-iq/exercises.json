@@ -1,0 +1,5918 @@
+[
+ {
+  "id": "sit-to-stand",
+  "name": "Sit to stand",
+  "aliases": [
+   "chair stand"
+  ],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "box-squat",
+   "bodyweight-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "wall-sit",
+  "name": "Wall sit",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "bodyweight-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "box-squat",
+  "name": "Box squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "box"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "sit-to-stand"
+  ],
+  "harder": [
+   "bodyweight-squat",
+   "goblet-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "trx-squat",
+  "name": "Suspension-assisted squat",
+  "aliases": [
+   "TRX squat"
+  ],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "suspension",
+  "equipment": {
+   "needs": [
+    "suspension"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "bodyweight-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "bodyweight-squat",
+  "name": "Bodyweight squat",
+  "aliases": [
+   "air squat"
+  ],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "box-squat",
+   "trx-squat"
+  ],
+  "harder": [
+   "goblet-squat",
+   "jump-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-squat",
+  "name": "Banded squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "bodyweight-squat"
+  ],
+  "harder": [
+   "goblet-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "goblet-squat",
+  "name": "Goblet squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "core",
+   "upper back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "bodyweight-squat",
+   "box-squat"
+  ],
+  "harder": [
+   "dumbbell-squat",
+   "front-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "dumbbell-squat",
+  "name": "Dumbbell squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core",
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "goblet-squat"
+  ],
+  "harder": [
+   "back-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "landmine-squat",
+  "name": "Landmine squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": [],
+   "piece": "Landmine"
+  },
+  "level": "beginner",
+  "easier": [
+   "goblet-squat"
+  ],
+  "harder": [
+   "front-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "leg-press",
+  "name": "Leg press",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Leg press machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "hack-squat",
+   "back-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "smith-squat",
+  "name": "Smith machine squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Smith machine"
+  },
+  "level": "intermediate",
+  "easier": [
+   "leg-press",
+   "goblet-squat"
+  ],
+  "harder": [
+   "back-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-load"
+   ]
+  }
+ },
+ {
+  "id": "hack-squat",
+  "name": "Hack squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Hack squat machine"
+  },
+  "level": "intermediate",
+  "easier": [
+   "leg-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "spinal-load"
+   ]
+  }
+ },
+ {
+  "id": "back-squat",
+  "name": "Barbell back squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core",
+   "lower back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "goblet-squat",
+   "leg-press"
+  ],
+  "harder": [
+   "front-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips",
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-load",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "front-squat",
+  "name": "Barbell front squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads"
+  ],
+  "secondary": [
+   "glutes",
+   "core",
+   "upper back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "goblet-squat",
+   "back-squat"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "wrists",
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-load",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "cossack-squat",
+  "name": "Cossack squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "adductors",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "kettlebells",
+    "dumbbells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "lateral-lunge"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "pistol-squat",
+  "name": "Pistol squat",
+  "aliases": [],
+  "pattern": "squat",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "rfe-split-squat",
+   "box-squat"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "hip-hinge-drill",
+  "name": "Hip hinge with a dowel",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary": [
+   "lower back"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "kettlebell-deadlift",
+   "romanian-deadlift"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "glute-bridge",
+  "name": "Glute bridge",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "single-leg-glute-bridge",
+   "hip-thrust"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "single-leg-glute-bridge",
+  "name": "Single-leg glute bridge",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "glute-bridge"
+  ],
+  "harder": [
+   "hip-thrust"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "hip-thrust",
+  "name": "Hip thrust",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "quads"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "bench"
+   ],
+   "oneOf": [
+    "barbells",
+    "dumbbells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "glute-bridge"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "cable-pull-through",
+  "name": "Cable pull-through",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes",
+   "hamstrings"
+  ],
+  "secondary": [
+   "lower back"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [
+    "cables"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "hip-hinge-drill"
+  ],
+  "harder": [
+   "romanian-deadlift"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-good-morning",
+  "name": "Banded good morning",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary": [
+   "lower back"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "hip-hinge-drill"
+  ],
+  "harder": [
+   "romanian-deadlift"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "kettlebell-deadlift",
+  "name": "Kettlebell deadlift",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes",
+   "hamstrings"
+  ],
+  "secondary": [
+   "quads",
+   "lower back",
+   "forearms"
+  ],
+  "modality": "kettlebell",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "kettlebells",
+    "dumbbells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "hip-hinge-drill"
+  ],
+  "harder": [
+   "romanian-deadlift",
+   "trap-bar-deadlift",
+   "kettlebell-swing"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "romanian-deadlift",
+  "name": "Romanian deadlift",
+  "aliases": [
+   "RDL"
+  ],
+  "pattern": "hinge",
+  "primary": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary": [
+   "lower back",
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "barbells",
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "kettlebell-deadlift",
+   "cable-pull-through"
+  ],
+  "harder": [
+   "single-leg-rdl",
+   "deadlift"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "single-leg-rdl",
+  "name": "Single-leg Romanian deadlift",
+  "aliases": [
+   "single-leg RDL"
+  ],
+  "pattern": "hinge",
+  "primary": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "romanian-deadlift"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "ankles"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "trap-bar-deadlift",
+  "name": "Trap bar deadlift",
+  "aliases": [
+   "hex bar deadlift"
+  ],
+  "pattern": "hinge",
+  "primary": [
+   "glutes",
+   "quads",
+   "hamstrings"
+  ],
+  "secondary": [
+   "upper back",
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": [],
+   "piece": "Trap bar"
+  },
+  "level": "intermediate",
+  "easier": [
+   "kettlebell-deadlift"
+  ],
+  "harder": [
+   "deadlift"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "knees"
+   ],
+   "flags": [
+    "spinal-load",
+    "grip",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "deadlift",
+  "name": "Barbell deadlift",
+  "aliases": [
+   "conventional deadlift"
+  ],
+  "pattern": "hinge",
+  "primary": [
+   "glutes",
+   "hamstrings"
+  ],
+  "secondary": [
+   "lower back",
+   "upper back",
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "trap-bar-deadlift",
+   "romanian-deadlift"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-load",
+    "grip",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "sumo-deadlift",
+  "name": "Sumo deadlift",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes",
+   "adductors",
+   "quads"
+  ],
+  "secondary": [
+   "hamstrings",
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "kettlebell-deadlift"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "hips"
+   ],
+   "flags": [
+    "spinal-load",
+    "grip",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "kettlebell-swing",
+  "name": "Kettlebell swing",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "glutes",
+   "hamstrings"
+  ],
+  "secondary": [
+   "core",
+   "shoulders"
+  ],
+  "modality": "kettlebell",
+  "equipment": {
+   "needs": [
+    "kettlebells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "kettlebell-deadlift"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "good-morning",
+  "name": "Barbell good morning",
+  "aliases": [],
+  "pattern": "hinge",
+  "primary": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary": [
+   "lower back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "band-good-morning",
+   "romanian-deadlift"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-load"
+   ]
+  }
+ },
+ {
+  "id": "back-extension",
+  "name": "Back extension",
+  "aliases": [
+   "hyperextension",
+   "45-degree back extension"
+  ],
+  "pattern": "hinge",
+  "primary": [
+   "lower back",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Back extension bench"
+  },
+  "level": "beginner",
+  "easier": [
+   "bird-dog"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "lying-face-down"
+   ]
+  }
+ },
+ {
+  "id": "assisted-split-squat",
+  "name": "Assisted split squat",
+  "aliases": [
+   "split squat holding a support"
+  ],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [],
+  "modality": "suspension",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "suspension"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "split-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "split-squat",
+  "name": "Split squat",
+  "aliases": [],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "adductors"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "assisted-split-squat"
+  ],
+  "harder": [
+   "rfe-split-squat",
+   "reverse-lunge"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "step-up",
+  "name": "Step-up",
+  "aliases": [],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "box"
+   ],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "sit-to-stand"
+  ],
+  "harder": [
+   "rfe-split-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "reverse-lunge",
+  "name": "Reverse lunge",
+  "aliases": [],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "adductors"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "split-squat"
+  ],
+  "harder": [
+   "walking-lunge",
+   "forward-lunge"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "forward-lunge",
+  "name": "Forward lunge",
+  "aliases": [],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "reverse-lunge"
+  ],
+  "harder": [
+   "walking-lunge"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "walking-lunge",
+  "name": "Walking lunge",
+  "aliases": [],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "reverse-lunge"
+  ],
+  "harder": [
+   "jumping-lunge"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "lateral-lunge",
+  "name": "Lateral lunge",
+  "aliases": [
+   "side lunge"
+  ],
+  "pattern": "lunge",
+  "primary": [
+   "adductors",
+   "quads",
+   "glutes"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [
+   "cossack-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "rfe-split-squat",
+  "name": "Rear-foot-elevated split squat",
+  "aliases": [
+   "Bulgarian split squat"
+  ],
+  "pattern": "lunge",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "adductors"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "bench"
+   ],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "split-squat",
+   "step-up"
+  ],
+  "harder": [
+   "pistol-squat"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "wall-push-up",
+  "name": "Wall push-up",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "incline-push-up"
+  ],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "incline-push-up",
+  "name": "Incline push-up",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "bench",
+    "box"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "wall-push-up"
+  ],
+  "harder": [
+   "push-up"
+  ],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "push-up",
+  "name": "Push-up",
+  "aliases": [
+   "press-up"
+  ],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "incline-push-up"
+  ],
+  "harder": [
+   "decline-push-up"
+  ],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "decline-push-up",
+  "name": "Decline push-up",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "front delts"
+  ],
+  "secondary": [
+   "triceps",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "bench",
+    "box"
+   ]
+  },
+  "level": "advanced",
+  "easier": [
+   "push-up"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": [
+    "inverted",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "trx-chest-press",
+  "name": "Suspension chest press",
+  "aliases": [
+   "TRX chest press"
+  ],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts",
+   "core"
+  ],
+  "modality": "suspension",
+  "equipment": {
+   "needs": [
+    "suspension"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "push-up"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-chest-press",
+  "name": "Banded chest press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "dumbbell-bench-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "machine-chest-press",
+  "name": "Machine chest press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Chest press machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "dumbbell-bench-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "cable-chest-press",
+  "name": "Cable chest press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts",
+   "core"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [
+    "cables"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "dumbbell-bench-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "floor-press",
+  "name": "Dumbbell floor press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "dumbbell-bench-press"
+  ],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": [
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "dumbbell-bench-press",
+  "name": "Dumbbell bench press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "machine-chest-press",
+   "floor-press"
+  ],
+  "harder": [
+   "barbell-bench-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "lying-on-back"
+   ]
+  }
+ },
+ {
+  "id": "incline-dumbbell-press",
+  "name": "Incline dumbbell press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "front delts"
+  ],
+  "secondary": [
+   "triceps"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "machine-chest-press"
+  ],
+  "harder": [
+   "incline-barbell-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "barbell-bench-press",
+  "name": "Barbell bench press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "dumbbell-bench-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "elbows"
+   ],
+   "flags": [
+    "lying-on-back",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "incline-barbell-press",
+  "name": "Incline barbell press",
+  "aliases": [],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "front delts"
+  ],
+  "secondary": [
+   "triceps"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "incline-dumbbell-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "dip",
+  "name": "Dip",
+  "aliases": [
+   "parallel bar dip"
+  ],
+  "pattern": "push-horizontal",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Dip station"
+  },
+  "level": "advanced",
+  "easier": [
+   "bench-dip",
+   "machine-chest-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "dumbbell-fly",
+  "name": "Dumbbell fly",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "chest"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "pec-deck"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "lying-on-back"
+   ]
+  }
+ },
+ {
+  "id": "cable-fly",
+  "name": "Cable fly",
+  "aliases": [
+   "cable crossover"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "chest"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [
+    "cables"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "pec-deck",
+  "name": "Pec deck",
+  "aliases": [
+   "machine fly"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "chest"
+  ],
+  "secondary": [
+   "front delts"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Pec deck machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "dumbbell-fly"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-overhead-press",
+  "name": "Banded overhead press",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "seated-dumbbell-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "landmine-press",
+  "name": "Landmine press",
+  "aliases": [
+   "half-kneeling landmine press"
+  ],
+  "pattern": "push-vertical",
+  "primary": [
+   "front delts",
+   "chest"
+  ],
+  "secondary": [
+   "triceps",
+   "core"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": [],
+   "piece": "Landmine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "standing-overhead-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "machine-shoulder-press",
+  "name": "Machine shoulder press",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Shoulder press machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "seated-dumbbell-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "seated-dumbbell-press",
+  "name": "Seated dumbbell shoulder press",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [
+   "upper back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "machine-shoulder-press",
+   "landmine-press"
+  ],
+  "harder": [
+   "standing-overhead-press",
+   "arnold-press"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "arnold-press",
+  "name": "Arnold press",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders"
+  ],
+  "secondary": [
+   "triceps"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "seated-dumbbell-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "kettlebell-press",
+  "name": "Kettlebell press",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "kettlebell",
+  "equipment": {
+   "needs": [
+    "kettlebells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "seated-dumbbell-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "wrists"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "standing-overhead-press",
+  "name": "Standing barbell overhead press",
+  "aliases": [
+   "military press",
+   "OHP"
+  ],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [
+   "core",
+   "upper back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "seated-dumbbell-press",
+   "landmine-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "lower-back"
+   ],
+   "flags": [
+    "overhead",
+    "spinal-load",
+    "breath-hold"
+   ]
+  }
+ },
+ {
+  "id": "pike-push-up",
+  "name": "Pike push-up",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "push-up"
+  ],
+  "harder": [
+   "handstand-push-up"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "wrists"
+   ],
+   "flags": [
+    "inverted"
+   ]
+  }
+ },
+ {
+  "id": "handstand-push-up",
+  "name": "Handstand push-up",
+  "aliases": [],
+  "pattern": "push-vertical",
+  "primary": [
+   "shoulders",
+   "triceps"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "pike-push-up"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "wrists",
+    "neck"
+   ],
+   "flags": [
+    "inverted",
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "band-row",
+  "name": "Banded row",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "rear delts"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "seated-cable-row",
+   "one-arm-dumbbell-row"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "trx-row",
+  "name": "Suspension row",
+  "aliases": [
+   "TRX row"
+  ],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "rear delts",
+   "core"
+  ],
+  "modality": "suspension",
+  "equipment": {
+   "needs": [
+    "suspension"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "inverted-row"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "low-row-machine",
+  "name": "Low row machine",
+  "aliases": [
+   "seated row machine"
+  ],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "rear delts"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Low row machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "one-arm-dumbbell-row"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "seated-cable-row",
+  "name": "Seated cable row",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "rear delts"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [
+    "cables"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "band-row"
+  ],
+  "harder": [
+   "bent-over-row"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "chest-supported-row",
+  "name": "Chest-supported dumbbell row",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "rear delts"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "bent-over-row"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "lying-face-down"
+   ]
+  }
+ },
+ {
+  "id": "one-arm-dumbbell-row",
+  "name": "One-arm dumbbell row",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "lats",
+   "upper back"
+  ],
+  "secondary": [
+   "biceps",
+   "rear delts"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [
+   "band-row",
+   "low-row-machine"
+  ],
+  "harder": [
+   "bent-over-row"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "inverted-row",
+  "name": "Inverted row",
+  "aliases": [
+   "bodyweight row",
+   "Australian pull-up"
+  ],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "barbells",
+    "suspension"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "trx-row"
+  ],
+  "harder": [
+   "pull-up"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "bent-over-row",
+  "name": "Bent-over barbell row",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "lower back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "barbells",
+    "dumbbells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "chest-supported-row",
+   "seated-cable-row"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "renegade-row",
+  "name": "Renegade row",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "lats",
+   "upper back",
+   "core"
+  ],
+  "secondary": [
+   "chest",
+   "triceps"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "one-arm-dumbbell-row",
+   "front-plank"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "face-pull",
+  "name": "Face pull",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "rear delts",
+   "upper back"
+  ],
+  "secondary": [
+   "shoulders"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-pull-apart",
+  "name": "Band pull-apart",
+  "aliases": [],
+  "pattern": "pull-horizontal",
+  "primary": [
+   "rear delts",
+   "upper back"
+  ],
+  "secondary": [],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "face-pull"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "reverse-fly",
+  "name": "Dumbbell reverse fly",
+  "aliases": [
+   "rear delt fly"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "rear delts",
+   "upper back"
+  ],
+  "secondary": [],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "band-pull-apart"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-pulldown",
+  "name": "Banded lat pulldown",
+  "aliases": [],
+  "pattern": "pull-vertical",
+  "primary": [
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "upper back"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "lat-pulldown"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "lat-pulldown",
+  "name": "Lat pulldown",
+  "aliases": [],
+  "pattern": "pull-vertical",
+  "primary": [
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "upper back"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "machines",
+    "cables"
+   ],
+   "piece": "Lat pulldown"
+  },
+  "level": "beginner",
+  "easier": [
+   "band-pulldown"
+  ],
+  "harder": [
+   "assisted-pull-up",
+   "pull-up"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "straight-arm-pulldown",
+  "name": "Straight-arm pulldown",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "lats"
+  ],
+  "secondary": [
+   "triceps",
+   "core"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "assisted-pull-up",
+  "name": "Assisted pull-up",
+  "aliases": [
+   "band-assisted pull-up"
+  ],
+  "pattern": "pull-vertical",
+  "primary": [
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "upper back"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "machines",
+    "bands"
+   ],
+   "piece": "Assisted pull-up machine"
+  },
+  "level": "beginner",
+  "easier": [
+   "lat-pulldown"
+  ],
+  "harder": [
+   "negative-pull-up",
+   "pull-up"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "scapular-pull-up",
+  "name": "Scapular pull-up",
+  "aliases": [],
+  "pattern": "pull-vertical",
+  "primary": [
+   "upper back",
+   "lats"
+  ],
+  "secondary": [
+   "forearms"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "pullup"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "negative-pull-up"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "negative-pull-up",
+  "name": "Negative pull-up",
+  "aliases": [],
+  "pattern": "pull-vertical",
+  "primary": [
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "upper back",
+   "forearms"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "pullup"
+   ],
+   "oneOf": [
+    "box",
+    "bench"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "assisted-pull-up"
+  ],
+  "harder": [
+   "pull-up"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "elbows"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "chin-up",
+  "name": "Chin-up",
+  "aliases": [],
+  "pattern": "pull-vertical",
+  "primary": [
+   "lats",
+   "biceps"
+  ],
+  "secondary": [
+   "upper back",
+   "forearms"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "pullup"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "negative-pull-up",
+   "assisted-pull-up"
+  ],
+  "harder": [
+   "pull-up"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "elbows"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "pull-up",
+  "name": "Pull-up",
+  "aliases": [],
+  "pattern": "pull-vertical",
+  "primary": [
+   "lats"
+  ],
+  "secondary": [
+   "biceps",
+   "upper back",
+   "forearms"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "pullup"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "chin-up",
+   "negative-pull-up",
+   "assisted-pull-up"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "elbows"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "dumbbell-pullover",
+  "name": "Dumbbell pullover",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "lats",
+   "chest"
+  ],
+  "secondary": [
+   "triceps"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells",
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "lying-on-back",
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "farmer-carry",
+  "name": "Farmer's carry",
+  "aliases": [
+   "farmer's walk"
+  ],
+  "pattern": "carry",
+  "primary": [
+   "forearms",
+   "upper back",
+   "core"
+  ],
+  "secondary": [
+   "glutes",
+   "calves"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "suitcase-carry",
+   "front-rack-carry"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "suitcase-carry",
+  "name": "Suitcase carry",
+  "aliases": [],
+  "pattern": "carry",
+  "primary": [
+   "core",
+   "forearms"
+  ],
+  "secondary": [
+   "upper back",
+   "glutes"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "kettlebells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "farmer-carry"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "front-rack-carry",
+  "name": "Front-rack carry",
+  "aliases": [],
+  "pattern": "carry",
+  "primary": [
+   "core",
+   "upper back"
+  ],
+  "secondary": [
+   "shoulders"
+  ],
+  "modality": "kettlebell",
+  "equipment": {
+   "needs": [
+    "kettlebells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "farmer-carry"
+  ],
+  "harder": [
+   "overhead-carry"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "overhead-carry",
+  "name": "Overhead carry",
+  "aliases": [],
+  "pattern": "carry",
+  "primary": [
+   "shoulders",
+   "core"
+  ],
+  "secondary": [
+   "upper back",
+   "triceps"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "kettlebells",
+    "dumbbells"
+   ]
+  },
+  "level": "advanced",
+  "easier": [
+   "front-rack-carry"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "sled-push",
+  "name": "Sled push",
+  "aliases": [],
+  "pattern": "carry",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "calves",
+   "chest",
+   "core"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [
+    "sled"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "sled-drag"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "sled-drag",
+  "name": "Sled drag",
+  "aliases": [],
+  "pattern": "carry",
+  "primary": [
+   "quads",
+   "glutes",
+   "hamstrings"
+  ],
+  "secondary": [
+   "calves",
+   "upper back"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [
+    "sled"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "sled-push"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "dead-bug",
+  "name": "Dead bug",
+  "aliases": [],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "hip flexors"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "hollow-hold",
+   "front-plank"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "bird-dog",
+  "name": "Bird dog",
+  "aliases": [],
+  "pattern": "core-anti-rotation",
+  "primary": [
+   "core",
+   "lower back"
+  ],
+  "secondary": [
+   "glutes",
+   "shoulders"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "front-plank"
+  ],
+  "cautions": {
+   "joints": [
+    "wrists"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "incline-plank",
+  "name": "Incline plank",
+  "aliases": [],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "shoulders"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "bench",
+    "box"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "front-plank"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "front-plank",
+  "name": "Plank",
+  "aliases": [
+   "front plank",
+   "forearm plank"
+  ],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "shoulders",
+   "glutes"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "incline-plank",
+   "dead-bug"
+  ],
+  "harder": [
+   "stability-ball-rollout",
+   "stir-the-pot"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "breath-hold",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "knee-side-plank",
+  "name": "Side plank from the knees",
+  "aliases": [],
+  "pattern": "core-lateral",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "side-plank"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "side-plank",
+  "name": "Side plank",
+  "aliases": [],
+  "pattern": "core-lateral",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "glutes",
+   "shoulders"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "knee-side-plank"
+  ],
+  "harder": [
+   "copenhagen-plank"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "pallof-press",
+  "name": "Pallof press",
+  "aliases": [],
+  "pattern": "core-anti-rotation",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "shoulders"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "cable-woodchop"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "hollow-hold",
+  "name": "Hollow hold",
+  "aliases": [],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "hip flexors"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "dead-bug"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "stability-ball-rollout",
+  "name": "Stability ball rollout",
+  "aliases": [],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "lats",
+   "shoulders"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "stabilityball"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "front-plank"
+  ],
+  "harder": [
+   "ab-wheel-rollout"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "ab-wheel-rollout",
+  "name": "Ab wheel rollout",
+  "aliases": [],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "lats",
+   "shoulders"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": [],
+   "piece": "Ab wheel"
+  },
+  "level": "advanced",
+  "easier": [
+   "stability-ball-rollout"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "stir-the-pot",
+  "name": "Stir the pot",
+  "aliases": [],
+  "pattern": "core-anti-extension",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "shoulders"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "stabilityball"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "front-plank"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "crunch",
+  "name": "Crunch",
+  "aliases": [],
+  "pattern": "core-flexion",
+  "primary": [
+   "core"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "reverse-crunch"
+  ],
+  "cautions": {
+   "joints": [
+    "neck"
+   ],
+   "flags": [
+    "spinal-flexion",
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "reverse-crunch",
+  "name": "Reverse crunch",
+  "aliases": [],
+  "pattern": "core-flexion",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "hip flexors"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "dead-bug"
+  ],
+  "harder": [
+   "hanging-knee-raise"
+  ],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-flexion",
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "hanging-knee-raise",
+  "name": "Hanging knee raise",
+  "aliases": [],
+  "pattern": "core-flexion",
+  "primary": [
+   "core",
+   "hip flexors"
+  ],
+  "secondary": [
+   "forearms"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "pullup"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "reverse-crunch"
+  ],
+  "harder": [
+   "hanging-leg-raise"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "grip",
+    "spinal-flexion"
+   ]
+  }
+ },
+ {
+  "id": "hanging-leg-raise",
+  "name": "Hanging leg raise",
+  "aliases": [],
+  "pattern": "core-flexion",
+  "primary": [
+   "core",
+   "hip flexors"
+  ],
+  "secondary": [
+   "forearms",
+   "lats"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "pullup"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "hanging-knee-raise"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "lower-back"
+   ],
+   "flags": [
+    "grip",
+    "spinal-flexion"
+   ]
+  }
+ },
+ {
+  "id": "cable-woodchop",
+  "name": "Cable woodchop",
+  "aliases": [],
+  "pattern": "rotation",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "shoulders",
+   "glutes"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "pallof-press"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-rotation"
+   ]
+  }
+ },
+ {
+  "id": "russian-twist",
+  "name": "Russian twist",
+  "aliases": [],
+  "pattern": "rotation",
+  "primary": [
+   "core"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "medball",
+    "dumbbells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-flexion",
+    "spinal-rotation",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "copenhagen-plank",
+  "name": "Copenhagen plank",
+  "aliases": [],
+  "pattern": "core-lateral",
+  "primary": [
+   "adductors",
+   "core"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "side-plank"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "hips"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "pilates-hundred",
+  "name": "The hundred (Pilates)",
+  "aliases": [],
+  "pattern": "core-flexion",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "hip flexors"
+  ],
+  "modality": "pilates",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "dead-bug"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "neck",
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-flexion",
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "dumbbell-curl",
+  "name": "Dumbbell curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "biceps"
+  ],
+  "secondary": [
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "band-curl"
+  ],
+  "harder": [
+   "barbell-curl"
+  ],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "hammer-curl",
+  "name": "Hammer curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "biceps",
+   "forearms"
+  ],
+  "secondary": [],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "dumbbells"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-curl",
+  "name": "Banded curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "biceps"
+  ],
+  "secondary": [],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "dumbbell-curl"
+  ],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "cable-curl",
+  "name": "Cable curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "biceps"
+  ],
+  "secondary": [
+   "forearms"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [
+    "cables"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "barbell-curl",
+  "name": "Barbell curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "biceps"
+  ],
+  "secondary": [
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "barbells"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "dumbbell-curl"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows",
+    "wrists"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "preacher-curl",
+  "name": "Preacher curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "biceps"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "machines",
+    "dumbbells"
+   ],
+   "piece": "Preacher curl bench"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "triceps-pushdown",
+  "name": "Triceps pushdown",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "triceps"
+  ],
+  "secondary": [],
+  "modality": "cable",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "overhead-triceps-extension",
+  "name": "Overhead triceps extension",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "triceps"
+  ],
+  "secondary": [],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "triceps-pushdown"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows",
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "skull-crusher",
+  "name": "Skull crusher",
+  "aliases": [
+   "lying triceps extension"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "triceps"
+  ],
+  "secondary": [],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [
+    "bench"
+   ],
+   "oneOf": [
+    "barbells",
+    "dumbbells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "triceps-pushdown"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "elbows"
+   ],
+   "flags": [
+    "lying-on-back"
+   ]
+  }
+ },
+ {
+  "id": "bench-dip",
+  "name": "Bench dip",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "triceps"
+  ],
+  "secondary": [
+   "chest",
+   "front delts"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "bench"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "triceps-pushdown"
+  ],
+  "harder": [
+   "dip"
+  ],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "wrists"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "close-grip-push-up",
+  "name": "Close-grip push-up",
+  "aliases": [
+   "diamond push-up"
+  ],
+  "pattern": "push-horizontal",
+  "primary": [
+   "triceps",
+   "chest"
+  ],
+  "secondary": [
+   "front delts",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "incline-push-up"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "elbows"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "lateral-raise",
+  "name": "Lateral raise",
+  "aliases": [
+   "side raise"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "side delts"
+  ],
+  "secondary": [
+   "upper back"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "machine-lateral-raise",
+  "name": "Machine lateral raise",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "side delts"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Lateral raise machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "front-raise",
+  "name": "Front raise",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "front delts"
+  ],
+  "secondary": [],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "cables",
+    "bands"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "shrug",
+  "name": "Shrug",
+  "aliases": [
+   "trap shrug"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "upper back"
+  ],
+  "secondary": [
+   "forearms"
+  ],
+  "modality": "free weights",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "barbells"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "neck"
+   ],
+   "flags": [
+    "grip"
+   ]
+  }
+ },
+ {
+  "id": "leg-extension",
+  "name": "Leg extension",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "quads"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Leg extension machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "lying-leg-curl",
+  "name": "Lying leg curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "hamstrings"
+  ],
+  "secondary": [
+   "calves"
+  ],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Lying leg curl machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "nordic-curl"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "lying-face-down"
+   ]
+  }
+ },
+ {
+  "id": "seated-leg-curl",
+  "name": "Seated leg curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "hamstrings"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Seated leg curl machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "nordic-curl"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "stability-ball-leg-curl",
+  "name": "Stability ball hamstring curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "hamstrings"
+  ],
+  "secondary": [
+   "glutes",
+   "core"
+  ],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "stabilityball"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "glute-bridge"
+  ],
+  "harder": [
+   "nordic-curl"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "lying-on-back",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "nordic-curl",
+  "name": "Nordic hamstring curl",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "hamstrings"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "stability-ball-leg-curl",
+   "lying-leg-curl"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "standing-calf-raise",
+  "name": "Standing calf raise",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "calves"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "dumbbells",
+    "machines",
+    "box"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "single-leg-calf-raise"
+  ],
+  "cautions": {
+   "joints": [
+    "ankles"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "single-leg-calf-raise",
+  "name": "Single-leg calf raise",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "calves"
+  ],
+  "secondary": [],
+  "modality": "bodyweight",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "box",
+    "dumbbells"
+   ]
+  },
+  "level": "intermediate",
+  "easier": [
+   "standing-calf-raise"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "ankles"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "seated-calf-raise",
+  "name": "Seated calf raise",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "calves"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "machines",
+    "dumbbells"
+   ],
+   "piece": "Seated calf machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "ankles"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "hip-abduction-machine",
+  "name": "Hip abduction machine",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Hip abduction machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "hips"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "hip-adduction-machine",
+  "name": "Hip adduction machine",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "adductors"
+  ],
+  "secondary": [],
+  "modality": "machine",
+  "equipment": {
+   "needs": [
+    "machines"
+   ],
+   "oneOf": [],
+   "piece": "Hip adduction machine"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "copenhagen-plank"
+  ],
+  "cautions": {
+   "joints": [
+    "hips"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "band-side-walk",
+  "name": "Banded side walk",
+  "aliases": [
+   "monster walk",
+   "lateral band walk"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [
+   "quads"
+  ],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "bands"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "lateral-lunge"
+  ],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "clamshell",
+  "name": "Clamshell",
+  "aliases": [],
+  "pattern": "isolation",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [],
+  "modality": "band",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": [
+    "bands"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "band-side-walk"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "glute-kickback",
+  "name": "Glute kickback",
+  "aliases": [
+   "cable kickback"
+  ],
+  "pattern": "isolation",
+  "primary": [
+   "glutes"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "cable",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "cables",
+    "bands",
+    "machines"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "med-ball-chest-pass",
+  "name": "Medicine ball chest pass",
+  "aliases": [],
+  "pattern": "plyometric",
+  "primary": [
+   "chest",
+   "triceps"
+  ],
+  "secondary": [
+   "shoulders",
+   "core"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [
+    "medball"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "med-ball-slam",
+  "name": "Medicine ball slam",
+  "aliases": [],
+  "pattern": "plyometric",
+  "primary": [
+   "core",
+   "lats"
+  ],
+  "secondary": [
+   "shoulders",
+   "glutes"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [
+    "medball"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back",
+    "shoulders"
+   ],
+   "flags": [
+    "overhead",
+    "spinal-flexion"
+   ]
+  }
+ },
+ {
+  "id": "med-ball-rotational-throw",
+  "name": "Rotational medicine ball throw",
+  "aliases": [],
+  "pattern": "rotation",
+  "primary": [
+   "core"
+  ],
+  "secondary": [
+   "glutes",
+   "shoulders"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [
+    "medball"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "cable-woodchop"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-rotation"
+   ]
+  }
+ },
+ {
+  "id": "pogo-hop",
+  "name": "Pogo hops",
+  "aliases": [],
+  "pattern": "plyometric",
+  "primary": [
+   "calves"
+  ],
+  "secondary": [
+   "quads"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "standing-calf-raise"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "ankles",
+    "knees"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "jump-squat",
+  "name": "Jump squat",
+  "aliases": [],
+  "pattern": "plyometric",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "calves"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "bodyweight-squat"
+  ],
+  "harder": [
+   "box-jump",
+   "broad-jump"
+  ],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "box-jump",
+  "name": "Box jump",
+  "aliases": [],
+  "pattern": "plyometric",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "calves"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [
+    "box"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "jump-squat"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "broad-jump",
+  "name": "Broad jump",
+  "aliases": [],
+  "pattern": "plyometric",
+  "primary": [
+   "glutes",
+   "quads"
+  ],
+  "secondary": [
+   "hamstrings",
+   "calves"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "jump-squat"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "skater-jump",
+  "name": "Skater jump",
+  "aliases": [
+   "lateral bound"
+  ],
+  "pattern": "plyometric",
+  "primary": [
+   "glutes",
+   "quads"
+  ],
+  "secondary": [
+   "adductors",
+   "calves"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "lateral-lunge"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles"
+   ],
+   "flags": [
+    "high-impact",
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "jumping-lunge",
+  "name": "Jumping lunge",
+  "aliases": [
+   "split jump"
+  ],
+  "pattern": "plyometric",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "calves"
+  ],
+  "modality": "plyometric",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "walking-lunge"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles"
+   ],
+   "flags": [
+    "high-impact",
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "march-in-place",
+  "name": "Marching in place",
+  "aliases": [
+   "low-impact march"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "hip flexors",
+   "calves"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "high-knees",
+   "step-jack"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "step-jack",
+  "name": "Step jack",
+  "aliases": [
+   "low-impact jumping jack"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "calves",
+   "shoulders"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "march-in-place"
+  ],
+  "harder": [
+   "jumping-jack"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "jumping-jack",
+  "name": "Jumping jack",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "calves",
+   "shoulders"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [
+   "step-jack"
+  ],
+  "harder": [
+   "burpee"
+  ],
+  "cautions": {
+   "joints": [
+    "ankles",
+    "knees"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "high-knees",
+  "name": "High knees",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "hip flexors",
+   "calves"
+  ],
+  "secondary": [
+   "quads",
+   "core"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "march-in-place"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "ankles",
+    "knees"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "mountain-climber",
+  "name": "Mountain climber",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "core",
+   "hip flexors"
+  ],
+  "secondary": [
+   "shoulders",
+   "quads"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "incline-plank"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "bear-crawl",
+  "name": "Bear crawl",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "core",
+   "shoulders"
+  ],
+  "secondary": [
+   "quads"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "bird-dog"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "burpee",
+  "name": "Burpee",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "quads",
+   "chest",
+   "core"
+  ],
+  "secondary": [
+   "shoulders",
+   "calves"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "advanced",
+  "easier": [
+   "step-jack",
+   "mountain-climber"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "knees",
+    "shoulders"
+   ],
+   "flags": [
+    "high-impact",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "shadow-boxing",
+  "name": "Shadow boxing",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "shoulders"
+  ],
+  "secondary": [
+   "core",
+   "calves"
+  ],
+  "modality": "conditioning",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "treadmill-walk",
+  "name": "Treadmill walk",
+  "aliases": [
+   "walking"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "quads",
+   "calves"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Treadmill"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "incline-walk",
+   "treadmill-run"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "incline-walk",
+  "name": "Incline walk",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "glutes",
+   "calves"
+  ],
+  "secondary": [
+   "hamstrings"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Treadmill"
+  },
+  "level": "beginner",
+  "easier": [
+   "treadmill-walk"
+  ],
+  "harder": [
+   "stair-climber"
+  ],
+  "cautions": {
+   "joints": [
+    "ankles"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "treadmill-run",
+  "name": "Treadmill run",
+  "aliases": [
+   "running"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "quads",
+   "calves"
+  ],
+  "secondary": [
+   "glutes",
+   "hamstrings"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Treadmill"
+  },
+  "level": "intermediate",
+  "easier": [
+   "treadmill-walk"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees",
+    "ankles",
+    "hips"
+   ],
+   "flags": [
+    "high-impact"
+   ]
+  }
+ },
+ {
+  "id": "stationary-bike",
+  "name": "Stationary bike",
+  "aliases": [
+   "exercise bike",
+   "spin bike"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "quads"
+  ],
+  "secondary": [
+   "glutes",
+   "calves"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Stationary bike"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "air-bike"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "air-bike",
+  "name": "Air bike",
+  "aliases": [
+   "assault bike",
+   "fan bike"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "quads",
+   "shoulders"
+  ],
+  "secondary": [
+   "glutes",
+   "chest",
+   "upper back"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Air bike"
+  },
+  "level": "intermediate",
+  "easier": [
+   "stationary-bike"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "elliptical",
+  "name": "Elliptical",
+  "aliases": [
+   "cross trainer"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "quads",
+   "glutes"
+  ],
+  "secondary": [
+   "calves",
+   "shoulders"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Elliptical"
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [
+   "rower"
+  ],
+  "cautions": {
+   "joints": [],
+   "flags": []
+  }
+ },
+ {
+  "id": "rower",
+  "name": "Rowing machine",
+  "aliases": [
+   "erg",
+   "rowing ergometer"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "lats",
+   "upper back",
+   "quads"
+  ],
+  "secondary": [
+   "glutes",
+   "biceps",
+   "core"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Rowing machine"
+  },
+  "level": "intermediate",
+  "easier": [
+   "stationary-bike"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "stair-climber",
+  "name": "Stair climber",
+  "aliases": [
+   "StairMaster"
+  ],
+  "pattern": "conditioning",
+  "primary": [
+   "glutes",
+   "quads"
+  ],
+  "secondary": [
+   "calves"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Stair climber"
+  },
+  "level": "intermediate",
+  "easier": [
+   "incline-walk"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "ski-erg",
+  "name": "Ski erg",
+  "aliases": [],
+  "pattern": "conditioning",
+  "primary": [
+   "lats",
+   "triceps",
+   "core"
+  ],
+  "secondary": [
+   "glutes",
+   "shoulders"
+  ],
+  "modality": "cardio",
+  "equipment": {
+   "needs": [
+    "cardio"
+   ],
+   "oneOf": [],
+   "piece": "Ski erg"
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders",
+    "lower-back"
+   ],
+   "flags": [
+    "spinal-flexion"
+   ]
+  }
+ },
+ {
+  "id": "cat-cow",
+  "name": "Cat-cow",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "lower back"
+  ],
+  "secondary": [
+   "core"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "childs-pose",
+  "name": "Child's pose",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "lower back",
+   "lats"
+  ],
+  "secondary": [
+   "glutes"
+  ],
+  "modality": "yoga",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "downward-dog",
+  "name": "Downward dog",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "hamstrings",
+   "calves",
+   "shoulders"
+  ],
+  "secondary": [],
+  "modality": "yoga",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists",
+    "shoulders"
+   ],
+   "flags": [
+    "inverted",
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "hip-flexor-stretch",
+  "name": "Half-kneeling hip flexor stretch",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "hip flexors"
+  ],
+  "secondary": [
+   "quads"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "worlds-greatest-stretch",
+  "name": "World's greatest stretch",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "hip flexors",
+   "hamstrings",
+   "upper back"
+  ],
+  "secondary": [
+   "adductors"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "intermediate",
+  "easier": [
+   "hip-flexor-stretch"
+  ],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "wrists"
+   ],
+   "flags": [
+    "floor-transfer",
+    "balance"
+   ]
+  }
+ },
+ {
+  "id": "ninety-ninety",
+  "name": "90/90 hip switch",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "glutes",
+   "hip flexors"
+  ],
+  "secondary": [
+   "adductors"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "hips",
+    "knees"
+   ],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "open-book",
+  "name": "Open book (thoracic rotation)",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "upper back"
+  ],
+  "secondary": [
+   "chest"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "wall-slide",
+  "name": "Wall slide",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "shoulders",
+   "upper back"
+  ],
+  "secondary": [],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "shoulders"
+   ],
+   "flags": [
+    "overhead"
+   ]
+  }
+ },
+ {
+  "id": "ankle-mobility",
+  "name": "Knee-to-wall ankle mobilization",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "calves"
+  ],
+  "secondary": [],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "ankles"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "hamstring-stretch",
+  "name": "Standing hamstring stretch",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "hamstrings"
+  ],
+  "secondary": [
+   "calves"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [],
+   "oneOf": [
+    "bench",
+    "box"
+   ]
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "lower-back"
+   ],
+   "flags": []
+  }
+ },
+ {
+  "id": "foam-roll",
+  "name": "Foam rolling",
+  "aliases": [
+   "self-massage"
+  ],
+  "pattern": "mobility",
+  "primary": [
+   "quads",
+   "hamstrings",
+   "upper back"
+  ],
+  "secondary": [
+   "calves",
+   "glutes"
+  ],
+  "modality": "mobility",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [],
+   "flags": [
+    "floor-transfer"
+   ]
+  }
+ },
+ {
+  "id": "warrior-two",
+  "name": "Warrior II",
+  "aliases": [],
+  "pattern": "mobility",
+  "primary": [
+   "quads",
+   "adductors"
+  ],
+  "secondary": [
+   "shoulders",
+   "glutes"
+  ],
+  "modality": "yoga",
+  "equipment": {
+   "needs": [
+    "mat"
+   ],
+   "oneOf": []
+  },
+  "level": "beginner",
+  "easier": [],
+  "harder": [],
+  "cautions": {
+   "joints": [
+    "knees"
+   ],
+   "flags": [
+    "balance"
+   ]
+  }
+ }
+]
