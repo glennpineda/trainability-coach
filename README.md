@@ -57,6 +57,8 @@ As in Studio:
   name (1.0 is Caesious).
 - **`BRAINSTORM.md`** — the working queue. Saying "brainstorm" means work
   through **Next up**.
+- **`CLAUDE.md`** — the working rules Claude follows here, in this repo so a
+  cloud session follows them too.
 - **`NEURALBRAIN.md`** — every finished item and test run, with how it was
   done, newest first.
 
