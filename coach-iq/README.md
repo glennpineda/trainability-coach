@@ -5,6 +5,28 @@ practices Billy works from when he helps a trainer design or check a program.
 It is not a set of programs. It is written in our own words, from the books
 Glenn has read, and it is the base the program reader will judge against later.
 
+## What it has to know (Glenn, 16 Oct 2026)
+
+"It needs to learn about different modalities, alternative exercises (based
+on fitness level, disabilities, illnesses, limitations), but also be able to
+keep it fun by suggesting other exercises that hits the same muscle
+group/goal."
+
+So Coach IQ is two parts:
+
+1. **Principles**, in prose, one file per topic: how to design a program, and
+   how to adapt it to a fitness level, a disability, an illness or a
+   limitation, including when somebody needs a doctor's clearance first. It
+   gives general adaptations and when to refer on; it never diagnoses.
+2. **The exercise library**, as a list rather than prose, so alternatives can
+   be found by matching. Each exercise records its movement (squat, hinge,
+   push, pull, carry, rotation …), the muscles it works, its modality and
+   equipment, its level, its easier and harder versions, and its cautions:
+   the joints it loads and the conditions that call for care. An alternative
+   is the same movement and muscles with a different tool or level, and
+   nothing the client's limitation rules out; variety, to keep it fun, is the
+   same goal by a different exercise.
+
 ## The rules (Glenn, 16 Oct 2026)
 
 - **The trainer's word always wins.** Coach IQ is guidance and assistance only.
