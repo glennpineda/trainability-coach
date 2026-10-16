@@ -81,7 +81,8 @@ by Studio, so:
 1. Open **trainabilitycoach.com** in your web browser.
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
-   **COACH** underneath. Under the logo it says *Use the same email and
+   **COACH** underneath. Under the logo is the version the app is on — for
+   example *Version 1.0.0 · Caesious* — and then *Use the same email and
    password as Trainability Studio.*
 3. Tap the **Email** box and type your email address. With a
    @trainabilitystudio.com address you can type just the part before the @ —
@@ -196,6 +197,9 @@ Each card is marked **Coming soon** for now, and tapping it does nothing yet.
    account you have: **Trainer**, **Admin**, **Master** or **Front desk** —
    the same as in Studio.
 3. Under that are **Open Studio** (3.3) and **Log out** (2.5).
+4. The last line is the version the app is on, such as
+   *Version 1.0.0 · Caesious*. If you ever report a problem, say which
+   version it was.
 
 To close the panel without choosing anything, tap anywhere outside it, or
 press Esc on a keyboard.
@@ -228,6 +232,7 @@ and light otherwise. There is nothing to set in the app.
 | **Temporary password** | A password emailed to you when yours is reset or forgotten. Use it once, then choose your own in Studio (2.4). |
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
+| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and in your account menu. |
 
 <div style="page-break-after: always;"></div>
 

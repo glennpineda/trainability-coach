@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { LogOut, ExternalLink, ChevronDown } from "lucide-react";
 import badgeLight from "../assets/coach-badge-light.svg";
 import { STUDIO_URL } from "../lib/api";
+import { VERSION_LABEL } from "../version";
 
 const initials = (name = "") =>
   name.trim().split(/\s+/).slice(0, 2).map(w => w[0]?.toUpperCase() || "").join("") || "?";
@@ -69,6 +70,7 @@ export function Header({ user, onLogout }) {
               <button role="menuitem" onClick={onLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-[var(--ghost-fill)]">
                 <LogOut size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Log out
               </button>
+              <p className="px-3 pt-1 pb-1 text-[11px]" style={{ color: "var(--iron)" }}>Version {VERSION_LABEL}</p>
             </div>
           )}
         </div>

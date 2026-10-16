@@ -3,6 +3,7 @@ import { KeyRound, Loader2 } from "lucide-react";
 import { HexBackdrop } from "./HexBackdrop";
 import { CoachLockup } from "./CoachLockup";
 import { apiRequest, STUDIO_URL } from "../lib/api";
+import { VERSION_LABEL } from "../version";
 
 /* As on Studio's screen: a name typed without an @ is taken as a studio
    address, since on a phone the @ is a keyboard switch away. */
@@ -79,8 +80,10 @@ export function LoginScreen({ onLogin, offline }) {
       <HexBackdrop />
       <div className="w-full max-w-sm relative z-10">
         <div className="cx-card p-7" style={{ borderRadius: 20, boxShadow: "0 18px 50px rgba(0,0,0,0.35)" }}>
-          <div className="flex justify-center mb-6">
+          <div className="flex flex-col items-center mb-6">
             <CoachLockup style={{ width: 150, height: "auto" }} />
+            {/* Under the logo, as on Studio's sign-in screen. */}
+            <div className="text-sm mt-3" style={{ color: "var(--iron)" }}>Version {VERSION_LABEL}</div>
           </div>
 
           {offline && (

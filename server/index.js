@@ -1,6 +1,6 @@
 import express from "express";
 import path from "node:path";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 /**
@@ -29,6 +29,10 @@ const PORT = Number(process.env.PORT || 4800);
 const STUDIO_ORIGIN = (process.env.STUDIO_ORIGIN || "http://localhost:4242").replace(/\/+$/, "");
 const SESSION_COOKIE = "ts_session";
 
+/* Which version this is, from the same package.json the page is built from,
+   so the page and its host cannot disagree. Never a reason not to start. */
+const PKG = (() => { try { return JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")); } catch { return {}; } })();
+
 const RELAYED = new Set(["/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password"]);
 
 const app = express();
@@ -37,7 +41,7 @@ app.disable("x-powered-by");
 app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
 app.use("/api", express.json({ limit: "20kb" }));
 
-app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", studio: STUDIO_ORIGIN }));
+app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), studio: STUDIO_ORIGIN }));
 
 /* Only Studio's session cookie is passed on, never anything else the browser
    holds for Coach's domain. */

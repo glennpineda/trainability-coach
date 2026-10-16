@@ -53,6 +53,8 @@ As in Studio:
   `npm run manual` to refresh its copy at the bottom of `NEURALBRAIN.md`;
   `npm run check-docs` fails if the copy is behind or a picture is missing.
   `npm run screenshots` retakes its pictures from the running app.
+- **`CHANGELOG.md`** — what changed in each release, under its version and
+  name (1.0 is Caesious).
 - **`BRAINSTORM.md`** — the working queue. Saying "brainstorm" means work
   through **Next up**.
 - **`NEURALBRAIN.md`** — every finished item and test run, with how it was
