@@ -50,7 +50,7 @@ export function Header({ user, onLogout }) {
           <button onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
             className="flex items-center gap-2 rounded-full pl-1 pr-2 py-1 hover:bg-white/10 transition-colors">
             <Avatar user={user} />
-            <span className="hidden sm:block text-sm font-medium text-white max-w-[12rem] truncate">{user.name}</span>
+            <span className="hidden sm:block text-sm font-medium text-white max-w-48 truncate">{user.name}</span>
             <ChevronDown size={16} className="text-white/70" aria-hidden="true" />
           </button>
           {open && (
@@ -64,10 +64,10 @@ export function Header({ user, onLogout }) {
                 </div>
               </div>
               <div className="my-1 border-t" style={{ borderColor: "var(--iron-line)" }} />
-              <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-[var(--ghost-fill)]">
+              <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
                 <ExternalLink size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Open Studio
               </a>
-              <button role="menuitem" onClick={onLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-[var(--ghost-fill)]">
+              <button role="menuitem" onClick={onLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
                 <LogOut size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Log out
               </button>
               <p className="px-3 pt-1 pb-1 text-[11px]" style={{ color: "var(--iron)" }}>Version {VERSION_LABEL}</p>

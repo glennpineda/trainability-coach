@@ -1,98 +1,111 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* Coach's colors, from the logo kit (brand/README.txt). Studio's screens are
    built on the same token names (--ink, --paper, --chalk, --iron …) so a
    component lifted from one app reads correctly in the other. */
-:root {
-  --cerulean: #007BA7;
-  --cerulean-deep: #005F82;
-  --sky: #4FA8DC;
-  --navy: #172A3A;
-  --navy-deep: #0E1C28;
-
-  --ink: #172A3A;
-  --ink-soft: #3B4F60;
-  --iron: #5B6B78;
-  --iron-line: #D5DEE5;
-  --paper: #F3F7FA;
-  --chalk: #FFFFFF;
-  --ghost-fill: #E7EEF3;
-  --accent: #007BA7;          /* links and icons; 4.9:1 on white */
-  --accent-soft: #E3F1F8;
-  --ember: #C2412D;
-  --ember-soft: #FBEAE7;
-  --moss: #2E7D4F;
-  --moss-soft: #E5F3EA;
-  --soft-shadow: 0 10px 24px -12px rgba(23, 42, 58, 0.28), 0 1px 3px rgba(23, 42, 58, 0.10);
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --ink: #EEF4F8;
-    --ink-soft: #CFDCE6;
-    --iron: #9DB0BF;
-    --iron-line: #2C4255;
-    --paper: #0E1C28;
-    --chalk: #172A3A;
-    --ghost-fill: #213749;
-    --accent: #4FA8DC;        /* sky on navy; cerulean is too dark to read here */
-    --accent-soft: #1A3A52;
-    --ember: #FF8F80;
-    --ember-soft: #3D2526;
-    --moss: #8FCB8A;
-    --moss-soft: #1E3A2C;
-    --soft-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    color-scheme: dark;
-  }
-}
+    --cerulean: #007BA7;
+    --cerulean-deep: #005F82;
+    --sky: #4FA8DC;
+    --navy: #172A3A;
+    --navy-deep: #0E1C28;
 
-html, body, #root { min-height: 100%; }
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-@layer components {
-  .cx-card {
-    background: var(--chalk);
-    border: 1px solid var(--iron-line);
-    border-radius: 16px;
-    box-shadow: var(--soft-shadow);
+    --ink: #172A3A;
+    --ink-soft: #3B4F60;
+    --iron: #5B6B78;
+    --iron-line: #D5DEE5;
+    --paper: #F3F7FA;
+    --chalk: #FFFFFF;
+    --ghost-fill: #E7EEF3;
+    --accent: #007BA7;          /* links and icons; 4.9:1 on white */
+    --accent-soft: #E3F1F8;
+    --ember: #C2412D;
+    --ember-soft: #FBEAE7;
+    --moss: #2E7D4F;
+    --moss-soft: #E5F3EA;
+    --soft-shadow: 0 10px 24px -12px rgba(23, 42, 58, 0.28), 0 1px 3px rgba(23, 42, 58, 0.10);
+    color-scheme: light;
   }
-  .cx-input {
-    width: 100%;
-    background: var(--chalk);
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #EEF4F8;
+      --ink-soft: #CFDCE6;
+      --iron: #9DB0BF;
+      --iron-line: #2C4255;
+      --paper: #0E1C28;
+      --chalk: #172A3A;
+      --ghost-fill: #213749;
+      --accent: #4FA8DC;        /* sky on navy; cerulean is too dark to read here */
+      --accent-soft: #1A3A52;
+      --ember: #FF8F80;
+      --ember-soft: #3D2526;
+      --moss: #8FCB8A;
+      --moss-soft: #1E3A2C;
+      --soft-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      color-scheme: dark;
+    }
+  }
+
+  /* Two things Tailwind 3 did by default and 4 no longer does. A border with
+     no color of its own is the app's soft line rather than the text color,
+     and anything pressable shows the pointing hand. */
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    border-color: var(--iron-line);
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html, body, #root { min-height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
     color: var(--ink);
-    border: 1px solid var(--iron-line);
-    border-radius: 10px;
-    padding: 0.6rem 0.75rem;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color .15s, box-shadow .15s;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
-  .cx-input:focus { border-color: var(--cerulean); box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.18); }
-  .cx-input[readonly] { color: var(--iron); background: var(--ghost-fill); }
-  .cx-btn-primary {
-    background: var(--cerulean);
-    color: #fff;
-    font-weight: 600;
-    border-radius: 10px;
-    transition: background .15s, transform .05s;
-  }
-  .cx-btn-primary:hover { background: var(--cerulean-deep); }
-  .cx-btn-primary:active { transform: translateY(1px); }
-  .cx-btn-primary:disabled { opacity: .45; cursor: default; }
-  .cx-link {
-    color: var(--accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-  }
-  .cx-link:hover { text-decoration: underline; }
+}
+
+/* The app's own pieces. Utilities rather than plain classes, so Tailwind's
+   variants (hover:, sm: …) work on them as on its own. */
+@utility cx-card {
+  background: var(--chalk);
+  border: 1px solid var(--iron-line);
+  border-radius: 16px;
+  box-shadow: var(--soft-shadow);
+}
+
+@utility cx-input {
+  width: 100%;
+  background: var(--chalk);
+  color: var(--ink);
+  border: 1px solid var(--iron-line);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  &:focus { border-color: var(--cerulean); box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.18); }
+  &[readonly] { color: var(--iron); background: var(--ghost-fill); }
+}
+
+@utility cx-btn-primary {
+  background: var(--cerulean);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background .15s, transform .05s;
+  &:hover { background: var(--cerulean-deep); }
+  &:active { transform: translateY(1px); }
+  &:disabled { opacity: .45; cursor: default; }
+}
+
+@utility cx-link {
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  &:hover { text-decoration: underline; }
 }

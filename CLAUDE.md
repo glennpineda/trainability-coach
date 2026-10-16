@@ -15,7 +15,7 @@ described in `README.md`.
   `STUDIO_ORIGIN`. A user signs in with the same password as Studio but gets a
   separate session. Most Coach work should need no change to Studio. If one
   seems needed, say so and ask first.
-- The stack matches Studio's: React 18, Vite 5, Tailwind 3, lucide icons and
+- The stack matches Studio's: React 18, Vite 8, Tailwind 4 (CSS-first: no tailwind.config.js), lucide icons and
   Express. The color tokens use Studio's names in `src/index.css`: Cerulean
   `#007BA7` (main), Sky `#4FA8DC`, Navy `#172A3A`. The wordmark is
   TRAINABILITY® (not ™).

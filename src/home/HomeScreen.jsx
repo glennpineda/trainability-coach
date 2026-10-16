@@ -21,7 +21,7 @@ const SECTIONS = [
 export function HomeScreen({ user, onLogout }) {
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
-    <div className="min-h-[100dvh]" style={{ background: "var(--paper)" }}>
+    <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
       <Header user={user} onLogout={onLogout} />
 
       {/* A cerulean band under the header, so the greeting has the sign-in

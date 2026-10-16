@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { readFileSync } from "node:fs";
 
 /* The version and its name, baked into the bundle from package.json, as in
@@ -22,7 +23,7 @@ const appVersion = {
    In development the same path is kept: /api goes to Coach's server on 4800
    (`npm run server`), which relays to Studio's API. */
 export default defineConfig({
-  plugins: [react(), appVersion],
+  plugins: [react(), tailwindcss(), appVersion],
   server: {
     port: 5174,
     proxy: { "/api": { target: process.env.API_URL || "http://localhost:4800", changeOrigin: true } },

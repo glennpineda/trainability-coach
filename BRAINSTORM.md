@@ -37,17 +37,6 @@ Nothing yet. Coach has not had a test run.
 
 _Not thought through yet._
 
-- **npm's security warnings: Vite and Tailwind upgrades.** (16 Oct 2026;
-  found by the first cloud session) `npm audit` reports 9: vite (path
-  traversal in its dev server's `.map` handling; launch-editor on Windows),
-  esbuild (any website can query the dev server), and tailwindcss through
-  chokidar, fast-glob, micromatch and braces (denial of service on deeply
-  nested patterns), plus postcss-selector-parser. All are build or dev-server
-  tools. The live site's Express server only serves the finished `dist/`, so
-  none of them runs in production, and the dev server is only on Glenn's Mac.
-  Clearing them means Vite 8 and Tailwind 4, both large upgrades. Studio is on
-  the same versions, so it is probably worth doing in both apps together.
-
 - **What goes on the home screen.** (16 Oct 2026) The four cards are
   placeholders, each marked Coming soon, so the shape could be judged before
   any of it is built: **Today** (the day's sessions), **Clients** (who you

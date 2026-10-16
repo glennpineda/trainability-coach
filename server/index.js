@@ -41,7 +41,7 @@ app.disable("x-powered-by");
 app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
 app.use("/api", express.json({ limit: "20kb" }));
 
-app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), studio: STUDIO_ORIGIN }));
+app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN }));
 
 /* Only Studio's session cookie is passed on, never anything else the browser
    holds for Coach's domain. */

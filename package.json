@@ -15,18 +15,17 @@
     "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.2",
     "express": "^5.2.1",
     "lucide-react": "^0.454.0",
-    "postcss": "^8.4.49",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^3.4.17",
-    "vite": "^5.4.11"
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.4"
   },
   "engines": {
-    "node": ">=22.5"
+    "node": ">=22.12"
   },
   "main": "server/index.js",
   "devDependencies": {
