@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, ExternalLink, LogOut } from "lucide-react";
+import { ChevronDown, Dumbbell, ExternalLink, LogOut } from "lucide-react";
 import { STUDIO_URL } from "../lib/api";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
@@ -13,7 +13,7 @@ const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "
  * after the role badge, and is the one place for these — the tab bar has no
  * Profile. Your name shows beside the photo where there is room.
  */
-export function AccountMenu({ user, onLogout }) {
+export function AccountMenu({ user, onLogout, onOpen }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const btnRef = useRef(null);
@@ -50,6 +50,13 @@ export function AccountMenu({ user, onLogout }) {
             </div>
           </div>
           <div className="my-1 border-t" />
+          {/* The trainer's own equipment, the start of their personal memory. */}
+          {onOpen && (
+            <button role="menuitem" type="button" onClick={() => { setOpen(false); onOpen("equipment"); }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
+              <Dumbbell size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> My equipment
+            </button>
+          )}
           <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
             <ExternalLink size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Open Studio
           </a>

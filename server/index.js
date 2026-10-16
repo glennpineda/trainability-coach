@@ -3,6 +3,8 @@ import path from "node:path";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import * as billy from "./billy.js";
+import * as db from "./db.js";
+import * as equipment from "./equipment.js";
 
 /**
  * Coach's server: the built page, and a relay to Studio for signing in and
@@ -49,7 +51,7 @@ app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
 app.use("/api/assistant", express.json({ limit: "32mb" }));
 app.use("/api", express.json({ limit: "20kb" }));
 
-app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN }));
+app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN, database: db.dialect() }));
 
 /* Only Studio's session cookie is passed on, never anything else the browser
    holds for Coach's domain. */
@@ -149,6 +151,45 @@ app.get("/api/clients", async (req, res) => {
   }
 });
 
+/* The trainer's equipment, the first part of their personal memory
+   (server/equipment.js). Each person's own: the trainer is whoever Studio
+   says is signed in, never an id the browser sends. */
+const asSignedIn = (what, fn) => async (req, res) => {
+  try {
+    await fn(req, res, await signedIn(req));
+  } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
+    if (err?.code === "studio_unreachable" || err?.name === "TypeError" || err?.name === "TimeoutError") return unreachable(res, what, err);
+    console.error(`${what} failed: ${err.message}`);
+    res.status(500).json({ error: "That didn't save. Try again in a minute.", code: "failed" });
+  }
+};
+
+app.get("/api/equipment", asSignedIn("GET /equipment", async (_req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
+app.put("/api/equipment/categories/:key", asSignedIn("PUT /equipment/categories", async (req, res, user) => {
+  const has = req.body?.has;
+  if (!equipment.isCategory(req.params.key)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  if (has !== true && has !== false && has !== null) return res.status(400).json({ error: "Say yes, no, or not answered.", code: "invalid" });
+  await equipment.setCategory(user.id, req.params.key, has);
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
+app.post("/api/equipment/items", asSignedIn("POST /equipment/items", async (req, res, user) => {
+  const wrong = equipment.checkItem(req.body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await equipment.setItem(user.id, req.body);
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
+app.delete("/api/equipment/items/:id", asSignedIn("DELETE /equipment/items", async (req, res, user) => {
+  await equipment.removeItem(user.id, req.params.id);
+  res.json(await equipment.equipmentOf(user.id));
+}));
+
 /* Whether Billy is here at all, so the header can leave his button out. Asked
    by somebody signed in, like every other question about Coach's setup. */
 app.get("/api/assistant", async (req, res) => {
@@ -182,7 +223,24 @@ app.post("/api/assistant", async (req, res) => {
   const wrong = billy.checkHistory(history);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
   try {
-    const out = await billy.answer(user, history, { my_clients: async () => ({ clients: await myClients(req, user) }) });
+    const out = await billy.answer(user, history, {
+      my_clients: async () => ({ clients: await myClients(req, user) }),
+      my_equipment: async () => equipment.equipmentOf(user.id),
+      /* Only what the trainer has just told him (Glenn, 16 Oct 2026: "Yes"),
+         marked as Billy's, on view on their equipment page to correct. */
+      remember_equipment: async (input) => {
+        if (input?.kind === "category") {
+          if (!equipment.isCategory(input.category)) return { error: "That isn't one of the checklist's kinds of equipment." };
+          await equipment.setCategory(user.id, input.category, !!input.has, "billy");
+        } else {
+          const piece = { name: input?.name, category: input?.category, has: input?.has, where: input?.where || "" };
+          const wrong = equipment.checkItem(piece);
+          if (wrong) return { error: wrong };
+          await equipment.setItem(user.id, piece, "billy");
+        }
+        return { saved: true };
+      },
+    });
     res.set("Cache-Control", "private, no-store");
     res.json({ reply: out.reply, messages: out.messages, model: out.model, usage: out.usage });
   } catch (err) {
@@ -228,4 +286,13 @@ if (existsSync(DIST)) {
   console.warn(`No dist/ at ${DIST} — serving the API relay only. Run "npm run build" to serve the page too.`);
 }
 
+/* The database's tables first: a request that arrived before them would find
+   none. A database that cannot be reached is said in the log, and the app
+   still starts, so sign-in and the Clients tab keep working. */
+try {
+  await db.migrate();
+  console.log(`Database: ${db.describe()}`);
+} catch (err) {
+  console.error(`Database not ready (${db.describe()}): ${err.message}`);
+}
 app.listen(PORT, () => console.log(`Coach on http://localhost:${PORT}, signing in through ${STUDIO_ORIGIN}`));

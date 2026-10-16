@@ -32,4 +32,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   about the clients on your list, or send him a photo or a PDF — a food log,
   a form, a program — and he reads it. He changes nothing. Shown only where
   the server has a key for him.
+- **My equipment.** In your account menu: a short checklist of what you have
+  to train with, and the particular pieces a program has asked about. Billy
+  checks it before suggesting exercises, asks about a piece once, and notes
+  your answer there for you to change.
 - **Light or dark,** following your phone or computer.

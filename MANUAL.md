@@ -29,6 +29,7 @@ of the app gets its own chapter here as it arrives.
    - [3.4 The home screen](#34-the-home-screen)
    - [3.5 Your account menu](#35-your-account-menu)
    - [3.6 Light or dark](#36-light-or-dark)
+   - [3.7 My equipment](#37-my-equipment)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
    - [4.2 Reading the list](#42-reading-the-list)
@@ -280,6 +281,7 @@ so — see 2.4.
    - **Your name**, your email address, and what kind of account you have:
      **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
      the same as in Studio.
+   - **My equipment** — what you have to train with (3.7).
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
@@ -294,6 +296,27 @@ or press Esc on a keyboard.
 Coach follows your phone or computer. If your device is set to dark mode,
 Coach is dark too — a navy background with white and light blue words —
 and light otherwise. There is nothing to set in the app.
+
+### 3.7 My equipment
+
+Coach keeps a list of the equipment you have, so Billy suggests exercises you
+can actually do. It is yours alone: nobody else sees it.
+
+1. Tap your photo or initials in the top right corner, then **My equipment**.
+2. Under **The basics**, answer each line — **Dumbbells**, **Barbells and a
+   rack**, **Kettlebells**, **Weight machines** and so on — by tapping **Yes**
+   or **No**. Your answer is saved as you tap. To take an answer back, tap it
+   again.
+3. Under **Particular pieces** are machines and other pieces a program has
+   asked about, such as a low row machine. Each says what kind it is, and where
+   it is if you said. Tap **Yes** or **No** to change whether you have it, or
+   the bin to remove it.
+4. To add a piece yourself, fill in **Add a piece** at the bottom: its name,
+   **What kind is it?**, where it is if you like, and **Do you have it?** Then
+   tap **Add**.
+
+A piece Billy wrote down from something you told him says **Noted by Billy**.
+Change or remove it here like any other.
 
 <div style="page-break-after: always;"></div>
 
@@ -446,9 +469,11 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ### 5.5 What Billy can't do
 
-- **He changes nothing.** He cannot add or change a client, book or cancel a
-  session, send a message or charge anybody. Clients are added and changed in
-  Studio (4.6).
+- **He changes nothing, apart from noting your equipment.** When you tell him
+  what you have — "there's no low row machine" — he writes it down on your
+  equipment list (3.7), marked **Noted by Billy**. Otherwise he cannot add or
+  change a client, book or cancel a session, send a message or charge anybody.
+  Clients are added and changed in Studio (4.6).
 - **He only knows your own clients**, the same people as on your Clients page.
 - **He is not a doctor or a dietitian.** About pain, an injury or illness, he
   will say a professional should see it.

@@ -60,6 +60,17 @@ as a JPEG (a GIF goes as it is); a PDF goes as it is, up to 15 MB. His route
 takes up to 32 MB, Claude's own limit for one request; every other route keeps
 its 20 kB limit.
 
+## Coach's database
+
+Coach keeps its own data (so far, each trainer's equipment) in a database of
+its own, never Studio's (`server/db.js`). On the host, GoDaddy gives the app a
+new, empty MariaDB and names it with `DB_HOST`, `DB_PORT`, `DB_NAME`,
+`DB_USER` and `DB_PASSWORD`; `DB_SSL=true` if the server asks for TLS.
+Anywhere those are not set (a Mac, a cloud session) Coach uses a SQLite file,
+`server/coach.sqlite` or `COACH_SQLITE_PATH`, never committed. The tables are
+made on start and every one is named `coach_…`. `/api/health` says which
+(`"database": "mysql"` or `"sqlite"`).
+
 ## Running it locally
 
 Three terminals. Studio's API on its throwaway fixture database, so nothing

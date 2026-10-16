@@ -5,3 +5,6 @@ dist
 .DS_Store
 .memsearch
 .claude/
+
+# Coach's local database (server/db.js), for a Mac or a cloud session; never committed
+server/*.sqlite*

@@ -27,7 +27,7 @@ const ROLE = { master: "Master", admin: "Admin" };
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
  */
-export function Header({ user, onLogout, billy }) {
+export function Header({ user, onLogout, billy, onOpen }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
@@ -150,7 +150,7 @@ export function Header({ user, onLogout, billy }) {
           )}
           {/* Billy, when this server has him (useBilly). */}
           {billy?.available && <BillyButton billy={billy} />}
-          <AccountMenu user={user} onLogout={onLogout} />
+          <AccountMenu user={user} onLogout={onLogout} onOpen={onOpen} />
         </div>
         {billy?.available && <BillyPanel billy={billy} />}
 

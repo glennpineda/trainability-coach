@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { CATEGORIES } from "./equipment.js";
 
 /**
  * Billy, in Coach: the same assistant as in Studio, with Coach's own work.
@@ -51,6 +52,27 @@ const TOOLS = [
     description: "The clients on this trainer's own list in Trainability Studio: name, pronouns, email, phone, birthday, the day they joined the list, their last session and the next one booked, whether the trainer has archived them, and how many other trainers they also train with. Use it whenever the trainer mentions a client by name or asks about their clients.",
     input_schema: { type: "object", properties: {}, additionalProperties: false },
   },
+  {
+    name: "my_equipment",
+    description: "The equipment this trainer has told Coach about: the checklist of kinds (yes, no, or not answered yet) and the particular pieces, each with whether they have it and where. Read it before suggesting exercises, and before asking about a piece.",
+    input_schema: { type: "object", properties: {}, additionalProperties: false },
+  },
+  {
+    name: "remember_equipment",
+    description: "Write down what the trainer has just told you about their equipment, so they are never asked again. Only what they said in this conversation, never a guess. kind \"category\" answers one of the checklist's kinds; kind \"item\" is a particular piece, with the checklist kind it belongs to.",
+    input_schema: {
+      type: "object",
+      properties: {
+        kind: { type: "string", enum: ["category", "item"] },
+        category: { type: "string", enum: CATEGORIES.map(c => c.key), description: "The checklist kind: " + CATEGORIES.map(c => `${c.key} (${c.label})`).join(", ") },
+        name: { type: "string", description: "For an item: the piece, as the trainer would say it, such as \"Low row machine\"." },
+        has: { type: "boolean" },
+        where: { type: "string", description: "Where it is, if they said: \"the studio\", \"Maria's home\"." },
+      },
+      required: ["kind", "category", "has"],
+      additionalProperties: false,
+    },
+  },
 ];
 
 function systemPrompt(user) {
@@ -70,10 +92,12 @@ function systemPrompt(user) {
     "What you do here:",
     "- Read what they give you. A photo or a PDF arrives with their message: a client's food log, a form, a program, a whiteboard. Say what is in it plainly and answer what they asked about it. If you cannot read part of it, say which part.",
     "- Know their clients. Look a client up with your tool whenever one is mentioned rather than guessing, and use only what it gives back.",
+    "- Know their equipment. Check what they have before you suggest an exercise. When an exercise needs a particular piece you have no answer about (a low row machine, a leg press), ask them once, plainly, and write their answer down. Without the piece, keep the movement and change the equipment to a kind they have: no low row machine but dumbbells means a dumbbell row.",
+    "- Write down only what they have just told you about equipment, and say in a few words that you have noted it. Never record a guess, and never answer the checklist for them.",
     "- Never name your tools. Say what you could or could not find out, in plain words.",
     "",
     "Hard rules:",
-    "- You change nothing. You cannot book, cancel, message a client, or touch money, and Coach does not keep clients: they are added and changed in Studio. Say so and point them there.",
+    "- Apart from noting their equipment, you change nothing. You cannot book, cancel, message a client, or touch money, and Coach does not keep clients: they are added and changed in Studio. Say so and point them there.",
     "- You are not a doctor or a dietitian. On pain, injury, illness, medication or an eating disorder, be brief and kind, and say a professional should see it.",
     "- Never guess a number, a date or a fact about a client. If you cannot see it, say so.",
   ].join("\n");

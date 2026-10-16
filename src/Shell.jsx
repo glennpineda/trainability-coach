@@ -5,6 +5,7 @@ import { BottomNav } from "./chrome/BottomNav";
 import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
 import { ClientsTab } from "./tabs/ClientsTab";
+import { EquipmentTab } from "./tabs/EquipmentTab";
 import { useClients } from "./hooks/useClients";
 import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
@@ -15,6 +16,9 @@ const TABS = [
   { id: "programs", label: "Programs", icon: ClipboardList },
   { id: "messages", label: "Messages", icon: MessageCircle },
 ];
+/* Pages with no button on the bar, opened from elsewhere: My equipment, from
+   the account menu. */
+const PAGES = ["equipment"];
 const KEY = "coach-tab";
 
 /* Signed in: the header, the tab on screen, and the bar along the bottom.
@@ -24,7 +28,7 @@ const KEY = "coach-tab";
    so it never sits stale. */
 export function Shell({ user, onLogout, onSignedOut }) {
   const [tab, setTab] = useState(() => {
-    try { const t = sessionStorage.getItem(KEY); return TABS.some(x => x.id === t) ? t : "home"; } catch { return "home"; }
+    try { const t = sessionStorage.getItem(KEY); return TABS.some(x => x.id === t) || PAGES.includes(t) ? t : "home"; } catch { return "home"; }
   });
   useEffect(() => { try { sessionStorage.setItem(KEY, tab); } catch { /* not kept */ } }, [tab]);
   const clients = useClients(onSignedOut);
@@ -35,11 +39,12 @@ export function Shell({ user, onLogout, onSignedOut }) {
 
   return (
     <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
-      <Header user={user} onLogout={onLogout} billy={billy} />
+      <Header user={user} onLogout={onLogout} billy={billy} onOpen={open} />
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
         {tab === "clients" && <ClientsTab {...clients} />}
+        {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
       <BottomNav tabs={TABS} activeTab={tab} onChange={open} />
