@@ -22,16 +22,7 @@ finished stays here.
 
 _Things actually ready to do._
 
-- **Set `TRUST_PROXY=1` on the Airo app.** In the app's environment variables,
-  then restart. GoDaddy has a proxy in front of Coach; with this set, Coach
-  sees each visitor's own address and passes it on to Studio. Glenn's to do on
-  the host. Tick it off here once it is in.
-
-- **Sign in to the live Coach with a real Studio account.** At
-  https://trainabilitycoach.com. Everything up to that has been checked from
-  outside (the page, the relay reaching Studio, a 401 for nobody signed in),
-  but a real sign-in needs a real account. It should land on the home screen
-  with the right name.
+Nothing waiting.
 
 ## Found in testing
 
