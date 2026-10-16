@@ -81,6 +81,34 @@ where it came from and when. Coach IQ then lives in Coach's database, with that
 history in place of git's, and this file stays as its rules. Waiting on: what
 database the Coach app can have on GoDaddy.
 
+## Exercise names (Glenn, 16 Oct 2026)
+
+"I'd also like to introduce a proper naming convention for the exercises. Each
+trainer can call every exercise differently, but it would be good to have a
+name that explains the exercise by: position, velocity, plane, modality etc,
+can we build our \"own\" master name and have display names for trainers?"
+
+Every exercise has three kinds of name:
+
+1. **A master name**, Trainability's own, made from the exercise's attributes
+   in a fixed order and never typed by hand, so it explains the exercise and
+   no two can share one. The attributes: position, support, limbs, equipment,
+   load or grip, movement, plane, velocity.
+2. **A common name**, what most trainers call it, shown by default.
+3. **Each trainer's own names**, kept in their personal memory. Coach shows a
+   trainer their own name, Billy and the program reader understand all of
+   them, and a client sees their trainer's name ("Their trainers name, the
+   trainer creates the program so their word wins").
+
+Decided: an attribute at its usual setting (standing, bilateral, controlled)
+is left out of the master name ("Leave them out"); the plane is named only
+when the movement does not already say it ("When it isn't obvious");
+exercises are grouped in families, a base movement with each version defined
+by its attributes, which is also how alternatives are found, for equipment
+and for people with limitations ("Families would be great, also perfect for
+finding alternative exercises, and people with limitations"). Still to
+decide: the order of the words, from examples.
+
 ## The rules (Glenn, 16 Oct 2026)
 
 - **The trainer's word always wins.** Coach IQ is guidance and assistance only.
