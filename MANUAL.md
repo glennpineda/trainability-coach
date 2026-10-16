@@ -99,7 +99,7 @@ by Studio, so:
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
    **COACH** underneath. Under the logo is the version the app is on — for
-   example *Version 1.0.0 · Caesious* — and then *Use the same email and
+   example *Version 1.0.1 · Caesious* — and then *Use the same email and
    password as Trainability Studio.*
 3. Tap the **Email** box and type your email address. With a
    @trainabilitystudio.com address you can type just the part before the @ —
@@ -285,7 +285,7 @@ so — see 2.4.
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
-     *Version 1.0.0 · Caesious*. If you ever report a problem, say which
+     *Version 1.0.1 · Caesious*. If you ever report a problem, say which
      version it was.
 
 To close it without choosing anything, tap the photo again, tap anywhere else,
@@ -497,7 +497,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
 | **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
+| **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>
 

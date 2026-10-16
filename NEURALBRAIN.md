@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Build 1.0.1** (16 Oct 2026; Glenn: "Push, bump build and merge"). Coach's first build bump. Coach has no build-number script as Studio does: its build is the patch number in `package.json`, so `npm version patch --no-git-tag-version` took 1.0.0 to 1.0.1 (and `package-lock.json` with it), still Caesious, since build numbers get no name (CLAUDE.md). It covers everything since 1.0.0: the Clients tab, Billy with photos and PDFs on Sonnet 5.5, Coach's own database, My equipment, and Coach IQ's rules, exercise library, families and master names. The manual's three examples of the version now say 1.0.1; the CHANGELOG keeps one heading per minor version (1.0 Caesious), as Studio's does. Checked: `/api/health` answered `"version":"1.0.1"` and the built page carries "1.0.1 · Caesious". "Merge": Coach's work goes straight to `main`, so nothing was waiting; the one other branch on GitHub, `claude/compassionate-bardeen-0w8ugz`, holds the first, separate-page version of the Clients work, which was rebuilt into `main` as the Clients tab (`4b5c560`), so it was not merged, since that would bring back files `main` replaced. The 5 commits before this were pushed first (`96ff0d7`). Commit to follow.
+
 - **Coach IQ: velocity named only when it differs from the usual, confirmed** (16 Oct 2026; Glenn: "Also, name the velocity only when it differs from the exercise's usual."). The rule had already been applied as the suggestion while his answer was pending (previous entry), so no name changed: *Swing — Kettlebell*, while *Squat — Bodyweight, Jumping* and *Pull-Up — Bodyweight, Eccentric* keep theirs. `coach-iq/README.md` now gives it in his words.
 
 - **Coach IQ: families, and master names made from attributes** (16 Oct 2026; Glenn: "I'd go with C"). Three word orders were put to him on the same nine exercises (A like a sentence, B equipment first, C movement first); he chose C: `Movement — position, support, limbs, equipment, load, grip, velocity, plane`. The velocity question (name it only when it is not the movement's usual) went unanswered and was taken as suggested, which keeps "Swing — Kettlebell" rather than "Ballistic"; easy to change since names are made, not stored. Also decided along the way, and said in the reply: names end in a recognisable movement word (Romanian Deadlift, Split Squat) rather than the bare pattern (Hinge), with the pattern kept on the family; equipment always named except Bodyweight in families that are only ever bodyweight and where the movement's own name says it (`implementInName`: Leg Press, Hack Squat, Back Extension, Sled Push and Drag, Box Jump, Elliptical, Rowing Machine, Stair Climber, Ski Erg, Foam Rolling); the cardio rowing machine is its own family so it never mixes with the strength Row family. **`server/coach-iq.js`**: `ORDER`, `WORDS` (the words each of the eight attributes may use: thirteen positions, ten supports, three limb settings, twenty-four pieces of equipment, seven loads, five grips, seven velocities, three planes), `masterName`, `bodyweightFamilies` and `slug`; shared by the checker now and meant for Billy and the program reader later. **The conversion**: the 177 flat exercises were mapped by hand, one line each, to a family and attributes (a one-off script in the session's scratchpad, not committed), and split into one version per piece of equipment wherever the starter list allowed several ("dumbbell or kettlebell"), with a bodyweight version first where the movement is commonly done unloaded: 109 families, 229 versions, so an equipment fallback is a sibling in the same family (Row — Seated, Machine to Row — Bent-Over, Bench, Single-Arm, Dumbbell). Ids are the master name in lowercase, hyphenated, and the checker insists on it; easier and harder links were pointed at the first version of what they named. Common names of new versions swap the equipment word where the name has one ("Bent-over dumbbell row", not "Dumbbell bent-over barbell row", the first attempt) and put it in front otherwise, keeping proper names capitalised (Romanian, Russian). Chin-up became *Pull-Up — Bodyweight, Supinated-Grip* with "Chin-up" as its common name, the convention working as meant. `exercises.json` is now `{movements, exercises}`; each version lost its own `pattern` (it is the family's) and gained `movement` and `attributes`. **`scripts/iq.mjs`** checks families, every attribute word against `WORDS`, ids against master names, no two versions sharing a master name, and that every family has a version; `EXERCISES.md` now lists pattern, then family, then each version's master name first and its common name beside it. No duplicates on the first run. Commit `13990f5`.
@@ -202,7 +204,7 @@ by Studio, so:
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
    **COACH** underneath. Under the logo is the version the app is on — for
-   example *Version 1.0.0 · Caesious* — and then *Use the same email and
+   example *Version 1.0.1 · Caesious* — and then *Use the same email and
    password as Trainability Studio.*
 3. Tap the **Email** box and type your email address. With a
    @trainabilitystudio.com address you can type just the part before the @ —
@@ -388,7 +390,7 @@ so — see 2.4.
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
-     *Version 1.0.0 · Caesious*. If you ever report a problem, say which
+     *Version 1.0.1 · Caesious*. If you ever report a problem, say which
      version it was.
 
 To close it without choosing anything, tap the photo again, tap anywhere else,
@@ -600,7 +602,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
 | **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
+| **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>
 
