@@ -4,11 +4,13 @@ import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 /**
- * Coach's server: the built page, and a relay to Studio for signing in.
+ * Coach's server: the built page, and a relay to Studio for signing in and
+ * for the signed-in trainer's clients.
  *
- * Coach keeps no accounts. Every Trainability account lives in Studio's
- * database, so the four sign-in routes below are passed through to Studio's
- * API as they are, and the same email and password work in both apps.
+ * Coach keeps no accounts and no clients. Every Trainability account lives in
+ * Studio's database, so the four sign-in routes below are passed through to
+ * Studio's API as they are, and the same email and password work in both
+ * apps. The client list is read from Studio too (/api/clients below).
  *
  * Relayed rather than called from the browser, so Coach can run as its own
  * app on its own domain without Studio having to allow it cross-origin. The
@@ -50,23 +52,78 @@ function studioCookie(header = "") {
   return hit || "";
 }
 
+/* One request to Studio's API, carrying only Studio's session cookie and the
+   visitor's address. */
+function studio(req, route, { method = "GET", body } = {}) {
+  const cookie = studioCookie(req.headers.cookie);
+  return fetch(`${STUDIO_ORIGIN}/api${route}`, {
+    method,
+    headers: {
+      ...(method === "GET" ? {} : { "Content-Type": "application/json" }),
+      ...(cookie ? { Cookie: cookie } : {}),
+      "User-Agent": req.headers["user-agent"] || "Trainability Coach",
+      "X-Forwarded-For": req.ip,
+    },
+    body: method === "GET" ? undefined : JSON.stringify(body ?? {}),
+    redirect: "manual",
+    signal: AbortSignal.timeout(15000),
+  });
+}
+
+const unreachable = (res, what, err) => {
+  console.error(`Studio relay failed for ${what}: ${err.message}`);
+  res.status(502).json({ error: "Couldn't reach Trainability. Try again in a minute.", code: "studio_unreachable" });
+};
+
+/**
+ * The signed-in trainer's own clients, read from Studio each time it is asked.
+ *
+ * Coach keeps no copy, so there is nothing to fall out of step: a client added
+ * or archived in Studio shows here on the next load. Studio's /api/clients
+ * already limits the list to what this account may see; a master or admin is
+ * also sent the clients of everybody they manage, so the list is cut here to
+ * the people on this account's own list. And only what Coach shows goes to the
+ * browser: no card, notes, address or message settings.
+ */
+app.get("/api/clients", async (req, res) => {
+  try {
+    const [meRes, listRes] = await Promise.all([studio(req, "/auth/me"), studio(req, "/clients")]);
+    for (const r of [meRes, listRes]) {
+      if (!r.ok) return res.status(r.status).type("application/json").send(await r.text());
+    }
+    const { user } = await meRes.json();
+    const { clients = [] } = await listRes.json();
+    const mine = clients
+      .filter(c => !c.bookingOnly && !c.deskOnly && (c.trainerIds || []).includes(user.id))
+      .map(c => ({
+        id: c.id,
+        firstName: c.firstName || "",
+        lastName: c.lastName || "",
+        email: c.email || "",
+        phone: c.phone || "",
+        pronouns: c.pronouns || "",
+        dateOfBirth: c.dateOfBirth || "",
+        /* The day they joined this trainer's list, not the day the record
+           was made: somebody handed on from a colleague is new here. */
+        since: c.linkedAt?.[user.id] || c.createdAt || "",
+        lastSessionOn: c.lastSessionOn || null,
+        latestSessionOn: c.latestSessionOn || null,
+        archived: (c.archivedBy || []).includes(user.id),
+        /* Other trainers they are still training with. */
+        sharedWith: (c.trainerIds || []).filter(t => t !== user.id && !(c.archivedBy || []).includes(t)).length,
+      }));
+    res.set("Cache-Control", "private, no-store");
+    res.json({ clients: mine });
+  } catch (err) {
+    unreachable(res, "GET /clients", err);
+  }
+});
+
 app.all(/^\/api\/.*/, async (req, res) => {
   const route = req.path.replace(/^\/api/, "");
   if (!RELAYED.has(route)) return res.status(404).json({ error: "Not found", code: "not_found" });
   try {
-    const cookie = studioCookie(req.headers.cookie);
-    const upstream = await fetch(`${STUDIO_ORIGIN}/api${route}`, {
-      method: req.method,
-      headers: {
-        ...(req.method === "GET" ? {} : { "Content-Type": "application/json" }),
-        ...(cookie ? { Cookie: cookie } : {}),
-        "User-Agent": req.headers["user-agent"] || "Trainability Coach",
-        "X-Forwarded-For": req.ip,
-      },
-      body: req.method === "GET" ? undefined : JSON.stringify(req.body ?? {}),
-      redirect: "manual",
-      signal: AbortSignal.timeout(15000),
-    });
+    const upstream = await studio(req, route, { method: req.method, body: req.body });
     /* Studio's Set-Cookie, kept host-only: no Domain attribute is ever passed
        through, so the cookie belongs to Coach's domain alone. */
     for (const c of upstream.headers.getSetCookie?.() || []) {
@@ -76,8 +133,7 @@ app.all(/^\/api\/.*/, async (req, res) => {
     if (retry) res.set("Retry-After", retry);
     res.status(upstream.status).type("application/json").send(await upstream.text());
   } catch (err) {
-    console.error(`Studio relay failed for ${req.method} ${route}: ${err.message}`);
-    res.status(502).json({ error: "Couldn't reach Trainability. Try again in a minute.", code: "studio_unreachable" });
+    unreachable(res, `${req.method} ${route}`, err);
   }
 });
 

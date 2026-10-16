@@ -1,6 +1,8 @@
 import React from "react";
 
-export function ComingSoonCard({ section, onOpen }) {
+/* A part of Coach on Home. `badge` replaces Coming soon on one that is built,
+   such as the Clients card's count. */
+export function ComingSoonCard({ section, onOpen, badge }) {
   const { icon: Icon, title, body } = section;
   const Tag = onOpen ? "button" : "div";
   return (
@@ -12,7 +14,9 @@ export function ComingSoonCard({ section, onOpen }) {
       <span className="min-w-0 block">
         <span className="flex items-center gap-2">
           <span className="font-semibold text-base">{title}</span>
-          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)", color: "var(--iron)" }}>Coming soon</span>
+          {section.built
+            ? badge && <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>{badge}</span>
+            : <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)", color: "var(--iron)" }}>Coming soon</span>}
         </span>
         <span className="block text-sm mt-1" style={{ color: "var(--iron)" }}>{body}</span>
       </span>

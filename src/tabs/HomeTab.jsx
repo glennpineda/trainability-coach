@@ -10,9 +10,16 @@ function greeting(now = new Date()) {
 }
 const firstName = (name = "") => name.trim().split(/\s+/)[0] || "there";
 
+/* On the Clients card: how many, once the list has come. */
+function clientCount(clients) {
+  if (clients === undefined) return "Loading…";
+  const n = clients.filter(c => !c.archived).length;
+  return `${n} active client${n === 1 ? "" : "s"}`;
+}
+
 /* Where Coach opens: the date, a greeting by name, and the parts of Coach on
    the way. Each card but Today opens its own tab. */
-export function HomeTab({ user, onOpen }) {
+export function HomeTab({ user, onOpen, clients }) {
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
     <>
@@ -39,7 +46,8 @@ export function HomeTab({ user, onOpen }) {
         )}
         <div className="grid gap-4 sm:grid-cols-2">
           {Object.entries(SECTIONS).map(([id, section]) => (
-            <ComingSoonCard key={id} section={section} onOpen={id === "today" ? undefined : () => onOpen(id)} />
+            <ComingSoonCard key={id} section={section} onOpen={id === "today" ? undefined : () => onOpen(id)}
+              badge={id === "clients" ? clientCount(clients) : undefined} />
           ))}
         </div>
       </div>

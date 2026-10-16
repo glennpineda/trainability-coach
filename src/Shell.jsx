@@ -4,6 +4,8 @@ import { Header } from "./chrome/Header";
 import { BottomNav } from "./chrome/BottomNav";
 import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
+import { ClientsTab } from "./tabs/ClientsTab";
+import { useClients } from "./hooks/useClients";
 import { SECTIONS } from "./tabs/sections";
 
 const TABS = [
@@ -15,12 +17,18 @@ const TABS = [
 const KEY = "coach-tab";
 
 /* Signed in: the header, the tab on screen, and the bar along the bottom.
-   The tab is remembered for this browser tab only, so a reload stays put. */
-export function Shell({ user, onLogout }) {
+   The tab is remembered for this browser tab only, so a reload stays put.
+   The client list is held here, so Home can count it and the Clients tab
+   opens on it without waiting, and asked for again on every change of tab
+   so it never sits stale. */
+export function Shell({ user, onLogout, onSignedOut }) {
   const [tab, setTab] = useState(() => {
     try { const t = sessionStorage.getItem(KEY); return TABS.some(x => x.id === t) ? t : "home"; } catch { return "home"; }
   });
   useEffect(() => { try { sessionStorage.setItem(KEY, tab); } catch { /* not kept */ } }, [tab]);
+  const clients = useClients(onSignedOut);
+  const { refresh } = clients;
+  useEffect(() => refresh(), [tab, refresh]);
   const open = (id) => { setTab(id); window.scrollTo({ top: 0 }); };
 
   return (
@@ -28,8 +36,9 @@ export function Shell({ user, onLogout }) {
       <Header user={user} onLogout={onLogout} />
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
-        {tab === "home" && <HomeTab user={user} onOpen={open} />}
-        {SECTIONS[tab] && <ComingSoonTab section={SECTIONS[tab]} />}
+        {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
+        {tab === "clients" && <ClientsTab {...clients} />}
+        {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
       <BottomNav tabs={TABS} activeTab={tab} onChange={open} />
     </div>

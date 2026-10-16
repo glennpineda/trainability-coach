@@ -70,6 +70,17 @@ try {
   await page.waitForSelector('[role="menu"]');
   await page.mouse.move(10, 600);   // off the button, so the shading is the open state's
   await shot("04-account");
+  await page.keyboard.press("Escape");
+
+  /* The Clients tab, then its first client opened. Waits for the list
+     itself, not the "Loading…" line. */
+  await page.click('button[data-tab="clients"]');
+  await page.waitForSelector("main ul li button");
+  await page.mouse.move(10, 10);
+  await shot("05-clients");
+  await page.click("main ul li button");
+  await page.mouse.move(10, 10);
+  await shot("06-client-details");
 
   /* Signed out again, so the next run starts from the sign-in screen. */
   await page.evaluate(() => fetch("/api/auth/logout", { method: "POST", credentials: "include" }));

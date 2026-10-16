@@ -39,5 +39,9 @@ export function useAuth() {
     try { await apiRequest("POST", "/auth/logout"); } finally { setUser(null); }
   }, []);
 
-  return { user, offline, login, logout };
+  /* Studio said the session has ended (a 401 from any later request): back
+     to sign-in, with nothing to tell Studio. */
+  const signedOut = useCallback(() => setUser(null), []);
+
+  return { user, offline, login, logout, signedOut };
 }

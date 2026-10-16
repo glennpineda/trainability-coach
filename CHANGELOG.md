@@ -14,8 +14,14 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   both apps. Each app keeps its own sign-in, so signing in or out of one
   leaves the other as it was.
 - **The home screen.** Today's date and a greeting by name, and the four parts
-  of Coach on the way: Today, Clients, Programs and Messages, each marked
-  Coming soon.
+  of Coach: Today, Clients, Programs and Messages. Clients is open, with how
+  many clients you have; the other three are marked Coming soon.
+- **Your clients.** The Clients tab shows everyone on your own list in
+  Studio, read from Studio each time so it is never out of date: each one's
+  last session, and tapped open, their email, phone, birthday, the day they
+  became your client and their next booked session. Search by name, email or
+  phone, and archived clients kept under their own tab. Clients are still
+  added and changed in Studio.
 - **Studio's header and tab bar.** The Coach logo and name across the top,
   and a floating bar at the bottom for Home, Clients, Programs and Messages.
 - **Switch between Coach and Studio.** Tap the Coach logo and a panel folds
