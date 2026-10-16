@@ -196,8 +196,7 @@ Coach and Studio are two apps with one account, and the logo is the quick way
 between them.
 
 1. Tap the Coach logo in the top left corner — or, on a computer, just point
-   at it with the mouse. It opens out into the Coach app icon with **COACH**
-   beside it, and a panel folds down underneath with the heading
+   at it with the mouse. A panel folds down from the logo with the heading
    **TRAINABILITY APPS**.
 2. The panel lists both apps:
    - **Coach** — *Programs, progress, and nutrition*. The tick beside it

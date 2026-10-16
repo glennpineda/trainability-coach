@@ -19,9 +19,7 @@ const ROLE = { master: "Master", admin: "Admin" };
 /**
  * The bar across the top, Studio's header in Coach's colors.
  *
- * The mark sits in the corner in a 36px badge, with COACH beside it. Under the
- * pointer the badge opens out, as Studio's does: the mark becomes the app's
- * own icon (the tile on a home screen) and its name slides out beside it.
+ * The mark sits in the corner in a 36px badge, with COACH beside it.
  *
  * Pointed at with a mouse, or tapped, it folds out the apps panel underneath: Coach (ticked, where you
  * are) and Studio, a tap away, each with a line on what it is for. Every Coach account is a Studio account, so both are
@@ -107,14 +105,11 @@ export function Header({ user, onLogout }) {
           aria-label={open ? "Hide the Trainability apps" : "Trainability apps: switch between Coach and Studio"}
           title={open ? "Hide" : "Switch apps"}
         >
-          {/* Two marks in one slot, swapped in CSS: the plain mark at rest, the
-              app's own icon opened out. */}
           {/* The logo kit's two badges: cerulean on light, white on dark. */}
-          <picture className="cx-logo-rest flex-none">
+          <picture className="flex-none">
             <source srcSet={badgeMarkDark} media="(prefers-color-scheme: dark)" />
             <img src={badgeMark} alt="" style={{ width: BADGE, height: BADGE, display: "block" }} />
           </picture>
-          <img src={coachIcon} alt="" className="cx-logo-open flex-none" style={{ width: BADGE, height: BADGE, borderRadius: 9 }} />
           <span className="cx-logo-label">
             <CoachWordmark label="" className="h-[15px] sm:h-[17px] w-auto" style={{ color: "var(--wordmark)" }} />
           </span>
