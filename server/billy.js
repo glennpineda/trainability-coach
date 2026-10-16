@@ -19,7 +19,10 @@ import Anthropic from "@anthropic-ai/sdk";
  * or anything to do with money: Coach does none of those.
  */
 
-export const model = () => process.env.ASSISTANT_MODEL || "claude-opus-5-5";
+/* Sonnet 5.5 (Glenn, 16 Oct 2026: "good enough for this"): looking up a
+   trainer's clients and reading a photo or a PDF is well within it, at half
+   Opus's price. ASSISTANT_MODEL=claude-opus-5-5 is there if it ever isn't. */
+export const model = () => process.env.ASSISTANT_MODEL || "claude-sonnet-5-5";
 export const configured = () => !!process.env.ANTHROPIC_API_KEY;
 
 /* ASSISTANT_API_BASE points Billy at a stand-in on this machine, for testing

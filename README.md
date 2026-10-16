@@ -51,7 +51,7 @@ names:
 | Variable | What it does |
 |---|---|
 | `ANTHROPIC_API_KEY` | Unset, Billy is not offered: no button, and `/api/assistant` answers 503. |
-| `ASSISTANT_MODEL` | Which model answers. Unset: `claude-opus-5-5`. |
+| `ASSISTANT_MODEL` | Which model answers. Unset: `claude-sonnet-5-5`; `claude-opus-5-5` is stronger and twice the price. |
 | `ASSISTANT_TRACE` | Logs each turn while debugging. Leave off: the questions are about real clients. |
 | `ASSISTANT_API_BASE` | Never on a host. Points Billy at a stand-in on this machine for testing; only `http://localhost` or `http://127.0.0.1` with a port is taken. |
 
