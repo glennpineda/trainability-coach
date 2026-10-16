@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The role badge into the account menu; no Open Studio** (16 Oct 2026; Glenn, while Studio was getting the same header: "Let's move the user level badge inside the new profile submenu, remove the link to \"Coach\" (\"Studio\" on Coach), do this on Coach app as well."). The header's shield (Admin, Master, Primary Master) is gone from the badge row, so the account menu is alone on the right. In the menu, under your name and email, an admin's or a master's kind of account is now that shield as a small pill: blue (`--accent-soft`) for an Admin, pale gold for a Master, gold with Studio's sparkle for the Primary Master (`RoleBadge` in `AccountMenu.jsx`). A trainer or the front desk keeps the word. **Open Studio** left the menu: the logo's apps panel is the one way across. `ROLE` and the `.cx-badge` rules went from the header and `src/index.css`, and `.cx-badge-row` stays for the menu. Studio got the same change in its account-menu PR. Built; not checked signed in, since that needs Studio's fixture running beside it. Manual 3.1, 3.5 and the word list and CHANGELOG 1.0 updated; the `04-account` screenshot still shows Open Studio and the old role line, and needs retaking with `npm run screenshots`.
+
 - **No hover look on the logo: straight to the open panel** (16 Oct 2026; Glenn: "remove the old hover showing the darker logo.. just go straight to the open panel"). The CSS `:hover` and `:focus-visible` rules copied from Studio's `.iw-logo-badge` are gone: the badge opening out, and the swap from the badge mark to the navy app-icon tile (`.cx-logo-rest` / `.cx-logo-open`). With the panel now opening on hover, the badge's own hover look showed for an instant before the panel and read as a second, darker state. Now the badge has two states, at rest or open (`.cx-logo-badge-open`), and open keeps the ordinary mark (cerulean, or white in dark mode) with COACH beside it as the top of the panel. The opening transitions went with the hover rules, so it appears in one step, while the drawer still slides. The app tiles stay in the panel's two rows, where Coach and Studio are shown as the apps they are. A step away from Studio, whose logo still opens out on hover. Manual 3.2 step 1 and the `03-apps` screenshot updated.
 
 - **The apps panel opens on hover** (16 Oct 2026; Glenn: "when we hover over the coach logo, show the panel as if it is clicked instead."). Before, a mouse over the logo only opened the badge out (CSS `:hover`), and the panel needed a click. Now `onPointerEnter` with `pointerType === "mouse"` opens the panel itself. The logo and the drawer each carry the enter and leave handlers, so they are one place to the pointer: leaving either starts a 250 ms close, and entering the other cancels it, so moving from the logo down into the panel, or brushing an edge, never shuts it. A click on a logo the pointer has already opened leaves it open (`byHover`, with `e.detail > 0`), rather than closing what is about to be used. Touch screens never fire a mouse pointer, so a tap still toggles it there, and Enter still toggles it from a keyboard. Escape and a press outside still close it either way. Checked in the browser: on the logo it opens; on the rows it stays open, with the row under the pointer highlighted; away from both, it is gone within the 250 ms. Manual 3.1 and 3.2 now say pointing opens it.
@@ -254,9 +256,6 @@ Across the top of every screen:
 
 - **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
   **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
-- **On the right**, an Admin or Master account has a small shield, gold for a
-  Master. On a computer, point at it and it says which: **Admin**, **Master**
-  or **Primary Master**. A trainer's account has no shield.
 - **In the corner**, your photo (or your initials) with a small arrow
   pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
@@ -337,10 +336,11 @@ so — see 2.4.
 1. Tap your photo or initials in the top right corner. The button stays
    shaded, and its arrow turns to point up, while the menu is open.
 2. The menu shows:
-   - **Your name**, your email address, and what kind of account you have:
-     **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
-     the same as in Studio.
-   - **Open Studio** — goes to Studio, at trainabilitystudio.com.
+   - **Your name**, your email address, and what kind of account you have,
+     the same as in Studio: **Trainer** or **Front desk** in words, and for
+     an Admin or a Master a small shield naming it — blue for an **Admin**,
+     pale gold for a **Master**, gold with a sparkle for the **Primary
+     Master**.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.0 · Caesious*. If you ever report a problem, say which
@@ -369,7 +369,7 @@ and light otherwise. There is nothing to set in the app.
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, Log out and the version (3.5). Studio is opened from the logo (3.2). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>

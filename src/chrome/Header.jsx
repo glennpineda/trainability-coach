@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Check, ShieldCheck, Sparkles } from "lucide-react";
+import { Check } from "lucide-react";
 import badgeMark from "../assets/coach-badge-light.svg";
 import badgeMarkDark from "../assets/coach-badge-dark.svg";
 import coachIcon from "../assets/coach-app-icon.png";
@@ -13,8 +13,6 @@ import { STUDIO_URL } from "../lib/api";
 const BADGE = 36;
 /* How long the apps panel takes to slide, in and out (.cx-appdrawer). */
 const SLIDE_MS = 220;
-
-const ROLE = { master: "Master", admin: "Admin" };
 
 /**
  * The bar across the top, Studio's header in Coach's colors.
@@ -123,30 +121,10 @@ export function Header({ user, onLogout }) {
 
         <div className="flex-1" />
 
-        {/* Studio's badges: an Admin's or a Master's account says so, its name
-            opening out under the pointer (a trainer has none); then you, with
-            your account menu, in the corner. */}
+        {/* You, with your account menu, in the corner. The shield that said
+            Admin or Master is in the menu now, beside your name (Glenn, 16 Oct
+            2026). */}
         <div className="cx-badge-row">
-          {ROLE[user.role] && (
-            <span className="relative inline-flex flex-none">
-              <span
-                className={`cx-badge${user.isPrimary ? " cx-badge-primary" : ""}`}
-                style={user.isPrimary
-                  ? { background: "linear-gradient(135deg, var(--gold-light), var(--gold))", color: "var(--gold-deep)" }
-                  : user.role === "master"
-                    ? { background: "linear-gradient(135deg, var(--gold-pale-light), var(--gold-pale))", color: "var(--gold-deep)" }
-                    : { background: "var(--accent-soft)", color: "var(--accent)" }}
-                tabIndex={0}
-              >
-                <ShieldCheck size={18} className="flex-none" aria-hidden="true" />
-                <span className="cx-badge-label text-sm font-medium">{user.isPrimary ? "Primary Master" : ROLE[user.role]}</span>
-              </span>
-              {user.isPrimary && (
-                <Sparkles size={14} aria-hidden="true" className="absolute pointer-events-none"
-                  style={{ top: -4, right: -4, color: "var(--gold)", filter: "drop-shadow(0 0 2px var(--chalk))" }} />
-              )}
-            </span>
-          )}
           <AccountMenu user={user} onLogout={onLogout} />
         </div>
 

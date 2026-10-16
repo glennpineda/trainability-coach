@@ -177,9 +177,6 @@ Across the top of every screen:
 
 - **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
   **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
-- **On the right**, an Admin or Master account has a small shield, gold for a
-  Master. On a computer, point at it and it says which: **Admin**, **Master**
-  or **Primary Master**. A trainer's account has no shield.
 - **In the corner**, your photo (or your initials) with a small arrow
   pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
@@ -260,10 +257,11 @@ so — see 2.4.
 1. Tap your photo or initials in the top right corner. The button stays
    shaded, and its arrow turns to point up, while the menu is open.
 2. The menu shows:
-   - **Your name**, your email address, and what kind of account you have:
-     **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
-     the same as in Studio.
-   - **Open Studio** — goes to Studio, at trainabilitystudio.com.
+   - **Your name**, your email address, and what kind of account you have,
+     the same as in Studio: **Trainer** or **Front desk** in words, and for
+     an Admin or a Master a small shield naming it — blue for an **Admin**,
+     pale gold for a **Master**, gold with a sparkle for the **Primary
+     Master**.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.0 · Caesious*. If you ever report a problem, say which
@@ -292,7 +290,7 @@ and light otherwise. There is nothing to set in the app.
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, Log out and the version (3.5). Studio is opened from the logo (3.2). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>

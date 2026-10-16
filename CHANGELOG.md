@@ -21,5 +21,6 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Switch between Coach and Studio.** Tap the Coach logo and a panel folds
   down with both apps; Studio is one tap away.
 - **Your account menu.** Your photo in the top corner opens a menu with your
-  name, email and kind of account, Open Studio, Log out and the version.
+  name, email and kind of account (a shield for an Admin or a Master), Log out
+  and the version.
 - **Light or dark,** following your phone or computer.
