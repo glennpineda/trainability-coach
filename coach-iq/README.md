@@ -157,6 +157,16 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
   in from something easier.
 - **No two exercises answer to the same name**, ignoring capitals, hyphens
   and plurals, across common names, other names and former names.
+- **What each family is for** (ideas audit, 8): its purposes (strength,
+  power, muscle building, endurance, mobility, balance and fall prevention,
+  conditioning, control) and its usual place in a session (warm-up, main
+  lift, accessory, finisher, cool-down), so variety means "the same purpose
+  by another exercise". Proposed words, for the first book to refine.
+- **For the clients Glenn sees** (ideas audit, 15: older adults, injury and
+  post-rehab, pregnancy and postpartum, chronic conditions): chair-based and
+  seated work, balance (its own pattern), getting up from the floor,
+  step-downs, rotator cuff work, breathing and pelvic floor (their own
+  pattern), tibialis raises. A chair is a support word.
 - **Every exercise says where it came from and whether Glenn has passed it**:
   `origin` (starter, book or trainer), `status` (draft, reviewed or retired)
   and `reviewed` (the date). All 230 are drafts until he reviews them.

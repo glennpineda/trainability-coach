@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { CATEGORIES } from "../server/equipment.js";
 import { isId } from "../server/ids.js";
 import {
-  ORDER, WORDS, PATTERNS, PIECES, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES, ORIGINS, STATUSES,
+  ORDER, WORDS, PATTERNS, PIECES, PURPOSES, ROLES, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES, ORIGINS, STATUSES,
   masterName, bodyweightFamilies, equipmentFor, measureOf, perSideOf, nameKey,
 } from "../server/coach-iq.js";
 
@@ -41,6 +41,10 @@ for (const [id, f] of Object.entries(movements)) {
   for (const m of f.measure || []) if (!MEASURES.includes(m)) wrong(`unknown measure "${m}"`);
   for (const k of f.needs || []) if (!KINDS.has(k)) wrong(`unknown equipment "${k}"`);
   if (f.discipline && !DISCIPLINES.includes(f.discipline)) wrong(`unknown discipline "${f.discipline}"`);
+  if (!f.purposes?.length) wrong("it says nothing of what it is for");
+  for (const x of f.purposes || []) if (!PURPOSES[x]) wrong(`unknown purpose "${x}"`);
+  if (!f.roles?.length) wrong("it has no usual place in a session");
+  for (const x of f.roles || []) if (!ROLES[x]) wrong(`unknown role "${x}"`);
 }
 
 const bwOnly = bodyweightFamilies(list);
@@ -149,6 +153,8 @@ const lines = [
   "(the first is the usual); weights are in pounds, and dumbbells and kettlebells are per hand. A tempo, a pause or",
   "slow lowering is the program's to say, not the exercise's.",
   "",
+  "Each family says what it is **for** (" + Object.values(PURPOSES).join(", ") + ") and where it usually sits in a session (" + Object.values(ROLES).join(", ") + ").",
+  "",
   "**Care with** lists the joints an exercise loads and plain facts about it; which conditions call for care with which",
   "is in Coach IQ's principles. The facts: " + Object.entries(FLAGS).map(([k, v]) => `**${k}** (${v})`).join(", ") + ".",
   "",
@@ -159,6 +165,7 @@ for (const [key, title] of Object.entries(PATTERNS)) {
   lines.push(`## ${title}`, "");
   for (const [fid, f] of families) {
     lines.push(`### ${f.label}${f.discipline ? ` (${f.discipline})` : ""}`, "",
+      `For ${f.purposes.map(x => PURPOSES[x]).join(", ")}; usually ${f.roles.map(x => ROLES[x]).join(", ")}.`, "",
       "| Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |",
       "|---|---|---|---|---|---|---|---|---|");
     for (const x of list.filter(y => y.movement === fid)) {

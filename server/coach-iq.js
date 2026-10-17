@@ -40,11 +40,12 @@ export const WORDS = {
   position: ["Seated", "Half-Kneeling", "Tall-Kneeling", "Kneeling", "Supine", "Prone", "Side-Lying", "Quadruped",
     "Hanging", "Bent-Over", "Split Stance", "Staggered Stance", "Narrow Stance", "Wide Stance", "Sumo Stance"],
   support: ["Bench", "Incline Bench", "Decline Bench", "Preacher Bench", "Box", "Wall", "Incline", "Feet-Elevated",
-    "Rear-Foot-Elevated", "Deficit", "Parallel Bars", "Stability Ball"],
+    "Rear-Foot-Elevated", "Deficit", "Parallel Bars", "Stability Ball", "Chair"],
   limbs: ["Single-Arm", "Single-Leg", "Alternating"],
   implement: ["Bodyweight", "Dumbbell", "Kettlebell", "Barbell", "Trap Bar", "Landmine", "Smith Machine", "Machine",
     "Cable", "Band", "Suspension Trainer", "Medicine Ball", "Stability Ball", "Ab Wheel", "Sled", "Foam Roller",
-    "Treadmill", "Stationary Bike", "Air Bike", "Elliptical", "Rowing Machine", "Stair Climber", "Ski Erg", "Plyo Box"],
+    "Treadmill", "Stationary Bike", "Air Bike", "Elliptical", "Rowing Machine", "Stair Climber", "Ski Erg", "Plyo Box",
+    "Jump Rope", "Battle Ropes"],
   attachment: ["Rope", "V-Handle", "Single Handle", "Straight Bar", "EZ Bar", "Wide Bar", "Ankle Strap"],
   load: ["Goblet", "Front-Rack", "Overhead", "At Sides", "Farmer", "Suitcase", "Contralateral", "Assisted"],
   grip: ["Neutral-Grip", "Pronated-Grip", "Supinated-Grip", "Wide-Grip", "Close-Grip"],
@@ -60,7 +61,20 @@ export const PATTERNS = {
   "pull-horizontal": "Pull, horizontal", "pull-vertical": "Pull, vertical",
   "carry": "Carry", "core-anti-extension": "Core: resisting arching", "core-anti-rotation": "Core: resisting twisting",
   "core-lateral": "Core: resisting bending sideways", "core-flexion": "Core: bending", "rotation": "Rotation",
-  "isolation": "Single muscle", "plyometric": "Jumping and throwing", "conditioning": "Conditioning", "mobility": "Mobility",
+  "isolation": "Single muscle", "plyometric": "Jumping and throwing", "conditioning": "Conditioning",
+  "balance": "Balance", "breathing": "Breathing and pelvic floor", "mobility": "Mobility",
+};
+
+/* What a family is for, and where it usually sits in a session (ideas audit,
+   8), so variety can mean "the same purpose by another exercise" and a
+   scanned warm-up is understood. Proposed words; the first book may refine
+   them. */
+export const PURPOSES = {
+  "strength": "strength", "power": "power", "muscle": "muscle building", "endurance": "endurance",
+  "mobility": "mobility", "balance": "balance and fall prevention", "conditioning": "conditioning", "control": "control",
+};
+export const ROLES = {
+  "warm-up": "warm-up", "main": "main lift", "accessory": "accessory", "finisher": "finisher", "cool-down": "cool-down",
 };
 
 /* Muscles, finer than before (ideas audit, 17): no "shoulders" (it is a
@@ -160,7 +174,7 @@ const IMPLEMENT_KIND = {
   "Smith Machine": "machines", "Machine": "machines", "Cable": "cables", "Band": "bands", "Suspension Trainer": "suspension",
   "Medicine Ball": "medball", "Stability Ball": "stabilityball", "Ab Wheel": "smalltools", "Sled": "sled", "Foam Roller": "smalltools",
   "Treadmill": "cardio", "Stationary Bike": "cardio", "Air Bike": "cardio", "Elliptical": "cardio", "Rowing Machine": "cardio",
-  "Stair Climber": "cardio", "Ski Erg": "cardio", "Plyo Box": "box",
+  "Stair Climber": "cardio", "Ski Erg": "cardio", "Plyo Box": "box", "Jump Rope": "smalltools", "Battle Ropes": "ropes",
 };
 /* An incline or decline needs an adjustable bench; benches and bars that are
    stations, not machines, are stations (ideas audit, 19). */

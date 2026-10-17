@@ -29,7 +29,7 @@ by one the same day: all 25 to build, none parked or dropped. Numbers are the
 audit's; sizes are the auditor's (S an hour or two, M a day or so). Grouped
 into batches in building order; each item is struck from here as it is built.
 Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4. Batch B (6, 18,
-19, 20) is built: build 1.0.5._
+19, 20) is built: build 1.0.5. Batch C (8, 15, 16) is built: build 1.0.6._
 
 **Record ids, Studio's way.** Every new record id is a 3-letter tag, 3 digits,
 3 letters, 3 digits, lowercase (Studio's `server/db.js`, `newId`), with the tag
@@ -38,22 +38,6 @@ exercise (a trainer's private exercise shares it), **exf** an exercise family,
 **eqp** an equipment answer (replacing the made-up `eq_` ids), **exx** a
 trainer's own name for an exercise, **tpl** a trainer's own place, **lim** a
 client's limitation. Any other new kind means asking him first.
-
-Batch C — library content (a starter set now; the books refine it):
-
-15. **For people with limitations** (M), leaning to the groups Glenn sees:
-    older adults, injury and post-rehab, pregnancy and postpartum, chronic
-    conditions. Chair-based work, balance, getting up from the floor,
-    step-downs, rotator cuff, breathing and pelvic floor, tibialis raises.
-16. **Mainstream gaps** (M): kettlebell skills (Turkish get-up, clean,
-    snatch, goblet carry), cardio away from machines (outdoor walk and run,
-    jump rope, battle ropes, sprints, agility), loaded glute bridge, upright,
-    landmine and T-bar rows, decline press, stretching, Pilates and yoga,
-    isometrics.
-8. **What each exercise is for** (M): purposes (strength, power, muscle
-   building, endurance, mobility, balance and fall prevention, conditioning,
-   control) and a usual role (warm-up, main lift, accessory, finisher,
-   cool-down); the words settled with the first book.
 
 Batch D — safety and trust:
 
