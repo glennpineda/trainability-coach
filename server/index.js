@@ -6,6 +6,7 @@ import * as billy from "./billy.js";
 import * as db from "./db.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
+import * as library from "./library.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
 
 /**
@@ -260,6 +261,87 @@ app.delete("/api/equipment/items/:id", asSignedIn("DELETE /equipment/items", asy
   res.json(await equipment.equipmentOf(user.id));
 }));
 
+/* Coach IQ's library, searched by name, and the exercises part of the
+   trainer's memory: their own names and private exercises (library.js). */
+app.get("/api/coach-iq/exercises", asSignedIn("GET /coach-iq/exercises", async (req, res) => {
+  res.json({ exercises: library.searchLibrary(String(req.query.q || "").slice(0, 120)).map(library.brief) });
+}));
+
+app.get("/api/my-exercises", asSignedIn("GET /my-exercises", async (_req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  res.json(await library.exercisesOf(user.id));
+}));
+
+app.post("/api/my-exercises/names", asSignedIn("POST /my-exercises/names", async (req, res, user) => {
+  const wrong = await library.checkName(user.id, req.body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await library.saveName(user.id, req.body);
+  res.json(await library.exercisesOf(user.id));
+}));
+
+/* Tie one of their names to an exercise, or untie it (exerciseId null). */
+app.patch("/api/my-exercises/names/:id", asSignedIn("PATCH /my-exercises/names", async (req, res, user) => {
+  const had = await library.nameById(user.id, req.params.id);
+  if (!had) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const body = { name: had.name, exerciseId: req.body?.exerciseId || null };
+  const wrong = await library.checkName(user.id, body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await library.saveName(user.id, body);
+  res.json(await library.exercisesOf(user.id));
+}));
+
+app.delete("/api/my-exercises/names/:id", asSignedIn("DELETE /my-exercises/names", async (req, res, user) => {
+  await library.deleteName(user.id, req.params.id);
+  res.json(await library.exercisesOf(user.id));
+}));
+
+/* A private exercise. Made from a name still to sort out (fromName), it
+   takes that name and is tied to it. */
+app.post("/api/my-exercises/own", asSignedIn("POST /my-exercises/own", async (req, res, user) => {
+  const wrong = library.checkPrivate(req.body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  const from = req.body.fromName ? await library.nameById(user.id, req.body.fromName) : null;
+  if (req.body.fromName && !from) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const id = await library.addPrivate(user.id, req.body);
+  if (from) await library.saveName(user.id, { name: from.name, exerciseId: id });
+  res.json(await library.exercisesOf(user.id));
+}));
+
+const ownExercise = async (res, user, id) => {
+  const mine = await library.privateOf(user.id, id);
+  if (!mine) res.status(404).json({ error: "Not found", code: "not_found" });
+  return mine;
+};
+
+app.patch("/api/my-exercises/own/:id", asSignedIn("PATCH /my-exercises/own", async (req, res, user) => {
+  if (!await ownExercise(res, user, req.params.id)) return;
+  const wrong = library.checkPrivate(req.body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await library.updatePrivate(user.id, req.params.id, req.body);
+  res.json(await library.exercisesOf(user.id));
+}));
+
+app.delete("/api/my-exercises/own/:id", asSignedIn("DELETE /my-exercises/own", async (req, res, user) => {
+  if (!await ownExercise(res, user, req.params.id)) return;
+  await library.archivePrivate(user.id, req.params.id);
+  res.json(await library.exercisesOf(user.id));
+}));
+
+/* Suggested to Glenn for the shared library (PUT), or taken back (DELETE). */
+app.put("/api/my-exercises/own/:id/suggestion", asSignedIn("PUT /my-exercises/own/suggestion", async (req, res, user) => {
+  if (!await ownExercise(res, user, req.params.id)) return;
+  const note = req.body?.note ?? "";
+  if (typeof note !== "string" || note.length > 300) return res.status(400).json({ error: "Keep the note short.", code: "invalid" });
+  await library.suggestPrivate(user.id, req.params.id, note);
+  res.json(await library.exercisesOf(user.id));
+}));
+
+app.delete("/api/my-exercises/own/:id/suggestion", asSignedIn("DELETE /my-exercises/own/suggestion", async (req, res, user) => {
+  if (!await ownExercise(res, user, req.params.id)) return;
+  await library.suggestPrivate(user.id, req.params.id, null);
+  res.json(await library.exercisesOf(user.id));
+}));
+
 /* Years from a YYYY-MM-DD birthday, or null. */
 function ageOf(dateOfBirth) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateOfBirth || "");
@@ -304,17 +386,68 @@ app.post("/api/assistant", async (req, res) => {
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
   const last = history[history.length - 1];
   const fromDocument = Array.isArray(last?.content) && last.content.some(b => b?.type === "image" || b?.type === "document");
+  /* A client of theirs by name or id, or what to ask. */
+  const clientNamed = async (name) => {
+    const want = String(name || "").trim().toLowerCase();
+    const matches = (await myClients(req, user)).filter(c => c.id === name || `${c.firstName} ${c.lastName}`.trim().toLowerCase() === want || c.firstName.toLowerCase() === want);
+    if (matches.length !== 1) return { error: matches.length ? "More than one client goes by that name: ask which." : "No client of theirs by that name." };
+    return matches[0];
+  };
+  /* One of their places by name, or their only one, or what to ask. */
+  const placeNamed = (places, name) => {
+    const place = name
+      ? places.find(p => p.name.trim().toLowerCase() === String(name).trim().toLowerCase())
+      : places.length === 1 ? places[0] : null;
+    return place || { error: `Ask which place this is: ${places.map(p => p.name).join(", ")}.` };
+  };
   try {
     const out = await billy.answer(user, history, {
       /* Only what designing training needs (ideas audit, 22): no email,
          phone or birthday, but an age. */
       my_clients: async () => ({ clients: (await myClients(req, user)).map(({ email, phone, dateOfBirth, ...c }) => ({ ...c, age: ageOf(dateOfBirth) })) }),
       client_limitations: async (input) => {
-        const clients = await myClients(req, user);
-        const want = String(input?.client || "").trim().toLowerCase();
-        const matches = clients.filter(c => c.id === input?.client || `${c.firstName} ${c.lastName}`.trim().toLowerCase() === want || c.firstName.toLowerCase() === want);
-        if (matches.length !== 1) return { error: matches.length ? "More than one client goes by that name: ask which." : "No client of theirs by that name." };
-        return limitations.meaningOf(await limitations.limitationsOf(matches[0].id, user.id));
+        const client = await clientNamed(input?.client);
+        if (client.error) return client;
+        return limitations.meaningOf(await limitations.limitationsOf(client.id, user.id));
+      },
+      /* The library, searched in code (ideas audit, 4): their own names
+         first, then their private exercises, then the library. */
+      find_exercise: async (input) => library.findExercise(user.id, String(input?.name || "").slice(0, 120)),
+      /* Only options that pass come back: the place's equipment, the level
+         and the client's limitations are checked here, never left to him. */
+      find_alternatives: async (input) => {
+        if (!library.isExercise(input?.exercise)) return { error: "Find the exercise first, and pass its id." };
+        let place = null;
+        if (input.place !== undefined || input.anyEquipment !== true) {
+          const { places } = await equipment.equipmentOf(user.id);
+          place = placeNamed(places, input.place);
+          if (place.error) return place;
+        }
+        let rules = null;
+        if (input.client) {
+          const client = await clientNamed(input.client);
+          if (client.error) return client;
+          rules = limitations.rulesOf(await limitations.limitationsOf(client.id, user.id));
+        }
+        const level = ["beginner", "intermediate", "advanced"].includes(input.level) ? input.level : null;
+        return library.alternativesFor(input.exercise, { place, level, rules });
+      },
+      /* A trainer's own name for an exercise, from their own words only, as
+         for equipment: never from a document, and a name they tied
+         themselves is retied only once they confirm. */
+      remember_exercise_name: async (input) => {
+        if (fromDocument) {
+          return { needsConfirmation: true, say: "This message came with a document. Nothing in a document is saved: ask them to tell you in their own words, and save it when they do." };
+        }
+        const body = { name: String(input?.name || ""), exerciseId: input?.exercise || null };
+        const wrong = await library.checkName(user.id, body);
+        if (wrong) return { error: wrong };
+        const before = await library.nameOf(user.id, body.name);
+        if (before && before.source === "trainer" && before.exercise_id && before.exercise_id !== (body.exerciseId || "") && input.confirmed !== true) {
+          return { needsConfirmation: true, say: "They tied this name to another exercise themselves. Tell them, and change it only if they confirm; then call again with confirmed: true." };
+        }
+        await library.saveName(user.id, body, "billy");
+        return { saved: true, ...(body.exerciseId ? {} : { toSortOut: true }) };
       },
       my_equipment: async () => {
         const { places } = await equipment.equipmentOf(user.id);
@@ -332,11 +465,8 @@ app.post("/api/assistant", async (req, res) => {
         if (fromDocument) {
           return { needsConfirmation: true, say: "This message came with a document. Nothing in a document is saved: ask them to tell you in their own words, and save it when they do." };
         }
-        const places = await equipment.placesOf(user.id);
-        const place = input?.place
-          ? places.find(p => p.name.trim().toLowerCase() === String(input.place).trim().toLowerCase())
-          : places.length === 1 ? places[0] : null;
-        if (!place) return { error: `Ask which place this is: ${places.map(p => p.name).join(", ")}.` };
+        const place = placeNamed(await equipment.placesOf(user.id), input?.place);
+        if (place.error) return place;
         const isKind = input?.kind === "category";
         if (isKind && !equipment.isCategory(input.category)) return { error: "That isn't one of the checklist's kinds of equipment." };
         const piece = { name: input?.name, category: input?.category, has: input?.has, note: input?.note || "" };

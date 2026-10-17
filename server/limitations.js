@@ -69,23 +69,38 @@ export async function clientOf(id) {
  * to avoid gathered in one place. A condition still in draft says so.
  */
 export function meaningOf(limitations) {
+  const rules = rulesOf(limitations);
+  const notes = limitations.map(l => ({
+    said: l.text, by: l.writtenBy,
+    conditions: l.conditions.map(k => byKey[k]).filter(Boolean).map(c =>
+      ({ condition: c.label, clearanceFirst: c.clearance, refer: c.refer, ...(c.status === "draft" ? { draft: true } : {}) })),
+  }));
+  const words = (set) => [...set].map(f => FLAGS[f] || f);
+  return {
+    limitations: notes,
+    avoid: { facts: words(rules.avoid.facts), joints: [...rules.avoid.joints] },
+    modify: { facts: words(rules.modify.facts), joints: [...rules.modify.joints] },
+  };
+}
+
+/**
+ * The same, as the library's own keys, for filtering exercises in code
+ * (library.js, alternativesFor): what to avoid, and what to modify that
+ * isn't already avoided.
+ */
+export function rulesOf(limitations) {
   const avoid = { facts: new Set(), joints: new Set() }, modify = { facts: new Set(), joints: new Set() };
-  const notes = limitations.map(l => {
+  for (const l of limitations) {
     for (const f of l.facts) avoid.facts.add(f);
     for (const j of l.joints) avoid.joints.add(j);
-    const conds = l.conditions.map(k => byKey[k]).filter(Boolean).map(c => {
+    for (const c of l.conditions.map(k => byKey[k]).filter(Boolean)) {
       for (const f of c.avoid.facts) avoid.facts.add(f);
       for (const j of c.avoid.joints) avoid.joints.add(j);
       for (const f of c.modify.facts) modify.facts.add(f);
       for (const j of c.modify.joints) modify.joints.add(j);
-      return { condition: c.label, clearanceFirst: c.clearance, refer: c.refer, ...(c.status === "draft" ? { draft: true } : {}) };
-    });
-    return { said: l.text, by: l.writtenBy, conditions: conds };
-  });
-  const words = (set) => [...set].map(f => FLAGS[f] || f);
-  return {
-    limitations: notes,
-    avoid: { facts: words(avoid.facts), joints: [...avoid.joints] },
-    modify: { facts: words(modify.facts).filter(w => !words(avoid.facts).includes(w)), joints: [...modify.joints].filter(j => !avoid.joints.has(j)) },
-  };
+    }
+  }
+  for (const f of avoid.facts) modify.facts.delete(f);
+  for (const j of avoid.joints) modify.joints.delete(j);
+  return { avoid, modify };
 }

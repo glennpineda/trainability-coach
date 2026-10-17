@@ -41,7 +41,11 @@ Billy, Studio's assistant, is in Coach too: his face is the button beside the
 badges in the header, and his panel hangs under it. He knows the signed-in
 trainer's own clients (through the same `/api/clients` path the Clients tab
 uses, with the same session, so he sees nothing they can't), and he reads a
-photo or a PDF given to him. He changes nothing.
+photo or a PDF given to him. He looks exercises up in Coach IQ's library and
+finds alternatives through `server/library.js`, which filters them in code by
+the place's equipment, the level and the client's limitations, so he only
+ever sees options that pass. He changes nothing but the trainer's equipment
+answers and names for exercises, from their own words.
 
 `server/billy.js` asks Claude through Anthropic's SDK; the key stays on the
 server, and the conversation is kept by the browser tab and sent whole with
@@ -62,7 +66,8 @@ its 20 kB limit.
 
 ## Coach's database
 
-Coach keeps its own data (so far, each trainer's equipment) in a database of
+Coach keeps its own data (each trainer's equipment, names for exercises and
+own exercises, and clients' limitations) in a database of
 its own, never Studio's (`server/db.js`). On the host, GoDaddy gives the app a
 new, empty MariaDB and names it with `DB_HOST`, `DB_PORT`, `DB_NAME`,
 `DB_USER` and `DB_PASSWORD`; `DB_SSL=true` if the server asks for TLS.

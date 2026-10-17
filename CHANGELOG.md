@@ -36,4 +36,11 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   to train with, and the particular pieces a program has asked about. Billy
   checks it before suggesting exercises, asks about a piece once, and notes
   your answer there for you to change.
+- **My exercises,** in the account menu: your own names for exercises, tied
+  to Coach's library, names still to sort out, and exercises of your own,
+  which you can suggest for everybody's library. Billy uses your names, and
+  notes one when you tell him.
+- **Billy suggests from the library, already checked.** Ask him for
+  something instead of an exercise and he offers only what fits the
+  equipment at the place, the client's level and their limitations.
 - **Light or dark,** following your phone or computer.

@@ -30,7 +30,8 @@ audit's; sizes are the auditor's (S an hour or two, M a day or so). Grouped
 into batches in building order; each item is struck from here as it is built.
 Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4. Batch B (6, 18,
 19, 20) is built: build 1.0.5. Batch C (8, 15, 16) is built: build 1.0.6. Batch D (21, 22,
-23) is built: build 1.0.7; its conditions table waits for Glenn's approval._
+23) is built: build 1.0.7; Glenn took its conditions table as drafted for now
+(17 Oct 2026). Batch E (3, 4) is built: build 1.0.8._
 
 **Record ids, Studio's way.** Every new record id is a 3-letter tag, 3 digits,
 3 letters, 3 digits, lowercase (Studio's `server/db.js`, `newId`), with the tag
@@ -39,19 +40,6 @@ exercise (a trainer's private exercise shares it), **exf** an exercise family,
 **eqp** an equipment answer (replacing the made-up `eq_` ids), **exx** a
 trainer's own name for an exercise, **tpl** a trainer's own place, **lim** a
 client's limitation. Any other new kind means asking him first.
-
-Batch E — names and Billy's tools:
-
-3. **Trainers' own names and invented exercises** (M): own names (exx…) in
-   the trainer's memory; an "unmatched" list from scans, linked to the
-   library or kept as a private exercise (exr…); a way to suggest one to
-   Glenn for the shared library.
-4. **Billy's library tools, filtering in code** (M): "find this exercise"
-   (any name, alias, former name or trainer's own name) and "find
-   alternatives" (an exercise plus the client's equipment, level and
-   limitations; only options that pass come back). Alternatives look in the
-   family first, and widen to the movement pattern and main muscles when the
-   family has nothing suitable (the second half of 14).
 
 Batch F — review:
 

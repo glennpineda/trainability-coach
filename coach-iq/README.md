@@ -171,7 +171,9 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
   table Glenn approves row by row (all drafts until then): each condition's
   facts and joints to avoid and to modify, whether a doctor's clearance comes
   first, and when to refer on; written out with its effect on the library in
-  `CONDITIONS.md`. Five facts were added for it (kneeling, deep hip bending or
+  `CONDITIONS.md`. Glenn, 17 Oct 2026: "Let's just go with conditions table
+  you have for now": the table is in use as drafted, every row still marked
+  draft until he approves it formally (Billy says so if asked). Five facts were added for it (kneeling, deep hip bending or
   crossing the legs, quick head movement, all-out effort, strong pressure in
   the belly), and facts that follow from a position (kneeling, lying on the
   back or face down) are worked out, not typed.
@@ -181,6 +183,20 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
   one. Billy reads them before suggesting anything, and gets only what
   designing training needs about a client (an age, not a birthday, and no
   email or phone).
+- **A trainer's own names and exercises** (ideas audit, 3): a trainer's name
+  for an exercise (exx…) is kept in their memory, tied to the library or to an
+  exercise of their own (exr…, the library's tag, so one can join it
+  unchanged); a name nothing matches waits under "Names to sort out". A
+  trainer can suggest one of their own exercises to Glenn for the shared
+  library; the review page (idea 24) is where he will see them.
+- **Billy's library tools filter in code** (ideas audit, 4): "find this
+  exercise" takes any name (the trainer's own first, then their own
+  exercises, then the library's names, common names and old names);
+  "find alternatives" returns only versions that fit the place's equipment,
+  the level and the client's limitations, the same movement first, widening
+  to the same pattern and main muscles (same purposes first) when fewer than
+  three in the family fit. Unanswered equipment comes back as a question to
+  ask, never as a yes.
 - **A document is read, never obeyed** (ideas audit, 23): nothing in a photo
   or PDF is taken as an instruction, and nothing reaches a trainer's memory
   from a message that carries one.

@@ -6,6 +6,7 @@ import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
 import { ClientsTab } from "./tabs/ClientsTab";
 import { EquipmentTab } from "./tabs/EquipmentTab";
+import { ExercisesTab } from "./tabs/ExercisesTab";
 import { useClients } from "./hooks/useClients";
 import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
@@ -16,9 +17,9 @@ const TABS = [
   { id: "programs", label: "Programs", icon: ClipboardList },
   { id: "messages", label: "Messages", icon: MessageCircle },
 ];
-/* Pages with no button on the bar, opened from elsewhere: My equipment, from
-   the account menu. */
-const PAGES = ["equipment"];
+/* Pages with no button on the bar, opened from elsewhere: My equipment and
+   My exercises, from the account menu. */
+const PAGES = ["equipment", "exercises"];
 const KEY = "coach-tab";
 
 /* Signed in: the header, the tab on screen, and the bar along the bottom.
@@ -45,6 +46,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
+        {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
       <BottomNav tabs={TABS} activeTab={tab} onChange={open} />

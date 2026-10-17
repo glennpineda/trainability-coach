@@ -30,6 +30,7 @@ of the app gets its own chapter here as it arrives.
    - [3.5 Your account menu](#35-your-account-menu)
    - [3.6 Light or dark](#36-light-or-dark)
    - [3.7 My equipment](#37-my-equipment)
+   - [3.8 My exercises](#38-my-exercises)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
    - [4.2 Reading the list](#42-reading-the-list)
@@ -283,6 +284,8 @@ so — see 2.4.
      **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
      the same as in Studio.
    - **My equipment** — what you have to train with (3.7).
+   - **My exercises** — what you call your exercises, and exercises of your
+     own (3.8).
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
@@ -329,6 +332,37 @@ nobody else sees it.
 A piece Billy wrote down from something you told him says **Noted by Billy**.
 Change or remove it here like any other. If Billy is told something different
 from an answer you gave yourself, he asks you before changing it.
+
+### 3.8 My exercises
+
+Coach has its own library of exercises, each with a full name that says
+exactly what it is, such as *Squat — Dumbbell, Goblet*. You can keep your own
+names for them, and add exercises the library doesn't have. Billy uses your
+names when he talks to you. Like your equipment, it is yours alone.
+
+1. Tap your photo or initials in the top right corner, then **My exercises**.
+2. **My names** lists what you call an exercise, with the library's full name
+   under it. To add one, type what you call it under **Add a name**, such as
+   *Bulgarians*, and tap **Find what it is**. Search the library, such as
+   *rear foot elevated split squat*, and tap the right one.
+   - To change what one of your names means, tap the **link** beside it and
+     choose again.
+   - To remove a name, tap the **bin**.
+3. **Names to sort out** appears only when Coach has a name of yours it didn't
+   recognise. For each, tap **Find it in the library** and choose it, or
+   **Keep it as my own** to make it an exercise of your own.
+4. **My own exercises** are exercises the library doesn't have. Tap **+ Add
+   an exercise of my own**, then give it a name, the movement it is closest to
+   if there is one, what it needs, what it mainly works and how it's done.
+   Tap **Save**. To change one, tap its name; to remove it, tap the **bin**.
+5. If one of your own exercises belongs in everybody's library, tap **Suggest
+   for the library**, say why if you like, and tap **Suggest it**. It then says
+   **Suggested for the library on** the day. To change your mind, tap **Take
+   back**.
+
+A name Billy wrote down from something you told him says **Noted by Billy**.
+If you had tied that name to a different exercise yourself, he asks you
+before changing it.
 
 <div style="page-break-after: always;"></div>
 
@@ -500,9 +534,11 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ### 5.5 What Billy can't do
 
-- **He changes nothing, apart from noting your equipment.** When you tell him
-  what you have — "there's no low row machine" — he writes it down on your
-  equipment list (3.7), marked **Noted by Billy**. If you have more than one
+- **He changes nothing, apart from noting your equipment and your names for
+  exercises.** When you tell him what you have — "there's no low row
+  machine" — he writes it down on your equipment list (3.7), marked **Noted by
+  Billy**; when you tell him what you call an exercise, it goes on My
+  exercises (3.8). If you have more than one
   place, he asks which. If you had given a different answer yourself, he
   tells you what you had said and changes it only if you say so. Otherwise he cannot add or
   change a client, book or cancel a session, send a message or charge anybody.
@@ -511,8 +547,13 @@ page clears it too: Coach does not keep your conversations with Billy.
   and only what designing training needs: not their email, phone number or
   birthday. He reads their limitations (4.7) before suggesting anything, and
   says when something needs a doctor's go-ahead first.
+- **His suggestions come from the library, already checked.** Ask him for
+  something instead of an exercise and he only offers ones that fit the
+  equipment at the place, the client's level and their limitations. If one
+  needs a piece of equipment you haven't answered about, he asks first.
 - **He reads what you send him, but never takes orders from it.** Nothing in a
-  photo or a PDF is saved to your equipment list; tell him in your own words.
+  photo or a PDF is saved to your equipment list or your names; tell him in
+  your own words.
 - **He is not a doctor or a dietitian.** About pain, an injury or illness, he
   will say a professional should see it.
 - He can get things wrong, like any assistant. Check anything important.
@@ -532,6 +573,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
+| **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |

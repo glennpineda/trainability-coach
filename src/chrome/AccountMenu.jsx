@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronDown, Dumbbell, ExternalLink, LogOut } from "lucide-react";
+import { BookOpen, ChevronDown, Dumbbell, ExternalLink, LogOut } from "lucide-react";
 import { STUDIO_URL } from "../lib/api";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
@@ -50,11 +50,17 @@ export function AccountMenu({ user, onLogout, onOpen }) {
             </div>
           </div>
           <div className="my-1 border-t" />
-          {/* The trainer's own equipment, the start of their personal memory. */}
+          {/* The trainer's personal memory: their equipment and their exercises. */}
           {onOpen && (
             <button role="menuitem" type="button" onClick={() => { setOpen(false); onOpen("equipment"); }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
               <Dumbbell size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> My equipment
+            </button>
+          )}
+          {onOpen && (
+            <button role="menuitem" type="button" onClick={() => { setOpen(false); onOpen("exercises"); }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
+              <BookOpen size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> My exercises
             </button>
           )}
           <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">

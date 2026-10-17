@@ -151,6 +151,36 @@ const SCHEMA = [
     written_by_name VARCHAR(120) NOT NULL,
     created_at VARCHAR(32) NOT NULL
   )`,
+  /* A trainer's own names for exercises (ideas audit, 3): exercise_id is a
+     library version or one of their private exercises, or '' for a name
+     still to sort out. source is "trainer" or "billy", as for equipment. */
+  `CREATE TABLE IF NOT EXISTS coach_own_names (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    name_key VARCHAR(120) NOT NULL,
+    exercise_id VARCHAR(40) NOT NULL DEFAULT '',
+    source VARCHAR(16) NOT NULL,
+    created_at VARCHAR(32) NOT NULL,
+    UNIQUE (trainer_id, name_key)
+  )`,
+  /* A trainer's private exercises, for what the library doesn't have (ideas
+     audit, 3): exr… ids like the library's, so one can join it unchanged.
+     needs and primary_muscles are JSON lists; suggested_at is set when the
+     trainer suggests it for the shared library. Archived, never deleted. */
+  `CREATE TABLE IF NOT EXISTS coach_private_exercises (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    family_id VARCHAR(40) NOT NULL DEFAULT '',
+    needs VARCHAR(400) NOT NULL DEFAULT '[]',
+    primary_muscles VARCHAR(400) NOT NULL DEFAULT '[]',
+    note VARCHAR(300) NOT NULL DEFAULT '',
+    suggested_at VARCHAR(32) NULL,
+    suggest_note VARCHAR(300) NOT NULL DEFAULT '',
+    archived INTEGER NOT NULL DEFAULT 0,
+    created_at VARCHAR(32) NOT NULL
+  )`,
 ];
 
 export async function migrate() {
