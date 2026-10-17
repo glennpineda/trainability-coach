@@ -11,8 +11,14 @@ Folders
              "dark" = for dark backgrounds (white badge). SVG + PNG 256-2048 px.
   lockup/    Stacked mark + TRAINABILITY(R) COACH. Transparent SVG/PNG for light and
              dark backgrounds, plus a version on navy.
-  app-icon/  Full-bleed square on navy. iOS/Android round the corners themselves,
-             so don't pre-round it. PNG 48-1024 px.
+  app-icon/  Full-bleed square, drawn the way Studio's icon is (17 Oct 2026): a
+             dark blue gradient (#0B4F6E to Navy, top left to bottom right), a
+             white hex at Studio's size, a Cerulean C and a Sky chevron.
+             iOS/Android round the corners themselves, so don't pre-round it.
+             PNG 48-1024 px, all rendered from coach-app-icon.svg; the same
+             PNGs are public/apple-touch-icon.png (the phone's home screen),
+             public/coach-app-icon-192/512.png and src/assets/coach-app-icon.png
+             (the apps panel).
   favicon/   favicon.svg, favicon.ico (16/32/48), PNGs incl. 180 px apple-touch icon.
 
 Notes

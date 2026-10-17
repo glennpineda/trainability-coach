@@ -36,6 +36,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   adds to the principles, topic by topic, asking about anything it shouldn't
   decide alone with a recommended answer. Nothing changes until it is
   accepted.
+- **A new app icon, drawn like Studio's.** A white hex on a dark blue tile,
+  with the blue C and chevron, for the home screen of your phone and the apps
+  panel. Add Coach to your home screen again to pick it up.
 - **Design programs.** The Programs tab is open: a program for one of your
   clients, day by day, exercise by exercise, with only the exercise needed
   and sets, reps, load, effort, tempo, rest and notes as you like. Coach IQ
