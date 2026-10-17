@@ -10,8 +10,12 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <!-- The name under the icon when Coach is added to a home screen (Glenn,
          17 Oct 2026: "Coach" only): Safari reads the first, Android the
-         manifest's short_name. The tab keeps the full title. -->
+         manifest's short_name. The tab keeps the full title. Opened from the
+         icon, Coach fills the screen, as Studio does. -->
     <meta name="apple-mobile-web-app-title" content="Coach" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="application-name" content="Coach" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <!-- Roboto, Studio's face throughout (its theme.jsx; Glenn, 3 Oct 2026). -->

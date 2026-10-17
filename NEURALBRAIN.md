@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **"Add to Home Screen" on the sign-in screen, as in Studio** (17 Oct 2026; Glenn: "Can you add the “add to Home Screen” like on Studio at the bottom of the login screen"). Build 1.0.21. Not from Next up. **Read from Studio** (`glennpineda/trainability-studio`, unchanged): `src/lib/install.js` (catches `beforeinstallprompt` at load, before any screen exists, so a Chrome/Edge/Samsung offer isn't missed; works out "prompt", "ios" or nothing: nothing when already running from the icon, in an app's own browser such as Instagram's, or on a browser with no install; "Not now" kept on the device for 30 days) and `src/components/InstallApp.jsx` (`InstallBanner`: a glass strip fixed along the bottom of the sign-in screen, phones and tablets only, "Add Studio 3 to your Home Screen" on an iPhone or iPad, which opens a dialog of three steps, "Install the app" where the browser can install, and an ×). Studio's manifest is `display: standalone` with the Apple capable tags, so it opens full screen from its icon. **Ported**: `src/lib/install.js` taken as it is (its notes pointed at Coach's manifest, the storage key renamed `cx-install-banner-hidden-until`), imported first in `src/main.jsx` as Studio does; `src/auth/InstallBanner.jsx`, Studio's strip and steps with Coach's words ("Add Coach to your Home Screen", "Coach appears on your Home Screen and opens full screen from there") and, since Coach has no `DialogShell`, a small dialog of its own (a sheet from the bottom on a phone, Escape and × close it, OK); on the sign-in screen after the form. **Changed from build 1.0.20**: the manifest's `display` from `browser` to `standalone` with `scope: "/"`, and `apple-mobile-web-app-capable`, `mobile-web-app-capable` and `apple-mobile-web-app-status-bar-style` in `index.html`, as Studio has them: Chrome only offers an install for a standalone app, and Studio's steps promise full screen. The server sends the manifest as `application/manifest+json`. Manual 2.6 "Putting Coach on your Home Screen"; CHANGELOG. **Tested** in Chromium: as an iPhone 13 (touch, with Chromium's own install offer hidden, as Safari has none) the strip said "Add Coach to your Home Screen", opened the three steps, OK closed them, × hid the strip and it stayed hidden after a reload; as an iPhone with Chromium's offer left in, it said "Install the app", so the manifest is installable; on a 1200px desktop nothing showed; no console errors but the signed-out check's 401. **Not tested** on a real phone. Commit: build 1.0.21.
+
 - **"Coach" as the name on the home screen** (17 Oct 2026; Glenn: "Can we also make the default name for the “add to Home Screen” to be “Coach” only?"). Build 1.0.20. Not from Next up. Safari offers the page's title ("Trainability Coach") unless the page names itself: `index.html` now has `<meta name="apple-mobile-web-app-title" content="Coach">` (Safari's Add to Home Screen) and `<meta name="application-name" content="Coach">`, and a new `public/manifest.webmanifest` (name "Trainability Coach", short_name "Coach", start_url "/", the 192 and 512 px icons, theme Cerulean, background Navy) for Android, linked from `index.html`. Its `display` is `browser`, so adding it to a home screen still opens Coach in the browser as before, not as a separate app window; that is a choice for another day. The browser tab keeps the full title. The built page carries both (checked in `dist/`). CHANGELOG (the icon bullet). Not tested on a phone: a cloud session has none; after the deploy, Glenn removes the icon and adds it again. Commit: build 1.0.20.
 
 - **The app icon, drawn like Studio's** (17 Oct 2026; Glenn, with a photo of his phone's home screen showing Studio 3 and Trainability Coach side by side: "Can you design the app logo more like the studio app logos, smaller hex, white hex background and blue c and chevron"). Build 1.0.19. Not from Next up. **What the phone showed**: Studio's home-screen icon is a dark purple gradient tile with a white hex and a two-tone purple S; Coach's was `public/apple-touch-icon.png`, the Cerulean badge on a transparent background, which iOS fills with black, so a big blue hex on black. **Measured from Studio's icon** (`src/assets/studio-app-icon.png`, 192 px): the white hex spans about 69% of the tile, and the tile runs from (77,43,100) at the top left to (42,26,56) at the bottom right. **Drawn**: `brand/app-icon/coach-app-icon.svg` rewritten as Studio's way, a full-bleed square with a gradient from #0B4F6E (the sign-in screen's middle blue) to Navy #172A3A, top left to bottom right, the badge's own white hex, Cerulean C and Sky chevron scaled about the centre; a first try at 0.9455 (Studio's 69% of the height) looked smaller than Studio's beside it, because Studio's hex is wider for its height and its S fills more of it, so it went to 1.02 with the C's stroke 80.67 → 94 and the chevron's 55.2 → 64. Not pre-rounded, as the brand README says (the phone rounds it). Rendered with the session's Chromium from the one SVG to every size in `brand/app-icon/` (48, 64, 80, 87, 120, 152, 167, 180, 192, 512, 1024), and to `public/apple-touch-icon.png` (180, the home screen), `public/coach-app-icon-192.png` and `-512.png`, and `src/assets/coach-app-icon.png` (the apps panel beside Studio's). A preview beside Studio's, rounded as a phone does, was shown to Glenn. The favicon (the browser tab) and the badges and lockups are unchanged. `brand/README.txt` says how the icon is drawn and where its copies go; CHANGELOG. **Glenn's to do**: an iPhone keeps the icon it was given when Coach was added to the home screen, so remove it and add it again from Safari (Share → Add to Home Screen) after the deploy. Commit: build 1.0.19.
@@ -163,6 +165,7 @@ of the app gets its own chapter here as it arrives.
    - [2.3 If you have forgotten your password](#23-if-you-have-forgotten-your-password)
    - [2.4 Signed in with a temporary password](#24-signed-in-with-a-temporary-password)
    - [2.5 Signing out](#25-signing-out)
+   - [2.6 Putting Coach on your Home Screen](#26-putting-coach-on-your-home-screen)
 3. [Finding your way around](#3-finding-your-way-around)
    - [3.1 The bar at the top](#31-the-bar-at-the-top)
    - [3.2 Switching between Coach and Studio](#32-switching-between-coach-and-studio)
@@ -328,6 +331,26 @@ time you sign in to Coach.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
 of Studio.
+
+#### 2.6 Putting Coach on your Home Screen
+
+On a phone or tablet, the sign-in screen has a strip along the bottom. Coach
+then has its own icon, named **Coach**, and opens full screen from it.
+
+**On an iPhone or iPad** the strip says **Add Coach to your Home Screen**.
+
+1. Tap it. A box shows three steps.
+2. Tap **OK**, then tap the **Share** button: at the bottom of Safari on an
+   iPhone, at the top on an iPad.
+3. Scroll down and tap **Add to Home Screen**.
+4. Tap **Add**.
+
+**On an Android phone** the strip says **Install the app**. Tap it, then
+**Install** in the box your phone shows.
+
+Not now? Tap the **×** at the end of the strip. It stays away on that phone
+for a month. The strip does not show once Coach is on your Home Screen, or on
+a computer.
 
 <div style="page-break-after: always;"></div>
 

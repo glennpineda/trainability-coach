@@ -22,6 +22,7 @@ of the app gets its own chapter here as it arrives.
    - [2.3 If you have forgotten your password](#23-if-you-have-forgotten-your-password)
    - [2.4 Signed in with a temporary password](#24-signed-in-with-a-temporary-password)
    - [2.5 Signing out](#25-signing-out)
+   - [2.6 Putting Coach on your Home Screen](#26-putting-coach-on-your-home-screen)
 3. [Finding your way around](#3-finding-your-way-around)
    - [3.1 The bar at the top](#31-the-bar-at-the-top)
    - [3.2 Switching between Coach and Studio](#32-switching-between-coach-and-studio)
@@ -187,6 +188,26 @@ time you sign in to Coach.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
 of Studio.
+
+### 2.6 Putting Coach on your Home Screen
+
+On a phone or tablet, the sign-in screen has a strip along the bottom. Coach
+then has its own icon, named **Coach**, and opens full screen from it.
+
+**On an iPhone or iPad** the strip says **Add Coach to your Home Screen**.
+
+1. Tap it. A box shows three steps.
+2. Tap **OK**, then tap the **Share** button: at the bottom of Safari on an
+   iPhone, at the top on an iPad.
+3. Scroll down and tap **Add to Home Screen**.
+4. Tap **Add**.
+
+**On an Android phone** the strip says **Install the app**. Tap it, then
+**Install** in the box your phone shows.
+
+Not now? Tap the **×** at the end of the strip. It stays away on that phone
+for a month. The strip does not show once Coach is on your Home Screen, or on
+a computer.
 
 <div style="page-break-after: always;"></div>
 

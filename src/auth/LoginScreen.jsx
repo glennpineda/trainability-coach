@@ -4,6 +4,7 @@ import { HexBackdrop } from "./HexBackdrop";
 import { CoachLockup } from "./CoachLockup";
 import { apiRequest, STUDIO_URL } from "../lib/api";
 import { VERSION_LABEL } from "../version";
+import { InstallBanner } from "./InstallBanner";
 
 /* As on Studio's screen: a name typed without an @ is taken as a studio
    address, since on a phone the @ is a keyboard switch away. */
@@ -165,6 +166,7 @@ export function LoginScreen({ onLogin, offline }) {
           <a href={STUDIO_URL} className="inline-flex items-center gap-1 font-medium" style={{ color: "#fff" }}><ExternalLink size={14} aria-hidden="true" /> Open Studio</a>
         </p>
       </div>
+      <InstallBanner />
     </div>
   );
 }

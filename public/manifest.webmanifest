@@ -2,7 +2,8 @@
   "name": "Trainability Coach",
   "short_name": "Coach",
   "start_url": "/",
-  "display": "browser",
+  "scope": "/",
+  "display": "standalone",
   "background_color": "#172A3A",
   "theme_color": "#007BA7",
   "icons": [

@@ -36,6 +36,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   adds to the principles, topic by topic, asking about anything it shouldn't
   decide alone with a recommended answer. Nothing changes until it is
   accepted.
+- **Add Coach to your Home Screen.** On a phone, a strip at the bottom of the
+  sign-in screen offers it, as in Studio: the steps on an iPhone, the install
+  box on Android. From its icon Coach opens full screen.
 - **A new app icon, drawn like Studio's.** A white hex on a dark blue tile,
   with the blue C and chevron, for the home screen of your phone and the apps
   panel, named just **Coach** under it. Add Coach to your home screen again to
