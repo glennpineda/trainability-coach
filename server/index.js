@@ -8,6 +8,9 @@ import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
 import * as library from "./library.js";
 import * as reviews from "./reviews.js";
+import * as store from "./iq-store.js";
+import * as edit from "./iq-edit.js";
+import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
 
@@ -381,15 +384,157 @@ app.put("/api/coach-iq/review/:kind/:target", asPrimary("PUT /coach-iq/review", 
   if (!reviews.MARKS.includes(mark)) return res.status(400).json({ error: "Approve, flag, or take it back.", code: "invalid" });
   if (typeof comment !== "string" || comment.length > 1000) return res.status(400).json({ error: "Keep the comment under 1,000 characters.", code: "invalid" });
   if (mark === "flag" && !comment.trim()) return res.status(400).json({ error: "Say what's wrong, so it can be fixed.", code: "invalid" });
+  /* The mark goes into the library itself now it lives in the app: an
+     approval makes it reviewed, dated today; a flag, or taking an approval
+     back, makes it a draft again. */
+  const doc = kind === "exercise" ? library.exerciseById(target) : store.current().conditions.find(c => c.key === target);
+  const had = reviews.markOf(kind, target);
+  const status = mark === "approve" ? { status: "reviewed", reviewed: new Date().toISOString().slice(0, 10) }
+    : mark === "flag" || had?.mark === "approve" ? { status: "draft", reviewed: null } : null;
+  if (status && doc.status !== "retired" && (doc.status !== status.status || doc.reviewed !== status.reviewed)) {
+    const words = { approve: "Approved", flag: "Flagged", clear: "Took back the approval of" }[mark];
+    try {
+      await store.change([{ kind, id: target, after: { ...doc, ...status } }], user, `${words} ${doc.name || doc.label}`);
+    } catch (err) { return refused(res, err); }
+  }
   await reviews.setMark(kind, target, { mark, comment }, user);
   res.json({ mark: reviews.markOf(kind, target) });
 }));
 
-/* Every mark that counts, as a file to write into the library with
-   `npm run iq -- --apply <file>` (Glenn: "App now, file later"). */
-app.get("/api/coach-iq/review/export", asPrimary("GET /coach-iq/review/export", async (_req, res) => {
-  res.set("Content-Disposition", `attachment; filename="coach-iq-reviews-${new Date().toISOString().slice(0, 10)}.json"`);
-  res.json({ exported: new Date().toISOString(), marks: reviews.exportMarks() });
+/* ------------------------------------------------- editing the library
+   The library lives in the app (iq-store.js): every change is checked with
+   Coach IQ's rules, refused with the reasons if it would break, and kept in
+   its history to undo. The Primary Master's alone, like the review. */
+/* A new id for the library, one it doesn't hold already. */
+const freshId = (kind) => {
+  let id;
+  do id = newId(kind); while (library.exerciseById(id) || library.familyById(id));
+  return id;
+};
+const refused = (res, err, headline = "That would break the library, so nothing was saved.") => {
+  if (!(err instanceof store.Refused)) throw err;
+  res.status(400).json({ error: headline, problems: err.problems, code: "refused" });
+};
+
+app.get("/api/coach-iq/library/vocabulary", asPrimary("GET /coach-iq/library/vocabulary", async (_req, res) => {
+  res.json(edit.vocabulary());
+}));
+
+/* A version changed; with `easier`, the versions one step easier too. */
+app.put("/api/coach-iq/library/exercises/:id", asPrimary("PUT /coach-iq/library/exercises", async (req, res, user) => {
+  const had = library.exerciseById(req.params.id);
+  if (!had) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const after = edit.versionFrom(req.body, had);
+  const others = Array.isArray(req.body?.easier) ? edit.easierChanges(store.current().exercises, had.id, req.body.easier) : [];
+  try {
+    await store.change([{ kind: "exercise", id: had.id, after }, ...others], user, `Changed ${after.name}`);
+  } catch (err) { return refused(res, err); }
+  res.json(library.reviewFamily(after.movement));
+}));
+
+/* A new version in a family. */
+app.post("/api/coach-iq/library/exercises", asPrimary("POST /coach-iq/library/exercises", async (req, res, user) => {
+  const id = freshId("exercise");
+  const after = edit.versionFrom(req.body, null, { id });
+  const family = library.familyById(after.movement);
+  if (!family) return res.status(400).json({ error: "Choose the family it belongs to.", code: "invalid" });
+  try {
+    await store.change([{ kind: "exercise", id, after }, ...edit.easierChanges(store.current().exercises, id, req.body?.easier)], user, `Added ${after.name} to ${family.label}`);
+  } catch (err) { return refused(res, err); }
+  res.json({ id, family: library.reviewFamily(after.movement) });
+}));
+
+/* Retire a version (it stays, so programs naming it are understood, but is
+   never offered), or bring one back. */
+app.put("/api/coach-iq/library/exercises/:id/retired", asPrimary("PUT /coach-iq/library/exercises/retired", async (req, res, user) => {
+  const had = library.exerciseById(req.params.id);
+  if (!had) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const retire = req.body?.retired === true;
+  const after = retire ? { ...had, status: "retired" } : { ...had, status: "draft", reviewed: null };
+  if (!retire) delete after.replacedBy;
+  try {
+    await store.change([{ kind: "exercise", id: had.id, after }], user, `${retire ? "Retired" : "Brought back"} ${had.name}`);
+  } catch (err) { return refused(res, err); }
+  res.json(library.reviewFamily(had.movement));
+}));
+
+app.put("/api/coach-iq/library/families/:id", asPrimary("PUT /coach-iq/library/families", async (req, res, user) => {
+  const had = library.familyById(req.params.id);
+  if (!had) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const after = edit.familyFrom(req.body, had);
+  try {
+    await store.change([{ kind: "family", id: req.params.id, after }], user, `Changed the family ${after.label}`);
+  } catch (err) { return refused(res, err); }
+  res.json(library.reviewFamily(req.params.id));
+}));
+
+/* A new family, with its first version: a family can't be empty. */
+app.post("/api/coach-iq/library/families", asPrimary("POST /coach-iq/library/families", async (req, res, user) => {
+  const familyId = freshId("family"), id = freshId("exercise");
+  const family = edit.familyFrom(req.body?.family);
+  const version = edit.versionFrom({ ...req.body?.version, movement: familyId }, null, { id });
+  try {
+    await store.change([{ kind: "family", id: familyId, after: family }, { kind: "exercise", id, after: version },
+      ...edit.easierChanges(store.current().exercises, id, req.body?.version?.easier)], user, `Added the family ${family.label}, with ${version.name}`);
+  } catch (err) { return refused(res, err); }
+  res.json({ id: familyId, family: library.reviewFamily(familyId) });
+}));
+
+app.put("/api/coach-iq/library/conditions/:key", asPrimary("PUT /coach-iq/library/conditions", async (req, res, user) => {
+  const had = store.current().conditions.find(c => c.key === req.params.key);
+  if (!had) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const after = edit.conditionFrom(req.body, had);
+  try {
+    await store.change([{ kind: "condition", id: had.key, after }], user, `Changed the condition ${after.label}`);
+  } catch (err) { return refused(res, err); }
+  res.json({ conditions: limitations.conditionsForReview() });
+}));
+
+app.post("/api/coach-iq/library/conditions", asPrimary("POST /coach-iq/library/conditions", async (req, res, user) => {
+  const after = edit.conditionFrom(req.body);
+  if (!after.key) return res.status(400).json({ error: "Give the condition a name.", code: "invalid" });
+  if (limitations.isCondition(after.key)) return res.status(400).json({ error: "There is a condition by that name already.", code: "invalid" });
+  try {
+    await store.change([{ kind: "condition", id: after.key, after }], user, `Added the condition ${after.label}`);
+  } catch (err) { return refused(res, err); }
+  res.json({ conditions: limitations.conditionsForReview() });
+}));
+
+/* A trainer's suggestion, made a version of the library: their names for it
+   follow it there, and their own copy is put away. */
+app.post("/api/coach-iq/library/suggestions/:id", asPrimary("POST /coach-iq/library/suggestions", async (req, res, user) => {
+  const suggestion = await library.suggestionById(req.params.id);
+  if (!suggestion) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const id = freshId("exercise");
+  const after = edit.versionFrom(req.body, null, { id, origin: "trainer" });
+  const family = library.familyById(after.movement);
+  if (!family) return res.status(400).json({ error: "Choose the family it belongs to.", code: "invalid" });
+  try {
+    await store.change([{ kind: "exercise", id, after }, ...edit.easierChanges(store.current().exercises, id, req.body?.easier)], user,
+      `Added ${after.name} to ${family.label}, suggested by ${suggestion.by || "a trainer"}`);
+  } catch (err) { return refused(res, err); }
+  await library.acceptSuggestion(suggestion.id, id);
+  res.json({ id, family: after.movement, suggestions: await library.suggestions() });
+}));
+
+/* What changed, newest first: all of it, or one row's. */
+app.get("/api/coach-iq/library/history", asPrimary("GET /coach-iq/library/history", async (req, res) => {
+  res.json({ changes: await store.history({ kind: req.query.kind, id: req.query.id, limit: Math.min(Number(req.query.limit) || 50, 200) }) });
+}));
+
+app.post("/api/coach-iq/library/history/:id/undo", asPrimary("POST /coach-iq/library/history/undo", async (req, res, user) => {
+  try {
+    const id = await store.undo(req.params.id, user);
+    if (!id) return res.status(404).json({ error: "Not found", code: "not_found" });
+  } catch (err) { return refused(res, err, "That change can't be undone just now."); }
+  res.json({ changes: await store.history() });
+}));
+
+/* The whole library as a file, in the files' own shape: a snapshot to keep,
+   and what `npm run iq -- --import <file>` writes back into the code. */
+app.get("/api/coach-iq/library/export", asPrimary("GET /coach-iq/library/export", async (_req, res) => {
+  res.set("Content-Disposition", `attachment; filename="coach-iq-library-${new Date().toISOString().slice(0, 10)}.json"`);
+  res.json(store.exportLibrary());
 }));
 
 /* Installation → Where files are saved (server/durable-home.js), the
@@ -607,6 +752,7 @@ try {
   await db.migrate();
   await equipment.adoptOldAnswers();
   await reviews.load();
+  await store.load();
   await refreshStorage({ force: true });
   console.log(`Database: ${db.describe()}`);
 } catch (err) {

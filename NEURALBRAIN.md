@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The library in the app, not the code** (17 Oct 2026; Glenn: "So we have to keep committing here to update the library? We have to keep committing? Is there another way so it's app controlled?", then "Yes, use LIH", then "Brainstorm"). Build 1.0.12. Coach IQ's exercise library and conditions table moved from `coach-iq/exercises.json` and `conditions.json` into Coach's own database, edited on Review Coach IQ, with a history to undo. **The checker, shared**: the rules in `scripts/iq.mjs` moved, unchanged, into `server/iq-check.js` (`checkLibrary({movements, exercises, conditions})` → problems, master names and easier steps; it no longer writes `master` onto what it's given, which the script did), so the app and `npm run check-iq` run the same rules; one word changed, "same master name" became "same full name". `iq.mjs` now uses it, and its `--apply` (writing downloaded review marks into the files) gave way to `--import <file>`, which writes an export from the app into the files. `conditions.json` is written in its hand-made layout (a field to a line, each fact list on one line) by `conditionsText`, checked by importing the files' own contents and getting no diff at all. **The store**, `server/iq-store.js`: tables `coach_iq_docs` (kind "family", "exercise" or "condition"; its id or key; `pos` for the files' order, new rows last; `data`, the same JSON as the files; MEDIUMTEXT) and `coach_iq_history` (lih… ids, Glenn's tag: summary, `changes` as JSON with each touched row before and after, who, when, `undoes`, `undone_by`). The library starts as the files in memory, so Billy and the screens work even if the database never answers; `load()` (on start, after `reviews.load()`) reads the table, and the first time, with it empty, fills it from the files, writing in any approvals and flags already made under "App now, file later" (so none is lost in the move), with one history row "Loaded from the files: 139 families, 301 versions, 14 conditions" that can't be undone. `change(changes, who, summary)` builds the whole library as it would be, runs `checkLibrary`, refuses with `Refused(problems)` if anything is wrong (nothing written), else writes each row and one lih row and swaps the library in memory; listeners rebuild (`library.js`: families, versions, search keys, easier steps; `limitations.js`: the conditions). `undo(id)` checks each touched row still matches what the change left (else refused: "… has changed since. Undo the later change first."), then applies the befores as a new change, which `undoes` the old, marked `undone_by`; undoing an addition removes the row. `history({id})` finds a row's changes; `exportLibrary()` gives the files' shape. Writes are one after another, not in a transaction (db.js has none); a failure halfway is unlikely and the next start reads what was written. **Editing**, `server/iq-edit.js`: `vocabulary()` (every word list the editor offers), `versionFrom` (only known fields, tidied lists, optional fields left out rather than empty, unknown existing fields kept; a renamed version gets its old name in `formerNames`, so a program using it is still understood, and search still finds it), `familyFrom`, `conditionFrom` (key from the label, lowercase with hyphens), and `easierChanges` (choosing a version's easier steps means adding it to their harder lists, since easier steps are never stored). **Routes**, all the Primary Master's: `GET /api/coach-iq/library/vocabulary`; `PUT` and `POST /api/coach-iq/library/exercises` (with `easier`), `PUT …/exercises/:id/retired` (retire, or bring back as a draft); `PUT` and `POST …/families` (a new family comes with its first version: a family can't be empty); `PUT` and `POST …/conditions`; `POST …/suggestions/:id` (a trainer's suggestion made a version: their names tied to their own exercise are tied to the library's, and theirs is archived with `accepted_into`); `GET …/history` and `POST …/history/:id/undo`; `GET …/export`. New ids come from `freshId`, which skips any already in the library. A refusal answers 400 with "That would break the library, so nothing was saved." and the reasons; a refused undo says "That change can't be undone just now.". The Approve/Flag route now writes the status into the library too (approve: reviewed, dated today; flag, or taking back an approval: draft), as a change of its own ("Approved Goblet squat"), so `--apply` and Download reviews are gone and `reviews.exportMarks` with them. **A column on a live table**: `accepted_into` on `coach_private_exercises`, which went live in build 1.0.9, so `CREATE TABLE IF NOT EXISTS` couldn't add it; `db.js` gained `COLUMNS` and `hasColumn` (PRAGMA on SQLite, information_schema on MySQL), adding each missing column once on start. **The page**: `src/review/LibraryEditor.jsx` (the forms for a version, a family and a condition; chips; a search-to-add picker for easier and harder steps; a list of changes with Undo; the refusal shown in a pale red box) and `src/tabs/ReviewTab.jsx`: each card gets Edit, Retire or Bring back (retired cards stay in their family, faded, marked Retired, with no Approve/Flag), and History (its changes under it, each with Undo); Edit the family under the family's name; + Add a version of …, + Add a family (two steps: the family, then Next: its first version, then Add the family; going back keeps what was typed); conditions get Edit and + Add a condition; Suggestions get Add to the library (the version form, family chosen); a new **Changes** tab lists every change with Undo; **Export the library** replaces Download reviews. Manual 3.9 rewritten as "Reviewing and editing Coach IQ" with a table of what to tap. `coach-iq/README.md` has a new section, "The library lives in the app", in Glenn's words. **Tested** on scratch SQLite with the mock Studio, through the API: a trainer gets 404 on every route; loading from the files once and its history row; renaming (old name kept and still found by search); a level change refused with the reasons; adding a version, refused at intermediate with no easier step, then saved with one; retiring (no longer offered) and bringing back; adding a family with its first version (first refused because the library already has a "Wall sit"; the check worked) and editing it; adding a condition and a bad one refused; Approve writing reviewed and today's date into the library, Take back making it a draft; a trainer's suggestion added, their name following it to the library and their own copy gone; undo of a family edit, a family addition refused while it had been edited since, then allowed, then refused a second time; export; `--import` of the export (only the new rows changed in the files) and of the files' own contents (no diff), files restored after; a restart reading the library and history back from the database. In Chromium at phone width: rename, the refusal box, a card's history, retire and bring back, add a version, edit a condition, undo from Changes, and a new family in two steps; no page errors beyond the expected 400 of the refused change. Untested: MariaDB (MEDIUMTEXT and the information_schema column check), and two app processes editing at once (Airo runs one).
+
 - **Studio's look: Roboto, its heading sizes and its button levels** (17 Oct 2026; Glenn asked "Are using the same font as studio? Same design conventions on font sizes and buttons?", and after the comparison, "Yes go ahead"). Build 1.0.11. Not from Next up. **What was different**, read from Studio's `src/theme.jsx` and CONTRIBUTING.md ("Buttons and links"): Studio loads Roboto from Google Fonts and sets it throughout (Glenn, 3 Oct 2026: "Roboto throughout"); Coach loaded no web font, so it showed the device's own (San Francisco on Apple), with Roboto only a fallback. Studio shows `font-semibold` as 500 (Roboto's 600 is nearly bold) and sets headings in `.iw-display` (Roboto 500, each Tailwind size about a fifth smaller: text-2xl is 20px); Coach's page titles were 24px bold. Studio has eight control levels (primary gradient pill with a glow, ember, quiet outline over a pale wash at 12px, row, link with an icon and no underline, quiet grey text, view, icon square); Coach had a flat 10px primary, links that underlined on hover and stood in for secondary buttons, Cancel in the link colour, and Billy's panel icon used as the icon button everywhere. **What changed**: `index.html` loads Roboto 300 to 700 (preconnects, `display=swap`), and `body` uses it ahead of the system faces. `src/index.css`: `.font-semibold:not(.cx-display)` is 500; `cx-display` is Studio's `.iw-display` with the same scaled sizes; new fixed fills for white words that stay the same in dark (`--fill-cerulean` #007BA7 white 4.9:1, `--fill-deep` #0B5C8A 7.0:1, `--fill-ember` #B23A27 5.6:1), and `--sky-soft` for the secondary wash (light #E8F2FB, dark #1D3346). The levels, in Coach's blues where Studio has magenta and lilac: `cx-btn-primary` (135-degree cerulean to deep blue gradient, white, pill, blue glow; not sky, since white on sky is under 3:1), `cx-btn-ember`, `cx-btn-quiet` (accent outline over an accent-soft to sky-soft wash, 12px), `cx-btn-row`, `cx-link` (no underline), `cx-quiet` (iron), `cx-icon-btn` (2rem square on --paper, Studio's), and busy buttons at full strength (`button[aria-busy="true"]:disabled`). The view level wasn't needed: Coach's pill rows are choices inside a page. **Each screen moved to its level**: page titles `cx-display text-2xl uppercase` (TabHeading) and the greeting `cx-display text-3xl`/`4xl`; Login's second Back to login (after a reset) from primary to quiet, Send temporary password busy with a spinner, Open Studio without its underline; Home's Studio link inline in its sentence (accent, semibold, no icon, as Studio does for a link inside a sentence); Clients' Try again a row button; My equipment's Add a full-width secondary ("adding to a list is a secondary button inside the card"), Remove this place a row button, Rename and + Add a place links, icons as `cx-icon-btn`; a client's limitations: + Add a limitation full-width secondary, Save busy as Saving…, Cancel quiet, and deleting now Studio's inline confirmation (a pale red box asking *Delete this limitation? Its trainers will no longer see it.*, a red **Delete** and **Keep it** in ink-soft, since iron on the pale red is too faint), where it was two small links; My exercises: Find what it is and + Add an exercise of my own full-width secondary, Take back a row, Cancel quiet, icons; Review Coach IQ: Approve and Flag are row buttons sharing the card's width (each card had a primary, and Studio allows one per screen), Take back a row, the family name `cx-display`; Installation: Save folder busy as Saving…, Let the app choose secondary. Billy's panel kept its own icons and its primary send button, as in Studio. **`npm run check-ui`** (`scripts/check-ui.mjs`), after Studio's: it finds each `<button>` and `<a>` by scanning to the `>` outside braces and quotes (Studio's lesson: a regex stops at the first `=>`) and fails on a way out (Cancel, Keep it, Back to login …) wearing a loud level, two levels on one control, an underline, or Billy's panel icon outside his panel; a `ui-exception:` comment on the line before excuses one and is printed every run. Run against the code from before this pass it found 15 problems; after, none. CLAUDE.md now says the look matches Studio's and names the check. Manual: the limitation delete wording (Keep it, the pale red box); the other button words were unchanged. Also in this commit: the library-in-the-app item in Next up, and Glenn's tag **lih** for its history records in `server/ids.js` (not used yet). Tested on scratch SQLite with the mock Studio and Claude: before and after screenshots of every screen, light and dark, at phone width, with no page errors; the font server answered from here. Not done: the manual's own pictures (`npm run screenshots`) still show the old buttons, because they are taken against Studio's fixture with a test account, which a cloud session can't run; retake them on the Mac.
 
 - **Where files are saved, and an Installation page** (17 Oct 2026; Glenn: "Before we continue, the directory where we can save files on the host is /private please see how studio is doing it. And have an installation settings for it."). Build 1.0.10. Not from Next up: asked directly. **How Studio does it**, read from `trainability-studio`'s `server/durable-home.js`, its `/api/storage` routes, `StorageDialog.jsx` and its manual: the host (GoDaddy) runs the app from `/app`, rebuilt on every deploy, and keeps only Private Storage, `/private` (Studio lost four nights of backups written under the home folder, `/local`, to a deploy). Where the app runs from `/app` and `/private` is writable, `/private` is the home; anywhere else the home folder, since a Mac has a `/private` too. The Primary Master can name another folder (Settings → Installation → Where files are saved), stored in `settings` as `storage_folder`, re-read at most once a minute, tried (make, write, remove a file) before it is accepted, refused inside the app's folder; `BACKUP_DIR` and `MEDIA_DIR` on the host win. **Coach's copy** follows it closely: `server/durable-home.js` (the same `automaticHome`, `checkFolder`, `refreshStorage`, `chooseStorage`, `storageState`, and the stored value "automatic" for going back, so a lost row isn't read as a decision and a known folder is written back). Differences: Coach's files go in a `trainability-coach` folder inside the home (`filesDir()`, `filePath(name)`), so a home shared with another app never mixes them; one host override, `COACH_FILES_DIR`, which names Coach's files folder itself and wins over everything; a change is logged to the console, since Coach has no event log like Studio's `recordEvent`. Nothing is saved there yet: reading a book in the app and scanned programs will be the first. **Settings**: Coach had no settings table; `coach_settings` (name as the primary key, value, updated_at) in `server/db.js` and `server/settings.js` (`getSetting`, `setSetting`, read then insert or update), keyed by name like Studio's, so no id tag was needed. **Routes**: `GET /api/storage` (forces a re-read) and `PUT /api/storage` (`{folder}`; empty goes back to automatic), both behind `asPrimary` (404 to anyone else); `refreshStorage` also runs on start after `reviews.load()`. **The page**: `src/tabs/InstallationTab.jsx`, **Installation** in the account menu for the Primary Master only (and `Shell.jsx` checks too), with one card, Where files are saved: Saved in now (the files folder and why: named, chosen by the app, or the host's setting), a warning when a named folder can no longer be written to, Folder on the server, Save folder and Let the app choose; with `COACH_FILES_DIR` set, it says the host decides and offers nothing to change. Words follow Studio's dialog. Docs: manual 3.10 and the account menu list, README (Where files are saved, under Deploying), `.env.example` (`COACH_FILES_DIR`), CHANGELOG. Tested on scratch SQLite with the mock Studio: a trainer gets 404; refusals for a relative path, the top of the disk, the app's own `dist`, a path that can't be made (`/dev/null/x`, ENOTDIR) and a non-string; naming a scratch folder (the probe file made and removed, the setting stored), going back to automatic and naming it again; `automaticHome` gives `/private` for `/app` with `/private` writable, the home folder when it isn't, and the home folder off the host even with `/private` writable; `COACH_FILES_DIR` wins. A probe of `/proc/nope` hung in this container (its `/proc` quirk; Studio's code does the same), so that case was dropped from the run. The page was clicked through in Chromium at phone width with no errors. Untested: the real `/private` on GoDaddy.
@@ -156,7 +158,7 @@ of the app gets its own chapter here as it arrives.
    - [3.6 Light or dark](#36-light-or-dark)
    - [3.7 My equipment](#37-my-equipment)
    - [3.8 My exercises](#38-my-exercises)
-   - [3.9 Reviewing Coach IQ (Primary Master only)](#39-reviewing-coach-iq-primary-master-only)
+   - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
    - [3.10 Installation (Primary Master only)](#310-installation-primary-master-only)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
@@ -413,8 +415,8 @@ so — see 2.4.
    - **My equipment** — what you have to train with (3.7).
    - **My exercises** — what you call your exercises, and exercises of your
      own (3.8).
-   - **Review Coach IQ** — only for the Primary Master: passing the library
-     (3.9).
+   - **Review Coach IQ** — only for the Primary Master: passing and editing
+     the library (3.9).
    - **Installation** — only for the Primary Master: settings for this copy of
      Coach on its server (3.10).
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
@@ -495,11 +497,13 @@ A name Billy wrote down from something you told him says **Noted by Billy**.
 If you had tied that name to a different exercise yourself, he asks you
 before changing it.
 
-#### 3.9 Reviewing Coach IQ (Primary Master only)
+#### 3.9 Reviewing and editing Coach IQ (Primary Master only)
 
-Every exercise in the library and every line of the conditions table starts
-as a draft. The Primary Master passes each one here. Nobody else sees this
-page.
+Coach IQ's library of exercises and its conditions table live in Coach
+itself. Every exercise and every condition starts as a draft. The Primary
+Master passes each one here, and keeps the library right: changing, adding
+and retiring exercises, and adding trainers' suggestions. Nobody else sees
+this page.
 
 1. Tap your photo or initials in the top right corner, then **Review Coach
    IQ**.
@@ -518,18 +522,49 @@ page.
      your mind, tap **Take back**.
 5. When the family is done, tap **Next family**. It goes to the next family
    with anything still to pass.
+
+**Changing an exercise.** Tap **Edit** on its card. Change what needs
+changing: its everyday name, other names, family, its details (equipment,
+position and so on; **Usual** leaves one out of its full name), level, what it
+works, what it involves, the joints it loads, a particular piece it needs, how
+it is counted, and its easier and harder steps (search to add one, tap **×**
+to take one off). Tap **Save**. A renamed exercise keeps its old name as
+something it is also called, so programs that use the old name are still
+understood.
+
+If the change would break the library (two exercises with the same name, a
+harder step that is easier, an exercise above beginner with no easier step
+leading to it), nothing is saved and a pale red box says why. Change it and
+tap **Save** again, or tap **Cancel**.
+
+**Other things you can do:**
+
+| To do this | Tap this |
+|---|---|
+| Add an exercise to a family | **+ Add a version of** the family, at the foot of its cards |
+| Add a family | **+ Add a family** beside the family list. Fill in the family, tap **Next: its first version**, then fill in that and tap **Add the family**. A family can't be empty |
+| Change a family | **Edit the family**, under its name |
+| Stop offering an exercise | **Retire** on its card. It stays in the library, so programs that use it are still understood, but nobody is offered it. **Bring back** undoes it |
+| See what has changed on one card | **History** on the card |
+
 6. **Conditions** works the same way, one card for each condition: what to
    avoid, what to make easier or supported, whether a doctor's go-ahead comes
-   first, and when to refer on.
+   first, and when to send them on. Tap **Edit** to change one, or **+ Add a
+   condition** at the foot of the list.
 7. **Suggestions** shows exercises trainers have suggested for everybody's
-   library, who suggested each, and why. To add one, tell Claude in a session.
-8. **Books** is where reading a book into Coach IQ will be done. Until then,
+   library, who suggested each, and why. Tap **Add to the library**, choose
+   its family and fill in its details, then tap **Add to the library** again.
+   The trainer's names for it now mean the library's exercise.
+8. **Changes** lists every change to the library, newest first, with who made
+   it and when. **Undo** puts back what a change touched. If something it
+   touched has changed since, undo the later change first.
+9. **Books** is where reading a book into Coach IQ will be done. Until then,
    give Claude the PDF in a session.
 
-An approval counts straight away: Billy no longer calls that exercise or
-condition a draft. Now and then, tap **Download reviews** and give the file to
-Claude, who writes your marks into the library itself and works through the
-flags.
+Every change and every approval counts straight away: Billy uses the library
+as it now stands. **Export the library**, at the top, downloads all of it as
+one file, a snapshot to keep; Claude can write it into Coach's own copy of the
+library when you ask.
 
 #### 3.10 Installation (Primary Master only)
 
@@ -767,7 +802,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Active client** | A client on your list who you are still training. |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
-| **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews it (3.9). |
+| **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |

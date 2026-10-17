@@ -31,7 +31,7 @@ of the app gets its own chapter here as it arrives.
    - [3.6 Light or dark](#36-light-or-dark)
    - [3.7 My equipment](#37-my-equipment)
    - [3.8 My exercises](#38-my-exercises)
-   - [3.9 Reviewing Coach IQ (Primary Master only)](#39-reviewing-coach-iq-primary-master-only)
+   - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
    - [3.10 Installation (Primary Master only)](#310-installation-primary-master-only)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
@@ -288,8 +288,8 @@ so — see 2.4.
    - **My equipment** — what you have to train with (3.7).
    - **My exercises** — what you call your exercises, and exercises of your
      own (3.8).
-   - **Review Coach IQ** — only for the Primary Master: passing the library
-     (3.9).
+   - **Review Coach IQ** — only for the Primary Master: passing and editing
+     the library (3.9).
    - **Installation** — only for the Primary Master: settings for this copy of
      Coach on its server (3.10).
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
@@ -370,11 +370,13 @@ A name Billy wrote down from something you told him says **Noted by Billy**.
 If you had tied that name to a different exercise yourself, he asks you
 before changing it.
 
-### 3.9 Reviewing Coach IQ (Primary Master only)
+### 3.9 Reviewing and editing Coach IQ (Primary Master only)
 
-Every exercise in the library and every line of the conditions table starts
-as a draft. The Primary Master passes each one here. Nobody else sees this
-page.
+Coach IQ's library of exercises and its conditions table live in Coach
+itself. Every exercise and every condition starts as a draft. The Primary
+Master passes each one here, and keeps the library right: changing, adding
+and retiring exercises, and adding trainers' suggestions. Nobody else sees
+this page.
 
 1. Tap your photo or initials in the top right corner, then **Review Coach
    IQ**.
@@ -393,18 +395,49 @@ page.
      your mind, tap **Take back**.
 5. When the family is done, tap **Next family**. It goes to the next family
    with anything still to pass.
+
+**Changing an exercise.** Tap **Edit** on its card. Change what needs
+changing: its everyday name, other names, family, its details (equipment,
+position and so on; **Usual** leaves one out of its full name), level, what it
+works, what it involves, the joints it loads, a particular piece it needs, how
+it is counted, and its easier and harder steps (search to add one, tap **×**
+to take one off). Tap **Save**. A renamed exercise keeps its old name as
+something it is also called, so programs that use the old name are still
+understood.
+
+If the change would break the library (two exercises with the same name, a
+harder step that is easier, an exercise above beginner with no easier step
+leading to it), nothing is saved and a pale red box says why. Change it and
+tap **Save** again, or tap **Cancel**.
+
+**Other things you can do:**
+
+| To do this | Tap this |
+|---|---|
+| Add an exercise to a family | **+ Add a version of** the family, at the foot of its cards |
+| Add a family | **+ Add a family** beside the family list. Fill in the family, tap **Next: its first version**, then fill in that and tap **Add the family**. A family can't be empty |
+| Change a family | **Edit the family**, under its name |
+| Stop offering an exercise | **Retire** on its card. It stays in the library, so programs that use it are still understood, but nobody is offered it. **Bring back** undoes it |
+| See what has changed on one card | **History** on the card |
+
 6. **Conditions** works the same way, one card for each condition: what to
    avoid, what to make easier or supported, whether a doctor's go-ahead comes
-   first, and when to refer on.
+   first, and when to send them on. Tap **Edit** to change one, or **+ Add a
+   condition** at the foot of the list.
 7. **Suggestions** shows exercises trainers have suggested for everybody's
-   library, who suggested each, and why. To add one, tell Claude in a session.
-8. **Books** is where reading a book into Coach IQ will be done. Until then,
+   library, who suggested each, and why. Tap **Add to the library**, choose
+   its family and fill in its details, then tap **Add to the library** again.
+   The trainer's names for it now mean the library's exercise.
+8. **Changes** lists every change to the library, newest first, with who made
+   it and when. **Undo** puts back what a change touched. If something it
+   touched has changed since, undo the later change first.
+9. **Books** is where reading a book into Coach IQ will be done. Until then,
    give Claude the PDF in a session.
 
-An approval counts straight away: Billy no longer calls that exercise or
-condition a draft. Now and then, tap **Download reviews** and give the file to
-Claude, who writes your marks into the library itself and works through the
-flags.
+Every change and every approval counts straight away: Billy uses the library
+as it now stands. **Export the library**, at the top, downloads all of it as
+one file, a snapshot to keep; Claude can write it into Coach's own copy of the
+library when you ask.
 
 ### 3.10 Installation (Primary Master only)
 
@@ -642,7 +675,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Active client** | A client on your list who you are still training. |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
-| **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews it (3.9). |
+| **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |

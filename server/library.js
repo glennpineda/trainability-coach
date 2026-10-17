@@ -1,10 +1,10 @@
-import { readFileSync } from "node:fs";
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import {
   FLAGS, LEVELS, MUSCLES, PURPOSES, ROLES, bodyweightFamilies, equipmentFor, factsOf, masterName, measureOf, nameKey, perSideOf, PIECES,
 } from "./coach-iq.js";
 import * as reviews from "./reviews.js";
+import * as store from "./iq-store.js";
 import { CATEGORIES, IMPLIES, isCategory } from "./equipment.js";
 
 /**
@@ -27,17 +27,27 @@ import { CATEGORIES, IMPLIES, isCategory } from "./equipment.js";
 
 /* ---------------------------------------------------------------- library */
 
-const LIB = JSON.parse(readFileSync(new URL("../coach-iq/exercises.json", import.meta.url), "utf8"));
-const FAMILIES = LIB.movements;
-const BODYWEIGHT_ONLY = bodyweightFamilies(LIB.exercises);
-const LIVE = LIB.exercises.filter(x => x.status !== "retired");
-const BY_ID = new Map(LIB.exercises.map(x => [x.id, x]));
-
-const master = (x) => masterName(x, FAMILIES, BODYWEIGHT_ONLY);
+/* The library from iq-store.js, with lookups rebuilt whenever it changes. */
+let FAMILIES, BODYWEIGHT_ONLY, LIVE, ALL, BY_ID, KEYS, EASIER;
 /* Searched a little looser than nameKey: every word's last s dropped, so
    "chin ups" finds Chin-up, which nameKey leaves alone as too short. */
 const loose = (name) => nameKey(name).split(" ").map(w => w.replace(/s$/, "")).join(" ");
-const KEYS = new Map(LIB.exercises.map(x => [x.id, [master(x), x.name, ...(x.aliases || []), ...(x.formerNames || [])].map(loose)]));
+const master = (x) => masterName(x, FAMILIES, BODYWEIGHT_ONLY);
+
+function rebuild({ movements, exercises }) {
+  FAMILIES = movements;
+  ALL = exercises;
+  BODYWEIGHT_ONLY = bodyweightFamilies(exercises);
+  LIVE = exercises.filter(x => x.status !== "retired");
+  BY_ID = new Map(exercises.map(x => [x.id, x]));
+  KEYS = new Map(exercises.map(x => [x.id, [master(x), x.name, ...(x.aliases || []), ...(x.formerNames || [])].map(loose)]));
+  /* Easier steps are never stored (ideas audit, 11): a version is easier
+     than x when it lists x as harder. */
+  EASIER = new Map();
+  for (const y of exercises) for (const h of y.harder || []) EASIER.set(h, [...(EASIER.get(h) || []), y.id]);
+}
+rebuild(store.current());
+store.onChange(rebuild);
 
 export const isExercise = (id) => BY_ID.has(id);
 
@@ -332,10 +342,6 @@ export function alternativesFor(exerciseId, { place = null, level = null, rules 
 
 /* ------------------------------------------------------------- review */
 
-/* Easier steps are never stored (ideas audit, 11): a version is easier than
-   x when it lists x as harder. */
-const EASIER = new Map();
-for (const y of LIB.exercises) for (const h of y.harder || []) EASIER.set(h, [...(EASIER.get(h) || []), y.id]);
 
 const commonName = (id) => BY_ID.get(id)?.name || id;
 
@@ -358,7 +364,7 @@ export function reviewSummary() {
   return { families, total: sum("versions"), approved: sum("approved"), flagged: sum("flagged") };
 }
 
-/** One family, as cards: everything about each version there is to pass. */
+/** One family, as cards: everything about each version there is to pass, and to edit. */
 export function reviewFamily(id) {
   const f = FAMILIES[id];
   if (!f) return null;
@@ -366,7 +372,9 @@ export function reviewFamily(id) {
   return {
     id, label: f.label, pattern: f.pattern,
     purposes: words(f.purposes, PURPOSES), roles: words(f.roles, ROLES),
-    versions: LIVE.filter(x => x.movement === id).map(x => {
+    raw: f,
+    /* Retired versions too, last, so one can be brought back. */
+    versions: [...LIVE, ...ALL.filter(x => x.status === "retired")].filter(x => x.movement === id).map(x => {
       const eq = equipmentFor(x, f);
       return {
         id: x.id, name: x.name, master: master(x), aliases: x.aliases || [], formerNames: x.formerNames || [],
@@ -376,7 +384,31 @@ export function reviewFamily(id) {
         facts: factsOf(x).map(k => FLAGS[k] || k), joints: x.cautions?.joints || [],
         harder: (x.harder || []).map(commonName), easier: (EASIER.get(x.id) || []).map(commonName),
         origin: x.origin, status: reviews.statusOf("exercise", x.id, x.status), mark: reviews.markOf("exercise", x.id),
+        /* As stored, for the editor. */
+        raw: x, easierIds: EASIER.get(x.id) || [],
+        harderSteps: (x.harder || []).map(h => ({ id: h, name: commonName(h) })),
+        easierSteps: (EASIER.get(x.id) || []).map(h => ({ id: h, name: commonName(h) })),
       };
     }),
   };
+}
+
+/** The library's raw rows, for the editor. */
+export const exerciseById = (id) => BY_ID.get(id) || null;
+export const familyById = (id) => FAMILIES[id] || null;
+
+/**
+ * A trainer's suggested exercise, now in the library as `exerciseId`: the
+ * names they had tied to their own are tied to the library's, and theirs is
+ * archived, so they see the library's from now on.
+ */
+export async function acceptSuggestion(privateId, exerciseId) {
+  await run(`UPDATE coach_own_names SET exercise_id = ? WHERE exercise_id = ?`, [exerciseId, privateId]);
+  await run(`UPDATE coach_private_exercises SET archived = 1, accepted_into = ? WHERE id = ?`, [exerciseId, privateId]);
+}
+
+/** One suggestion, by its id, if it is still waiting. */
+export async function suggestionById(id) {
+  const r = await get(`SELECT * FROM coach_private_exercises WHERE id = ? AND suggested_at IS NOT NULL AND archived = 0`, [id]);
+  return r ? { ...shapePrivate(r), by: r.suggested_by_name || "" } : null;
 }

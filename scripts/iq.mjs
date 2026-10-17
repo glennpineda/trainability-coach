@@ -2,11 +2,8 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CATEGORIES } from "../server/equipment.js";
-import { isId } from "../server/ids.js";
-import {
-  ORDER, WORDS, PATTERNS, PIECES, PURPOSES, ROLES, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES, ORIGINS, STATUSES,
-  masterName, bodyweightFamilies, equipmentFor, measureOf, perSideOf, nameKey, factsOf,
-} from "../server/coach-iq.js";
+import { PATTERNS, PIECES, PURPOSES, ROLES, FLAGS, STATUSES, equipmentFor, measureOf, perSideOf, factsOf } from "../server/coach-iq.js";
+import { checkLibrary } from "../server/iq-check.js";
 
 /**
  * Coach IQ's exercise library: checked, and written out for reading.
@@ -14,11 +11,19 @@ import {
  *   npm run iq         checks coach-iq/exercises.json and writes EXERCISES.md
  *   npm run check-iq   checks it, and fails if EXERCISES.md is behind
  *                      (npm run check-docs runs it too)
+ *   npm run iq -- --import <file>
+ *                      writes a library exported from the app (Review Coach
+ *                      IQ → Export) into exercises.json and conditions.json,
+ *                      then checks and writes the pages as usual
  *
- * exercises.json is the library itself: its families (`movements`, keyed by
- * their exf… ids) and their versions (`exercises`, each with a permanent exr…
- * id). EXERCISES.md is the same list as tables, for reading; never edit it by
- * hand. Master names, equipment and how an exercise is counted are worked out
+ * Since build 1.0.12 the library lives in the app's database (server/
+ * iq-store.js), loaded from these files once; the files are its starting copy
+ * and a backup, refreshed from an export when wanted (Glenn, 17 Oct 2026:
+ * "Is there another way so it's app controlled?"). exercises.json holds its
+ * families (`movements`, keyed by their exf… ids) and their versions
+ * (`exercises`, each with a permanent exr… id). EXERCISES.md is the same list
+ * as tables, for reading; never edit it by hand. The rules are
+ * server/iq-check.js, the same ones the app runs on every change. Master names, equipment and how an exercise is counted are worked out
  * here from the attributes (server/coach-iq.js), so they are never typed.
  */
 
@@ -28,146 +33,40 @@ const PAGE = path.join(ROOT, "coach-iq", "EXERCISES.md");
 const CONDITIONS = path.join(ROOT, "coach-iq", "conditions.json");
 const CONDITIONS_PAGE = path.join(ROOT, "coach-iq", "CONDITIONS.md");
 
-const KINDS = new Set(CATEGORIES.map(c => c.key));
 const KIND_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.key, c.label.replace(/^(A|An) /, "").replace(/^./, ch => ch.toUpperCase())]));
-const DISCIPLINES = ["yoga", "pilates"];
 
-/*
- * `npm run iq -- --apply <file>`: the Primary Master's review marks,
- * downloaded from the review page, written into the library's files (Glenn,
- * 17 Oct 2026: "App now, file later"). An approval makes an exercise or a
- * condition reviewed, dated the day it was approved; a flag puts one that
- * was reviewed back to draft. Flags and comments are listed, to be acted on
- * before the files are committed. Then the pages are written as usual.
- */
-const applyAt = process.argv.indexOf("--apply");
-if (applyAt !== -1) {
-  const { marks = [] } = JSON.parse(readFileSync(process.argv[applyAt + 1], "utf8"));
-  const lib = JSON.parse(readFileSync(SOURCE, "utf8"));
-  const byId = new Map(lib.exercises.map(x => [x.id, x]));
-  let condText = readFileSync(CONDITIONS, "utf8");
-  const notes = [];
-  let changed = 0;
-  for (const m of marks) {
-    const day = String(m.at || "").slice(0, 10);
-    if (m.kind === "exercise") {
-      const x = byId.get(m.target);
-      if (!x) { notes.push(`${m.target}: not in the library any more`); continue; }
-      if (m.mark === "approve" && (x.status !== "reviewed" || x.reviewed !== day)) { x.status = "reviewed"; x.reviewed = day; changed++; }
-      if (m.mark === "flag" && x.status === "reviewed") { x.status = "draft"; x.reviewed = null; changed++; }
-      if (m.mark === "flag" || m.comment) notes.push(`${m.mark === "flag" ? "FLAGGED" : "approved"} ${x.name} (${x.id}): ${m.comment || "no comment"}`);
-    } else if (m.kind === "condition") {
-      /* conditions.json is laid out by hand, so only its status line changes. */
-      const at = condText.indexOf(`"key": "${m.target}"`);
-      if (at === -1) { notes.push(`condition ${m.target}: not in the table any more`); continue; }
-      const line = /"status": "[a-z]+", "reviewed": (null|"[0-9-]+")/.exec(condText.slice(at));
-      const status = m.mark === "approve" ? `"status": "reviewed", "reviewed": "${day}"` : m.mark === "flag" ? `"status": "draft", "reviewed": null` : line?.[0];
-      if (line && status !== line[0]) {
-        const from = at + line.index;
-        condText = condText.slice(0, from) + status + condText.slice(from + line[0].length);
-        changed++;
-      }
-      if (m.mark === "flag" || m.comment) notes.push(`${m.mark === "flag" ? "FLAGGED" : "approved"} condition ${m.target}: ${m.comment || "no comment"}`);
-    }
+/* conditions.json in its own layout, one line to a field, so a row reads
+   at a glance and an import changes only what changed. */
+function conditionsText(about, conditions) {
+  const list = (a) => `[${a.map(v => JSON.stringify(v)).join(", ")}]`;
+  const value = (v) => (v && typeof v === "object" && !Array.isArray(v) && "facts" in v
+    ? `{ "facts": ${list(v.facts || [])}, "joints": ${list(v.joints || [])} }` : JSON.stringify(v));
+  const row = (c) => {
+    const lines = Object.entries(c).filter(([k]) => k !== "status" && k !== "reviewed").map(([k, v]) => `   ${JSON.stringify(k)}: ${value(v)}`);
+    lines.push(`   "status": ${JSON.stringify(c.status)}, "reviewed": ${JSON.stringify(c.reviewed ?? null)}`);
+    return `  {\n${lines.join(",\n")}\n  }`;
+  };
+  return `{\n "about": ${JSON.stringify(about)},\n "conditions": [\n${conditions.map(row).join(",\n")}\n ]\n}\n`;
+}
+
+/* A library exported from the app, written into the files. */
+const importAt = process.argv.indexOf("--import");
+if (importAt !== -1) {
+  const out = JSON.parse(readFileSync(process.argv[importAt + 1], "utf8"));
+  if (!out.movements || !Array.isArray(out.exercises) || !Array.isArray(out.conditions)) {
+    console.error("That isn't a library exported from Coach (Review Coach IQ → Export).");
+    process.exit(1);
   }
-  writeFileSync(SOURCE, JSON.stringify(lib, null, 1) + "\n");
-  writeFileSync(CONDITIONS, condText);
-  console.log(`Applied ${marks.length} mark(s): ${changed} change(s) to the library's files.`);
-  if (notes.length) console.log(`To act on before committing:\n  ${notes.join("\n  ")}`);
+  const { about } = JSON.parse(readFileSync(CONDITIONS, "utf8"));
+  writeFileSync(SOURCE, JSON.stringify({ movements: out.movements, exercises: out.exercises }, null, 1) + "\n");
+  writeFileSync(CONDITIONS, conditionsText(about, out.conditions));
+  console.log(`Imported the library exported ${out.exported || "from the app"}: ${Object.keys(out.movements).length} families, ${out.exercises.length} versions, ${out.conditions.length} conditions.`);
 }
 
 const { movements, exercises: list } = JSON.parse(readFileSync(SOURCE, "utf8"));
-const problems = [];
-
-for (const [id, f] of Object.entries(movements)) {
-  const wrong = (why) => problems.push(`family ${f.label || id}: ${why}`);
-  if (!isId("family", id)) wrong(`its id "${id}" is not an exf… id`);
-  if (!f.label) wrong("it has no label");
-  if (!PATTERNS[f.pattern]) wrong(`unknown pattern "${f.pattern}"`);
-  for (const m of f.measure || []) if (!MEASURES.includes(m)) wrong(`unknown measure "${m}"`);
-  for (const k of f.needs || []) if (!KINDS.has(k)) wrong(`unknown equipment "${k}"`);
-  if (f.discipline && !DISCIPLINES.includes(f.discipline)) wrong(`unknown discipline "${f.discipline}"`);
-  if (!f.purposes?.length) wrong("it says nothing of what it is for");
-  for (const x of f.purposes || []) if (!PURPOSES[x]) wrong(`unknown purpose "${x}"`);
-  if (!f.roles?.length) wrong("it has no usual place in a session");
-  for (const x of f.roles || []) if (!ROLES[x]) wrong(`unknown role "${x}"`);
-}
-
-const bwOnly = bodyweightFamilies(list);
-const ids = new Map();
-const masters = new Map();
-const names = new Map();
-for (const x of list) {
-  const at = x.name || x.id;
-  const wrong = (why) => problems.push(`${at}: ${why}`);
-  if (!isId("exercise", x.id)) wrong(`its id "${x.id}" is not an exr… id`);
-  if (ids.has(x.id)) wrong("its id is used twice");
-  ids.set(x.id, x);
-  const family = movements[x.movement];
-  if (!family) { wrong(`unknown family "${x.movement}"`); continue; }
-  for (const [key, word] of Object.entries(x.attributes || {})) {
-    if (!ORDER.includes(key)) wrong(`unknown attribute "${key}"`);
-    else if (!WORDS[key].includes(word)) wrong(`"${word}" is not one of the words for ${key}`);
-  }
-  if (!x.attributes?.implement) wrong("it names no equipment");
-  x.master = masterName(x, movements, bwOnly);
-  if (masters.has(x.master)) wrong(`same master name as ${masters.get(x.master)}: "${x.master}"`);
-  masters.set(x.master, at);
-  /* No two exercises may answer to the same name (ideas audit, 13). */
-  for (const n of new Set([x.name, ...(x.aliases || []), ...(x.formerNames || [])].map(nameKey))) {
-    if (names.has(n) && names.get(n) !== x.id) wrong(`"${n}" is also a name of ${ids.get(names.get(n))?.name || names.get(n)}`);
-    names.set(n, x.id);
-  }
-  if (!x.name) wrong("it has no common name");
-  if (!x.primary?.length) wrong("it works no main muscle");
-  for (const m of [...(x.primary || []), ...(x.secondary || [])]) if (!MUSCLES.includes(m)) wrong(`unknown muscle "${m}"`);
-  if ((x.secondary || []).some(m => x.primary.includes(m))) wrong("a muscle is both main and other");
-  if (!LEVELS.includes(x.level)) wrong(`unknown level "${x.level}"`);
-  for (const m of x.measure || []) if (!MEASURES.includes(m)) wrong(`unknown measure "${m}"`);
-  for (const j of x.cautions?.joints || []) if (!JOINTS.includes(j)) wrong(`unknown joint "${j}"`);
-  for (const f of x.cautions?.flags || []) if (!FLAGS[f]) wrong(`unknown flag "${f}"`);
-  if (x.piece) {
-    const piece = PIECES[x.piece];
-    const e = equipmentFor(x, family);
-    if (!piece) wrong(`unknown piece "${x.piece}"`);
-    else if (![...e.needs, ...e.oneOf].includes(piece.kind)) wrong(`its piece (${piece.label}) is ${piece.kind}, which it doesn't need`);
-  }
-  if (!ORIGINS.includes(x.origin)) wrong(`unknown origin "${x.origin}"`);
-  if (!STATUSES.includes(x.status)) wrong(`unknown status "${x.status}"`);
-  if (x.status === "reviewed" && !/^\d{4}-\d{2}-\d{2}$/.test(x.reviewed || "")) wrong("reviewed, but with no date");
-  if (x.status === "retired" && x.replacedBy && !list.some(y => y.id === x.replacedBy)) wrong("replaced by an exercise that is not in the library");
-}
-for (const key of Object.keys(movements)) if (!list.some(x => x.movement === key)) problems.push(`family ${movements[key].label}: has no versions`);
-
-/* Harder steps: each one real, never itself, never in a loop, and never a
-   lower level. Easier steps are worked out from them (ideas audit, 7). */
-const rank = (x) => LEVELS.indexOf(x.level);
-const easier = new Map(list.map(x => [x.id, []]));
-for (const x of list) {
-  for (const h of x.harder || []) {
-    const t = ids.get(h);
-    if (h === x.id) problems.push(`${x.name}: lists itself as harder`);
-    else if (!t) problems.push(`${x.name}: harder "${h}" is not in the library`);
-    else {
-      if (rank(t) < rank(x)) problems.push(`${x.name}: its harder step ${t.name} is a lower level (${t.level} after ${x.level})`);
-      easier.get(h).push(x.id);
-    }
-  }
-}
-const seen = new Set(), stack = new Set();
-const loop = (id) => {
-  if (stack.has(id)) return true;
-  if (seen.has(id)) return false;
-  seen.add(id); stack.add(id);
-  const found = (ids.get(id)?.harder || []).some(loop);
-  stack.delete(id);
-  return found;
-};
-for (const x of list) if (loop(x.id)) { problems.push(`${x.name}: its harder steps go round in a loop`); break; }
-/* A way in: anything above beginner can be reached from something easier. */
-for (const x of list) {
-  if (x.status !== "retired" && rank(x) > 0 && !easier.get(x.id).length) problems.push(`${x.name}: ${x.level}, with no easier step leading to it`);
-}
+const { conditions } = JSON.parse(readFileSync(CONDITIONS, "utf8"));
+const { problems, masters, easier } = checkLibrary({ movements, exercises: list, conditions });
+const ids = new Map(list.map(x => [x.id, x]));
 
 const words = (a) => a.join(", ");
 const equipmentText = (x) => {
@@ -182,7 +81,7 @@ const counted = (x) => {
   const f = movements[x.movement];
   return measureOf(x, f).join(" or ") + (perSideOf(x, f) ? ", per side" : "");
 };
-const masterOf = (id) => ids.get(id)?.master || id;
+const masterOf = (id) => masters.get(id) || id;
 const statuses = STATUSES.map(s => `${list.filter(x => x.status === s).length} ${s}`).join(", ");
 const lines = [
   "# Coach IQ: exercise library",
@@ -218,33 +117,15 @@ for (const [key, title] of Object.entries(PATTERNS)) {
       const common = x.aliases?.length ? `${x.name} (${x.aliases.join(", ")})` : x.name;
       const works = words(x.primary) + (x.secondary?.length ? `; also ${words(x.secondary)}` : "");
       const care = [...(x.cautions?.joints || []), ...factsOf(x)].join(", ");
-      lines.push(`| **${x.master}** | ${common} | ${works} | ${equipmentText(x)} | ${counted(x)} | ${x.level} | ${easier.get(x.id).map(masterOf).join("; ")} | ${(x.harder || []).map(masterOf).join("; ")} | ${care} |`);
+      lines.push(`| **${masters.get(x.id)}** | ${common} | ${works} | ${equipmentText(x)} | ${counted(x)} | ${x.level} | ${easier.get(x.id).map(masterOf).join("; ")} | ${(x.harder || []).map(masterOf).join("; ")} | ${care} |`);
     }
     lines.push("");
   }
 }
 const page = lines.join("\n");
 
-/* The conditions table (ideas audit, 21): checked, and written out with what
-   each condition does to the library, so a row can be judged before it is
-   approved. */
-const { conditions } = JSON.parse(readFileSync(CONDITIONS, "utf8"));
-const condKeys = new Set();
-for (const c of conditions) {
-  const wrong = (why) => problems.push(`condition ${c.label || c.key}: ${why}`);
-  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(c.key || "")) wrong("its key must be lowercase words joined by hyphens");
-  if (condKeys.has(c.key)) wrong("its key is used twice");
-  condKeys.add(c.key);
-  if (!c.label) wrong("it has no label");
-  for (const part of ["avoid", "modify"]) {
-    for (const f of c[part]?.facts || []) if (!FLAGS[f]) wrong(`unknown fact "${f}" under ${part}`);
-    for (const j of c[part]?.joints || []) if (!JOINTS.includes(j)) wrong(`unknown joint "${j}" under ${part}`);
-  }
-  if (!c.refer) wrong("it says nothing about when to refer on");
-  if (typeof c.clearance !== "boolean") wrong("it must say whether a doctor's clearance comes first");
-  if (!["draft", "reviewed"].includes(c.status)) wrong(`unknown status "${c.status}"`);
-  if (c.status === "reviewed" && !/^\d{4}-\d{2}-\d{2}$/.test(c.reviewed || "")) wrong("reviewed, but with no date");
-}
+/* The conditions table (ideas audit, 21), written out with what each
+   condition does to the library, so a row can be judged. */
 const hits = (part, c) => list.filter(x => factsOf(x).some(f => c[part].facts.includes(f)) || (x.cautions?.joints || []).some(j => c[part].joints.includes(j)));
 const said = (part, c) => [...c[part].facts.map(f => `${f} (${FLAGS[f]})`), ...c[part].joints.map(j => `the ${j.replace("-", " ")}`)].join(", ") || "nothing";
 const condLines = [
@@ -268,7 +149,7 @@ for (const c of conditions) {
 const condPage = condLines.join("\n");
 
 if (problems.length) {
-  console.error(`exercises.json: ${problems.length} problem(s):\n  ${problems.join("\n  ")}`);
+  console.error(`Coach IQ: ${problems.length} problem(s):\n  ${problems.join("\n  ")}`);
   process.exit(1);
 }
 if (process.argv.includes("--check")) {

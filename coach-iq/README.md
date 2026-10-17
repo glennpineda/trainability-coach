@@ -76,13 +76,39 @@ tag) in Coach's database, kept with the ones before it as its history.
 
 Glenn, 17 Oct 2026: **"App now, file later"**. A mark counts in the app at
 once: an approved exercise or condition is no longer a draft to Billy or on
-any screen, and a flag puts one that was reviewed back to draft. The files
-here catch up when the marks are downloaded (**Download reviews**) and
-written in: `npm run iq -- --apply <file>` sets `status` and `reviewed` on
-each approved exercise and condition, and lists the flags and comments to act
-on before committing. Trainers' suggested exercises are listed there too, for
-Glenn to have added in a session. The page's **Books** tab is where reading a
-book in the app will go.
+any screen, and a flag puts one that was reviewed back to draft. Since the
+library moved into the app (below), the mark is written into the library
+itself, so nothing waits for the files.
+
+## The library lives in the app (Glenn, 17 Oct 2026; built in build 1.0.12)
+
+"So we have to keep committing here to update the library? We have to keep
+committing? Is there another way so it's app controlled?" Then: "Yes, use LIH."
+
+- **The database is the library.** Its families, versions and conditions are
+  rows in Coach's own database (`coach_iq_docs`), each the same JSON as in
+  `exercises.json` and `conditions.json`. Those files load it the first time
+  the app starts with an empty table (with any approvals already made written
+  in), and stay here as its starting copy and a backup.
+- **Edited on Review Coach IQ**, by the Primary Master: change, add or retire
+  a version; add or change a family (a new family comes with its first
+  version, since a family can't be empty); change or add a condition; make a
+  trainer's suggestion a version of a family, their names for it following it
+  there. A renamed version keeps its old name as a former name.
+- **Every change is checked** with the same rules `npm run check-iq` runs
+  (`server/iq-check.js`) and refused, with the reasons in plain words, if the
+  library wouldn't hold together. Nothing is half saved.
+- **Every change is kept** as a library history record, `lih…` (Glenn's
+  tag): each row it touched before and after, who and when. **Undo** puts it
+  back, as a change of its own, unless a row has changed since; then the later
+  change is undone first. This is the library's history now, in place of
+  git's.
+- **Export the library** downloads it all as one file. `npm run iq --
+  --import <file>` writes that into `exercises.json` and `conditions.json`
+  (keeping their layout) and refreshes the pages here, when the copy in the
+  code should catch up.
+- A change to the library's **shape** (a new kind of attribute, a new word
+  list) is still a change to the code; its **content** is not.
 
 ## Reading a book in the app (asked 16 Oct 2026, not built)
 
@@ -95,9 +121,9 @@ one request takes), showing progress, and throws the PDF away once read. The
 result is a draft, topic by topic, of what is new, what changed and where the
 book disagrees with Coach IQ, which the Primary Master accepts, edits or
 rejects; nothing reaches Billy until accepted, and every accepted change keeps
-where it came from and when. Coach IQ then lives in Coach's database, with that
-history in place of git's, and this file stays as its rules. Waiting on: what
-database the Coach app can have on GoDaddy.
+where it came from and when. The library already lives in Coach's database
+with its history (above), so a book's accepted changes go there the same way.
+Waiting on: the first book.
 
 ## Exercise names (Glenn, 16 Oct 2026)
 
@@ -252,13 +278,15 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
 - `README.md`: this page.
 - `READ.md`: the books read into Coach IQ so far, for Glenn. Not shown to
   trainers and not given to Billy.
-- `exercises.json`: the exercise library, the list Billy will read: its
+- `exercises.json`: the exercise library's starting copy (the library itself
+  lives in the app; above), refreshed from an export when wanted: its
   families (`movements`, keyed by exf… id, with how they are usually counted
   and anything they always need) and their versions (`exercises`, each with a
   permanent exr… id, its attributes, common and other names, muscles, level,
   harder steps, cautions, origin and review status). The starter list (177
   exercises drafted by Claude, 16 Oct 2026) became 106 families and 230
   versions after the ideas audit; for Glenn to review, and the books add to it.
+- `conditions.json`: the conditions table's starting copy, the same way.
 - `EXERCISES.md`: the same library as tables, for reading and review. Written
   by `npm run iq`; never edited by hand. `npm run check-iq` (and
   `npm run check-docs`, which runs it) fails when an id, a word or a name is

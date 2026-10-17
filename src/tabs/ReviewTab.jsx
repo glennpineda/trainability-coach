@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Check, Flag, Undo2, Download, ChevronRight } from "lucide-react";
+import { Check, Flag, Undo2, Download, ChevronRight, Pencil, History, Archive, Plus } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
+import { VersionForm, FamilyForm, ConditionForm, ChangeList, AddButton } from "../review/LibraryEditor";
 
 const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
-const SECTIONS = [["exercises", "Exercises"], ["conditions", "Conditions"], ["suggestions", "Suggestions"], ["books", "Books"]];
+const SECTIONS = [["exercises", "Exercises"], ["conditions", "Conditions"], ["suggestions", "Suggestions"], ["changes", "Changes"], ["books", "Books"]];
 
 /* How far through: a count and a bar. */
 function Progress({ label, done, flagged, total }) {
@@ -69,13 +70,20 @@ function Marker({ mark, onMark, busy }) {
   );
 }
 
+/* A card's own row of actions: Edit, History, and Retire or Bring back. */
+function CardActions({ children }) {
+  return <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">{children}</div>;
+}
+
 /**
- * Review Coach IQ (ideas audit, 24), for the Primary Master: the library one
- * family at a time, each version a card to Approve or Flag with a comment;
- * the conditions table the same way; trainers' suggestions for the library;
- * and, to come, the books. A mark counts in the app at once; Download
- * reviews gives the file the library's own files are brought up to date
- * from (Glenn, 17 Oct 2026: "App now, file later").
+ * Review Coach IQ (ideas audit, 24), for the Primary Master, and since the
+ * library moved into the app (build 1.0.12; Glenn, 17 Oct 2026: "Is there
+ * another way so it's app controlled?") its editor too: the library one
+ * family at a time, each version a card to Approve or Flag, Edit, Retire or
+ * look back through; families and versions added; the conditions table the
+ * same way; trainers' suggestions made library exercises; every change
+ * listed under Changes to undo; and Export for a snapshot. A mark and an
+ * edit count at once. Books is where reading a book will go.
  */
 export function ReviewTab({ onSignedOut }) {
   const [summary, setSummary] = useState(null);
@@ -83,8 +91,13 @@ export function ReviewTab({ onSignedOut }) {
   const [familyId, setFamilyId] = useState(null);
   const [family, setFamily] = useState(null);
   const [conditions, setConditions] = useState(null);
+  const [changes, setChanges] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  /* What is open for editing: { kind, id }, and what the server said. */
+  const [editing, setEditing] = useState(null);
+  const [formError, setFormError] = useState(null);
+  const [history, setHistory] = useState({ id: null, list: null });
 
   const fail = useCallback((err) => {
     if (err.status === 401) onSignedOut?.();
@@ -94,17 +107,36 @@ export function ReviewTab({ onSignedOut }) {
   const loadSummary = useCallback(() => apiRequest("GET", "/coach-iq/review").then(setSummary).catch(fail), [fail]);
   useEffect(() => { loadSummary(); }, [loadSummary]);
 
+  const loadFamily = useCallback((id) => apiRequest("GET", `/coach-iq/review/families/${id}`).then(setFamily).catch(err => { if (err.status === 404) { setFamily(null); setFamilyId(null); } else fail(err); }), [fail]);
   useEffect(() => {
-    if (!familyId) { setFamily(null); return undefined; }
-    let alive = true;
-    apiRequest("GET", `/coach-iq/review/families/${familyId}`).then(f => { if (alive) setFamily(f); }).catch(fail);
-    return () => { alive = false; };
-  }, [familyId, fail]);
+    if (!familyId) { setFamily(null); return; }
+    loadFamily(familyId);
+  }, [familyId, loadFamily]);
 
-  useEffect(() => {
-    if (section !== "conditions" || conditions) return;
-    apiRequest("GET", "/coach-iq/review/conditions").then(({ conditions: c }) => setConditions(c)).catch(fail);
-  }, [section, conditions, fail]);
+  const loadConditions = useCallback(() => apiRequest("GET", "/coach-iq/review/conditions").then(({ conditions: c }) => setConditions(c)).catch(fail), [fail]);
+  useEffect(() => { if (section === "conditions" && !conditions) loadConditions(); }, [section, conditions, loadConditions]);
+
+  const loadChanges = useCallback(() => apiRequest("GET", "/coach-iq/library/history").then(({ changes: c }) => setChanges(c)).catch(fail), [fail]);
+  useEffect(() => { if (section === "changes") loadChanges(); }, [section, loadChanges]);
+
+  const open = (kind, id = null) => { setEditing(kind ? { kind, id } : null); setFormError(null); };
+  const is = (kind, id = null) => editing?.kind === kind && editing?.id === id;
+
+  /* Save through the editor: on success close the form and read again what
+     changed; on a refusal keep the form open with the server's reasons. */
+  const save = async (method, path, body, after) => {
+    setBusy(true); setFormError(null);
+    try {
+      const out = await apiRequest(method, path, body);
+      await after?.(out);
+      setEditing(null);
+      loadSummary();
+      if (history.id) showHistory(history.id, true);
+    } catch (err) {
+      if (err.status === 401) onSignedOut?.();
+      else setFormError({ message: err.message, problems: err.data?.problems });
+    } finally { setBusy(false); }
+  };
 
   const mark = async (kind, target, body) => {
     setBusy(true); setError("");
@@ -116,21 +148,51 @@ export function ReviewTab({ onSignedOut }) {
     } catch (err) { fail(err); } finally { setBusy(false); }
   };
 
+  /* One row's changes, shown under its card. */
+  const showHistory = async (id, keep = false) => {
+    if (history.id === id && !keep) { setHistory({ id: null, list: null }); return; }
+    setHistory({ id, list: keep ? history.list : null });
+    try { const { changes: c } = await apiRequest("GET", `/coach-iq/library/history?id=${encodeURIComponent(id)}`); setHistory({ id, list: c }); }
+    catch (err) { fail(err); }
+  };
+
+  const undo = async (change) => {
+    setBusy(true); setFormError(null);
+    try {
+      await apiRequest("POST", `/coach-iq/library/history/${change.id}/undo`);
+      loadSummary(); loadChanges();
+      if (familyId) loadFamily(familyId);
+      if (conditions) loadConditions();
+      if (history.id) showHistory(history.id, true);
+    } catch (err) {
+      if (err.status === 401) onSignedOut?.();
+      else setFormError({ message: err.message, problems: err.data?.problems });
+    } finally { setBusy(false); }
+  };
+
   /* The next family with something not yet approved, after this one. */
   const next = () => {
     const list = summary.families;
     const from = list.findIndex(f => f.id === familyId);
     const after = [...list.slice(from + 1), ...list.slice(0, from + 1)];
     const todo = after.find(f => f.approved + f.flagged < f.versions);
-    setFamilyId((todo || after[0]).id);
+    setFamilyId((todo || after[0]).id); open(null);
     window.scrollTo({ top: 0 });
   };
+
+  const families = summary?.families.map(f => ({ id: f.id, label: f.label }));
+  const historyUnder = (id) => history.id === id && (
+    <div className="mt-3 pt-3 border-t" style={line}>
+      <ChangeList changes={history.list} busy={busy} onUndo={undo} error={null} />
+    </div>
+  );
 
   return (
     <div className="max-w-5xl mx-auto px-4">
       <TabHeading>Review Coach IQ</TabHeading>
       <p className="text-sm -mt-2 mb-4" style={muted}>
-        Pass each exercise and condition before trainers rely on it. Approving one counts in the app straight away.
+        Pass each exercise and condition before trainers rely on it, and keep the library right. Every change counts
+        straight away, and can be undone under Changes.
       </p>
       {error && <p className="text-sm mb-3" style={{ color: "var(--ember)" }}>{error}</p>}
 
@@ -139,14 +201,14 @@ export function ReviewTab({ onSignedOut }) {
           <section className="cx-card p-4 mb-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto] items-center">
             <Progress label="exercises" done={summary.approved} flagged={summary.flagged} total={summary.total} />
             <Progress label="conditions" done={summary.conditions.approved} flagged={summary.conditions.flagged} total={summary.conditions.total} />
-            <a href="/api/coach-iq/review/export" download className="text-sm cx-link justify-self-start">
-              <Download size={15} aria-hidden="true" /> Download reviews
+            <a href="/api/coach-iq/library/export" download className="text-sm cx-link justify-self-start">
+              <Download size={15} aria-hidden="true" /> Export the library
             </a>
           </section>
 
           <div className="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="What to review">
             {SECTIONS.map(([id, label]) => (
-              <button key={id} type="button" role="tab" aria-selected={section === id} onClick={() => setSection(id)}
+              <button key={id} type="button" role="tab" aria-selected={section === id} onClick={() => { setSection(id); open(null); }}
                 className="px-3 py-1.5 rounded-full text-sm font-medium"
                 style={section === id ? { background: "var(--cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
                 {label}{id === "suggestions" && summary.suggestions.length ? ` (${summary.suggestions.length})` : ""}
@@ -156,9 +218,9 @@ export function ReviewTab({ onSignedOut }) {
 
           {section === "exercises" && (
             <>
-              <div className="flex flex-wrap items-center gap-2 mb-4">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                 <select className="cx-input" style={{ maxWidth: 360 }} value={familyId || ""} aria-label="Family"
-                  onChange={e => setFamilyId(e.target.value || null)}>
+                  onChange={e => { setFamilyId(e.target.value || null); open(null); }}>
                   <option value="">Choose a family…</option>
                   {summary.families.map(f => (
                     <option key={f.id} value={f.id}>
@@ -169,35 +231,90 @@ export function ReviewTab({ onSignedOut }) {
                 <button type="button" className="text-sm cx-link" onClick={next}>
                   {familyId ? "Next family" : "Start with the first not done"} <ChevronRight size={16} aria-hidden="true" />
                 </button>
+                <button type="button" className="cx-btn-row" onClick={() => open("newFamily")}>
+                  <Plus size={15} aria-hidden="true" /> Add a family
+                </button>
               </div>
 
-              {family && (
+              {is("newFamily") && <NewFamily families={families} busy={busy} error={formError} onCancel={() => open(null)}
+                onSave={(body) => save("POST", "/coach-iq/library/families", body, (out) => { setFamilyId(out.id); setFamily(out.family); })} />}
+
+              {family && !is("newFamily") && (
                 <>
-                  <h2 className="cx-display text-2xl">{family.label}</h2>
-                  <p className="text-sm mb-3" style={muted}>
-                    {[family.pattern, family.purposes.filter(w => w !== family.pattern).join(", "), family.roles.join(", ")].filter(Boolean).join(" · ")}
-                  </p>
-                  <div className="grid gap-4 lg:grid-cols-2 items-start">
+                  {is("family", family.id) ? (
+                    <section className="cx-card p-4 mb-4">
+                      <h2 className="cx-display text-xl">Change the family</h2>
+                      <FamilyForm initial={family.raw} busy={busy} error={formError} onCancel={() => open(null)}
+                        onSave={(body) => save("PUT", `/coach-iq/library/families/${family.id}`, body, (out) => setFamily(out))} />
+                    </section>
+                  ) : (
+                    <>
+                      <h2 className="cx-display text-2xl">{family.label}</h2>
+                      <p className="text-sm" style={muted}>
+                        {[family.pattern, family.purposes.filter(w => w !== family.pattern).join(", "), family.roles.join(", ")].filter(Boolean).join(" · ")}
+                      </p>
+                      <CardActions>
+                        <button type="button" className="cx-btn-row" onClick={() => open("family", family.id)}><Pencil size={15} aria-hidden="true" /> Edit the family</button>
+                      </CardActions>
+                    </>
+                  )}
+                  <div className="grid gap-4 lg:grid-cols-2 items-start mt-4">
                     {family.versions.map(v => (
-                      <article key={v.id} className="cx-card p-4">
-                        <div className="font-semibold">{v.name}</div>
-                        <div className="text-sm mb-2" style={muted}>{v.master}</div>
-                        <div className="grid gap-0.5">
-                          <Fact label="Also called">{[...v.aliases, ...v.formerNames]}</Fact>
-                          <Fact label="Level">{v.level}</Fact>
-                          <Fact label="Works">{v.primary}</Fact>
-                          <Fact label="Also works">{v.secondary}</Fact>
-                          <Fact label="Needs">{[...v.needs, ...(v.needsOneOf.length ? [v.needsOneOf.join(" or ")] : []), ...(v.piece ? [v.piece] : [])]}</Fact>
-                          <Fact label="Counted in">{`${v.measure.join(" or ")}${v.perSide ? ", each side" : ""}`}</Fact>
-                          <Fact label="Involves">{v.facts}</Fact>
-                          <Fact label="Loads">{v.joints}</Fact>
-                          <Fact label="Easier">{v.easier}</Fact>
-                          <Fact label="Harder">{v.harder}</Fact>
-                        </div>
-                        <Marker key={v.mark?.at || "none"} mark={v.mark} busy={busy} onMark={(body) => mark("exercise", v.id, body)} />
+                      <article key={v.id} className="cx-card p-4" style={v.status === "retired" ? { opacity: 0.75 } : undefined}>
+                        {is("version", v.id) ? (
+                          <>
+                            <div className="font-semibold">Change {v.name}</div>
+                            <VersionForm initial={v} families={families} busy={busy} error={formError} onCancel={() => open(null)}
+                              onSave={(body) => save("PUT", `/coach-iq/library/exercises/${v.id}`, body, (out) => { setFamily(out); if (out.id !== familyId) setFamilyId(out.id); })} />
+                          </>
+                        ) : (
+                          <>
+                            <div className="font-semibold">{v.name}{v.status === "retired" && <span className="ml-2 text-xs font-normal px-1.5 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)" }}>Retired</span>}</div>
+                            <div className="text-sm mb-2" style={muted}>{v.master}</div>
+                            <div className="grid gap-0.5">
+                              <Fact label="Also called">{[...v.aliases, ...v.formerNames]}</Fact>
+                              <Fact label="Level">{v.level}</Fact>
+                              <Fact label="Works">{v.primary}</Fact>
+                              <Fact label="Also works">{v.secondary}</Fact>
+                              <Fact label="Needs">{[...v.needs, ...(v.needsOneOf.length ? [v.needsOneOf.join(" or ")] : []), ...(v.piece ? [v.piece] : [])]}</Fact>
+                              <Fact label="Counted in">{`${v.measure.join(" or ")}${v.perSide ? ", each side" : ""}`}</Fact>
+                              <Fact label="Involves">{v.facts}</Fact>
+                              <Fact label="Loads">{v.joints}</Fact>
+                              <Fact label="Easier">{v.easier}</Fact>
+                              <Fact label="Harder">{v.harder}</Fact>
+                            </div>
+                            <CardActions>
+                              <button type="button" className="cx-btn-row" onClick={() => open("version", v.id)}><Pencil size={15} aria-hidden="true" /> Edit</button>
+                              {v.status === "retired" ? (
+                                <button type="button" className="cx-btn-row" disabled={busy}
+                                  onClick={() => save("PUT", `/coach-iq/library/exercises/${v.id}/retired`, { retired: false }, (out) => setFamily(out))}>
+                                  <Undo2 size={15} aria-hidden="true" /> Bring back
+                                </button>
+                              ) : (
+                                <button type="button" className="cx-btn-row" disabled={busy}
+                                  onClick={() => save("PUT", `/coach-iq/library/exercises/${v.id}/retired`, { retired: true }, (out) => setFamily(out))}>
+                                  <Archive size={15} aria-hidden="true" /> Retire
+                                </button>
+                              )}
+                              <button type="button" className="text-sm cx-link" onClick={() => showHistory(v.id)}><History size={15} aria-hidden="true" /> History</button>
+                            </CardActions>
+                            {historyUnder(v.id)}
+                            {v.status !== "retired" && <Marker key={v.mark?.at || "none"} mark={v.mark} busy={busy} onMark={(body) => mark("exercise", v.id, body)} />}
+                          </>
+                        )}
                       </article>
                     ))}
+                    {is("newVersion", family.id) ? (
+                      <article className="cx-card p-4">
+                        <div className="font-semibold">A new version of {family.label}</div>
+                        <VersionForm initial={{ movement: family.id }} busy={busy} error={formError} word="Add it" onCancel={() => open(null)}
+                          onSave={(body) => save("POST", "/coach-iq/library/exercises", { ...body, movement: family.id }, (out) => setFamily(out.family))} />
+                      </article>
+                    ) : (
+                      <div className="lg:col-span-2"><AddButton onClick={() => open("newVersion", family.id)}>Add a version of {family.label}</AddButton></div>
+                    )}
                   </div>
+                  {!editing && formError && <div className="mt-3"><FormNote error={formError} /></div>}
                   <button type="button" className="mt-4 text-sm cx-link" onClick={next}>
                     Next family <ChevronRight size={16} aria-hidden="true" />
                   </button>
@@ -211,16 +328,40 @@ export function ReviewTab({ onSignedOut }) {
               <div className="grid gap-4 lg:grid-cols-2 items-start">
                 {conditions.map(c => (
                   <article key={c.key} className="cx-card p-4">
-                    <div className="font-semibold mb-2">{c.label}</div>
-                    <div className="grid gap-0.5">
-                      <Fact label="Avoid">{[...c.avoid.facts, ...c.avoid.joints.map(j => `the ${j.replace("-", " ")}`)]}</Fact>
-                      <Fact label="Easier or supported">{[...c.modify.facts, ...c.modify.joints.map(j => `the ${j.replace("-", " ")}`)]}</Fact>
-                      <Fact label="Doctor's go-ahead first">{c.clearance ? "yes" : "no"}</Fact>
-                      <Fact label="Refer on">{c.refer}</Fact>
-                    </div>
-                    <Marker key={c.mark?.at || "none"} mark={c.mark} busy={busy} onMark={(body) => mark("condition", c.key, body)} />
+                    {is("condition", c.key) ? (
+                      <>
+                        <div className="font-semibold">Change {c.label}</div>
+                        <ConditionForm initial={c.raw} busy={busy} error={formError} onCancel={() => open(null)}
+                          onSave={(body) => save("PUT", `/coach-iq/library/conditions/${c.key}`, body, (out) => setConditions(out.conditions))} />
+                      </>
+                    ) : (
+                      <>
+                        <div className="font-semibold mb-2">{c.label}</div>
+                        <div className="grid gap-0.5">
+                          <Fact label="Avoid">{[...c.avoid.facts, ...c.avoid.joints.map(j => `the ${j.replace("-", " ")}`)]}</Fact>
+                          <Fact label="Easier or supported">{[...c.modify.facts, ...c.modify.joints.map(j => `the ${j.replace("-", " ")}`)]}</Fact>
+                          <Fact label="Doctor's go-ahead first">{c.clearance ? "yes" : "no"}</Fact>
+                          <Fact label="Refer on">{c.refer}</Fact>
+                        </div>
+                        <CardActions>
+                          <button type="button" className="cx-btn-row" onClick={() => open("condition", c.key)}><Pencil size={15} aria-hidden="true" /> Edit</button>
+                          <button type="button" className="text-sm cx-link" onClick={() => showHistory(c.key)}><History size={15} aria-hidden="true" /> History</button>
+                        </CardActions>
+                        {historyUnder(c.key)}
+                        <Marker key={c.mark?.at || "none"} mark={c.mark} busy={busy} onMark={(body) => mark("condition", c.key, body)} />
+                      </>
+                    )}
                   </article>
                 ))}
+                {is("newCondition") ? (
+                  <article className="cx-card p-4">
+                    <div className="font-semibold">A new condition</div>
+                    <ConditionForm busy={busy} error={formError} word="Add it" onCancel={() => open(null)}
+                      onSave={(body) => save("POST", "/coach-iq/library/conditions", body, (out) => setConditions(out.conditions))} />
+                  </article>
+                ) : (
+                  <div className="lg:col-span-2"><AddButton onClick={() => open("newCondition")}>Add a condition</AddButton></div>
+                )}
               </div>
             )
           )}
@@ -228,7 +369,10 @@ export function ReviewTab({ onSignedOut }) {
           {section === "suggestions" && (
             summary.suggestions.length === 0 ? <p className="text-sm" style={muted}>No trainer has suggested an exercise yet.</p> : (
               <>
-                <p className="text-sm mb-3" style={muted}>Exercises trainers made for themselves and think belong in everybody's library. To add one, tell Claude in a session.</p>
+                <p className="text-sm mb-3" style={muted}>
+                  Exercises trainers made for themselves and think belong in everybody's library. Adding one makes it a
+                  version of a family, and the trainer's names for it follow it there.
+                </p>
                 <div className="grid gap-4 lg:grid-cols-2 items-start">
                   {summary.suggestions.map(x => (
                     <article key={x.id} className="cx-card p-4">
@@ -239,11 +383,31 @@ export function ReviewTab({ onSignedOut }) {
                       <Fact label="Needs">{x.needs}</Fact>
                       <Fact label="How it's done">{x.note}</Fact>
                       <Fact label="Why">{x.suggestNote}</Fact>
+                      {is("suggestion", x.id) ? (
+                        <VersionForm initial={{ name: x.name, movement: x.familyId || "", primary: x.primary }} families={families}
+                          busy={busy} error={formError} word="Add to the library" onCancel={() => open(null)}
+                          onSave={(body) => save("POST", `/coach-iq/library/suggestions/${x.id}`, body, (out) => { setSection("exercises"); setFamilyId(out.family); loadFamily(out.family); })} />
+                      ) : (
+                        <CardActions>
+                          <button type="button" className="cx-btn-row" onClick={() => open("suggestion", x.id)}><Plus size={15} aria-hidden="true" /> Add to the library</button>
+                        </CardActions>
+                      )}
                     </article>
                   ))}
                 </div>
               </>
             )
+          )}
+
+          {section === "changes" && (
+            <section className="cx-card p-4">
+              <h2 className="cx-display text-xl">Changes to the library</h2>
+              <p className="text-sm mt-1 mb-2" style={muted}>
+                Newest first. Undo puts back what a change touched, as a change of its own. If something it touched has
+                changed since, undo that first.
+              </p>
+              <ChangeList changes={changes} busy={busy} onUndo={undo} error={formError} />
+            </section>
           )}
 
           {section === "books" && (
@@ -257,5 +421,35 @@ export function ReviewTab({ onSignedOut }) {
         </>
       )}
     </div>
+  );
+}
+
+/* What the server said about a change made from a card's own buttons (Retire,
+   Bring back), which have no form to show it in. */
+function FormNote({ error }) {
+  return (
+    <div className="text-sm rounded-lg p-2.5" role="alert" style={{ background: "var(--ember-soft)", color: "var(--ink-soft)" }}>
+      <div className="font-semibold">{error.message}</div>
+      {error.problems?.length > 0 && <ul className="list-disc pl-5 mt-1">{error.problems.map((p, i) => <li key={i}>{p}</li>)}</ul>}
+    </div>
+  );
+}
+
+/* A new family: its details, then its first version, saved together, since a
+   family can't be empty. */
+function NewFamily({ families, busy, error, onSave, onCancel }) {
+  const [family, setFamily] = useState(null);
+  const [draft, setDraft] = useState({});
+  return (
+    <section className="cx-card p-4 mb-4">
+      <h2 className="cx-display text-xl">{family ? `${family.label}: its first version` : "A new family"}</h2>
+      {!family ? (
+        <FamilyForm initial={draft} busy={busy} error={null} word="Next: its first version" onCancel={onCancel} onSave={(f) => { setDraft(f); setFamily(f); }} />
+      ) : (
+        <VersionForm initial={{}} busy={busy} error={error} word="Add the family" onCancel={onCancel}
+          intro={<button type="button" className="text-sm cx-link justify-self-start" onClick={() => setFamily(null)}><Undo2 size={15} aria-hidden="true" /> Back to the family</button>}
+          onSave={(version) => onSave({ family, version })} />
+      )}
+    </section>
   );
 }

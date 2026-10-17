@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
 import * as reviews from "./reviews.js";
+import * as store from "./iq-store.js";
 
 /**
  * A client's limitations, as their trainer wrote them (ideas audit, 22).
@@ -15,8 +15,12 @@ import * as reviews from "./reviews.js";
  * deleting: this is health information, kept no longer than wanted.
  */
 
-/* Coach IQ's conditions table, read once. */
-const CONDITIONS = JSON.parse(readFileSync(new URL("../coach-iq/conditions.json", import.meta.url), "utf8")).conditions;
+/* Coach IQ's conditions table, from the library in the app (iq-store.js),
+   kept up to date as it changes. */
+let CONDITIONS, byKey;
+const rebuild = ({ conditions }) => { CONDITIONS = conditions; byKey = Object.fromEntries(conditions.map(c => [c.key, c])); };
+rebuild(store.current());
+store.onChange(rebuild);
 export const conditionsList = () => CONDITIONS.map(c => ({ key: c.key, label: c.label, status: reviews.statusOf("condition", c.key, c.status) }));
 
 /** Every condition in full, for the review page: in words, with its mark. */
@@ -26,9 +30,9 @@ export const conditionsForReview = () => CONDITIONS.map(c => ({
   modify: { facts: c.modify.facts.map(f => FLAGS[f] || f), joints: c.modify.joints },
   clearance: c.clearance, refer: c.refer,
   status: reviews.statusOf("condition", c.key, c.status), mark: reviews.markOf("condition", c.key),
+  raw: c,
 }));
 export const isCondition = (key) => !!byKey[key];
-const byKey = Object.fromEntries(CONDITIONS.map(c => [c.key, c]));
 
 const parse = (s) => { try { const v = JSON.parse(s || "[]"); return Array.isArray(v) ? v : []; } catch { return []; } };
 

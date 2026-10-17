@@ -7,9 +7,10 @@ import { insertWithNewId } from "./ids.js";
  *
  * A mark counts in the app at once (Glenn, 17 Oct 2026: "App now, file
  * later"): an approved exercise or condition stops being a draft for Billy
- * and on every screen. The library's own files (coach-iq/exercises.json and
- * conditions.json) catch up when the marks are downloaded and written in
- * with `npm run iq -- --apply <file>`, then committed.
+ * and on every screen. Since the library moved into the app (build 1.0.12,
+ * iq-store.js) the mark is also written into the library itself, so the
+ * download and `--apply` step that used to carry it into the files is gone;
+ * these rows keep the marks and their comments.
  *
  * The latest mark for each target is held in memory, read once on start and
  * kept up to date as marks are made, so asking whether something is a draft
@@ -50,9 +51,4 @@ export async function setMark(kind, target, { mark, comment = "" }, reviewer) {
     `INSERT INTO coach_iq_reviews (id, kind, target, mark, comment, reviewer_id, reviewer_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [id, row.kind, row.target, row.mark, row.comment, row.reviewer_id, row.reviewer_name, row.created_at]));
   latest.set(key(kind, target), shape(row));
-}
-
-/** Every mark that counts, for the download the library's files are updated from. */
-export function exportMarks() {
-  return [...latest.values()].filter(m => m.mark !== "clear");
 }

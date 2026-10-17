@@ -80,7 +80,8 @@ export async function run(sql, params = []) {
 
 /**
  * The tables, made if missing, on every start. Adding a table is adding a
- * statement here; a change to an existing one will want a step of its own.
+ * statement here; a column added to a table already live goes in COLUMNS
+ * below instead.
  */
 const SCHEMA = [
   /* A trainer's personal memory, its first part: their equipment (Glenn,
@@ -199,6 +200,33 @@ const SCHEMA = [
     reviewer_name VARCHAR(120) NOT NULL,
     created_at VARCHAR(32) NOT NULL
   )`,
+  /* Coach IQ's library itself, once it lives in the app (iq-store.js; Glenn,
+     17 Oct 2026). Each family (kind "family", its exf… id), version ("exercise",
+     its exr… id) and condition ("condition", its key) is one row, its data the
+     same JSON as in coach-iq/exercises.json and conditions.json, which load
+     it the first time and stay as its starting copy; pos keeps the files'
+     order, new rows going last. */
+  `CREATE TABLE IF NOT EXISTS coach_iq_docs (
+    kind VARCHAR(16) NOT NULL,
+    id VARCHAR(40) NOT NULL,
+    pos INTEGER NOT NULL DEFAULT 0,
+    data MEDIUMTEXT NOT NULL,
+    updated_at VARCHAR(32) NOT NULL,
+    PRIMARY KEY (kind, id)
+  )`,
+  /* Every change to the library (lih…, Glenn's tag): what each row it
+     touched was before and after, as JSON, who and when. A change made by
+     undoing another names it in undoes; the one undone names its undoer. */
+  `CREATE TABLE IF NOT EXISTS coach_iq_history (
+    id VARCHAR(40) PRIMARY KEY,
+    summary VARCHAR(300) NOT NULL,
+    changes MEDIUMTEXT NOT NULL,
+    changed_by VARCHAR(64) NOT NULL,
+    changed_by_name VARCHAR(120) NOT NULL,
+    changed_at VARCHAR(32) NOT NULL,
+    undoes VARCHAR(40) NOT NULL DEFAULT '',
+    undone_by VARCHAR(40) NOT NULL DEFAULT ''
+  )`,
   /* Settings for this installation, by name (settings.js): so far, where
      files are saved (durable-home.js). */
   `CREATE TABLE IF NOT EXISTS coach_settings (
@@ -208,6 +236,25 @@ const SCHEMA = [
   )`,
 ];
 
+/*
+ * Columns added to a table after it first went live, which CREATE TABLE IF
+ * NOT EXISTS can't add: each is added once, where it is missing. Newest last.
+ */
+const COLUMNS = [
+  /* The library entry a trainer's suggested exercise became (build 1.0.12). */
+  ["coach_private_exercises", "accepted_into", "VARCHAR(40) NOT NULL DEFAULT ''"],
+];
+
+async function hasColumn(table, column) {
+  if (dialect() === "mysql") {
+    return !!(await get(`SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?`, [table, column]));
+  }
+  return (await all(`PRAGMA table_info(${table})`)).some(c => c.name === column);
+}
+
 export async function migrate() {
   for (const sql of SCHEMA) await run(sql);
+  for (const [table, column, definition] of COLUMNS) {
+    if (!await hasColumn(table, column)) await run(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
 }

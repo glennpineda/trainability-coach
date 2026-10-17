@@ -50,6 +50,12 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Installation,** for the Primary Master: **Where files are saved**, as in
   Studio. On the host, files go to its Private Storage (`/private`), which a
   deploy keeps; another folder can be named, and is tried before it is used.
+- **Coach IQ's library is edited in the app.** On Review Coach IQ, the
+  Primary Master can change, add and retire exercises, add families, change
+  and add conditions, and add a trainer's suggestion to the library. A change
+  that would break the library is refused with the reason; every change is
+  listed under Changes and can be undone; Export the library downloads it
+  all.
 - **Studio's look throughout.** Roboto, Studio's typeface, with its lighter
   weights and heading sizes, and its kinds of button in Coach's blues: the
   main action a blue pill, other actions outlined, small buttons for one card,

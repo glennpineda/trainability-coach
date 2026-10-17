@@ -67,7 +67,8 @@ its 20 kB limit.
 ## Coach's database
 
 Coach keeps its own data (each trainer's equipment, names for exercises and
-own exercises, and clients' limitations) in a database of
+own exercises, clients' limitations, and Coach IQ's library itself with its
+history; `coach-iq/README.md`) in a database of
 its own, never Studio's (`server/db.js`). On the host, GoDaddy gives the app a
 new, empty MariaDB and names it with `DB_HOST`, `DB_PORT`, `DB_NAME`,
 `DB_USER` and `DB_PASSWORD`; `DB_SSL=true` if the server asks for TLS.
