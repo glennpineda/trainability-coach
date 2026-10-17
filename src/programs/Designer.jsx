@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Search, Sparkles, Trash2, TriangleAlert, Info, X,
+  ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Sparkles, Trash2, TriangleAlert, Info, X,
 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { convertText } from "../lib/units";
 import { useUnits } from "../hooks/useUnits";
+import { ExerciseDialog } from "./ExerciseDialog";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "Go"): one program, day by day,
@@ -59,75 +60,6 @@ function Point({ p }) {
       <Icon size={15} className="flex-none mt-0.5" style={{ color: LEVEL_COLOR[p.level] }} aria-label={p.level === "stop" ? "Stop" : p.level === "warn" ? "Take care" : "Note"} />
       <span className="min-w-0">{p.text} <span className="text-xs" style={muted}>({FROM[p.from] || p.from})</span></span>
     </li>
-  );
-}
-
-/* Search the trainer's names, their own exercises and the library. */
-function Finder({ onPick, onCancel, busy }) {
-  const [q, setQ] = useState("");
-  const [found, setFound] = useState(null);
-  useEffect(() => {
-    if (q.trim().length < 2) { setFound(null); return undefined; }
-    let alive = true;
-    const t = setTimeout(() => {
-      apiRequest("GET", `/programs-find?q=${encodeURIComponent(q.trim())}`)
-        .then(({ found: f }) => { if (alive) setFound(f); })
-        .catch(() => { if (alive) setFound([]); });
-    }, 250);
-    return () => { alive = false; clearTimeout(t); };
-  }, [q]);
-  return (
-    <div className="grid gap-2">
-      <div className="flex items-center gap-2">
-        <Search size={16} style={muted} aria-hidden="true" />
-        <input className="cx-input" autoFocus value={q} maxLength={120} placeholder="Find an exercise, by any name you use"
-          aria-label="Find an exercise" onChange={e => setQ(e.target.value)} />
-        <button type="button" className="cx-icon-btn" onClick={onCancel} aria-label="Cancel" title="Cancel"><X size={18} aria-hidden="true" /></button>
-      </div>
-      {found && (found.length === 0 ? <p className="text-xs" style={muted}>Nothing by that name. Try another word, or add it on My exercises.</p> : (
-        <ul className="rounded-lg overflow-hidden border" style={line}>
-          {found.map(x => (
-            <li key={x.id} className="border-t first:border-t-0" style={line}>
-              <button type="button" disabled={busy} onClick={() => onPick(x)} className="w-full text-left px-3 py-2 hover:bg-(--ghost-fill)">
-                <span className="block text-sm font-medium">{x.theirName || x.name}</span>
-                <span className="block text-xs" style={muted}>{x.theirOwnExercise ? "Your own exercise" : x.master}{x.level ? ` · ${x.level}` : ""}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ))}
-    </div>
-  );
-}
-
-/* Sets, reps and the rest: all optional. */
-function DoseForm({ e, busy, onSave, onCancel, first }) {
-  const [f, setF] = useState({ sets: e.sets || "", reps: e.reps || "", load: e.load || "", effort: e.effort || "", tempo: e.tempo || "", rest: e.restText || "", note: e.note || "", superset: !!e.superset });
-  const set = (k) => (ev) => setF(d => ({ ...d, [k]: ev.target.value }));
-  const field = (k, label, placeholder, max) => (
-    <label className="grid gap-1 text-xs" style={muted}>{label}
-      <input className="cx-input text-sm" value={f[k]} maxLength={max} placeholder={placeholder} onChange={set(k)} style={{ color: "var(--ink)" }} />
-    </label>
-  );
-  return (
-    <form className="grid gap-2 mt-2" onSubmit={(ev) => { ev.preventDefault(); onSave(f); }}>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-        {field("sets", "Sets", "3, or 1–3", 20)}
-        {field("reps", "Reps", "8–12, or 30 s", 40)}
-        {field("load", "Load", "45 lb", 60)}
-        {field("effort", "Effort", "2 in reserve", 60)}
-        {field("tempo", "Tempo", "3-1-1-0", 20)}
-        {field("rest", "Rest", "90 s, or 2 min", 20)}
-      </div>
-      {field("note", "Note", "Anything to remember", 300)}
-      {!first && (
-        <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={f.superset} onChange={ev => setF(d => ({ ...d, superset: ev.target.checked }))} /> Done together with the one above (a superset)</label>
-      )}
-      <div className="flex items-center gap-2">
-        <button type="submit" className="cx-btn-row" disabled={busy}>Save</button>
-        <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
-      </div>
-    </form>
   );
 }
 
@@ -202,7 +134,11 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
   const [p, setP] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [open, setOpen] = useState(null);     // { kind: "dose" | "swap" | "find" | "day" | "details", id }
+  const [open, setOpen] = useState(null);     // { kind: "swap" | "day" | "details", id }
+  /* The add-and-edit dialog: { day, editing?, suggested? } (ExerciseDialog.jsx). */
+  const [dialog, setDialog] = useState(null);
+  const [dialogError, setDialogError] = useState("");
+  const openDialog = (d) => { setDialogError(""); setDialog(d); };
   const [version, setVersion] = useState(0);
   const [units] = useUnits();
 
@@ -223,6 +159,21 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
     } catch (err) { fail(err); return false; } finally { setBusy(false); }
   };
   const is = (kind, key) => open?.kind === kind && open?.id === key;
+  /* Saved from the dialog: a new exercise on the day, or one changed. It
+     stays open with the server's words if the save is refused. */
+  const saveDialog = async (body) => {
+    const { day, editing } = dialog;
+    const { exerciseId, ...dose } = body;
+    setBusy(true); setDialogError("");
+    try {
+      const out = editing
+        ? await apiRequest("PATCH", `/program-exercises/${editing.id}`, { ...dose, ...(exerciseId !== editing.exerciseId ? { exerciseId } : {}) })
+        : await apiRequest("POST", `/program-days/${day.id}/exercises`, { exerciseId, ...dose });
+      setP(out); setVersion(v => v + 1); setDialog(null);
+    } catch (err) {
+      if (err.status === 401) onSignedOut?.(); else setDialogError(err.message);
+    } finally { setBusy(false); }
+  };
   const askBilly = (words) => { billy?.setOpen(true); billy?.ask(words); };
 
   if (!p) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <p className="text-sm" style={muted}>Loading…</p>;
@@ -307,23 +258,22 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                         {e.superset && <Link2 size={11} className="inline mr-0.5" aria-label="With the one above" />}{label}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <div className="text-sm font-medium">{e.name}{e.own && <span className="text-xs font-normal" style={muted}> · your own</span>}</div>
-                        {e.libraryName && e.libraryName !== e.name && <div className="text-xs" style={muted}>{e.libraryName}</div>}
-                        {doseLine(e, units) && <div className="text-sm">{doseLine(e, units)}</div>}
+                        <button type="button" className="text-left" onClick={() => openDialog({ day: d, editing: e, first: i === 0 })}>
+                          <span className="block text-sm font-medium">{e.name}{e.own && <span className="text-xs font-normal" style={muted}> · your own</span>}</span>
+                          {e.libraryName && e.libraryName !== e.name && <span className="block text-xs" style={muted}>{e.libraryName}</span>}
+                        </button>
+                        {doseLine(e, units) ? <div className="text-sm">{doseLine(e, units)}</div> : <div className="text-xs" style={muted}>No sets or reps yet.</div>}
                         {e.note && <div className="text-xs" style={muted}>{e.note}</div>}
                         {mine.length > 0 && <ul className="grid gap-1 mt-1">{mine.map((c, j) => <Point key={j} p={c} />)}</ul>}
-                        {is("dose", e.id) && <DoseForm e={e} first={i === 0} busy={busy} onCancel={() => setOpen(null)} onSave={(body) => call("PATCH", `/program-exercises/${e.id}`, body)} />}
                         {is("swap", e.id) && <Swaps peId={e.id} busy={busy} onCancel={() => setOpen(null)} onPick={(a) => call("PATCH", `/program-exercises/${e.id}`, { exerciseId: a.id })} />}
-                        {!is("dose", e.id) && (
-                          <div className="flex flex-wrap items-center gap-1 mt-1">
-                            <button type="button" className="text-xs cx-link" onClick={() => setOpen({ kind: "dose", id: e.id })}><Pencil size={13} aria-hidden="true" /> Sets, reps…</button>
+                        <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                            <button type="button" className="cx-btn-row" onClick={() => openDialog({ day: d, editing: e, first: i === 0 })}><Pencil size={14} aria-hidden="true" /> Details</button>
                             <button type="button" className="text-xs cx-link ml-2" onClick={() => setOpen(is("swap", e.id) ? null : { kind: "swap", id: e.id })}><Repeat size={13} aria-hidden="true" /> Swap</button>
                             <span className="flex-1" />
                             <button type="button" className="cx-icon-btn" disabled={busy || i === 0} onClick={() => call("PATCH", `/program-exercises/${e.id}`, { move: -1 })} aria-label={`Move ${e.name} up`} title="Move up"><ArrowUp size={15} aria-hidden="true" /></button>
                             <button type="button" className="cx-icon-btn" disabled={busy || i === d.exercises.length - 1} onClick={() => call("PATCH", `/program-exercises/${e.id}`, { move: 1 })} aria-label={`Move ${e.name} down`} title="Move down"><ArrowDown size={15} aria-hidden="true" /></button>
                             <button type="button" className="cx-icon-btn" disabled={busy} onClick={() => call("DELETE", `/program-exercises/${e.id}`)} aria-label={`Take ${e.name} out`} title="Take it out"><Trash2 size={15} aria-hidden="true" /></button>
-                          </div>
-                        )}
+                        </div>
                       </div>
                     </div>
                   </li>
@@ -332,21 +282,17 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
             </ol>
 
             <div className="mt-2">
-              {is("find", d.id) ? (
-                <Finder busy={busy} onCancel={() => setOpen(null)} onPick={(x) => call("POST", `/program-days/${d.id}/exercises`, { exerciseId: x.id })} />
-              ) : (
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                  <button type="button" className="cx-btn-row" onClick={() => setOpen({ kind: "find", id: d.id })}><Plus size={15} aria-hidden="true" /> Add an exercise</button>
+                  <button type="button" className="cx-btn-row" onClick={() => openDialog({ day: d, first: d.exercises.length === 0 })}><Plus size={15} aria-hidden="true" /> Add an exercise</button>
                   {billy?.available && (
                     <button type="button" className="text-sm cx-link" onClick={() => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}), what should come next on ${d.name}?`)}>
                       <Sparkles size={15} aria-hidden="true" /> Ask Billy about {d.name}
                     </button>
                   )}
                 </div>
-              )}
             </div>
             <Next dayId={d.id} version={version} busy={busy} units={units}
-              onTake={(s) => call("POST", `/program-days/${d.id}/exercises`, { exerciseId: s.id, sets: s.dose.sets, reps: s.dose.reps, rest: s.dose.restText })} />
+              onTake={(s) => openDialog({ day: d, suggested: s, first: d.exercises.length === 0 })} />
           </section>
         );
       })}
@@ -354,6 +300,10 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
       <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy} onClick={() => call("POST", `/programs/${p.id}/days`, {})}>
         <Plus size={15} className="inline" aria-hidden="true" /> Add a day
       </button>
+      {dialog && (
+        <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested}
+          busy={busy} error={dialogError} onSave={saveDialog} onClose={() => setDialog(null)} />
+      )}
     </div>
   );
 }

@@ -741,31 +741,59 @@ list; it is kept, not deleted.
 
 ### 5.2 Adding exercises
 
-There are two ways:
+1. Under a day, tap **Add an exercise**. A box opens: *Add an exercise to
+   Day A*.
+2. **Which exercise?** Type any name you use for it: your own name, one of
+   your own exercises, or the library's name, and tap it in the list. Before
+   you type, the box lists what **Coach IQ suggests** for that day, with why;
+   tap one of those instead if you like.
+3. The box now shows the exercise: its name, its full name in the library,
+   its **Level**, what it **Works** and what it **Needs**, and anything Coach
+   IQ has to say about it for this client and place, with the same marks as
+   in 5.4 (a red octagon to stop, an orange triangle to take care). To pick a
+   different one, tap **Change exercise**.
+4. Under **How it's done (all optional)**, Coach IQ's starting point is
+   filled in, such as **1–3** sets of **8–12** with **3 min** rest. Change
+   anything, or fill in more (5.3). **Coach IQ's starting point** puts its
+   numbers back.
+5. Tap **Add to Day A**. The exercise appears on the day with what you filled
+   in. If something can't be saved (a rest written oddly, say), the box stays
+   open and says why in red.
 
-- **Take a suggestion.** Under each day, **Could come next** lists exercises
-  Coach IQ suggests for what that day trains (*Could come next on an upper
-  body day*), one for each kind of movement the day doesn't have yet (a
-  squat, a hinge, a push, a row …), taking turns with what you chose to focus
-  on (*A focus of this program: core.*). Every one already fits the
-  place's equipment, the client's level and their limitations, and says
-  where to start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in
-  orange says what to make easier for the client. Tap **Add** to put it on the
-  day with that starting point. When the day holds about as much as your
-  session length allows, it says so. To change what a day trains, tap its
-  pencil and choose under **What this day trains**.
-- **Find one yourself.** Tap **Add an exercise** and type any name you use
-  for it: your own name, one of your own exercises, or the library's name.
-  Tap it in the list to add it.
+**From a suggestion.** Under each day, **Could come next** lists exercises
+Coach IQ suggests for what that day trains (*Could come next on an upper body
+day*), one for each kind of movement the day doesn't have yet (a squat, a
+hinge, a push, a row …), taking turns with what you chose to focus on (*A
+focus of this program: core.*). Every one already fits the place's
+equipment, the client's level and their limitations, and says where to
+start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in orange says
+what to make easier for the client. Tap **Add**: the same box opens at step
+3, with that exercise and its starting point. When the day holds about as
+much as your session length allows, it says so. To change what a day trains,
+tap its pencil and choose under **What this day trains**.
 
 ### 5.3 Sets, reps and the rest
 
-Only the exercise is needed. To say more, tap **Sets, reps…** under it and
-fill in what you want: **Sets** (3, or a range such as 1–3), **Reps** (8–12,
-or 30 s), **Load** (45 lb), **Effort** (2 in reserve), **Tempo** (3-1-1-0),
-**Rest** (90 s, or 2 min) and a **Note**. Tap **Save**. What you filled in
-shows under the exercise, such as *3 × 10 · 45 lb · tempo 3-1-1-0 · rest 2
-min*. Loads are shown in your units (3.5).
+Only the exercise is needed. In the box, under **How it's done**, fill in
+what you want:
+
+| Box | For example | |
+|---|---|---|
+| **Sets** | 3 | Or a range, such as 1–3. |
+| **Reps** | 8–12 | Or a time (30 s), or each side. |
+| **Load** | 45 lb | In your units (3.5). |
+| **Effort** | 2 in reserve | Or RPE 7. |
+| **Tempo** | 3-1-1-0 | Down, pause, up, pause. |
+| **Rest** | 90 s, or 2 min | Between sets. |
+| **Note** | A cue to remember | |
+
+What you filled in shows under the exercise on the day, such as *3 × 10 · 45
+lb · tempo 3-1-1-0 · rest 2 min*; an exercise with nothing filled in says *No
+sets or reps yet.*
+
+**To change an exercise already on a day**, tap its name or **Details** under
+it. The same box opens with what it has; change anything, or tap **Change
+exercise** to put another in its place, then tap **Save**.
 
 ### 5.4 What Coach IQ says
 
@@ -798,8 +826,8 @@ the suggestions, and talks it through; he changes nothing himself.
   (and gives it a note), and the bin takes it out with its exercises.
 - Beside each exercise: the arrows move it up or down the day, and the bin
   takes it out.
-- **A superset**: in **Sets, reps…**, tick **Done together with the one
-  above (a superset)**. The two then share a number, such as **2a** and
+- **A superset**: in its box (**Details**), tick **Done together with the
+  exercise above (a superset)**. The two then share a number, such as **2a** and
   **2b**.
 
 ### 5.6 Printing it for the client

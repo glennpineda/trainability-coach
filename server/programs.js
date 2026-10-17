@@ -618,6 +618,46 @@ const PATTERN_WORDS = {
 };
 const patternWords = (p) => PATTERN_WORDS[p] || p;
 
+/**
+ * One exercise as the add-and-edit dialog shows it, for a day of this program
+ * (Glenn, 17 Oct 2026: "When adding a new exercise, have a dialog asking what
+ * exercise, reps, sets, etc before adding it to program"): what it is, what
+ * Coach IQ says about it here before it goes in (stop, take care, ask first),
+ * and a starting dose from the principles.
+ */
+export async function preview(trainerId, program, exerciseId) {
+  const ctx = await context(trainerId, program);
+  const names = await theirNames(trainerId);
+  const x = library.exerciseById(exerciseId);
+  if (!x) {
+    const p = await library.privateBrief(trainerId, exerciseId);
+    if (!p) return null;
+    return {
+      exercise: { id: p.id, name: names.get(p.id) || p.name, own: true, primary: p.primary, needs: p.needs.map(library.kindLabel), note: p.note },
+      points: [{ level: "note", text: "Your own exercise: Coach IQ can't check it beyond its equipment." }],
+      dose: doseFor(program.goal, program.level, { accessory: true }),
+    };
+  }
+  const b = library.brief(x);
+  const points = [];
+  if (x.status === "retired") points.push({ level: "warn", text: "Retired from the library." });
+  if (ctx.place) {
+    const fit = library.placeCheck(x, ctx.place);
+    if (fit === "no") points.push({ level: "stop", text: `Needs equipment that “${ctx.place.name}” doesn't have.` });
+    else if (Array.isArray(fit)) points.push({ level: "note", text: `Nobody has said whether “${ctx.place.name}” has ${fit.join(", ").toLowerCase()}.` });
+  }
+  const lim = library.limitsCheck(x, ctx.rules);
+  if (lim === "no") points.push({ level: "stop", text: `${program.client_name}'s limitations say to avoid it.` });
+  else if (lim.length) points.push({ level: "warn", text: `Make it easier or supported for ${program.client_name} (${lim.join(", ")}).` });
+  if (LEVELS.indexOf(x.level) > LEVELS.indexOf(program.level)) points.push({ level: "warn", text: `${x.level[0].toUpperCase() + x.level.slice(1)}, above ${program.client_name}'s level (${program.level}).` });
+  const accessory = !(library.familyOf(x)?.roles || []).includes("main");
+  return {
+    exercise: { ...b, name: names.get(x.id) || x.name, libraryName: x.name, secondary: x.secondary || [] },
+    points,
+    dose: doseFor(program.goal, program.level, { accessory }),
+  };
+}
+
 /** Alternatives for one exercise in a program: the library's, fitted to this program's world. */
 export async function swapsFor(trainerId, program, exerciseId) {
   if (!library.isExercise(exerciseId)) return { alternatives: [], note: "Your own exercise: Coach IQ has no alternatives for it." };

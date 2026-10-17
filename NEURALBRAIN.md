@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **A dialog for adding and changing an exercise** (17 Oct 2026; Glenn: "When adding a new exercise, have a dialog asking what exercise, reps, sets, etc before adding it to program. Right now, the exercise details is kind of hidden and not very helpful."). Build 1.0.26. Not from Next up. **Before**: Add an exercise was a search box under the day that put the exercise on at once with nothing filled in, Could come next's Add did the same with the starting dose, and the details hid behind a small "Sets, reps…" link that opened a compact form in the row. **Now**: `src/programs/ExerciseDialog.jsx`, a dialog (a sheet from the bottom on a phone, centred on a computer, Escape and × close it, its middle scrolls), titled "Add an exercise to Day A" or "Change the exercise". Step 1, **Which exercise?**: a search box (any name the trainer uses, through `/api/programs-find`), and before anything is typed, "Coach IQ suggests for a full body day" with the day's suggestions and why. Step 2: a panel saying what the exercise is (the trainer's name, the library's name, the master name, Level, Works with its other muscles, Needs, or "Your own exercise" with its note), what Coach IQ says about it for this client and place before it goes in (red octagon to stop, orange triangle to take care, grey note), and **Change exercise**; then "How it's done (all optional)", six labelled boxes in two columns with an example in each and a hint under it (Sets "Or a range, such as 1–3.", Reps "Or a time, or each side.", Load "In your units.", Effort "Or RPE 7.", Tempo "Down, pause, up, pause.", Rest "Between sets."), Note, and the superset tick (not for a day's first exercise); filled from Coach IQ's starting point when an exercise is chosen, unless the trainer has typed something, and **Coach IQ's starting point** puts it back. **Add to Day A** (or Save) is the dialog's one primary; a refused save keeps it open with the server's words in red. **Server**: `programs.preview()` and `GET /api/program-days/:id/preview?exercise=…` (the writer's only, a 404 otherwise): the exercise's brief, the points (retired; the place's equipment, stop or ask; the client's limitations, stop or make easier; above the client's level) and `doseFor` the program's goal and level (an accessory a set less), with rest in words. **The designer**: Add an exercise opens the dialog at step 1; Could come next's Add opens it at step 2 with that suggestion's dose; each exercise's name and a new **Details** button (a row button where the "Sets, reps…" link was) open it to change; an exercise with nothing filled in says "No sets or reps yet."; the old inline search and form (`Finder`, `DoseForm`) are gone. Check-ui caught the step-1 Back as a link where it backs out; made quiet. Manual 5.2 and 5.3 rewritten (the steps, a table of the boxes, changing one), 5.5 the superset tick; CHANGELOG. **Tested** against the stand-ins: the preview for a barbell back squat at a place without barbells for a beginner with a new knee gave stop (equipment), take care (limitations) and take care (intermediate, above beginner) with 1–3 × 8–12, rest 3 min for strength; another trainer was told Not found; in Chromium at 400px dark and 1200px light, the dialog listed the day's suggestions, found Goblet squat, showed its level, muscles, dumbbells and the knee note with 1–3, 8–12 and 3 min filled in, refused a rest of "later" staying open with "Write rest as seconds or minutes, such as 90 s or 2 min.", added it with 20 kg (shown as 45 lb on the day) and 2 min, opened again from its name with what it had, and added Glute bridge from Could come next with its starting point; no sideways scroll; the only console error was that deliberate 400. Commit: build 1.0.26.
+
 - **Asking what kind of program before making one** (17 Oct 2026; Glenn: "Before creating a new program, ask what kind of program they are think of creating so we can help recommend exercises better."). Build 1.0.25. Not from Next up. Built without a round of questions, as the shape was clear; the choices are easy to change. **The questions** (a first step, `KindForm` in `src/programs/Designer.jsx`, before the details form, which now has "Back to the kind of program"): what kind (`KINDS` in `server/programs.js`: Full body, every day the whole body, 3 days usual; Upper and lower, 4; Push, pull, legs, 3; A circuit, little rest, for conditioning, 3; Mobility and flexibility, 2), each with a line saying what it is; Days a week (1–6, the kind's usual chosen); Anything to focus on? (optional, any number: Legs and glutes, Upper body, Core, Balance and stability, Posture, Conditioning); How long is a session? (30, 45, 60, 75 or 90 minutes, 60 chosen). Next is greyed until a kind is chosen. The details step then has What it's for chosen to suit the kind (general, muscle, muscle, fat loss, mobility). **What the answers do**: the program is made with its days already (`startingDays`): Upper A, Lower A, Upper B, Lower B; Push, Pull, Legs (Push A … Legs B for six); Day A, Day B … for full body and mobility; Circuit A … for a circuit; each day stores what it trains (`DAY_KINDS`: Full body, Upper body, Lower body, Push, Pull, Legs, Circuit, Mobility, each a list of movement patterns, single-muscle work split by body part through the version's main muscles, "isolation-push", "-pull", "-lower"). **Add a day** continues the turn (`nextDay`: Upper C after Lower B), replacing `nextDayName`. A day's pencil can change what it trains. **Suggestions** (`suggestNext`) now take the day's own patterns rather than one list for every day: the day's movements and the program's focus in turn (focus patterns that the day trains, at most two a day, fewer for focus it already has; an upper or push or pull day never gets a lower-body focus, nor the other way round), each the best version passing the place, the level and the limitations as before; the reason says "A focus of this program: core." where it is one; the heading says "Could come next on an upper body day"; and when a day already has about as many exercises as the session holds (`MINUTES`: 30 → 4, 45 → 5, 60 → 6, 75 → 7, 90 → 8, from sets.md's 45–75 minutes) it says "This day has about as much as a 45-minute session holds." **The check** adds a note when a day has more than one over that many exercises, from Sets. The first try put all four of an empty upper day's suggestions into core work (the focus first, four core patterns); changed to taking the day's movements and the focus in turn with the focus capped at two, so a push-up and a row still lead. Day names were first "Upper body A"; shortened to "Upper A". **Stored**: new columns on `coach_programs` (`kind`, `days_per_week`, `minutes`, `focus` JSON) and `coach_program_days` (`kind`), added on start where missing (`COLUMNS` in `db.js`), so older programs read as full body. Checked on the server: an unknown kind, a focus not on the list, a session length not offered and 1–7 days. The program's line, the list and Billy's `my_programs` (kind, focus, session minutes, what each day trains) say them; Edit the details changes the focus and session length. Manual 5.1 (the steps rewritten), 5.2 and 5.5; CHANGELOG. **Tested** against the stand-ins: the vocabulary, the refusals, an upper and lower program of 4 days with a core focus and 45 minutes made with Upper A, Lower A, Upper B, Lower B, its upper day suggesting Push-up, Hollow hold (core), Bent-over dumbbell row, Bird dog (core) and its lower day Cossack squat, Hollow hold, Single-leg glute bridge, Bird dog; a push, pull, legs program with a legs focus suggesting Push-up, Arnold press, Dumbbell fly and Hollow hold on Push, rows, a pulldown, a straight-arm pulldown and a carry on Pull, and leg work on Legs; Add a day giving Upper C; 6-day push, pull, legs, circuit and mobility programs named as above; in Chromium at 400px dark and 1200px light, the first step (Next greyed until a kind, 4 days chosen for upper and lower), the goal chosen to suit it, and the designer showing "Upper and lower · 45-minute sessions · focus: core" with no console errors and no sideways scroll. **Not tested**: Billy's real use of it (no key in the cloud). Commit: build 1.0.25.
 
 - **Making sure phones pick up the new icon** (17 Oct 2026; Glenn: "Can you make sure the icons gets updated?"). Build 1.0.24. Not from Next up. The icon redrawn in build 1.0.19 kept its old addresses (`/apple-touch-icon.png`, `/coach-app-icon-192.png`, `-512.png`), and a phone keeps a home-screen icon by its address, so it can go on showing the old picture. Studio meets this with `?v=2` on its icon addresses (its `index.html` and both `.webmanifest` files, with a note to raise it whenever the icons change); Coach does the same now: `index.html`'s apple-touch-icon is `/apple-touch-icon.png?v=2` with `sizes="180x180"`, the manifest link `/manifest.webmanifest?v=2`, and the manifest's icons `?v=2`, with a note to raise the number with any new icon. The manifest also gained the 512 px icon as `purpose: "maskable"`, as Studio has one, so Android can crop it to its own shape: the tile is full-bleed, and a check of the 512 px PNG found nothing white outside the maskable safe circle (40% of the width from the centre), so the hex is never cut. Express serves the files whatever follows the `?`. Not checked on the live site: the cloud session can't reach trainabilitycoach.com; Glenn checks https://trainabilitycoach.com/apple-touch-icon.png?v=2 after the deploy, then removes the icon from his home screen and adds it again. Commit: build 1.0.24.
@@ -892,31 +894,59 @@ list; it is kept, not deleted.
 
 #### 5.2 Adding exercises
 
-There are two ways:
+1. Under a day, tap **Add an exercise**. A box opens: *Add an exercise to
+   Day A*.
+2. **Which exercise?** Type any name you use for it: your own name, one of
+   your own exercises, or the library's name, and tap it in the list. Before
+   you type, the box lists what **Coach IQ suggests** for that day, with why;
+   tap one of those instead if you like.
+3. The box now shows the exercise: its name, its full name in the library,
+   its **Level**, what it **Works** and what it **Needs**, and anything Coach
+   IQ has to say about it for this client and place, with the same marks as
+   in 5.4 (a red octagon to stop, an orange triangle to take care). To pick a
+   different one, tap **Change exercise**.
+4. Under **How it's done (all optional)**, Coach IQ's starting point is
+   filled in, such as **1–3** sets of **8–12** with **3 min** rest. Change
+   anything, or fill in more (5.3). **Coach IQ's starting point** puts its
+   numbers back.
+5. Tap **Add to Day A**. The exercise appears on the day with what you filled
+   in. If something can't be saved (a rest written oddly, say), the box stays
+   open and says why in red.
 
-- **Take a suggestion.** Under each day, **Could come next** lists exercises
-  Coach IQ suggests for what that day trains (*Could come next on an upper
-  body day*), one for each kind of movement the day doesn't have yet (a
-  squat, a hinge, a push, a row …), taking turns with what you chose to focus
-  on (*A focus of this program: core.*). Every one already fits the
-  place's equipment, the client's level and their limitations, and says
-  where to start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in
-  orange says what to make easier for the client. Tap **Add** to put it on the
-  day with that starting point. When the day holds about as much as your
-  session length allows, it says so. To change what a day trains, tap its
-  pencil and choose under **What this day trains**.
-- **Find one yourself.** Tap **Add an exercise** and type any name you use
-  for it: your own name, one of your own exercises, or the library's name.
-  Tap it in the list to add it.
+**From a suggestion.** Under each day, **Could come next** lists exercises
+Coach IQ suggests for what that day trains (*Could come next on an upper body
+day*), one for each kind of movement the day doesn't have yet (a squat, a
+hinge, a push, a row …), taking turns with what you chose to focus on (*A
+focus of this program: core.*). Every one already fits the place's
+equipment, the client's level and their limitations, and says where to
+start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in orange says
+what to make easier for the client. Tap **Add**: the same box opens at step
+3, with that exercise and its starting point. When the day holds about as
+much as your session length allows, it says so. To change what a day trains,
+tap its pencil and choose under **What this day trains**.
 
 #### 5.3 Sets, reps and the rest
 
-Only the exercise is needed. To say more, tap **Sets, reps…** under it and
-fill in what you want: **Sets** (3, or a range such as 1–3), **Reps** (8–12,
-or 30 s), **Load** (45 lb), **Effort** (2 in reserve), **Tempo** (3-1-1-0),
-**Rest** (90 s, or 2 min) and a **Note**. Tap **Save**. What you filled in
-shows under the exercise, such as *3 × 10 · 45 lb · tempo 3-1-1-0 · rest 2
-min*. Loads are shown in your units (3.5).
+Only the exercise is needed. In the box, under **How it's done**, fill in
+what you want:
+
+| Box | For example | |
+|---|---|---|
+| **Sets** | 3 | Or a range, such as 1–3. |
+| **Reps** | 8–12 | Or a time (30 s), or each side. |
+| **Load** | 45 lb | In your units (3.5). |
+| **Effort** | 2 in reserve | Or RPE 7. |
+| **Tempo** | 3-1-1-0 | Down, pause, up, pause. |
+| **Rest** | 90 s, or 2 min | Between sets. |
+| **Note** | A cue to remember | |
+
+What you filled in shows under the exercise on the day, such as *3 × 10 · 45
+lb · tempo 3-1-1-0 · rest 2 min*; an exercise with nothing filled in says *No
+sets or reps yet.*
+
+**To change an exercise already on a day**, tap its name or **Details** under
+it. The same box opens with what it has; change anything, or tap **Change
+exercise** to put another in its place, then tap **Save**.
 
 #### 5.4 What Coach IQ says
 
@@ -949,8 +979,8 @@ the suggestions, and talks it through; he changes nothing himself.
   (and gives it a note), and the bin takes it out with its exercises.
 - Beside each exercise: the arrows move it up or down the day, and the bin
   takes it out.
-- **A superset**: in **Sets, reps…**, tick **Done together with the one
-  above (a superset)**. The two then share a number, such as **2a** and
+- **A superset**: in its box (**Details**), tick **Done together with the
+  exercise above (a superset)**. The two then share a number, such as **2a** and
   **2b**.
 
 #### 5.6 Printing it for the client

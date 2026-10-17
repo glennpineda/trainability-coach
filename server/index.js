@@ -751,6 +751,16 @@ app.get("/api/program-days/:id/suggestions", asSignedIn("GET /program-days/sugge
   res.json(await programs.suggestNext(user.id, program, req.params.id));
 }));
 
+/* One exercise as the dialog shows it before it goes on this day. */
+app.get("/api/program-days/:id/preview", asSignedIn("GET /program-days/preview", async (req, res, user) => {
+  const program = await programs.programOfDay(user.id, req.params.id);
+  if (!program) return notFound(res);
+  const out = await programs.preview(user.id, program, String(req.query.exercise || ""));
+  if (!out) return notFound(res);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ ...out, dose: { ...out.dose, restText: programs.restWords(out.dose.rest) } });
+}));
+
 /* An exercise on a day: the library's or one of their own, by its id. */
 app.post("/api/program-days/:id/exercises", asSignedIn("POST /program-days/exercises", async (req, res, user) => {
   const program = await programs.programOfDay(user.id, req.params.id);
