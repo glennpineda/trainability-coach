@@ -23,7 +23,7 @@ import { FLAGS, JOINTS } from "./coach-iq.js";
  * for the signed-in trainer's clients.
  *
  * Coach keeps no accounts and no clients. Every Trainability account lives in
- * Studio's database, so the four sign-in routes below are passed through to
+ * Studio's database, so the five sign-in routes below are passed through to
  * Studio's API as they are, and the same email and password work in both
  * apps. The client list is read from Studio too (/api/clients below).
  *
@@ -50,7 +50,9 @@ const SESSION_COOKIE = "ts_session";
    so the page and its host cannot disagree. Never a reason not to start. */
 const PKG = (() => { try { return JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")); } catch { return {}; } })();
 
-const RELAYED = new Set(["/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password"]);
+/* The sign-in routes Studio answers for Coach. /auth/door is the one sign-in
+   screen's first question, which way in an email takes (Glenn, 17 Oct 2026). */
+const RELAYED = new Set(["/auth/door", "/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password"]);
 
 const app = express();
 app.disable("x-powered-by");

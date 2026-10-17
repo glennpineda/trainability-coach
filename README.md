@@ -10,8 +10,9 @@ So far: the sign-in screen, the home screen and the trainer's client list.
 ## One sign-in for every Trainability app
 
 Coach keeps no accounts. Every Trainability account lives in Studio's
-database, and Coach's server (`server/index.js`) relays exactly four routes to
-Studio's API: `/api/auth/login`, `/api/auth/me`, `/api/auth/logout` and
+database, and Coach's server (`server/index.js`) relays exactly five routes to
+Studio's API: `/api/auth/door` (the sign-in screen's first question, which way
+in an email takes), `/api/auth/login`, `/api/auth/me`, `/api/auth/logout` and
 `/api/auth/forgot-password`. So:
 
 - the email and password that work in Studio work in Coach, and a password

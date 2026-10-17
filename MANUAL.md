@@ -112,19 +112,30 @@ by Studio, so:
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
    **COACH** underneath. Under the logo, *You belong here.* changes language
-   every few seconds, as on Studio's sign-in screen; then *Use the same email
-   and password as Trainability Studio.* The version the app is on is in your
-   account menu once you are signed in (3.5).
-3. Tap the **Email** box and type your email address. With a
-   @trainabilitystudio.com address you can type just the part before the @ —
-   the app adds the rest when you log in.
-4. Tap the **Password** box and type your password.
-5. If this is your own phone or computer, tick **Keep me logged in**. Leave it
+   every few seconds, as on Studio's sign-in screen; then, in blue, *Please
+   use the email you used when you signed up with Trainability.* The version
+   the app is on is in your account menu once you are signed in (3.5).
+3. Tap the **Your email address** box and type your email address, the same
+   one you use for Studio. With a @trainabilitystudio.com address you can type
+   just the part before the @: the app adds the rest.
+4. Tap **Continue**. It says **One moment…** while the app checks which way
+   in your email takes.
+5. The box now shows your **Email** (greyed; tap **Use a different email** to
+   change it) and an empty **Password** box. Type your password, the same as
+   in Studio.
+6. If this is your own phone or computer, tick **Keep me logged in**. Leave it
    unticked on a shared machine — see 2.2.
-6. Tap the blue **Log in** button. It says **Signing in…** for a moment while
+7. Tap the blue **Log in** button. It says **Signing in…** for a moment while
    the app checks.
 
 You are now signed in, and you land on the home screen (3.4).
+
+**An email that isn't a trainer's.** Coach is for Trainability's trainers for
+now; clients will be able to sign in here later. If the email is not a team
+account (a client's, or one nobody has), the box says *Coach is for
+Trainability's trainers for now. Clients will be able to sign in here soon.*,
+with **Go to my page**, which opens the client's own page in Studio, and **Use
+a different email**.
 
 If the email and password do not match, the box says *That email and password
 don't match.* in red under **Keep me logged in**, and nothing else happens.
@@ -148,7 +159,8 @@ When you are still signed in, opening Coach goes straight to the home screen.
 
 ### 2.3 If you have forgotten your password
 
-1. On the sign-in screen, tap **Forgot password?** underneath the Log in button.
+1. On the sign-in screen, type your email and tap **Continue**, then tap
+   **Forgot password?** underneath the Log in button.
 2. Type your email address into the **Email** box. If you had already typed it
    on the sign-in screen, it is there already.
 3. Tap **Send temporary password**. The screen says the same thing whether or
@@ -889,6 +901,11 @@ page clears it too: Coach does not keep your conversations with Billy.
 ---
 
 ## 8. When something goes wrong
+
+**"Type your email address first."**
+**Continue** was tapped with no email, or one missing its @ or its ending.
+Type the whole address, or just the part before the @ of a
+@trainabilitystudio.com one.
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock

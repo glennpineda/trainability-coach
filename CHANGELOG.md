@@ -36,6 +36,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   adds to the principles, topic by topic, asking about anything it shouldn't
   decide alone with a recommended answer. Nothing changes until it is
   accepted.
+- **Sign in the way Studio does: your email first.** Type your email and tap
+  Continue, then your password. An email that isn't a trainer's is told that
+  Coach is for trainers for now, and pointed to its own page in Studio.
 - **"You belong here." on the sign-in screen**, in twenty languages under the
   logo, as on Studio's; the Open Studio link is no longer at the foot of it
   (Open Studio is still in your account menu).

@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The sign-in screen made Studio's: the email first** (17 Oct 2026; Glenn: "Can you make the login screen identical to Studio, checking email first as we will eventually let clients login here."). Build 1.0.23. Not from Next up. **Read from Studio** (unchanged): `src/auth/LoginScreen.jsx` asks the email first ("Please use the email you used when you signed up with {business}." in bold accent colour, the box with no caption, placeholder "Your email address", **Continue** saying "One moment…"), then `POST /api/auth/door`, whose answer is `password` for a team account (with `also` when that email is a client's or member's too) and `code` for everybody else, a client, a member or an address nobody has, answered alike so the screen can't be used to learn who is a client, and rate-limited by Studio (`checkDoorAllowed`, a 429 with Retry-After). Password: the email kept as a read-only field (so a password manager saves the pair), Password, Keep me logged in, Log in, Forgot password?, "Use a different email". Code: Studio's `CodeSignIn`, a client's or member's own page at /me. **In Coach**: `/auth/door` added to the relayed routes in `server/index.js` (now five; CLAUDE.md, README and the server's notes say so). `src/auth/LoginScreen.jsx` rewritten to Studio's steps: email (Studio's line with "Trainability" for the business, Studio's box, Continue/One moment…, "Type your email address first." for an empty or incomplete address, the @trainabilitystudio.com shortcut kept), then password as Studio's (and the old app's "Check your email" note kept), then Forgot password? as before with Back to login returning to the password step. **The client's way** ends, for now, at a card of its own, since Coach has no client sign-in yet: "Coach is for Trainability's trainers for now. Clients will be able to sign in here soon." and "If you train with us, your own page is in Studio. Open it and sign in there with {email}.", **Go to my page** (Studio's /me) and Use a different email. A first wording said a code had been sent; Studio's door sends none (its code screen does, when asked), so it was taken out. Left out of Studio's screen, for now: "I have a code" (a client's welcome-email code, for when clients sign in here), "Open my member page instead" (`also`), the demo-mode hint, the business name fetched from Studio (written as Trainability), and Studio's below-the-fold "about the app" panel and drifting hexagons. Manual 2.1 (the steps, and an email that isn't a trainer's), 2.3 step 1, chapter 8 "Type your email address first."; CHANGELOG. **Tested** in Chromium as an iPhone 13 against the stand-in Studio, taught `/api/auth/door` and `/api/auth/login`: Continue with nothing said "Type your email address first."; someone@gmail.com went to the client card with Go to my page pointing at trainabilitystudio.com/me; Use a different email went back; "glenn" became glenn@trainabilitystudio.com and went to the password step; a wrong password said "That email and password don't match."; Forgot password? and Back to login; the right password signed in to Home; no page errors. The relay answered the door directly with Studio's JSON. Commit: build 1.0.23.
+
 - **"You belong here." on the sign-in screen, as in Studio, and no Open Studio link there** (17 Oct 2026; Glenn: "Can we have the same “you belong here animation” on the login screen like the studio has? Also, remove the “open studio” link"). Build 1.0.22. Not from Next up. **Read from Studio** (unchanged): `src/auth/PhraseCycle.jsx`, "You belong here." in twenty languages (English, Norwegian, Tagalog, then by number of speakers; each with its own sentence mark; right to left for Arabic and Urdu), a new one every 2,600 ms, held at English for reduced motion, the cycling text hidden from screen readers with one static line read instead, in a box of fixed height so the form doesn't jump; and its `iw-cycle` animation in `theme.jsx` (rising 5px and fading in over 0.55 s, off for reduced motion). Studio's sign-in shows the phrase under its lockup and no version there. **Ported**: `src/auth/PhraseCycle.jsx`, Studio's file with its notes and the BELONGING list as they are (its welcome-back list left out: Coach has no welcome-back screen), the class renamed `cx-cycle`; `cx-cycle-in` and `.cx-cycle` in `src/index.css`, off under reduced motion. On `LoginScreen.jsx` the phrase takes the place of the version line under the logo, as on Studio's (the version is still at the foot of the account menu); the foot of the screen keeps "Part of the Trainability family" without its "· Open Studio" link (the account menu keeps its Open Studio). Manual 2.1 step 2; CHANGELOG. **Tested** in Chromium as an iPhone 13: the line ran "You belong here.", "Du hører til her.", "Dito ka nabibilang.", "Este es tu lugar." about every 2.7 s, stayed on "You belong here." with reduced motion, the screen-reader line read "You belong here.", no Open Studio on the page, no page errors. Commit: build 1.0.22.
 
 - **"Add to Home Screen" on the sign-in screen, as in Studio** (17 Oct 2026; Glenn: "Can you add the “add to Home Screen” like on Studio at the bottom of the login screen"). Build 1.0.21. Not from Next up. **Read from Studio** (`glennpineda/trainability-studio`, unchanged): `src/lib/install.js` (catches `beforeinstallprompt` at load, before any screen exists, so a Chrome/Edge/Samsung offer isn't missed; works out "prompt", "ios" or nothing: nothing when already running from the icon, in an app's own browser such as Instagram's, or on a browser with no install; "Not now" kept on the device for 30 days) and `src/components/InstallApp.jsx` (`InstallBanner`: a glass strip fixed along the bottom of the sign-in screen, phones and tablets only, "Add Studio 3 to your Home Screen" on an iPhone or iPad, which opens a dialog of three steps, "Install the app" where the browser can install, and an ×). Studio's manifest is `display: standalone` with the Apple capable tags, so it opens full screen from its icon. **Ported**: `src/lib/install.js` taken as it is (its notes pointed at Coach's manifest, the storage key renamed `cx-install-banner-hidden-until`), imported first in `src/main.jsx` as Studio does; `src/auth/InstallBanner.jsx`, Studio's strip and steps with Coach's words ("Add Coach to your Home Screen", "Coach appears on your Home Screen and opens full screen from there") and, since Coach has no `DialogShell`, a small dialog of its own (a sheet from the bottom on a phone, Escape and × close it, OK); on the sign-in screen after the form. **Changed from build 1.0.20**: the manifest's `display` from `browser` to `standalone` with `scope: "/"`, and `apple-mobile-web-app-capable`, `mobile-web-app-capable` and `apple-mobile-web-app-status-bar-style` in `index.html`, as Studio has them: Chrome only offers an install for a standalone app, and Studio's steps promise full screen. The server sends the manifest as `application/manifest+json`. Manual 2.6 "Putting Coach on your Home Screen"; CHANGELOG. **Tested** in Chromium: as an iPhone 13 (touch, with Chromium's own install offer hidden, as Safari has none) the strip said "Add Coach to your Home Screen", opened the three steps, OK closed them, × hid the strip and it stayed hidden after a reload; as an iPhone with Chromium's offer left in, it said "Install the app", so the manifest is installable; on a 1200px desktop nothing showed; no console errors but the signed-out check's 401. **Not tested** on a real phone. Commit: build 1.0.21.
@@ -257,19 +259,30 @@ by Studio, so:
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
    **COACH** underneath. Under the logo, *You belong here.* changes language
-   every few seconds, as on Studio's sign-in screen; then *Use the same email
-   and password as Trainability Studio.* The version the app is on is in your
-   account menu once you are signed in (3.5).
-3. Tap the **Email** box and type your email address. With a
-   @trainabilitystudio.com address you can type just the part before the @ —
-   the app adds the rest when you log in.
-4. Tap the **Password** box and type your password.
-5. If this is your own phone or computer, tick **Keep me logged in**. Leave it
+   every few seconds, as on Studio's sign-in screen; then, in blue, *Please
+   use the email you used when you signed up with Trainability.* The version
+   the app is on is in your account menu once you are signed in (3.5).
+3. Tap the **Your email address** box and type your email address, the same
+   one you use for Studio. With a @trainabilitystudio.com address you can type
+   just the part before the @: the app adds the rest.
+4. Tap **Continue**. It says **One moment…** while the app checks which way
+   in your email takes.
+5. The box now shows your **Email** (greyed; tap **Use a different email** to
+   change it) and an empty **Password** box. Type your password, the same as
+   in Studio.
+6. If this is your own phone or computer, tick **Keep me logged in**. Leave it
    unticked on a shared machine — see 2.2.
-6. Tap the blue **Log in** button. It says **Signing in…** for a moment while
+7. Tap the blue **Log in** button. It says **Signing in…** for a moment while
    the app checks.
 
 You are now signed in, and you land on the home screen (3.4).
+
+**An email that isn't a trainer's.** Coach is for Trainability's trainers for
+now; clients will be able to sign in here later. If the email is not a team
+account (a client's, or one nobody has), the box says *Coach is for
+Trainability's trainers for now. Clients will be able to sign in here soon.*,
+with **Go to my page**, which opens the client's own page in Studio, and **Use
+a different email**.
 
 If the email and password do not match, the box says *That email and password
 don't match.* in red under **Keep me logged in**, and nothing else happens.
@@ -293,7 +306,8 @@ When you are still signed in, opening Coach goes straight to the home screen.
 
 #### 2.3 If you have forgotten your password
 
-1. On the sign-in screen, tap **Forgot password?** underneath the Log in button.
+1. On the sign-in screen, type your email and tap **Continue**, then tap
+   **Forgot password?** underneath the Log in button.
 2. Type your email address into the **Email** box. If you had already typed it
    on the sign-in screen, it is there already.
 3. Tap **Send temporary password**. The screen says the same thing whether or
@@ -1034,6 +1048,11 @@ page clears it too: Coach does not keep your conversations with Billy.
 ---
 
 ### 8. When something goes wrong
+
+**"Type your email address first."**
+**Continue** was tapped with no email, or one missing its @ or its ending.
+Type the whole address, or just the part before the @ of a
+@trainabilitystudio.com one.
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock

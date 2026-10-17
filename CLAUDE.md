@@ -10,8 +10,8 @@ described in `README.md`.
 - The coaching app in the Trainability family, alongside Trainability Studio
   (`glennpineda/trainability-studio`). Live at trainabilitycoach.com on GoDaddy
   Airo. The start command is `npm start`, which builds and then serves.
-- **Coach keeps no accounts.** `server/index.js` relays four routes
-  (`/api/auth/login`, `me`, `logout`, `forgot-password`) to Studio's API at
+- **Coach keeps no accounts.** `server/index.js` relays five routes
+  (`/api/auth/door`, `login`, `me`, `logout`, `forgot-password`) to Studio's API at
   `STUDIO_ORIGIN`. A user signs in with the same password as Studio but gets a
   separate session. Most Coach work should need no change to Studio. If one
   seems needed, say so and ask first.
