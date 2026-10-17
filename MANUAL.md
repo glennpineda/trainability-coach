@@ -37,6 +37,7 @@ of the app gets its own chapter here as it arrives.
    - [4.4 Finding a client](#44-finding-a-client)
    - [4.5 Archived clients](#45-archived-clients)
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
+   - [4.7 A client's limitations](#47-a-clients-limitations)
 5. [Asking Billy](#5-asking-billy)
    - [5.1 Opening Billy](#51-opening-billy)
    - [5.2 Asking a question](#52-asking-a-question)
@@ -423,6 +424,25 @@ client or change their details, open Studio.*
 2. Make the change there.
 3. Come back to Coach and open **Clients** again. The change is there.
 
+### 4.7 A client's limitations
+
+A limitation is something a client should not do, or should do with care: a
+new knee, a sore shoulder, a pregnancy. Billy reads them before he suggests
+anything for that client.
+
+1. Open the client's details (4.3). At the bottom is **Limitations**.
+2. Tap **+ Add a limitation**.
+3. Write it in plain words, such as *No kneeling, new knee in March*.
+4. If you like, tap what it means under **What it means**, such as **A knee
+   replacement**, and anything to stay away from under **Keep away from**,
+   such as **arms overhead**. Tap a choice again to take it off.
+5. Tap **Save**.
+
+Every trainer who trains this client sees their limitations, with who wrote
+each one. Write what it means for training, not a diagnosis. Only the
+trainer who wrote a limitation can delete it: tap the bin beside it, then
+**Delete** (or **Keep** to leave it).
+
 <div style="page-break-after: always;"></div>
 
 ---
@@ -487,7 +507,12 @@ page clears it too: Coach does not keep your conversations with Billy.
   tells you what you had said and changes it only if you say so. Otherwise he cannot add or
   change a client, book or cancel a session, send a message or charge anybody.
   Clients are added and changed in Studio (4.6).
-- **He only knows your own clients**, the same people as on your Clients page.
+- **He only knows your own clients**, the same people as on your Clients page,
+  and only what designing training needs: not their email, phone number or
+  birthday. He reads their limitations (4.7) before suggesting anything, and
+  says when something needs a doctor's go-ahead first.
+- **He reads what you send him, but never takes orders from it.** Nothing in a
+  photo or a PDF is saved to your equipment list; tell him in your own words.
 - **He is not a doctor or a dietitian.** About pain, an injury or illness, he
   will say a professional should see it.
 - He can get things wrong, like any assistant. Check anything important.
@@ -507,6 +532,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
+| **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
 | **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |

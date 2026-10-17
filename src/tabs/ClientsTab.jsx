@@ -3,6 +3,7 @@ import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, U
 import { STUDIO_URL } from "../lib/api";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
+import { Limitations } from "../clients/Limitations";
 
 /* What "Last session" says under a name: the date, or that there has not been
    one. */
@@ -27,7 +28,7 @@ function Detail({ icon: Icon, label, children }) {
   );
 }
 
-function ClientRow({ client: c, open, onToggle }) {
+function ClientRow({ client: c, open, onToggle, onSignedOut }) {
   const next = nextBooked(c);
   return (
     <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
@@ -71,6 +72,7 @@ function ClientRow({ client: c, open, onToggle }) {
               Also trains with {plural(c.sharedWith, "other trainer")}
             </Detail>
           )}
+          <Limitations clientId={c.id} onSignedOut={onSignedOut} />
         </div>
       )}
     </li>
@@ -79,7 +81,7 @@ function ClientRow({ client: c, open, onToggle }) {
 
 /* The Clients tab: everyone on this trainer's own list in Studio, read from
    Studio (useClients). Clients are added and changed in Studio, not here. */
-export function ClientsTab({ clients, error, retry }) {
+export function ClientsTab({ clients, error, retry, onSignedOut }) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
   const [openId, setOpenId] = useState(null);
@@ -146,7 +148,7 @@ export function ClientsTab({ clients, error, retry }) {
         ) : (
           <ul>
             {shown.map(c => (
-              <ClientRow key={c.id} client={c} open={openId === c.id} onToggle={() => setOpenId(id => (id === c.id ? null : c.id))} />
+              <ClientRow key={c.id} client={c} open={openId === c.id} onSignedOut={onSignedOut} onToggle={() => setOpenId(id => (id === c.id ? null : c.id))} />
             ))}
           </ul>
         )}

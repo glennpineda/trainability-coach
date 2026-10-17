@@ -100,7 +100,30 @@ export const FLAGS = {
   "breath-hold": "heavy bracing that tempts holding the breath",
   "floor-transfer": "getting down to the floor and up",
   "grip": "a hard grip",
+  /* Added by the ideas audit (21), for common precautions. */
+  "kneeling": "weight on a knee",
+  "deep-hip-flexion": "the hip bent past 90 degrees or the legs crossed",
+  "head-movement": "quick changes of head position",
+  "maximal-effort": "all-out effort",
+  "abdominal-pressure": "strong pressure in the belly",
 };
+
+/* Facts that follow from the attributes, worked out rather than typed so they
+   can never drift: a kneeling position means weight on a knee, supine means
+   lying on the back, and so on. */
+const POSITION_FACTS = {
+  "Kneeling": ["kneeling"], "Half-Kneeling": ["kneeling"], "Tall-Kneeling": ["kneeling"], "Quadruped": ["kneeling"],
+  "Supine": ["lying-on-back"], "Prone": ["lying-face-down"],
+};
+
+/** All the facts about a version: those written on it and those its attributes imply. */
+export function factsOf(x) {
+  const facts = new Set(x.cautions?.flags || []);
+  for (const f of POSITION_FACTS[x.attributes?.position] || []) facts.add(f);
+  if (x.attributes?.load === "Overhead") facts.add("overhead");
+  if (x.attributes?.support === "Decline Bench") facts.add("inverted");
+  return [...facts];
+}
 
 /* Level is the skill and strength an exercise needs, whatever the weight
    (Glenn: "Skill and strength"). How hard it is on the body is told by its

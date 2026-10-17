@@ -136,6 +136,21 @@ const SCHEMA = [
     has INTEGER NOT NULL,
     source VARCHAR(16) NOT NULL
   )`,
+  /* A client's limitations, as their trainer wrote them (ideas audit, 22):
+     plain everyday words, never a diagnosis, tied to Coach IQ's conditions
+     and facts; seen by all of the client's trainers, deleted only by the one
+     who wrote it. conditions, facts and joints are JSON lists. */
+  `CREATE TABLE IF NOT EXISTS coach_limitations (
+    id VARCHAR(40) PRIMARY KEY,
+    client_id VARCHAR(64) NOT NULL,
+    text VARCHAR(300) NOT NULL,
+    conditions VARCHAR(400) NOT NULL DEFAULT '[]',
+    facts VARCHAR(400) NOT NULL DEFAULT '[]',
+    joints VARCHAR(200) NOT NULL DEFAULT '[]',
+    written_by VARCHAR(64) NOT NULL,
+    written_by_name VARCHAR(120) NOT NULL,
+    created_at VARCHAR(32) NOT NULL
+  )`,
 ];
 
 export async function migrate() {

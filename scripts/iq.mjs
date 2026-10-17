@@ -5,7 +5,7 @@ import { CATEGORIES } from "../server/equipment.js";
 import { isId } from "../server/ids.js";
 import {
   ORDER, WORDS, PATTERNS, PIECES, PURPOSES, ROLES, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES, ORIGINS, STATUSES,
-  masterName, bodyweightFamilies, equipmentFor, measureOf, perSideOf, nameKey,
+  masterName, bodyweightFamilies, equipmentFor, measureOf, perSideOf, nameKey, factsOf,
 } from "../server/coach-iq.js";
 
 /**
@@ -25,6 +25,8 @@ import {
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE = path.join(ROOT, "coach-iq", "exercises.json");
 const PAGE = path.join(ROOT, "coach-iq", "EXERCISES.md");
+const CONDITIONS = path.join(ROOT, "coach-iq", "conditions.json");
+const CONDITIONS_PAGE = path.join(ROOT, "coach-iq", "CONDITIONS.md");
 
 const KINDS = new Set(CATEGORIES.map(c => c.key));
 const KIND_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.key, c.label.replace(/^(A|An) /, "").replace(/^./, ch => ch.toUpperCase())]));
@@ -171,13 +173,55 @@ for (const [key, title] of Object.entries(PATTERNS)) {
     for (const x of list.filter(y => y.movement === fid)) {
       const common = x.aliases?.length ? `${x.name} (${x.aliases.join(", ")})` : x.name;
       const works = words(x.primary) + (x.secondary?.length ? `; also ${words(x.secondary)}` : "");
-      const care = [...(x.cautions?.joints || []), ...(x.cautions?.flags || [])].join(", ");
+      const care = [...(x.cautions?.joints || []), ...factsOf(x)].join(", ");
       lines.push(`| **${x.master}** | ${common} | ${works} | ${equipmentText(x)} | ${counted(x)} | ${x.level} | ${easier.get(x.id).map(masterOf).join("; ")} | ${(x.harder || []).map(masterOf).join("; ")} | ${care} |`);
     }
     lines.push("");
   }
 }
 const page = lines.join("\n");
+
+/* The conditions table (ideas audit, 21): checked, and written out with what
+   each condition does to the library, so a row can be judged before it is
+   approved. */
+const { conditions } = JSON.parse(readFileSync(CONDITIONS, "utf8"));
+const condKeys = new Set();
+for (const c of conditions) {
+  const wrong = (why) => problems.push(`condition ${c.label || c.key}: ${why}`);
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(c.key || "")) wrong("its key must be lowercase words joined by hyphens");
+  if (condKeys.has(c.key)) wrong("its key is used twice");
+  condKeys.add(c.key);
+  if (!c.label) wrong("it has no label");
+  for (const part of ["avoid", "modify"]) {
+    for (const f of c[part]?.facts || []) if (!FLAGS[f]) wrong(`unknown fact "${f}" under ${part}`);
+    for (const j of c[part]?.joints || []) if (!JOINTS.includes(j)) wrong(`unknown joint "${j}" under ${part}`);
+  }
+  if (!c.refer) wrong("it says nothing about when to refer on");
+  if (typeof c.clearance !== "boolean") wrong("it must say whether a doctor's clearance comes first");
+  if (!["draft", "reviewed"].includes(c.status)) wrong(`unknown status "${c.status}"`);
+  if (c.status === "reviewed" && !/^\d{4}-\d{2}-\d{2}$/.test(c.reviewed || "")) wrong("reviewed, but with no date");
+}
+const hits = (part, c) => list.filter(x => factsOf(x).some(f => c[part].facts.includes(f)) || (x.cautions?.joints || []).some(j => c[part].joints.includes(j)));
+const said = (part, c) => [...c[part].facts.map(f => `${f} (${FLAGS[f]})`), ...c[part].joints.map(j => `the ${j.replace("-", " ")}`)].join(", ") || "nothing";
+const condLines = [
+  "# Coach IQ: conditions",
+  "",
+  "Written by `npm run iq` from `conditions.json`. Do not edit this page.",
+  "",
+  `${conditions.length} conditions (${conditions.filter(c => c.status === "draft").length} drafts for Glenn to approve). For each: the facts and joints`,
+  "to **avoid** (those exercises are not offered), to **modify** (an easier or supported version is offered first),",
+  "whether a doctor's **clearance** comes first, and when to **refer** on. Never a diagnosis.",
+  "",
+];
+for (const c of conditions) {
+  const out = hits("avoid", c), changed = hits("modify", c).filter(x => !out.includes(x));
+  condLines.push(`## ${c.label}${c.status === "draft" ? " (draft)" : ""}`, "",
+    `- **Avoid:** ${said("avoid", c)}. ${out.length} of ${list.length} exercises left out.`,
+    `- **Modify:** ${said("modify", c)}. ${changed.length} more offered with care.`,
+    `- **Clearance first:** ${c.clearance ? "yes" : "no"}.`,
+    `- **Refer:** ${c.refer}`, "");
+}
+const condPage = condLines.join("\n");
 
 if (problems.length) {
   console.error(`exercises.json: ${problems.length} problem(s):\n  ${problems.join("\n  ")}`);
@@ -190,8 +234,15 @@ if (process.argv.includes("--check")) {
     console.error("coach-iq/EXERCISES.md is behind exercises.json. Run: npm run iq");
     process.exit(1);
   }
-  console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions, all consistent.`);
+  let hadConditions = "";
+  try { hadConditions = readFileSync(CONDITIONS_PAGE, "utf8"); } catch { /* missing */ }
+  if (hadConditions !== condPage) {
+    console.error("coach-iq/CONDITIONS.md is behind conditions.json. Run: npm run iq");
+    process.exit(1);
+  }
+  console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions, ${conditions.length} conditions, all consistent.`);
 } else {
   writeFileSync(PAGE, page);
+  writeFileSync(CONDITIONS_PAGE, condPage);
   console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions checked; EXERCISES.md written.`);
 }

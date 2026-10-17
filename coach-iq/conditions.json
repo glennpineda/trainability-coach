@@ -1,0 +1,131 @@
+{
+ "about": "Coach IQ's conditions table (ideas audit, 21): which facts about an exercise a condition rules out (avoid), which call for an easier or supported version (modify), and when the client should see a professional (refer). Drafted by Claude from general training guidance on 17 Oct 2026, for Glenn to approve row by row; the books refine it. Never a diagnosis: a trainer records a client's limitation in plain words and picks what it means here. 'facts' are the library's flags, 'joints' its joints.",
+ "conditions": [
+  {
+   "key": "pregnancy",
+   "label": "Pregnancy, after the first trimester",
+   "avoid": { "facts": ["lying-on-back", "abdominal-pressure", "breath-hold", "maximal-effort", "inverted"], "joints": [] },
+   "modify": { "facts": ["high-impact", "balance", "lying-face-down", "spinal-load"], "joints": [] },
+   "clearance": true,
+   "refer": "Bleeding, dizziness, chest pain, calf pain or swelling, fluid loss, or contractions: stop and see their midwife or doctor.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "postpartum",
+   "label": "Postpartum, the first months",
+   "avoid": { "facts": ["abdominal-pressure", "high-impact", "maximal-effort"], "joints": [] },
+   "modify": { "facts": ["breath-hold", "spinal-flexion", "spinal-load"], "joints": [] },
+   "clearance": true,
+   "refer": "Leaking, heaviness or pain in the pelvic floor, or a gap down the middle of the belly: a pelvic health physiotherapist.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "high-blood-pressure",
+   "label": "High blood pressure",
+   "avoid": { "facts": ["breath-hold", "maximal-effort", "inverted"], "joints": [] },
+   "modify": { "facts": ["overhead", "spinal-load"], "joints": [] },
+   "clearance": false,
+   "refer": "If it is not under control, or they feel dizzy, a headache comes on, or their chest hurts: stop and see their doctor.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "heart-condition",
+   "label": "A heart condition",
+   "avoid": { "facts": ["maximal-effort", "breath-hold"], "joints": [] },
+   "modify": { "facts": ["inverted", "high-impact"], "joints": [] },
+   "clearance": true,
+   "refer": "Chest pain, unusual breathlessness, a racing or irregular heartbeat, or feeling faint: stop at once and get medical help.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "osteoporosis",
+   "label": "Osteoporosis or low bone density",
+   "avoid": { "facts": ["spinal-flexion", "spinal-rotation"], "joints": [] },
+   "modify": { "facts": ["high-impact", "spinal-load", "floor-transfer"], "joints": [] },
+   "clearance": false,
+   "refer": "A fall, new back pain, or a loss of height: their doctor.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "knee-replacement",
+   "label": "A knee replacement",
+   "avoid": { "facts": ["kneeling", "high-impact"], "joints": [] },
+   "modify": { "facts": ["deep-hip-flexion"], "joints": ["knees"] },
+   "clearance": true,
+   "refer": "Swelling, heat or new pain in the knee: their surgeon or physiotherapist.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "hip-replacement",
+   "label": "A hip replacement",
+   "avoid": { "facts": ["deep-hip-flexion"], "joints": [] },
+   "modify": { "facts": ["high-impact", "kneeling", "balance"], "joints": ["hips"] },
+   "clearance": true,
+   "refer": "Their surgeon's precautions come first; new pain, clicking or a feeling of the hip giving way: their surgeon.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "vertigo",
+   "label": "Vertigo or dizziness",
+   "avoid": { "facts": ["head-movement", "inverted"], "joints": [] },
+   "modify": { "facts": ["balance", "floor-transfer", "lying-on-back"], "joints": [] },
+   "clearance": false,
+   "refer": "New or worsening dizziness, or with a headache, numbness or trouble speaking: medical help at once.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "falls-risk",
+   "label": "Poor balance or a risk of falling",
+   "avoid": { "facts": ["high-impact"], "joints": [] },
+   "modify": { "facts": ["balance", "floor-transfer", "head-movement"], "joints": [] },
+   "clearance": false,
+   "refer": "A recent fall, or falls becoming more frequent: their doctor.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "low-back-pain",
+   "label": "Low back pain",
+   "avoid": { "facts": [], "joints": [] },
+   "modify": { "facts": ["spinal-load", "spinal-flexion", "spinal-rotation", "high-impact"], "joints": ["lower-back"] },
+   "clearance": false,
+   "refer": "Pain down a leg, numbness, weakness, trouble with the bladder or bowels, or pain at night that won't settle: their doctor, at once for the bladder or bowels.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "shoulder-pain",
+   "label": "Shoulder pain",
+   "avoid": { "facts": [], "joints": [] },
+   "modify": { "facts": ["overhead"], "joints": ["shoulders"] },
+   "clearance": false,
+   "refer": "Pain at night, weakness lifting the arm, or after a fall: their doctor or a physiotherapist.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "knee-pain",
+   "label": "Knee pain",
+   "avoid": { "facts": [], "joints": [] },
+   "modify": { "facts": ["high-impact", "kneeling", "deep-hip-flexion"], "joints": ["knees"] },
+   "clearance": false,
+   "refer": "Swelling, locking, the knee giving way, or after a twist: a physiotherapist or their doctor.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "hand-arthritis",
+   "label": "Arthritis in the hands or wrists",
+   "avoid": { "facts": [], "joints": [] },
+   "modify": { "facts": ["grip"], "joints": ["wrists"] },
+   "clearance": false,
+   "refer": "A hot, swollen joint or a flare that doesn't settle: their doctor.",
+   "status": "draft", "reviewed": null
+  },
+  {
+   "key": "diabetes",
+   "label": "Diabetes",
+   "avoid": { "facts": [], "joints": [] },
+   "modify": { "facts": ["maximal-effort"], "joints": ["feet"] },
+   "clearance": false,
+   "refer": "Shaky, sweaty, confused or faint during a session (a low): stop, and follow their plan for a low. Sores or numbness in the feet: their doctor.",
+   "status": "draft", "reviewed": null
+  }
+ ]
+}

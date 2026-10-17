@@ -15,7 +15,7 @@ slow lowering is the program's to say, not the exercise's.
 Each family says what it is **for** (strength, power, muscle building, endurance, mobility, balance and fall prevention, conditioning, control) and where it usually sits in a session (warm-up, main lift, accessory, finisher, cool-down).
 
 **Care with** lists the joints an exercise loads and plain facts about it; which conditions call for care with which
-is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **spinal-load** (a heavy load on the spine), **spinal-flexion** (rounding the spine), **spinal-rotation** (twisting the spine), **overhead** (arms overhead), **lying-on-back** (lying on the back), **lying-face-down** (lying face down), **inverted** (head below the heart), **balance** (a balance challenge), **breath-hold** (heavy bracing that tempts holding the breath), **floor-transfer** (getting down to the floor and up), **grip** (a hard grip).
+is in Coach IQ's principles. The facts: **high-impact** (jumping or running), **spinal-load** (a heavy load on the spine), **spinal-flexion** (rounding the spine), **spinal-rotation** (twisting the spine), **overhead** (arms overhead), **lying-on-back** (lying on the back), **lying-face-down** (lying face down), **inverted** (head below the heart), **balance** (a balance challenge), **breath-hold** (heavy bracing that tempts holding the breath), **floor-transfer** (getting down to the floor and up), **grip** (a hard grip), **kneeling** (weight on a knee), **deep-hip-flexion** (the hip bent past 90 degrees or the legs crossed), **head-movement** (quick changes of head position), **maximal-effort** (all-out effort), **abdominal-pressure** (strong pressure in the belly).
 
 ## Squat
 
@@ -26,17 +26,17 @@ For strength, muscle building; usually main lift, accessory.
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Squat — Box, Bodyweight** | Box squat | quads, glutes; also hamstrings, core | Plyo box or step | reps | beginner | Sit to Stand — Bench | Squat — Bodyweight; Squat — Dumbbell, Goblet; Squat — Kettlebell, Goblet; Pistol Squat; Step-Down — Box, Bodyweight | knees |
-| **Squat — Suspension Trainer, Assisted** | Suspension-assisted squat (TRX squat) | quads, glutes; also core | Suspension trainer (TRX) | reps | beginner |  | Squat — Bodyweight | knees |
-| **Squat — Bodyweight** | Bodyweight squat (air squat) | quads, glutes; also hamstrings, core | None | reps | beginner | Sit to Stand — Bench; Wall Sit; Squat — Box, Bodyweight; Squat — Suspension Trainer, Assisted | Squat — Dumbbell, Goblet; Squat — Bodyweight, Jumping; Squat — Band; Squat — Kettlebell, Goblet; Squat — Landmine; Squat — Smith Machine; Squat — Barbell; Chair Pose | knees, hips |
-| **Squat — Band** | Banded squat | quads, glutes; also core | Resistance bands | reps | beginner | Squat — Bodyweight | Squat — Dumbbell, Goblet | knees |
-| **Squat — Dumbbell, Goblet** | Goblet squat | quads, glutes; also core, upper back | Dumbbells | reps | beginner | Squat — Box, Bodyweight; Squat — Bodyweight; Squat — Band | Squat — Dumbbell, At Sides; Squat — Barbell, Front-Rack; Squat — Landmine; Squat — Smith Machine; Squat — Barbell | knees, hips |
-| **Squat — Kettlebell, Goblet** | Kettlebell goblet squat | quads, glutes; also core, upper back | Kettlebells | reps | beginner | Squat — Box, Bodyweight; Squat — Bodyweight | Squat — Dumbbell, At Sides; Squat — Barbell, Front-Rack | knees, hips |
-| **Squat — Dumbbell, At Sides** | Dumbbell squat | quads, glutes; also hamstrings, core, forearms | Dumbbells | reps | beginner | Squat — Dumbbell, Goblet; Squat — Kettlebell, Goblet | Squat — Barbell | knees, hips, grip |
-| **Squat — Landmine** | Landmine squat | quads, glutes; also core | Landmine, Barbells and a rack | reps | beginner | Squat — Bodyweight; Squat — Dumbbell, Goblet | Squat — Barbell, Front-Rack | knees |
-| **Squat — Smith Machine** | Smith machine squat | quads, glutes; also hamstrings | Smith machine, Weight machines | reps | intermediate | Squat — Bodyweight; Squat — Dumbbell, Goblet; Leg Press | Squat — Barbell | knees, lower-back, spinal-load |
-| **Squat — Barbell** | Barbell back squat | quads, glutes; also hamstrings, core, lower back | Barbells and a rack | reps | intermediate | Squat — Bodyweight; Squat — Dumbbell, Goblet; Squat — Dumbbell, At Sides; Leg Press; Squat — Smith Machine | Squat — Barbell, Front-Rack | knees, hips, lower-back, spinal-load, breath-hold |
-| **Squat — Barbell, Front-Rack** | Barbell front squat | quads; also glutes, core, upper back | Barbells and a rack | reps | advanced | Squat — Dumbbell, Goblet; Squat — Kettlebell, Goblet; Squat — Landmine; Squat — Barbell |  | knees, wrists, lower-back, spinal-load, breath-hold |
-| **Squat — Bodyweight, Jumping** | Jump squat | quads, glutes; also calves | None | reps | intermediate | Squat — Bodyweight | Box Jump; Broad Jump | knees, ankles, high-impact |
+| **Squat — Suspension Trainer, Assisted** | Suspension-assisted squat (TRX squat) | quads, glutes; also core | Suspension trainer (TRX) | reps | beginner |  | Squat — Bodyweight | knees, deep-hip-flexion |
+| **Squat — Bodyweight** | Bodyweight squat (air squat) | quads, glutes; also hamstrings, core | None | reps | beginner | Sit to Stand — Bench; Wall Sit; Squat — Box, Bodyweight; Squat — Suspension Trainer, Assisted | Squat — Dumbbell, Goblet; Squat — Bodyweight, Jumping; Squat — Band; Squat — Kettlebell, Goblet; Squat — Landmine; Squat — Smith Machine; Squat — Barbell; Chair Pose | knees, hips, deep-hip-flexion |
+| **Squat — Band** | Banded squat | quads, glutes; also core | Resistance bands | reps | beginner | Squat — Bodyweight | Squat — Dumbbell, Goblet | knees, deep-hip-flexion |
+| **Squat — Dumbbell, Goblet** | Goblet squat | quads, glutes; also core, upper back | Dumbbells | reps | beginner | Squat — Box, Bodyweight; Squat — Bodyweight; Squat — Band | Squat — Dumbbell, At Sides; Squat — Barbell, Front-Rack; Squat — Landmine; Squat — Smith Machine; Squat — Barbell | knees, hips, deep-hip-flexion |
+| **Squat — Kettlebell, Goblet** | Kettlebell goblet squat | quads, glutes; also core, upper back | Kettlebells | reps | beginner | Squat — Box, Bodyweight; Squat — Bodyweight | Squat — Dumbbell, At Sides; Squat — Barbell, Front-Rack | knees, hips, deep-hip-flexion |
+| **Squat — Dumbbell, At Sides** | Dumbbell squat | quads, glutes; also hamstrings, core, forearms | Dumbbells | reps | beginner | Squat — Dumbbell, Goblet; Squat — Kettlebell, Goblet | Squat — Barbell | knees, hips, grip, deep-hip-flexion |
+| **Squat — Landmine** | Landmine squat | quads, glutes; also core | Landmine, Barbells and a rack | reps | beginner | Squat — Bodyweight; Squat — Dumbbell, Goblet | Squat — Barbell, Front-Rack | knees, deep-hip-flexion |
+| **Squat — Smith Machine** | Smith machine squat | quads, glutes; also hamstrings | Smith machine, Weight machines | reps | intermediate | Squat — Bodyweight; Squat — Dumbbell, Goblet; Leg Press | Squat — Barbell | knees, lower-back, spinal-load, deep-hip-flexion |
+| **Squat — Barbell** | Barbell back squat | quads, glutes; also hamstrings, core, lower back | Barbells and a rack | reps | intermediate | Squat — Bodyweight; Squat — Dumbbell, Goblet; Squat — Dumbbell, At Sides; Leg Press; Squat — Smith Machine | Squat — Barbell, Front-Rack | knees, hips, lower-back, spinal-load, breath-hold, deep-hip-flexion |
+| **Squat — Barbell, Front-Rack** | Barbell front squat | quads; also glutes, core, upper back | Barbells and a rack | reps | advanced | Squat — Dumbbell, Goblet; Squat — Kettlebell, Goblet; Squat — Landmine; Squat — Barbell |  | knees, wrists, lower-back, spinal-load, breath-hold, deep-hip-flexion |
+| **Squat — Bodyweight, Jumping** | Jump squat | quads, glutes; also calves | None | reps | intermediate | Squat — Bodyweight | Box Jump; Broad Jump | knees, ankles, high-impact, deep-hip-flexion |
 
 ### Sit to Stand
 
@@ -60,7 +60,7 @@ For strength, muscle building; usually main lift, accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Pistol Squat** | Pistol squat | quads, glutes; also core | None | reps, per side | advanced | Squat — Box, Bodyweight; Split Squat — Rear-Foot-Elevated, Bodyweight; Split Squat — Rear-Foot-Elevated, Dumbbell; Split Squat — Rear-Foot-Elevated, Kettlebell |  | knees, ankles, balance |
+| **Pistol Squat** | Pistol squat | quads, glutes; also core | None | reps, per side | advanced | Squat — Box, Bodyweight; Split Squat — Rear-Foot-Elevated, Bodyweight; Split Squat — Rear-Foot-Elevated, Dumbbell; Split Squat — Rear-Foot-Elevated, Kettlebell |  | knees, ankles, balance, deep-hip-flexion |
 
 ### Cossack Squat
 
@@ -68,9 +68,9 @@ For strength, muscle building; usually main lift, accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Cossack Squat — Bodyweight** | Cossack squat | quads, adductors, glutes; also hamstrings | None | reps, per side | intermediate | Lunge — Lateral, Bodyweight | Cossack Squat — Kettlebell; Cossack Squat — Dumbbell | knees, hips, balance |
-| **Cossack Squat — Kettlebell** | Kettlebell cossack squat | quads, adductors, glutes; also hamstrings | Kettlebells | reps, per side | intermediate | Cossack Squat — Bodyweight; Lunge — Lateral, Kettlebell |  | knees, hips, balance |
-| **Cossack Squat — Dumbbell** | Dumbbell cossack squat | quads, adductors, glutes; also hamstrings | Dumbbells | reps, per side | intermediate | Cossack Squat — Bodyweight; Lunge — Lateral, Dumbbell |  | knees, hips, balance |
+| **Cossack Squat — Bodyweight** | Cossack squat | quads, adductors, glutes; also hamstrings | None | reps, per side | intermediate | Lunge — Lateral, Bodyweight | Cossack Squat — Kettlebell; Cossack Squat — Dumbbell | knees, hips, balance, deep-hip-flexion |
+| **Cossack Squat — Kettlebell** | Kettlebell cossack squat | quads, adductors, glutes; also hamstrings | Kettlebells | reps, per side | intermediate | Cossack Squat — Bodyweight; Lunge — Lateral, Kettlebell |  | knees, hips, balance, deep-hip-flexion |
+| **Cossack Squat — Dumbbell** | Dumbbell cossack squat | quads, adductors, glutes; also hamstrings | Dumbbells | reps, per side | intermediate | Cossack Squat — Bodyweight; Lunge — Lateral, Dumbbell |  | knees, hips, balance, deep-hip-flexion |
 
 ### Leg Press
 
@@ -78,7 +78,7 @@ For strength, muscle building; usually main lift, accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Leg Press** | Leg press | quads, glutes; also hamstrings | Leg press machine, Weight machines | reps | beginner |  | Hack Squat; Squat — Barbell; Squat — Smith Machine | knees, lower-back |
+| **Leg Press** | Leg press | quads, glutes; also hamstrings | Leg press machine, Weight machines | reps | beginner |  | Hack Squat; Squat — Barbell; Squat — Smith Machine | knees, lower-back, deep-hip-flexion |
 
 ### Hack Squat
 
@@ -86,7 +86,7 @@ For strength, muscle building; usually main lift, accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Hack Squat** | Hack squat | quads; also glutes | Hack squat machine, Weight machines | reps | intermediate | Leg Press |  | knees, spinal-load |
+| **Hack Squat** | Hack squat | quads; also glutes | Hack squat machine, Weight machines | reps | intermediate | Leg Press |  | knees, spinal-load, deep-hip-flexion |
 
 ### Chair Pose (yoga)
 
@@ -292,7 +292,7 @@ For strength, muscle building; usually main lift, accessory.
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Overhead Press — Band** | Banded overhead press | front delts, side delts, triceps; also core | Resistance bands | reps | beginner | Overhead Press — Seated, Band | Overhead Press — Seated, Dumbbell | shoulders, overhead |
-| **Overhead Press — Half-Kneeling, Single-Arm, Landmine** | Landmine press (half-kneeling landmine press) | front delts, chest; also triceps, core | Landmine, Barbells and a rack | reps, per side | beginner |  | Overhead Press — Barbell; Overhead Press — Seated, Dumbbell | shoulders |
+| **Overhead Press — Half-Kneeling, Single-Arm, Landmine** | Landmine press (half-kneeling landmine press) | front delts, chest; also triceps, core | Landmine, Barbells and a rack | reps, per side | beginner |  | Overhead Press — Barbell; Overhead Press — Seated, Dumbbell | shoulders, kneeling |
 | **Overhead Press — Seated, Machine** | Machine shoulder press | front delts, side delts, triceps | Shoulder press machine, Weight machines | reps | beginner |  | Overhead Press — Seated, Dumbbell | shoulders, overhead |
 | **Overhead Press — Seated, Dumbbell** | Seated dumbbell shoulder press | front delts, side delts, triceps; also upper back | Dumbbells + Flat bench | reps | beginner | Overhead Press — Band; Overhead Press — Half-Kneeling, Single-Arm, Landmine; Overhead Press — Seated, Machine | Overhead Press — Barbell; Arnold Press — Seated, Dumbbell; Overhead Press — Single-Arm, Kettlebell | shoulders, overhead |
 | **Overhead Press — Single-Arm, Kettlebell** | Kettlebell press | front delts, side delts, triceps; also core | Kettlebells | reps, per side | intermediate | Overhead Press — Seated, Dumbbell |  | shoulders, wrists, overhead |
@@ -467,8 +467,8 @@ For strength, control, mobility; usually main lift, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Turkish Get-Up — Bodyweight** | Bodyweight Turkish get-up (naked get-up) | core, front delts; also glutes, obliques, rotator cuff | None | reps, per side | beginner |  | Turkish Get-Up — Kettlebell | shoulders, wrists, floor-transfer |
-| **Turkish Get-Up — Kettlebell** | Turkish get-up (TGU, get-up) | core, front delts; also glutes, obliques, rotator cuff | Kettlebells | reps, per side | intermediate | Turkish Get-Up — Bodyweight |  | shoulders, wrists, floor-transfer, overhead |
+| **Turkish Get-Up — Bodyweight** | Bodyweight Turkish get-up (naked get-up) | core, front delts; also glutes, obliques, rotator cuff | None | reps, per side | beginner |  | Turkish Get-Up — Kettlebell | shoulders, wrists, floor-transfer, head-movement |
+| **Turkish Get-Up — Kettlebell** | Turkish get-up (TGU, get-up) | core, front delts; also glutes, obliques, rotator cuff | Kettlebells | reps, per side | intermediate | Turkish Get-Up — Bodyweight |  | shoulders, wrists, floor-transfer, overhead, head-movement |
 
 ## Core: resisting arching
 
@@ -486,8 +486,8 @@ For control, strength; usually accessory, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Plank — Incline** | Incline plank | core; also front delts | Flat bench or Plyo box or step | time | beginner |  | Plank; Mountain Climber | shoulders |
-| **Plank** | Plank (front plank, forearm plank) | core; also front delts, glutes | None | time | beginner | Dead Bug; Bird Dog; Plank — Incline | Renegade Row — Alternating, Dumbbell; Rollout — Kneeling, Stability Ball; Stir the Pot — Stability Ball | shoulders, breath-hold, floor-transfer |
+| **Plank — Incline** | Incline plank | core; also front delts | Flat bench or Plyo box or step | time | beginner |  | Plank; Mountain Climber | shoulders, abdominal-pressure |
+| **Plank** | Plank (front plank, forearm plank) | core; also front delts, glutes | None | time | beginner | Dead Bug; Bird Dog; Plank — Incline | Renegade Row — Alternating, Dumbbell; Rollout — Kneeling, Stability Ball; Stir the Pot — Stability Ball | shoulders, breath-hold, floor-transfer, abdominal-pressure |
 
 ### Hollow Hold
 
@@ -495,7 +495,7 @@ For control, strength; usually accessory, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Hollow Hold** | Hollow hold | core; also hip flexors | None | time | intermediate | Dead Bug |  | lower-back, lying-on-back, floor-transfer |
+| **Hollow Hold** | Hollow hold | core; also hip flexors | None | time | intermediate | Dead Bug |  | lower-back, lying-on-back, floor-transfer, abdominal-pressure |
 
 ### Rollout
 
@@ -503,8 +503,8 @@ For control, strength; usually accessory, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Rollout — Kneeling, Stability Ball** | Stability ball rollout | core; also lats, front delts | Stability ball | reps | intermediate | Plank | Rollout — Kneeling, Ab Wheel | lower-back, shoulders, floor-transfer |
-| **Rollout — Kneeling, Ab Wheel** | Ab wheel rollout | core; also lats, front delts | Ab wheel, Small tools: an ab wheel, sliders, a jump rope, a foam roller | reps | advanced | Rollout — Kneeling, Stability Ball |  | lower-back, shoulders, floor-transfer |
+| **Rollout — Kneeling, Stability Ball** | Stability ball rollout | core; also lats, front delts | Stability ball | reps | intermediate | Plank | Rollout — Kneeling, Ab Wheel | lower-back, shoulders, floor-transfer, kneeling, abdominal-pressure |
+| **Rollout — Kneeling, Ab Wheel** | Ab wheel rollout | core; also lats, front delts | Ab wheel, Small tools: an ab wheel, sliders, a jump rope, a foam roller | reps | advanced | Rollout — Kneeling, Stability Ball |  | lower-back, shoulders, floor-transfer, kneeling, abdominal-pressure |
 
 ### Stir the Pot
 
@@ -512,7 +512,7 @@ For control, strength; usually accessory, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Stir the Pot — Stability Ball** | Stir the pot | core; also front delts | Stability ball | reps | advanced | Plank |  | lower-back, shoulders |
+| **Stir the Pot — Stability Ball** | Stir the pot | core; also front delts | Stability ball | reps | advanced | Plank |  | lower-back, shoulders, abdominal-pressure |
 
 ### Single-Leg Stretch (pilates)
 
@@ -520,7 +520,7 @@ For control, strength; usually accessory, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Single-Leg Stretch — Supine** | Single-leg stretch (Pilates single-leg stretch) | core; also hip flexors | None | reps, per side | intermediate | Dead Bug |  | neck, spinal-flexion, lying-on-back, floor-transfer |
+| **Single-Leg Stretch — Supine** | Single-leg stretch (Pilates single-leg stretch) | core; also hip flexors | None | reps, per side | intermediate | Dead Bug |  | neck, spinal-flexion, lying-on-back, floor-transfer, abdominal-pressure |
 
 ## Core: resisting twisting
 
@@ -530,7 +530,7 @@ For control; usually warm-up, accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Bird Dog** | Bird dog | core, lower back; also glutes, front delts | None | reps, per side | beginner |  | Back Extension — Prone; Plank; Bear Crawl; Swimming — Prone | wrists, floor-transfer |
+| **Bird Dog** | Bird dog | core, lower back; also glutes, front delts | None | reps, per side | beginner |  | Back Extension — Prone; Plank; Bear Crawl; Swimming — Prone | wrists, floor-transfer, kneeling |
 
 ### Anti-Rotation Press
 
@@ -547,7 +547,7 @@ For control, strength; usually accessory, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Swimming — Prone** | Pilates swimming | lower back, glutes; also upper back, core | None | time or reps | beginner | Bird Dog |  | lying-face-down, floor-transfer |
+| **Swimming — Prone** | Pilates swimming | lower back, glutes; also upper back, core | None | time or reps | beginner | Bird Dog |  | lying-face-down, floor-transfer, kneeling |
 
 ## Core: resisting bending sideways
 
@@ -557,7 +557,7 @@ For control, strength; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Side Plank — Kneeling** | Side plank from the knees | core, obliques; also glutes | None | time, per side | beginner |  | Side Plank | shoulders, floor-transfer |
+| **Side Plank — Kneeling** | Side plank from the knees | core, obliques; also glutes | None | time, per side | beginner |  | Side Plank | shoulders, floor-transfer, kneeling |
 | **Side Plank** | Side plank | core, obliques; also glutes, front delts | None | time, per side | intermediate | Side Plank — Kneeling | Copenhagen Plank — Bench | shoulders, floor-transfer |
 
 ### Copenhagen Plank
@@ -576,7 +576,7 @@ For strength, muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Crunch** | Crunch | core | None | reps | beginner |  | Reverse Crunch; Russian Twist — Bodyweight; Roll-Up — Supine | neck, spinal-flexion, lying-on-back, floor-transfer |
+| **Crunch** | Crunch | core | None | reps | beginner |  | Reverse Crunch; Russian Twist — Bodyweight; Roll-Up — Supine | neck, spinal-flexion, lying-on-back, floor-transfer, abdominal-pressure |
 
 ### Reverse Crunch
 
@@ -584,7 +584,7 @@ For strength, muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Reverse Crunch** | Reverse crunch | core; also hip flexors | None | reps | intermediate | Dead Bug; Crunch | Knee Raise — Hanging | lower-back, spinal-flexion, lying-on-back, floor-transfer |
+| **Reverse Crunch** | Reverse crunch | core; also hip flexors | None | reps | intermediate | Dead Bug; Crunch | Knee Raise — Hanging | lower-back, spinal-flexion, lying-on-back, floor-transfer, deep-hip-flexion, abdominal-pressure |
 
 ### Knee Raise
 
@@ -592,7 +592,7 @@ For strength, muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Knee Raise — Hanging** | Hanging knee raise | core, hip flexors; also forearms | Pull-up bar | reps | intermediate | Reverse Crunch | Leg Raise — Hanging | shoulders, grip, spinal-flexion |
+| **Knee Raise — Hanging** | Hanging knee raise | core, hip flexors; also forearms | Pull-up bar | reps | intermediate | Reverse Crunch | Leg Raise — Hanging | shoulders, grip, spinal-flexion, deep-hip-flexion, abdominal-pressure |
 
 ### Leg Raise
 
@@ -600,7 +600,7 @@ For strength, muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Leg Raise — Hanging** | Hanging leg raise | core, hip flexors; also forearms, lats | Pull-up bar | reps | advanced | Knee Raise — Hanging |  | shoulders, lower-back, grip, spinal-flexion |
+| **Leg Raise — Hanging** | Hanging leg raise | core, hip flexors; also forearms, lats | Pull-up bar | reps | advanced | Knee Raise — Hanging |  | shoulders, lower-back, grip, spinal-flexion, deep-hip-flexion, abdominal-pressure |
 
 ### The Hundred (pilates)
 
@@ -608,7 +608,7 @@ For strength, muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **The Hundred** | The hundred (Pilates) | core; also hip flexors | None | reps | intermediate | Dead Bug |  | neck, lower-back, spinal-flexion, lying-on-back, floor-transfer |
+| **The Hundred** | The hundred (Pilates) | core; also hip flexors | None | reps | intermediate | Dead Bug |  | neck, lower-back, spinal-flexion, lying-on-back, floor-transfer, deep-hip-flexion, abdominal-pressure |
 
 ### Roll-Up (pilates)
 
@@ -616,7 +616,7 @@ For strength, muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Roll-Up — Supine** | Roll-up (Pilates roll-up) | core; also hip flexors | None | reps | intermediate | Crunch |  | neck, lower-back, spinal-flexion, lying-on-back, floor-transfer |
+| **Roll-Up — Supine** | Roll-up (Pilates roll-up) | core; also hip flexors | None | reps | intermediate | Crunch |  | neck, lower-back, spinal-flexion, lying-on-back, floor-transfer, deep-hip-flexion, head-movement, abdominal-pressure |
 
 ## Rotation
 
@@ -635,9 +635,9 @@ For power, control; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Russian Twist — Bodyweight** | Russian twist | core, obliques | None | reps | intermediate | Crunch | Russian Twist — Medicine Ball; Russian Twist — Dumbbell | lower-back, spinal-flexion, spinal-rotation, floor-transfer |
-| **Russian Twist — Medicine Ball** | Medicine ball Russian twist | core, obliques | Medicine balls | reps | intermediate | Russian Twist — Bodyweight |  | lower-back, spinal-flexion, spinal-rotation, floor-transfer |
-| **Russian Twist — Dumbbell** | Dumbbell Russian twist | core, obliques | Dumbbells | reps | intermediate | Russian Twist — Bodyweight |  | lower-back, spinal-flexion, spinal-rotation, floor-transfer |
+| **Russian Twist — Bodyweight** | Russian twist | core, obliques | None | reps | intermediate | Crunch | Russian Twist — Medicine Ball; Russian Twist — Dumbbell | lower-back, spinal-flexion, spinal-rotation, floor-transfer, deep-hip-flexion, abdominal-pressure |
+| **Russian Twist — Medicine Ball** | Medicine ball Russian twist | core, obliques | Medicine balls | reps | intermediate | Russian Twist — Bodyweight |  | lower-back, spinal-flexion, spinal-rotation, floor-transfer, deep-hip-flexion, abdominal-pressure |
+| **Russian Twist — Dumbbell** | Dumbbell Russian twist | core, obliques | Dumbbells | reps | intermediate | Russian Twist — Bodyweight |  | lower-back, spinal-flexion, spinal-rotation, floor-transfer, deep-hip-flexion, abdominal-pressure |
 
 ### Rotational Throw
 
@@ -775,7 +775,7 @@ For muscle building; usually accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Nordic Curl — Kneeling** | Nordic hamstring curl | hamstrings | None | reps | advanced | Leg Curl — Prone, Machine; Leg Curl — Seated, Machine; Leg Curl — Supine, Stability Ball |  | knees, floor-transfer |
+| **Nordic Curl — Kneeling** | Nordic hamstring curl | hamstrings | None | reps | advanced | Leg Curl — Prone, Machine; Leg Curl — Seated, Machine; Leg Curl — Supine, Stability Ball |  | knees, floor-transfer, kneeling |
 
 ### Calf Raise
 
@@ -861,7 +861,7 @@ For control, muscle building; usually warm-up, accessory.
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Y-T-W Raise — Prone, Bodyweight** | Y-T-W raise (YTW) | upper back, rear delts; also rotator cuff, traps | None | reps | beginner |  | Y-T-W Raise — Prone, Incline Bench, Dumbbell | shoulders, lying-face-down, floor-transfer |
-| **Y-T-W Raise — Prone, Incline Bench, Dumbbell** | Incline dumbbell Y-T-W raise | upper back, rear delts; also rotator cuff, traps | Dumbbells + Adjustable bench (incline and decline) | reps | intermediate | Y-T-W Raise — Prone, Bodyweight |  | shoulders |
+| **Y-T-W Raise — Prone, Incline Bench, Dumbbell** | Incline dumbbell Y-T-W raise | upper back, rear delts; also rotator cuff, traps | Dumbbells + Adjustable bench (incline and decline) | reps | intermediate | Y-T-W Raise — Prone, Bodyweight |  | shoulders, lying-face-down |
 
 ### Tibialis Raise
 
@@ -1005,7 +1005,7 @@ For conditioning; usually finisher.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Burpee** | Burpee | quads, chest, core; also front delts, calves | None | reps | advanced | Step Jack; Jumping Jack; Mountain Climber |  | wrists, knees, shoulders, high-impact, floor-transfer |
+| **Burpee** | Burpee | quads, chest, core; also front delts, calves | None | reps | advanced | Step Jack; Jumping Jack; Mountain Climber |  | wrists, knees, shoulders, high-impact, floor-transfer, head-movement, maximal-effort |
 
 ### Shadow Boxing
 
@@ -1041,7 +1041,7 @@ For conditioning, endurance; usually finisher, warm-up.
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
 | **Cycling — Stationary Bike** | Stationary bike (exercise bike, spin bike) | quads; also glutes, calves | Stationary bike, Cardio machines | time or distance or calories | beginner |  | Cycling — Air Bike; Rowing Machine |  |
-| **Cycling — Air Bike** | Air bike (assault bike, fan bike) | quads, front delts; also glutes, chest, upper back | Air bike, Cardio machines | time or distance or calories | intermediate | Cycling — Stationary Bike |  |  |
+| **Cycling — Air Bike** | Air bike (assault bike, fan bike) | quads, front delts; also glutes, chest, upper back | Air bike, Cardio machines | time or distance or calories | intermediate | Cycling — Stationary Bike |  | maximal-effort |
 
 ### Elliptical
 
@@ -1081,7 +1081,7 @@ For power, conditioning; usually main lift, finisher.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Sprint** | Sprint (sprints) | glutes, hamstrings, quads; also calves | Room to move: walking lunges, sprints | distance or time | advanced | Run — Bodyweight |  | knees, ankles, hips, high-impact |
+| **Sprint** | Sprint (sprints) | glutes, hamstrings, quads; also calves | Room to move: walking lunges, sprints | distance or time | advanced | Run — Bodyweight |  | knees, ankles, hips, high-impact, maximal-effort |
 
 ### Shuttle Run
 
@@ -1089,7 +1089,7 @@ For conditioning, endurance; usually finisher, warm-up.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Shuttle Run** | Shuttle run (suicides) | quads, calves; also glutes, adductors | Room to move: walking lunges, sprints | distance or time | intermediate | Run — Bodyweight; Lateral Shuffle |  | knees, ankles, high-impact |
+| **Shuttle Run** | Shuttle run (suicides) | quads, calves; also glutes, adductors | Room to move: walking lunges, sprints | distance or time | intermediate | Run — Bodyweight; Lateral Shuffle |  | knees, ankles, high-impact, maximal-effort |
 
 ### Lateral Shuffle
 
@@ -1150,8 +1150,8 @@ For strength, balance and fall prevention; usually main lift, accessory.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Get Up From the Floor — Chair** | Getting up from the floor with a chair (floor transfer with support) | quads, glutes; also core, triceps | None | reps | beginner | Sit to Stand — Bench | Get Up From the Floor | knees, floor-transfer |
-| **Get Up From the Floor** | Getting up from the floor (floor transfer, floor to stand) | quads, glutes; also core | None | reps | intermediate | Get Up From the Floor — Chair |  | knees, floor-transfer, balance |
+| **Get Up From the Floor — Chair** | Getting up from the floor with a chair (floor transfer with support) | quads, glutes; also core, triceps | None | reps | beginner | Sit to Stand — Bench | Get Up From the Floor | knees, floor-transfer, kneeling, head-movement |
+| **Get Up From the Floor** | Getting up from the floor (floor transfer, floor to stand) | quads, glutes; also core | None | reps | intermediate | Get Up From the Floor — Chair |  | knees, floor-transfer, balance, kneeling, head-movement |
 
 ### Tree Pose (yoga)
 
@@ -1189,7 +1189,7 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Cat-Cow** | Cat-cow | lower back; also core | None | reps | beginner |  |  | wrists, floor-transfer |
+| **Cat-Cow** | Cat-cow | lower back; also core | None | reps | beginner |  |  | wrists, floor-transfer, kneeling |
 
 ### Child's Pose (yoga)
 
@@ -1197,7 +1197,7 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Child's Pose** | Child's pose | lower back, lats; also glutes | None | time | beginner |  | Downward Dog | knees, floor-transfer |
+| **Child's Pose** | Child's pose | lower back, lats; also glutes | None | time | beginner |  | Downward Dog | knees, floor-transfer, kneeling, deep-hip-flexion |
 
 ### Downward Dog (yoga)
 
@@ -1205,7 +1205,7 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Downward Dog** | Downward dog | hamstrings, calves, front delts | None | time | intermediate | Child's Pose |  | wrists, shoulders, inverted, floor-transfer |
+| **Downward Dog** | Downward dog | hamstrings, calves, front delts | None | time | intermediate | Child's Pose |  | wrists, shoulders, inverted, floor-transfer, head-movement |
 
 ### Hip Flexor Stretch
 
@@ -1213,7 +1213,7 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Hip Flexor Stretch — Half-Kneeling** | Half-kneeling hip flexor stretch | hip flexors; also quads | None | time, per side | beginner |  | World's Greatest Stretch | knees, floor-transfer |
+| **Hip Flexor Stretch — Half-Kneeling** | Half-kneeling hip flexor stretch | hip flexors; also quads | None | time, per side | beginner |  | World's Greatest Stretch | knees, floor-transfer, kneeling |
 
 ### World's Greatest Stretch
 
@@ -1229,7 +1229,7 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **90/90 Hip Switch** | 90/90 hip switch | glutes, hip flexors; also adductors | None | reps, per side | beginner |  |  | hips, knees, floor-transfer |
+| **90/90 Hip Switch** | 90/90 hip switch | glutes, hip flexors; also adductors | None | reps, per side | beginner |  |  | hips, knees, floor-transfer, deep-hip-flexion |
 
 ### Open Book
 
@@ -1253,7 +1253,7 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Ankle Mobilization — Half-Kneeling, Wall** | Knee-to-wall ankle mobilization | calves | None | reps, per side | beginner |  |  | ankles |
+| **Ankle Mobilization — Half-Kneeling, Wall** | Knee-to-wall ankle mobilization | calves | None | reps, per side | beginner |  |  | ankles, kneeling |
 
 ### Hamstring Stretch
 
@@ -1310,8 +1310,8 @@ For mobility; usually warm-up, cool-down.
 
 | Master name | Common name | Works | Equipment | Counted | Level | Easier | Harder | Care with |
 |---|---|---|---|---|---|---|---|---|
-| **Pigeon Stretch — Supine** | Figure-four stretch (supine pigeon) | glutes; also hip flexors | None | time, per side | beginner |  | Pigeon Stretch | hips, knees, lying-on-back, floor-transfer |
-| **Pigeon Stretch** | Pigeon pose (pigeon) | glutes, hip flexors | None | time, per side | intermediate | Pigeon Stretch — Supine |  | hips, knees, floor-transfer |
+| **Pigeon Stretch — Supine** | Figure-four stretch (supine pigeon) | glutes; also hip flexors | None | time, per side | beginner |  | Pigeon Stretch | hips, knees, lying-on-back, floor-transfer, deep-hip-flexion |
+| **Pigeon Stretch** | Pigeon pose (pigeon) | glutes, hip flexors | None | time, per side | intermediate | Pigeon Stretch — Supine |  | hips, knees, floor-transfer, deep-hip-flexion |
 
 ### Neck Stretch
 

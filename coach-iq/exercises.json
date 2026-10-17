@@ -1967,7 +1967,9 @@
     "joints": [
      "knees"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2008,7 +2010,9 @@
      "knees",
      "hips"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2038,7 +2042,9 @@
     "joints": [
      "knees"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2075,7 +2081,9 @@
      "knees",
      "hips"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2109,7 +2117,9 @@
      "knees",
      "hips"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2144,7 +2154,8 @@
      "hips"
     ],
     "flags": [
-     "grip"
+     "grip",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2176,7 +2187,9 @@
     "joints": [
      "knees"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2210,7 +2223,9 @@
      "knees",
      "lower-back"
     ],
-    "flags": []
+    "flags": [
+     "deep-hip-flexion"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -2243,7 +2258,8 @@
      "lower-back"
     ],
     "flags": [
-     "spinal-load"
+     "spinal-load",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2273,7 +2289,8 @@
      "knees"
     ],
     "flags": [
-     "spinal-load"
+     "spinal-load",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2310,7 +2327,8 @@
     ],
     "flags": [
      "spinal-load",
-     "breath-hold"
+     "breath-hold",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2345,7 +2363,8 @@
     ],
     "flags": [
      "spinal-load",
-     "breath-hold"
+     "breath-hold",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2380,7 +2399,8 @@
      "hips"
     ],
     "flags": [
-     "balance"
+     "balance",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2412,7 +2432,8 @@
      "hips"
     ],
     "flags": [
-     "balance"
+     "balance",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2444,7 +2465,8 @@
      "hips"
     ],
     "flags": [
-     "balance"
+     "balance",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -2475,7 +2497,8 @@
      "ankles"
     ],
     "flags": [
-     "balance"
+     "balance",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -6022,7 +6045,8 @@
      "wrists"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling"
     ]
    },
    "origin": "starter",
@@ -6054,7 +6078,9 @@
     "joints": [
      "shoulders"
     ],
-    "flags": []
+    "flags": [
+     "abdominal-pressure"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -6091,7 +6117,8 @@
     ],
     "flags": [
      "breath-hold",
-     "floor-transfer"
+     "floor-transfer",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6124,7 +6151,8 @@
      "shoulders"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling"
     ]
    },
    "origin": "starter",
@@ -6243,7 +6271,8 @@
     ],
     "flags": [
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6277,7 +6306,9 @@
      "shoulders"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6310,7 +6341,9 @@
      "shoulders"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6339,7 +6372,9 @@
      "lower-back",
      "shoulders"
     ],
-    "flags": []
+    "flags": [
+     "abdominal-pressure"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -6371,7 +6406,8 @@
     "flags": [
      "spinal-flexion",
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6404,7 +6440,9 @@
     "flags": [
      "spinal-flexion",
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6438,7 +6476,9 @@
     ],
     "flags": [
      "grip",
-     "spinal-flexion"
+     "spinal-flexion",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6472,7 +6512,9 @@
     ],
     "flags": [
      "grip",
-     "spinal-flexion"
+     "spinal-flexion",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6569,7 +6611,9 @@
     "flags": [
      "spinal-flexion",
      "spinal-rotation",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6599,7 +6643,9 @@
     "flags": [
      "spinal-flexion",
      "spinal-rotation",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6629,7 +6675,9 @@
     "flags": [
      "spinal-flexion",
      "spinal-rotation",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -6690,7 +6738,9 @@
     "flags": [
      "spinal-flexion",
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -7572,7 +7622,8 @@
      "knees"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling"
     ]
    },
    "origin": "starter",
@@ -8167,7 +8218,8 @@
      "ankles"
     ],
     "flags": [
-     "high-impact"
+     "high-impact",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -8528,7 +8580,9 @@
     ],
     "flags": [
      "high-impact",
-     "floor-transfer"
+     "floor-transfer",
+     "head-movement",
+     "maximal-effort"
     ]
    },
    "origin": "starter",
@@ -8719,7 +8773,9 @@
    "harder": [],
    "cautions": {
     "joints": [],
-    "flags": []
+    "flags": [
+     "maximal-effort"
+    ]
    },
    "origin": "starter",
    "status": "draft",
@@ -8881,7 +8937,8 @@
      "wrists"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling"
     ]
    },
    "origin": "starter",
@@ -8913,7 +8970,9 @@
      "knees"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -8944,7 +9003,8 @@
     ],
     "flags": [
      "inverted",
-     "floor-transfer"
+     "floor-transfer",
+     "head-movement"
     ]
    },
    "origin": "starter",
@@ -8976,7 +9036,8 @@
      "knees"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling"
     ]
    },
    "origin": "starter",
@@ -9039,7 +9100,8 @@
      "knees"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -9414,7 +9476,9 @@
      "knees"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling",
+     "head-movement"
     ]
    },
    "origin": "starter",
@@ -9448,7 +9512,9 @@
     ],
     "flags": [
      "floor-transfer",
-     "balance"
+     "balance",
+     "kneeling",
+     "head-movement"
     ]
    },
    "origin": "starter",
@@ -10148,7 +10214,8 @@
      "wrists"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "head-movement"
     ]
    },
    "origin": "starter",
@@ -10185,7 +10252,8 @@
     ],
     "flags": [
      "floor-transfer",
-     "overhead"
+     "overhead",
+     "head-movement"
     ]
    },
    "origin": "starter",
@@ -10894,7 +10962,8 @@
      "hips"
     ],
     "flags": [
-     "high-impact"
+     "high-impact",
+     "maximal-effort"
     ]
    },
    "origin": "starter",
@@ -10928,7 +10997,8 @@
      "ankles"
     ],
     "flags": [
-     "high-impact"
+     "high-impact",
+     "maximal-effort"
     ]
    },
    "origin": "starter",
@@ -11217,7 +11287,8 @@
     ],
     "flags": [
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -11248,7 +11319,8 @@
      "knees"
     ],
     "flags": [
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion"
     ]
    },
    "origin": "starter",
@@ -11311,7 +11383,10 @@
     "flags": [
      "spinal-flexion",
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "deep-hip-flexion",
+     "head-movement",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -11345,7 +11420,8 @@
     "flags": [
      "spinal-flexion",
      "lying-on-back",
-     "floor-transfer"
+     "floor-transfer",
+     "abdominal-pressure"
     ]
    },
    "origin": "starter",
@@ -11376,7 +11452,8 @@
     "joints": [],
     "flags": [
      "lying-face-down",
-     "floor-transfer"
+     "floor-transfer",
+     "kneeling"
     ]
    },
    "origin": "starter",

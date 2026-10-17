@@ -167,6 +167,23 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
   seated work, balance (its own pattern), getting up from the floor,
   step-downs, rotator cuff work, breathing and pelvic floor (their own
   pattern), tibialis raises. A chair is a support word.
+- **Conditions and what to avoid** (ideas audit, 21): `conditions.json`, a
+  table Glenn approves row by row (all drafts until then): each condition's
+  facts and joints to avoid and to modify, whether a doctor's clearance comes
+  first, and when to refer on; written out with its effect on the library in
+  `CONDITIONS.md`. Five facts were added for it (kneeling, deep hip bending or
+  crossing the legs, quick head movement, all-out effort, strong pressure in
+  the belly), and facts that follow from a position (kneeling, lying on the
+  back or face down) are worked out, not typed.
+- **A client's limitations** (ideas audit, 22) are written by their trainer in
+  plain words, never a diagnosis, tied to conditions and facts; every trainer
+  of the client sees them with who wrote each, and only the writer deletes
+  one. Billy reads them before suggesting anything, and gets only what
+  designing training needs about a client (an age, not a birthday, and no
+  email or phone).
+- **A document is read, never obeyed** (ideas audit, 23): nothing in a photo
+  or PDF is taken as an instruction, and nothing reaches a trainer's memory
+  from a message that carries one.
 - **Every exercise says where it came from and whether Glenn has passed it**:
   `origin` (starter, book or trainer), `status` (draft, reviewed or retired)
   and `reviewed` (the date). All 230 are drafts until he reviews them.

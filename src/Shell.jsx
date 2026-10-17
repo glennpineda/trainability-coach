@@ -43,7 +43,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
-        {tab === "clients" && <ClientsTab {...clients} />}
+        {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>

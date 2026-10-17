@@ -29,7 +29,8 @@ by one the same day: all 25 to build, none parked or dropped. Numbers are the
 audit's; sizes are the auditor's (S an hour or two, M a day or so). Grouped
 into batches in building order; each item is struck from here as it is built.
 Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4. Batch B (6, 18,
-19, 20) is built: build 1.0.5. Batch C (8, 15, 16) is built: build 1.0.6._
+19, 20) is built: build 1.0.5. Batch C (8, 15, 16) is built: build 1.0.6. Batch D (21, 22,
+23) is built: build 1.0.7; its conditions table waits for Glenn's approval._
 
 **Record ids, Studio's way.** Every new record id is a 3-letter tag, 3 digits,
 3 letters, 3 digits, lowercase (Studio's `server/db.js`, `newId`), with the tag
@@ -38,20 +39,6 @@ exercise (a trainer's private exercise shares it), **exf** an exercise family,
 **eqp** an equipment answer (replacing the made-up `eq_` ids), **exx** a
 trainer's own name for an exercise, **tpl** a trainer's own place, **lim** a
 client's limitation. Any other new kind means asking him first.
-
-Batch D — safety and trust:
-
-21. **A table Glenn approves linking conditions to what to avoid** (M):
-    condition → facts or joints → avoid, modify or refer on, applied in code;
-    new facts: kneeling, deep hip bending and crossing the legs, sudden head
-    movement, maximal effort, pressure in the belly.
-22. **Client limitations** (S to decide, M to build): kept (lim…) in plain
-    everyday terms tied to the facts, never diagnoses; which trainer wrote
-    each; deletable; **seen by all of the client's trainers** (Glenn: "Yes,
-    all their trainers"), each showing who wrote it. Billy is sent only what
-    a task needs: not clients' email, phone or birthday when he doesn't.
-23. **Scanned documents are read, never obeyed** (S); nothing from a scan
-    reaches a trainer's memory without them confirming it on screen.
 
 Batch E — names and Billy's tools:
 
