@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { ExternalLink, KeyRound, Loader2 } from "lucide-react";
+import { KeyRound, Loader2 } from "lucide-react";
 import { HexBackdrop } from "./HexBackdrop";
 import { CoachLockup } from "./CoachLockup";
-import { apiRequest, STUDIO_URL } from "../lib/api";
-import { VERSION_LABEL } from "../version";
+import { apiRequest } from "../lib/api";
+import { PhraseCycle, BELONGING } from "./PhraseCycle";
 import { InstallBanner } from "./InstallBanner";
 
 /* As on Studio's screen: a name typed without an @ is taken as a studio
@@ -83,8 +83,9 @@ export function LoginScreen({ onLogin, offline }) {
         <div className="cx-card p-7" style={{ borderRadius: 20, boxShadow: "0 18px 50px rgba(0,0,0,0.35)" }}>
           <div className="flex flex-col items-center mb-6">
             <CoachLockup style={{ width: 150, height: "auto" }} />
-            {/* Under the logo, as on Studio's sign-in screen. */}
-            <div className="text-sm mt-3" style={{ color: "var(--iron)" }}>Version {VERSION_LABEL}</div>
+            {/* Under the logo, as on Studio's sign-in screen: "You belong
+                here." in twenty languages (the version is in the account menu). */}
+            <div className="mt-3"><PhraseCycle phrases={BELONGING} label="You belong here." className="text-sm" /></div>
           </div>
 
           {offline && (
@@ -162,8 +163,7 @@ export function LoginScreen({ onLogin, offline }) {
           )}
         </div>
         <p className="text-center text-sm mt-5" style={{ color: "rgba(255,255,255,0.75)" }}>
-          Part of the Trainability family ·{" "}
-          <a href={STUDIO_URL} className="inline-flex items-center gap-1 font-medium" style={{ color: "#fff" }}><ExternalLink size={14} aria-hidden="true" /> Open Studio</a>
+          Part of the Trainability family
         </p>
       </div>
       <InstallBanner />

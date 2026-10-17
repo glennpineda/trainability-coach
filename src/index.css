@@ -328,9 +328,15 @@
   .cx-billy-icon:hover { background: var(--ghost-fill); color: var(--accent); }
   .cx-billy-icon:disabled { opacity: .45; }
 
+  /* "You belong here." under the logo on the sign-in screen, one language at
+     a time (auth/PhraseCycle.jsx): Studio's iw-cycle. */
+  @keyframes cx-cycle-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  .cx-cycle { animation: cx-cycle-in .55s ease-out both; }
+
   @media (prefers-reduced-motion: reduce) {
     .cx-appdrawer, .cx-badge, .cx-nav-lit, .cx-navbtn, .cx-card-press, .cx-billy-button { transition: none; }
     .cx-billy * { animation: none !important; }
+    .cx-cycle { animation: none; }
   }
 }
 

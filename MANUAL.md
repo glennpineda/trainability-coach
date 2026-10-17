@@ -111,9 +111,10 @@ by Studio, so:
 1. Open **trainabilitycoach.com** in your web browser.
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
-   **COACH** underneath. Under the logo is the version the app is on — for
-   example *Version 1.0.1 · Caesious* — and then *Use the same email and
-   password as Trainability Studio.*
+   **COACH** underneath. Under the logo, *You belong here.* changes language
+   every few seconds, as on Studio's sign-in screen; then *Use the same email
+   and password as Trainability Studio.* The version the app is on is in your
+   account menu once you are signed in (3.5).
 3. Tap the **Email** box and type your email address. With a
    @trainabilitystudio.com address you can type just the part before the @ —
    the app adds the rest when you log in.

@@ -36,6 +36,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   adds to the principles, topic by topic, asking about anything it shouldn't
   decide alone with a recommended answer. Nothing changes until it is
   accepted.
+- **"You belong here." on the sign-in screen**, in twenty languages under the
+  logo, as on Studio's; the Open Studio link is no longer at the foot of it
+  (Open Studio is still in your account menu).
 - **Add Coach to your Home Screen.** On a phone, a strip at the bottom of the
   sign-in screen offers it, as in Studio: the steps on an iPhone, the install
   box on Android. From its icon Coach opens full screen.
