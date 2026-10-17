@@ -2,8 +2,9 @@ import { readFileSync } from "node:fs";
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import {
-  FLAGS, LEVELS, MUSCLES, bodyweightFamilies, equipmentFor, factsOf, masterName, nameKey, PIECES,
+  FLAGS, LEVELS, MUSCLES, PURPOSES, ROLES, bodyweightFamilies, equipmentFor, factsOf, masterName, measureOf, nameKey, perSideOf, PIECES,
 } from "./coach-iq.js";
+import * as reviews from "./reviews.js";
 import { CATEGORIES, IMPLIES, isCategory } from "./equipment.js";
 
 /**
@@ -48,7 +49,7 @@ export function brief(x) {
     id: x.id, name: x.name, master: master(x), family: family.label, pattern: family.pattern, level: x.level,
     primary: x.primary, needs: eq.needs.map(labelOfKind), ...(eq.oneOf.length ? { needsOneOf: eq.oneOf.map(labelOfKind) } : {}),
     ...(x.piece ? { piece: PIECES[x.piece].label } : {}),
-    ...(x.status === "draft" ? { draft: true } : {}),
+    ...(reviews.statusOf("exercise", x.id, x.status) === "draft" ? { draft: true } : {}),
   };
 }
 const labelOfKind = (key) => CATEGORIES.find(c => c.key === key)?.label || key;
@@ -187,15 +188,15 @@ export async function archivePrivate(trainerId, id) {
 }
 
 /** Suggested to Glenn for the shared library, with a word on why; or taken back. */
-export async function suggestPrivate(trainerId, id, note) {
-  await run(`UPDATE coach_private_exercises SET suggested_at = ?, suggest_note = ? WHERE id = ? AND trainer_id = ?`,
-    [note === null ? null : now(), note === null ? "" : String(note).trim().slice(0, 300), id, trainerId]);
+export async function suggestPrivate(trainer, id, note) {
+  await run(`UPDATE coach_private_exercises SET suggested_at = ?, suggest_note = ?, suggested_by_name = ? WHERE id = ? AND trainer_id = ?`,
+    [note === null ? null : now(), note === null ? "" : String(note).trim().slice(0, 300), note === null ? "" : trainer.name || "", id, trainer.id]);
 }
 
 /** Every trainer's suggestions, for the Primary Master's review. */
 export async function suggestions() {
   const rows = await all(`SELECT * FROM coach_private_exercises WHERE suggested_at IS NOT NULL AND archived = 0 ORDER BY suggested_at`);
-  return rows.map(r => ({ ...shapePrivate(r), trainerId: r.trainer_id }));
+  return rows.map(r => ({ ...shapePrivate(r), by: r.suggested_by_name || "" }));
 }
 
 /* -------------------------------------------------------- Billy's tools */
@@ -326,5 +327,56 @@ export function alternativesFor(exerciseId, { place = null, level = null, rules 
     ...(place ? { place: place.name } : {}),
     alternatives: [...family.slice(0, 10), ...wider],
     leftOut: counts,
+  };
+}
+
+/* ------------------------------------------------------------- review */
+
+/* Easier steps are never stored (ideas audit, 11): a version is easier than
+   x when it lists x as harder. */
+const EASIER = new Map();
+for (const y of LIB.exercises) for (const h of y.harder || []) EASIER.set(h, [...(EASIER.get(h) || []), y.id]);
+
+const commonName = (id) => BY_ID.get(id)?.name || id;
+
+/**
+ * The review page's front (ideas audit, 24): every family with how many of
+ * its versions are approved and flagged, and the totals for the progress
+ * count. Retired versions are left out: there is nothing to pass.
+ */
+export function reviewSummary() {
+  const families = Object.entries(FAMILIES).map(([id, f]) => {
+    const versions = LIVE.filter(x => x.movement === id);
+    const marks = versions.map(x => reviews.markOf("exercise", x.id)?.mark);
+    return {
+      id, label: f.label, versions: versions.length,
+      approved: versions.filter(x => reviews.statusOf("exercise", x.id, x.status) === "reviewed").length,
+      flagged: marks.filter(m => m === "flag").length,
+    };
+  }).sort((a, b) => a.label.localeCompare(b.label));
+  const sum = (k) => families.reduce((n, f) => n + f[k], 0);
+  return { families, total: sum("versions"), approved: sum("approved"), flagged: sum("flagged") };
+}
+
+/** One family, as cards: everything about each version there is to pass. */
+export function reviewFamily(id) {
+  const f = FAMILIES[id];
+  if (!f) return null;
+  const words = (list, table) => (list || []).map(k => table[k] || k);
+  return {
+    id, label: f.label, pattern: f.pattern,
+    purposes: words(f.purposes, PURPOSES), roles: words(f.roles, ROLES),
+    versions: LIVE.filter(x => x.movement === id).map(x => {
+      const eq = equipmentFor(x, f);
+      return {
+        id: x.id, name: x.name, master: master(x), aliases: x.aliases || [], formerNames: x.formerNames || [],
+        level: x.level, primary: x.primary || [], secondary: x.secondary || [],
+        needs: eq.needs.map(labelOfKind), needsOneOf: eq.oneOf.map(labelOfKind), piece: x.piece ? PIECES[x.piece].label : null,
+        measure: measureOf(x, f), perSide: perSideOf(x, f),
+        facts: factsOf(x).map(k => FLAGS[k] || k), joints: x.cautions?.joints || [],
+        harder: (x.harder || []).map(commonName), easier: (EASIER.get(x.id) || []).map(commonName),
+        origin: x.origin, status: reviews.statusOf("exercise", x.id, x.status), mark: reviews.markOf("exercise", x.id),
+      };
+    }),
   };
 }

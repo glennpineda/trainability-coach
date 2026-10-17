@@ -43,4 +43,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Billy suggests from the library, already checked.** Ask him for
   something instead of an exercise and he offers only what fits the
   equipment at the place, the client's level and their limitations.
+- **Review Coach IQ,** for the Primary Master: the library one family at a
+  time and the conditions table, each to Approve or Flag with a comment, with
+  a count of how far through; trainers' suggestions for the library; and
+  Download reviews, to write the marks into the library itself.
 - **Light or dark,** following your phone or computer.

@@ -15,6 +15,8 @@ export const PREFIX = {
   ownName: "exx",        // a trainer's own name for an exercise
   place: "tpl",          // a trainer's own place: the studio, a client's home
   limitation: "lim",     // a client's limitation, as their trainer wrote it
+  /* Glenn's tag, 17 Oct 2026. */
+  review: "iqr",         // the Primary Master's mark on Coach IQ: approve or flag, with a comment
 };
 
 const DIGITS = "0123456789";

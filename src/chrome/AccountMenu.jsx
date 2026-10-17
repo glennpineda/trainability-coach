@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BookOpen, ChevronDown, Dumbbell, ExternalLink, LogOut } from "lucide-react";
+import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, ExternalLink, LogOut } from "lucide-react";
 import { STUDIO_URL } from "../lib/api";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
@@ -61,6 +61,13 @@ export function AccountMenu({ user, onLogout, onOpen }) {
             <button role="menuitem" type="button" onClick={() => { setOpen(false); onOpen("exercises"); }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
               <BookOpen size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> My exercises
+            </button>
+          )}
+          {/* Passing Coach IQ's library is the Primary Master's alone. */}
+          {onOpen && user.isPrimary && user.role === "master" && (
+            <button role="menuitem" type="button" onClick={() => { setOpen(false); onOpen("review"); }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
+              <ClipboardCheck size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Review Coach IQ
             </button>
           )}
           <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">

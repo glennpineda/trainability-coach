@@ -31,6 +31,7 @@ of the app gets its own chapter here as it arrives.
    - [3.6 Light or dark](#36-light-or-dark)
    - [3.7 My equipment](#37-my-equipment)
    - [3.8 My exercises](#38-my-exercises)
+   - [3.9 Reviewing Coach IQ (Primary Master only)](#39-reviewing-coach-iq-primary-master-only)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
    - [4.2 Reading the list](#42-reading-the-list)
@@ -286,6 +287,8 @@ so — see 2.4.
    - **My equipment** — what you have to train with (3.7).
    - **My exercises** — what you call your exercises, and exercises of your
      own (3.8).
+   - **Review Coach IQ** — only for the Primary Master: passing the library
+     (3.9).
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
@@ -363,6 +366,42 @@ names when he talks to you. Like your equipment, it is yours alone.
 A name Billy wrote down from something you told him says **Noted by Billy**.
 If you had tied that name to a different exercise yourself, he asks you
 before changing it.
+
+### 3.9 Reviewing Coach IQ (Primary Master only)
+
+Every exercise in the library and every line of the conditions table starts
+as a draft. The Primary Master passes each one here. Nobody else sees this
+page.
+
+1. Tap your photo or initials in the top right corner, then **Review Coach
+   IQ**.
+2. At the top are two counts with bars: how many exercises and how many
+   conditions are approved so far, and how many are flagged.
+3. Under **Exercises**, tap **Start with the first not done**, or choose a
+   family from the list. Each family's line in the list says how many of its
+   exercises are approved, such as *Squat — 3 of 12*.
+4. Each exercise is a card: its everyday name, its full name, what else it is
+   called, its level, what it works, what it needs, how it is counted, what it
+   involves, the joints it loads, and its easier and harder steps.
+   - If it is right, tap **Approve**. A comment is optional.
+   - If something is wrong, write what in the comment box, then tap **Flag**.
+     A flag needs a comment, so it can be fixed.
+   - The card then says **Approved** or **Flagged**, with the day. To change
+     your mind, tap **Take back**.
+5. When the family is done, tap **Next family**. It goes to the next family
+   with anything still to pass.
+6. **Conditions** works the same way, one card for each condition: what to
+   avoid, what to make easier or supported, whether a doctor's go-ahead comes
+   first, and when to refer on.
+7. **Suggestions** shows exercises trainers have suggested for everybody's
+   library, who suggested each, and why. To add one, tell Claude in a session.
+8. **Books** is where reading a book into Coach IQ will be done. Until then,
+   give Claude the PDF in a session.
+
+An approval counts straight away: Billy no longer calls that exercise or
+condition a draft. Now and then, tap **Download reviews** and give the file to
+Claude, who writes your marks into the library itself and works through the
+flags.
 
 <div style="page-break-after: always;"></div>
 
@@ -574,6 +613,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Active client** | A client on your list who you are still training. |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
+| **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews it (3.9). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |

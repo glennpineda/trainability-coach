@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
+import * as reviews from "./reviews.js";
 
 /**
  * A client's limitations, as their trainer wrote them (ideas audit, 22).
@@ -16,7 +17,17 @@ import { FLAGS, JOINTS } from "./coach-iq.js";
 
 /* Coach IQ's conditions table, read once. */
 const CONDITIONS = JSON.parse(readFileSync(new URL("../coach-iq/conditions.json", import.meta.url), "utf8")).conditions;
-export const conditionsList = () => CONDITIONS.map(c => ({ key: c.key, label: c.label, status: c.status }));
+export const conditionsList = () => CONDITIONS.map(c => ({ key: c.key, label: c.label, status: reviews.statusOf("condition", c.key, c.status) }));
+
+/** Every condition in full, for the review page: in words, with its mark. */
+export const conditionsForReview = () => CONDITIONS.map(c => ({
+  key: c.key, label: c.label,
+  avoid: { facts: c.avoid.facts.map(f => FLAGS[f] || f), joints: c.avoid.joints },
+  modify: { facts: c.modify.facts.map(f => FLAGS[f] || f), joints: c.modify.joints },
+  clearance: c.clearance, refer: c.refer,
+  status: reviews.statusOf("condition", c.key, c.status), mark: reviews.markOf("condition", c.key),
+}));
+export const isCondition = (key) => !!byKey[key];
 const byKey = Object.fromEntries(CONDITIONS.map(c => [c.key, c]));
 
 const parse = (s) => { try { const v = JSON.parse(s || "[]"); return Array.isArray(v) ? v : []; } catch { return []; } };
@@ -73,7 +84,7 @@ export function meaningOf(limitations) {
   const notes = limitations.map(l => ({
     said: l.text, by: l.writtenBy,
     conditions: l.conditions.map(k => byKey[k]).filter(Boolean).map(c =>
-      ({ condition: c.label, clearanceFirst: c.clearance, refer: c.refer, ...(c.status === "draft" ? { draft: true } : {}) })),
+      ({ condition: c.label, clearanceFirst: c.clearance, refer: c.refer, ...(reviews.statusOf("condition", c.key, c.status) === "draft" ? { draft: true } : {}) })),
   }));
   const words = (set) => [...set].map(f => FLAGS[f] || f);
   return {

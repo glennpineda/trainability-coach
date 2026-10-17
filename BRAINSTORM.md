@@ -22,31 +22,7 @@ finished stays here.
 
 _Things actually ready to do._
 
-### Coach IQ ideas audit: all 25 to build
-
-_From the ideas audit of Coach IQ (16 Oct 2026). Glenn went through all 25 one
-by one the same day: all 25 to build, none parked or dropped. Numbers are the
-audit's; sizes are the auditor's (S an hour or two, M a day or so). Grouped
-into batches in building order; each item is struck from here as it is built.
-Batch A (1, 2, 5, 7, 9 to 14, 17, 25) is built: build 1.0.4. Batch B (6, 18,
-19, 20) is built: build 1.0.5. Batch C (8, 15, 16) is built: build 1.0.6. Batch D (21, 22,
-23) is built: build 1.0.7; Glenn took its conditions table as drafted for now
-(17 Oct 2026). Batch E (3, 4) is built: build 1.0.8._
-
-**Record ids, Studio's way.** Every new record id is a 3-letter tag, 3 digits,
-3 letters, 3 digits, lowercase (Studio's `server/db.js`, `newId`), with the tag
-Glenn's to choose and never invented. His tags, 16 Oct 2026: **exr** an
-exercise (a trainer's private exercise shares it), **exf** an exercise family,
-**eqp** an equipment answer (replacing the made-up `eq_` ids), **exx** a
-trainer's own name for an exercise, **tpl** a trainer's own place, **lim** a
-client's limitation. Any other new kind means asking him first.
-
-Batch F — review:
-
-24. **A review page for the Primary Master** (M): one family at a time as
-    cards, Approve and Flag, a comment box, a progress count; feeds idea 10's
-    mark, and is the future home of the in-app book upload. Its records will
-    need tags from Glenn when it is built.
+Nothing waiting. The ideas audit's 25 are all built (builds 1.0.4 to 1.0.9).
 
 ## Found in testing
 

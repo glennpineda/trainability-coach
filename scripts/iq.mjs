@@ -32,6 +32,50 @@ const KINDS = new Set(CATEGORIES.map(c => c.key));
 const KIND_LABEL = Object.fromEntries(CATEGORIES.map(c => [c.key, c.label.replace(/^(A|An) /, "").replace(/^./, ch => ch.toUpperCase())]));
 const DISCIPLINES = ["yoga", "pilates"];
 
+/*
+ * `npm run iq -- --apply <file>`: the Primary Master's review marks,
+ * downloaded from the review page, written into the library's files (Glenn,
+ * 17 Oct 2026: "App now, file later"). An approval makes an exercise or a
+ * condition reviewed, dated the day it was approved; a flag puts one that
+ * was reviewed back to draft. Flags and comments are listed, to be acted on
+ * before the files are committed. Then the pages are written as usual.
+ */
+const applyAt = process.argv.indexOf("--apply");
+if (applyAt !== -1) {
+  const { marks = [] } = JSON.parse(readFileSync(process.argv[applyAt + 1], "utf8"));
+  const lib = JSON.parse(readFileSync(SOURCE, "utf8"));
+  const byId = new Map(lib.exercises.map(x => [x.id, x]));
+  let condText = readFileSync(CONDITIONS, "utf8");
+  const notes = [];
+  let changed = 0;
+  for (const m of marks) {
+    const day = String(m.at || "").slice(0, 10);
+    if (m.kind === "exercise") {
+      const x = byId.get(m.target);
+      if (!x) { notes.push(`${m.target}: not in the library any more`); continue; }
+      if (m.mark === "approve" && (x.status !== "reviewed" || x.reviewed !== day)) { x.status = "reviewed"; x.reviewed = day; changed++; }
+      if (m.mark === "flag" && x.status === "reviewed") { x.status = "draft"; x.reviewed = null; changed++; }
+      if (m.mark === "flag" || m.comment) notes.push(`${m.mark === "flag" ? "FLAGGED" : "approved"} ${x.name} (${x.id}): ${m.comment || "no comment"}`);
+    } else if (m.kind === "condition") {
+      /* conditions.json is laid out by hand, so only its status line changes. */
+      const at = condText.indexOf(`"key": "${m.target}"`);
+      if (at === -1) { notes.push(`condition ${m.target}: not in the table any more`); continue; }
+      const line = /"status": "[a-z]+", "reviewed": (null|"[0-9-]+")/.exec(condText.slice(at));
+      const status = m.mark === "approve" ? `"status": "reviewed", "reviewed": "${day}"` : m.mark === "flag" ? `"status": "draft", "reviewed": null` : line?.[0];
+      if (line && status !== line[0]) {
+        const from = at + line.index;
+        condText = condText.slice(0, from) + status + condText.slice(from + line[0].length);
+        changed++;
+      }
+      if (m.mark === "flag" || m.comment) notes.push(`${m.mark === "flag" ? "FLAGGED" : "approved"} condition ${m.target}: ${m.comment || "no comment"}`);
+    }
+  }
+  writeFileSync(SOURCE, JSON.stringify(lib, null, 1) + "\n");
+  writeFileSync(CONDITIONS, condText);
+  console.log(`Applied ${marks.length} mark(s): ${changed} change(s) to the library's files.`);
+  if (notes.length) console.log(`To act on before committing:\n  ${notes.join("\n  ")}`);
+}
+
 const { movements, exercises: list } = JSON.parse(readFileSync(SOURCE, "utf8"));
 const problems = [];
 

@@ -66,6 +66,24 @@ Decided (Glenn, 16 Oct 2026):
   equipment, level, easier and harder versions and cautions, reviewed by
   Glenn; the books add to it.
 
+## Reviewing it in the app (ideas audit, 24; built 17 Oct 2026)
+
+The Primary Master (Studio's `isPrimaryMaster`: `isPrimary` and a master)
+reviews Coach IQ on **Review Coach IQ**, from the account menu: each exercise
+version, one family at a time, and each condition, Approve or Flag with a
+comment (a flag must say what is wrong). Each mark is an `iqr…` record (Glenn's
+tag) in Coach's database, kept with the ones before it as its history.
+
+Glenn, 17 Oct 2026: **"App now, file later"**. A mark counts in the app at
+once: an approved exercise or condition is no longer a draft to Billy or on
+any screen, and a flag puts one that was reviewed back to draft. The files
+here catch up when the marks are downloaded (**Download reviews**) and
+written in: `npm run iq -- --apply <file>` sets `status` and `reviewed` on
+each approved exercise and condition, and lists the flags and comments to act
+on before committing. Trainers' suggested exercises are listed there too, for
+Glenn to have added in a session. The page's **Books** tab is where reading a
+book in the app will go.
+
 ## Reading a book in the app (asked 16 Oct 2026, not built)
 
 "When it comes to the Coach IQ \"knowledge upload\" of PDF, can we can that

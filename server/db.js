@@ -178,7 +178,25 @@ const SCHEMA = [
     note VARCHAR(300) NOT NULL DEFAULT '',
     suggested_at VARCHAR(32) NULL,
     suggest_note VARCHAR(300) NOT NULL DEFAULT '',
+    suggested_by_name VARCHAR(120) NOT NULL DEFAULT '',
     archived INTEGER NOT NULL DEFAULT 0,
+    created_at VARCHAR(32) NOT NULL
+  )`,
+  /* The Primary Master's review of Coach IQ (ideas audit, 24): a mark on one
+     exercise version (kind "exercise", an exr… id) or one condition (kind
+     "condition", its key). mark is "approve", "flag", or "clear" for taken
+     back. Every mark is kept; the latest for a target is the one that
+     counts, so the rows are its history too. In the app at once; written
+     into the library's files when they are next committed (Glenn, 17 Oct
+     2026: "App now, file later"). */
+  `CREATE TABLE IF NOT EXISTS coach_iq_reviews (
+    id VARCHAR(40) PRIMARY KEY,
+    kind VARCHAR(16) NOT NULL,
+    target VARCHAR(40) NOT NULL,
+    mark VARCHAR(16) NOT NULL,
+    comment VARCHAR(1000) NOT NULL DEFAULT '',
+    reviewer_id VARCHAR(64) NOT NULL,
+    reviewer_name VARCHAR(120) NOT NULL,
     created_at VARCHAR(32) NOT NULL
   )`,
 ];

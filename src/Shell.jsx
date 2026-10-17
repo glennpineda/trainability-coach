@@ -7,6 +7,7 @@ import { ComingSoonTab } from "./tabs/ComingSoonTab";
 import { ClientsTab } from "./tabs/ClientsTab";
 import { EquipmentTab } from "./tabs/EquipmentTab";
 import { ExercisesTab } from "./tabs/ExercisesTab";
+import { ReviewTab } from "./tabs/ReviewTab";
 import { useClients } from "./hooks/useClients";
 import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
@@ -17,10 +18,14 @@ const TABS = [
   { id: "programs", label: "Programs", icon: ClipboardList },
   { id: "messages", label: "Messages", icon: MessageCircle },
 ];
-/* Pages with no button on the bar, opened from elsewhere: My equipment and
-   My exercises, from the account menu. */
-const PAGES = ["equipment", "exercises"];
+/* Pages with no button on the bar, opened from elsewhere: My equipment, My
+   exercises and, for the Primary Master, Review Coach IQ, all from the
+   account menu. */
+const PAGES = ["equipment", "exercises", "review"];
 const KEY = "coach-tab";
+
+/* As Studio decides it (its isPrimaryMaster); the server checks again. */
+const isPrimaryMaster = (user) => !!user?.isPrimary && user?.role === "master";
 
 /* Signed in: the header, the tab on screen, and the bar along the bottom.
    The tab is remembered for this browser tab only, so a reload stays put.
@@ -47,6 +52,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}
+        {tab === "review" && isPrimaryMaster(user) && <ReviewTab onSignedOut={onSignedOut} />}
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
       <BottomNav tabs={TABS} activeTab={tab} onChange={open} />

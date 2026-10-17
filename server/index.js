@@ -7,6 +7,7 @@ import * as db from "./db.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
 import * as library from "./library.js";
+import * as reviews from "./reviews.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
 
 /**
@@ -332,14 +333,62 @@ app.put("/api/my-exercises/own/:id/suggestion", asSignedIn("PUT /my-exercises/ow
   if (!await ownExercise(res, user, req.params.id)) return;
   const note = req.body?.note ?? "";
   if (typeof note !== "string" || note.length > 300) return res.status(400).json({ error: "Keep the note short.", code: "invalid" });
-  await library.suggestPrivate(user.id, req.params.id, note);
+  await library.suggestPrivate(user, req.params.id, note);
   res.json(await library.exercisesOf(user.id));
 }));
 
 app.delete("/api/my-exercises/own/:id/suggestion", asSignedIn("DELETE /my-exercises/own/suggestion", async (req, res, user) => {
   if (!await ownExercise(res, user, req.params.id)) return;
-  await library.suggestPrivate(user.id, req.params.id, null);
+  await library.suggestPrivate(user, req.params.id, null);
   res.json(await library.exercisesOf(user.id));
+}));
+
+/* The review of Coach IQ (ideas audit, 24), for the Primary Master alone,
+   as Studio decides who that is (its isPrimaryMaster); anyone else is told
+   there is nothing here. */
+const asPrimary = (what, fn) => asSignedIn(what, async (req, res, user) => {
+  if (!(user?.isPrimary && user?.role === "master")) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.set("Cache-Control", "private, no-store");
+  await fn(req, res, user);
+});
+
+app.get("/api/coach-iq/review", asPrimary("GET /coach-iq/review", async (_req, res) => {
+  const conditions = limitations.conditionsForReview();
+  res.json({
+    ...library.reviewSummary(),
+    conditions: { total: conditions.length, approved: conditions.filter(c => c.status === "reviewed").length, flagged: conditions.filter(c => c.mark?.mark === "flag").length },
+    suggestions: await library.suggestions(),
+  });
+}));
+
+app.get("/api/coach-iq/review/families/:id", asPrimary("GET /coach-iq/review/families", async (req, res) => {
+  const family = library.reviewFamily(req.params.id);
+  if (!family) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.json(family);
+}));
+
+app.get("/api/coach-iq/review/conditions", asPrimary("GET /coach-iq/review/conditions", async (_req, res) => {
+  res.json({ conditions: limitations.conditionsForReview() });
+}));
+
+/* Approve, Flag or take back (mark "clear"), with a comment. */
+app.put("/api/coach-iq/review/:kind/:target", asPrimary("PUT /coach-iq/review", async (req, res, user) => {
+  const { kind, target } = req.params;
+  const known = kind === "exercise" ? library.isExercise(target) : kind === "condition" ? limitations.isCondition(target) : false;
+  if (!known) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const { mark, comment = "" } = req.body || {};
+  if (!reviews.MARKS.includes(mark)) return res.status(400).json({ error: "Approve, flag, or take it back.", code: "invalid" });
+  if (typeof comment !== "string" || comment.length > 1000) return res.status(400).json({ error: "Keep the comment under 1,000 characters.", code: "invalid" });
+  if (mark === "flag" && !comment.trim()) return res.status(400).json({ error: "Say what's wrong, so it can be fixed.", code: "invalid" });
+  await reviews.setMark(kind, target, { mark, comment }, user);
+  res.json({ mark: reviews.markOf(kind, target) });
+}));
+
+/* Every mark that counts, as a file to write into the library with
+   `npm run iq -- --apply <file>` (Glenn: "App now, file later"). */
+app.get("/api/coach-iq/review/export", asPrimary("GET /coach-iq/review/export", async (_req, res) => {
+  res.set("Content-Disposition", `attachment; filename="coach-iq-reviews-${new Date().toISOString().slice(0, 10)}.json"`);
+  res.json({ exported: new Date().toISOString(), marks: reviews.exportMarks() });
 }));
 
 /* Years from a YYYY-MM-DD birthday, or null. */
@@ -535,6 +584,7 @@ if (existsSync(DIST)) {
 try {
   await db.migrate();
   await equipment.adoptOldAnswers();
+  await reviews.load();
   console.log(`Database: ${db.describe()}`);
 } catch (err) {
   console.error(`Database not ready (${db.describe()}): ${err.message}`);
