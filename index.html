@@ -7,7 +7,11 @@
     <title>Trainability Coach</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- ?v=2 since the icon was redrawn like Studio's (build 1.0.19): a phone
+         keeps an icon by its address, so a new picture at the old address can
+         be passed over. Raise the number, here and in the manifest, whenever
+         the icon files change (as Studio does). -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
     <!-- The name under the icon when Coach is added to a home screen (Glenn,
          17 Oct 2026: "Coach" only): Safari reads the first, Android the
          manifest's short_name. The tab keeps the full title. Opened from the
@@ -17,7 +21,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="application-name" content="Coach" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href="/manifest.webmanifest?v=2" />
     <!-- Roboto, Studio's face throughout (its theme.jsx; Glenn, 3 Oct 2026). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
