@@ -22,7 +22,23 @@ finished stays here.
 
 _Things actually ready to do._
 
-Nothing waiting. The ideas audit's 25 are all built (builds 1.0.4 to 1.0.9).
+- **The library in the app, not the code** (Glenn, 17 Oct 2026: asked "So we
+  have to keep committing here to update the library? … Is there another way
+  so it's app controlled?", then "Yes, use LIH" for the tag). Coach IQ's
+  exercise library and conditions table move from `coach-iq/exercises.json`
+  and `conditions.json` into Coach's own database, loaded from the files once;
+  after that the database is the library and the files stay as the starting
+  copy and a backup. The review page becomes an editor too: fix a name, a
+  level or the muscles, add a version or a family, accept a trainer's
+  suggestion in one tap. Every change keeps who, when and what it was before,
+  as a library history record with Glenn's tag **lih** (in place of git's
+  history, so a mistake can be undone). The checks `npm run check-iq` runs now
+  run in the app on every save, and a change that would break the library is
+  refused with a plain reason. An Export button gives a snapshot file. Book
+  reading (Coach IQ's README, "Reading a book in the app") then writes here
+  too. A change to the library's *shape* (a new kind of attribute) is still
+  code; its content is not. Any other new kind of record still needs a tag
+  from Glenn.
 
 ## Found in testing
 

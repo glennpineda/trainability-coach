@@ -31,7 +31,7 @@ function LibraryPicker({ onPick, onCancel, busy }) {
       <div className="flex items-center gap-2">
         <input className="cx-input" autoFocus value={q} maxLength={120} placeholder="Search the library, such as goblet squat"
           aria-label="Search the library" onChange={e => setQ(e.target.value)} />
-        <button type="button" className="cx-billy-icon flex-none" style={{ width: 34, height: 34 }} onClick={onCancel} aria-label="Cancel" title="Cancel">
+        <button type="button" className="cx-icon-btn" onClick={onCancel} aria-label="Cancel" title="Cancel">
           <X size={18} aria-hidden="true" />
         </button>
       </div>
@@ -86,8 +86,8 @@ function OwnForm({ initial, data, busy, onSave, onCancel }) {
       <textarea className="cx-input text-sm" rows={2} maxLength={300} value={f.note} placeholder="How it's done (optional)"
         aria-label="How it's done" onChange={e => setF(d => ({ ...d, note: e.target.value }))} />
       <div className="flex gap-2">
-        <button type="submit" className="cx-btn-primary px-4 py-2 text-sm" disabled={busy || !f.name.trim()}>Save</button>
-        <button type="button" className="px-4 py-2 text-sm cx-link" onClick={onCancel}>Cancel</button>
+        <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy || !f.name.trim()} aria-busy={busy}>{busy ? "Saving…" : "Save"}</button>
+        <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
       </div>
     </form>
   );
@@ -156,7 +156,7 @@ export function ExercisesTab({ onSignedOut }) {
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-sm font-medium min-w-0 truncate">{n.name}</span>
                         <button type="button" disabled={busy} onClick={() => call("DELETE", `/my-exercises/names/${n.id}`)}
-                          className="cx-billy-icon flex-none" style={{ width: 30, height: 30 }} aria-label={`Remove ${n.name}`} title="Remove">
+                          className="cx-icon-btn" aria-label={`Remove ${n.name}`} title="Remove">
                           <Trash2 size={15} aria-hidden="true" />
                         </button>
                       </div>
@@ -168,12 +168,12 @@ export function ExercisesTab({ onSignedOut }) {
                         <OwnForm initial={{ name: n.name }} data={data} busy={busy} onCancel={() => setOpen(null)}
                           onSave={async (f) => done(await call("POST", "/my-exercises/own", { ...f, fromName: n.id }))} />
                       ) : (
-                        <div className="flex flex-wrap gap-3 mt-1 text-sm">
-                          <button type="button" className="inline-flex items-center gap-1 cx-link" onClick={() => setOpen({ id: n.id, mode: "find" })}>
-                            <Search size={14} aria-hidden="true" /> Find it in the library
+                        <div className="flex flex-wrap gap-4 mt-1 text-sm">
+                          <button type="button" className="cx-link" onClick={() => setOpen({ id: n.id, mode: "find" })}>
+                            <Search size={15} aria-hidden="true" /> Find it in the library
                           </button>
-                          <button type="button" className="inline-flex items-center gap-1 cx-link" onClick={() => setOpen({ id: n.id, mode: "own" })}>
-                            <Plus size={14} aria-hidden="true" /> Keep it as my own
+                          <button type="button" className="cx-link" onClick={() => setOpen({ id: n.id, mode: "own" })}>
+                            <Plus size={15} aria-hidden="true" /> Keep it as my own
                           </button>
                         </div>
                       )}
@@ -200,12 +200,12 @@ export function ExercisesTab({ onSignedOut }) {
                           </span>
                         </span>
                         <span className="flex items-center gap-1 flex-none">
-                          <button type="button" className="cx-billy-icon" style={{ width: 30, height: 30 }} onClick={() => setOpen({ id: n.id, mode: "find" })}
+                          <button type="button" className="cx-icon-btn" onClick={() => setOpen({ id: n.id, mode: "find" })}
                             aria-label={`Change what ${n.name} is`} title="Change">
                             <Link2 size={15} aria-hidden="true" />
                           </button>
                           <button type="button" disabled={busy} onClick={() => call("DELETE", `/my-exercises/names/${n.id}`)}
-                            className="cx-billy-icon" style={{ width: 30, height: 30 }} aria-label={`Remove ${n.name}`} title="Remove">
+                            className="cx-icon-btn" aria-label={`Remove ${n.name}`} title="Remove">
                             <Trash2 size={15} aria-hidden="true" />
                           </button>
                         </span>
@@ -231,7 +231,7 @@ export function ExercisesTab({ onSignedOut }) {
                       if (out) { setOpen(null); setNewName(""); }
                     }} />
                 ) : (
-                  <button type="submit" className="cx-btn-primary py-2 text-sm inline-flex items-center justify-center gap-2" disabled={busy || !newName.trim()}>
+                  <button type="submit" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy || !newName.trim()}>
                     <Search size={16} aria-hidden="true" /> Find what it is
                   </button>
                 )}
@@ -262,14 +262,14 @@ export function ExercisesTab({ onSignedOut }) {
                           {x.note && <span className="block text-xs mt-0.5" style={muted}>{x.note}</span>}
                         </button>
                         <button type="button" disabled={busy} onClick={() => call("DELETE", `/my-exercises/own/${x.id}`)}
-                          className="cx-billy-icon flex-none" style={{ width: 30, height: 30 }} aria-label={`Remove ${x.name}`} title="Remove">
+                          className="cx-icon-btn" aria-label={`Remove ${x.name}`} title="Remove">
                           <Trash2 size={15} aria-hidden="true" />
                         </button>
                       </div>
                       {x.suggestedAt ? (
                         <div className="flex flex-wrap items-center gap-3 mt-1 text-xs" style={muted}>
                           <span>Suggested for the library on {new Date(x.suggestedAt).toLocaleDateString()}</span>
-                          <button type="button" className="inline-flex items-center gap-1 cx-link" disabled={busy}
+                          <button type="button" className="cx-btn-row" disabled={busy}
                             onClick={() => call("DELETE", `/my-exercises/own/${x.id}/suggestion`)}>
                             <Undo2 size={12} aria-hidden="true" /> Take back
                           </button>
@@ -283,13 +283,13 @@ export function ExercisesTab({ onSignedOut }) {
                             placeholder="Why it belongs in the library (optional)" aria-label="Why it belongs in the library"
                             onChange={e => setSuggestNote(e.target.value)} />
                           <div className="flex gap-2">
-                            <button type="submit" className="cx-btn-primary px-4 py-2 text-sm" disabled={busy}>Suggest it</button>
-                            <button type="button" className="px-4 py-2 text-sm cx-link" onClick={() => setOpen(null)}>Cancel</button>
+                            <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy} aria-busy={busy}>{busy ? "Suggesting…" : "Suggest it"}</button>
+                            <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={() => setOpen(null)}>Cancel</button>
                           </div>
                         </form>
                       ) : (
-                        <button type="button" className="mt-1 inline-flex items-center gap-1 text-sm cx-link" onClick={() => setOpen({ id: x.id, mode: "suggest" })}>
-                          <Send size={14} aria-hidden="true" /> Suggest for the library
+                        <button type="button" className="mt-1 text-sm cx-link" onClick={() => setOpen({ id: x.id, mode: "suggest" })}>
+                          <Send size={15} aria-hidden="true" /> Suggest for the library
                         </button>
                       )}
                     </>
@@ -301,7 +301,7 @@ export function ExercisesTab({ onSignedOut }) {
               <OwnForm data={data} busy={busy} onCancel={() => setOpen(null)}
                 onSave={async (f) => done(await call("POST", "/my-exercises/own", f))} />
             ) : (
-              <button type="button" className="mt-2 inline-flex items-center gap-1 text-sm cx-link" onClick={() => setOpen({ id: "new", mode: "own" })}>
+              <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => setOpen({ id: "new", mode: "own" })}>
                 <Plus size={14} aria-hidden="true" /> Add an exercise of my own
               </button>
             )}

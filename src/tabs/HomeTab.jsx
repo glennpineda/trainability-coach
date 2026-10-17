@@ -28,7 +28,7 @@ export function HomeTab({ user, onOpen, clients }) {
       <section style={{ background: "linear-gradient(150deg, #007BA7 0%, #0B4F6E 100%)" }}>
         <div className="max-w-5xl mx-auto px-4 pt-7 pb-16">
           <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.8)" }}>{today}</p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mt-1">{greeting()}, {firstName(user.name)}</h1>
+          <h1 className="cx-display text-3xl sm:text-4xl text-white mt-1">{greeting()}, {firstName(user.name)}</h1>
         </div>
       </section>
 
@@ -39,7 +39,7 @@ export function HomeTab({ user, onOpen, clients }) {
             <div className="text-sm">
               <strong className="block">You&apos;re signed in with a temporary password.</strong>
               <span style={{ color: "var(--iron)" }}>Choose your own in </span>
-              <a href={STUDIO_URL} className="cx-link font-medium">Studio</a>
+              <a href={STUDIO_URL} className="font-semibold" style={{ color: "var(--accent)" }}>Studio</a>
               <span style={{ color: "var(--iron)" }}> — it will work here too.</span>
             </div>
           </div>

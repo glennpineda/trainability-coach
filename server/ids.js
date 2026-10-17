@@ -17,6 +17,7 @@ export const PREFIX = {
   limitation: "lim",     // a client's limitation, as their trainer wrote it
   /* Glenn's tag, 17 Oct 2026. */
   review: "iqr",         // the Primary Master's mark on Coach IQ: approve or flag, with a comment
+  libraryHistory: "lih", // one change to the library, once it lives in the app (Next up; not used yet)
 };
 
 const DIGITS = "0123456789";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { KeyRound, Loader2 } from "lucide-react";
+import { ExternalLink, KeyRound, Loader2 } from "lucide-react";
 import { HexBackdrop } from "./HexBackdrop";
 import { CoachLockup } from "./CoachLockup";
 import { apiRequest, STUDIO_URL } from "../lib/api";
@@ -141,10 +141,10 @@ export function LoginScreen({ onLogin, offline }) {
                   <Field label="Email">
                     <input type="email" className="cx-input" value={email} onChange={e => setEmail(e.target.value)} autoFocus autoComplete="username" />
                   </Field>
-                  <button type="submit" disabled={!email.trim() || busy} className="cx-btn-primary w-full py-2.5 text-base">
-                    {busy ? "Sending…" : "Send temporary password"}
+                  <button type="submit" disabled={!email.trim() || busy} aria-busy={busy} className="cx-btn-primary w-full py-2.5 text-base flex items-center justify-center gap-2">
+                    {busy ? <><Loader2 size={18} className="animate-spin" aria-hidden="true" /> Sending…</> : "Send temporary password"}
                   </button>
-                  <button type="button" onClick={backToLogin} className="w-full text-sm" style={{ color: "var(--iron)" }}>Back to login</button>
+                  <button type="button" onClick={backToLogin} className="cx-quiet w-full text-sm">Back to login</button>
                 </>
               ) : (
                 <>
@@ -154,7 +154,7 @@ export function LoginScreen({ onLogin, offline }) {
                       It may take a minute to arrive. Check the junk folder before trying again — each attempt replaces the last password sent.
                     </div>
                   )}
-                  <button type="button" onClick={backToLogin} className="cx-btn-primary w-full py-2.5 text-base">Back to login</button>
+                  <button type="button" onClick={backToLogin} className="cx-quiet w-full py-2 text-sm">Back to login</button>
                 </>
               )}
             </form>
@@ -162,7 +162,7 @@ export function LoginScreen({ onLogin, offline }) {
         </div>
         <p className="text-center text-sm mt-5" style={{ color: "rgba(255,255,255,0.75)" }}>
           Part of the Trainability family ·{" "}
-          <a href={STUDIO_URL} className="underline underline-offset-2" style={{ color: "#fff" }}>Open Studio</a>
+          <a href={STUDIO_URL} className="inline-flex items-center gap-1 font-medium" style={{ color: "#fff" }}><ExternalLink size={14} aria-hidden="true" /> Open Studio</a>
         </p>
       </div>
     </div>

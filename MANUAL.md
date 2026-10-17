@@ -541,8 +541,9 @@ anything for that client.
 
 Every trainer who trains this client sees their limitations, with who wrote
 each one. Write what it means for training, not a diagnosis. Only the
-trainer who wrote a limitation can delete it: tap the bin beside it, then
-**Delete** (or **Keep** to leave it).
+trainer who wrote a limitation can delete it: tap the bin beside it. A pale
+red box asks *Delete this limitation?*; tap **Delete**, or **Keep it** to
+leave it.
 
 <div style="page-break-after: always;"></div>
 

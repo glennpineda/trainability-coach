@@ -133,7 +133,7 @@ export function ClientsTab({ clients, error, retry, onSignedOut }) {
         {error ? (
           <div className="p-6 text-center">
             <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p>
-            <button onClick={retry} className="cx-btn-primary mt-3 px-4 py-2 text-sm inline-flex items-center gap-2">
+            <button onClick={retry} className="cx-btn-row mt-3">
               <RefreshCw size={16} aria-hidden="true" /> Try again
             </button>
           </div>

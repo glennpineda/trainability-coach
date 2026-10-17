@@ -38,10 +38,10 @@ function NameBox({ initial = "", placeholder, onSave, onCancel, busy }) {
     <form className="flex items-center gap-2" onSubmit={(e) => { e.preventDefault(); if (name.trim()) onSave(name.trim()); }}>
       <input className="cx-input" style={{ padding: "0.4rem 0.6rem" }} autoFocus value={name} maxLength={80}
         placeholder={placeholder} aria-label="Name of the place" onChange={e => setName(e.target.value)} />
-      <button type="submit" className="cx-billy-icon" style={{ width: 34, height: 34 }} disabled={busy || !name.trim()} aria-label="Save" title="Save">
+      <button type="submit" className="cx-icon-btn" disabled={busy || !name.trim()} aria-label="Save" title="Save">
         <Check size={18} aria-hidden="true" />
       </button>
-      <button type="button" className="cx-billy-icon" style={{ width: 34, height: 34 }} onClick={onCancel} aria-label="Cancel" title="Cancel">
+      <button type="button" className="cx-icon-btn" onClick={onCancel} aria-label="Cancel" title="Cancel">
         <X size={18} aria-hidden="true" />
       </button>
     </form>
@@ -129,20 +129,20 @@ export function EquipmentTab({ onSignedOut }) {
                   }} />
               ) : (
                 <button type="button" onClick={() => setNaming("new")} disabled={busy}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm cx-link">
-                  <Plus size={14} aria-hidden="true" /> Add a place
+                  className="px-2 py-1.5 text-sm cx-link">
+                  <Plus size={15} aria-hidden="true" /> Add a place
                 </button>
               )}
             </div>
             {naming !== place.id && (
-              <div className="flex items-center gap-3 mt-2 text-xs" style={{ color: "var(--iron)" }}>
-                <button type="button" className="inline-flex items-center gap-1 cx-link" onClick={() => setNaming(place.id)}>
-                  <Pencil size={12} aria-hidden="true" /> Rename
+              <div className="flex flex-wrap items-center gap-4 mt-3">
+                <button type="button" className="text-sm cx-link" onClick={() => setNaming(place.id)}>
+                  <Pencil size={15} aria-hidden="true" /> Rename
                 </button>
                 {data.places.length > 1 && (
-                  <button type="button" className="inline-flex items-center gap-1 cx-link" disabled={busy}
+                  <button type="button" className="cx-btn-row" disabled={busy}
                     onClick={async () => { if (await call("DELETE", `/places/${place.id}`)) setPlaceId(null); }}>
-                    <Trash2 size={12} aria-hidden="true" /> Remove this place
+                    <Trash2 size={15} aria-hidden="true" /> Remove this place
                   </button>
                 )}
               </div>
@@ -191,7 +191,7 @@ export function EquipmentTab({ onSignedOut }) {
                               ? call("DELETE", `/equipment/items/${it.id}`)
                               : call("POST", `/places/${place.id}/items`, { name: it.name, category: it.category, has, note: it.note })} />
                           <button type="button" disabled={busy} onClick={() => call("DELETE", `/equipment/items/${it.id}`)}
-                            className="cx-billy-icon" style={{ width: 34, height: 34 }} aria-label={`Remove ${it.name}`} title="Remove">
+                            className="cx-icon-btn" aria-label={`Remove ${it.name}`} title="Remove">
                             <Trash2 size={16} aria-hidden="true" />
                           </button>
                         </span>
@@ -223,9 +223,10 @@ export function EquipmentTab({ onSignedOut }) {
                   <span className="text-sm">Do you have it?</span>
                   <YesNo value={draft.has} label="Do you have it?" onChange={(has) => setDraft(d => ({ ...d, has: has ?? d.has }))} />
                 </div>
-                <button type="submit" className="cx-btn-primary py-2 text-sm inline-flex items-center justify-center gap-2"
+                {/* Adding to a list: a secondary button inside its card (Studio). */}
+                <button type="submit" className="cx-btn-quiet w-full py-2 text-sm"
                   disabled={busy || !draft.name.trim() || (!known && !draft.category)}>
-                  <Plus size={16} aria-hidden="true" /> Add
+                  <Plus size={14} aria-hidden="true" /> Add
                 </button>
               </form>
             </section>

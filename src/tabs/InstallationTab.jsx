@@ -103,12 +103,12 @@ export function InstallationTab({ onSignedOut }) {
                 {error && <p style={{ color: "var(--ember)" }}>{error}</p>}
                 {done && <p style={{ color: "var(--cerulean)" }}>{done}</p>}
                 <div className="flex flex-wrap gap-2">
-                  <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-2"
-                    disabled={busy || !typed || unchanged} onClick={() => save(typed)}>
-                    {busy && <Loader2 size={15} className="animate-spin" aria-hidden="true" />} Save folder
+                  <button type="button" className="cx-btn-primary px-5 py-2 text-sm inline-flex items-center gap-2"
+                    disabled={busy || !typed || unchanged} aria-busy={busy} onClick={() => save(typed)}>
+                    {busy ? <><Loader2 size={15} className="animate-spin" aria-hidden="true" /> Saving…</> : "Save folder"}
                   </button>
                   {state.chosen && (
-                    <button type="button" className="px-4 py-2 text-sm cx-link" disabled={busy} onClick={() => save("")}>
+                    <button type="button" className="cx-btn-quiet px-4 py-2 text-sm" disabled={busy} onClick={() => save("")}>
                       Let the app choose
                     </button>
                   )}

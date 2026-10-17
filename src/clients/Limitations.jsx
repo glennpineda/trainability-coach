@@ -79,19 +79,26 @@ export function Limitations({ clientId, onSignedOut }) {
                     )}
                     <span className="block text-xs mt-1" style={{ color: "var(--iron)" }}>Written by {l.mine ? "you" : l.writtenBy}</span>
                   </span>
-                  {l.mine && (deleting === l.id ? (
-                    <span className="flex items-center gap-1 flex-none text-xs">
-                      <button type="button" className="cx-link" style={{ color: "var(--ember)" }} disabled={busy}
-                        onClick={async () => { if (await send("DELETE", `/limitations/${l.id}`)) setDeleting(null); }}>Delete</button>
-                      <button type="button" className="cx-link" onClick={() => setDeleting(null)}>Keep</button>
-                    </span>
-                  ) : (
-                    <button type="button" className="cx-billy-icon flex-none" style={{ width: 30, height: 30 }} aria-label="Delete this limitation"
+                  {l.mine && deleting !== l.id && (
+                    <button type="button" className="cx-icon-btn" aria-label="Delete this limitation"
                       title="Delete" onClick={() => setDeleting(l.id)}>
                       <Trash2 size={15} aria-hidden="true" />
                     </button>
-                  ))}
+                  )}
                 </div>
+                {/* An inline confirmation, Studio's: a pale red box, the red
+                    button and a quiet way out, in ink-soft (iron on the pale
+                    red is too faint to read). */}
+                {deleting === l.id && (
+                  <div className="mt-2 rounded-lg p-2.5 flex flex-wrap items-center gap-2" style={{ background: "var(--ember-soft)", color: "var(--ink-soft)" }}>
+                    <span className="text-sm flex-1 min-w-[10rem]">Delete this limitation? Its trainers will no longer see it.</span>
+                    <span className="flex items-center gap-1">
+                      <button type="button" className="cx-btn-ember px-3 py-1.5 text-sm" disabled={busy} aria-busy={busy}
+                        onClick={async () => { if (await send("DELETE", `/limitations/${l.id}`)) setDeleting(null); }}>{busy ? "Deleting…" : "Delete"}</button>
+                      <button type="button" className="px-3 py-1.5 text-sm" style={{ color: "var(--ink-soft)" }} onClick={() => setDeleting(null)}>Keep it</button>
+                    </span>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -116,12 +123,12 @@ export function Limitations({ clientId, onSignedOut }) {
                 Every trainer of this client sees this. Write what it means for training, not a diagnosis.
               </p>
               <div className="flex gap-2">
-                <button type="submit" className="cx-btn-primary px-4 py-2 text-sm" disabled={busy || !draft.text.trim()}>Save</button>
-                <button type="button" className="px-4 py-2 text-sm cx-link" onClick={() => setAdding(false)}>Cancel</button>
+                <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy || !draft.text.trim()} aria-busy={busy}>{busy ? "Saving…" : "Save"}</button>
+                <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={() => setAdding(false)}>Cancel</button>
               </div>
             </form>
           ) : (
-            <button type="button" className="mt-2 inline-flex items-center gap-1 text-sm cx-link" onClick={() => setAdding(true)}>
+            <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => setAdding(true)}>
               <Plus size={14} aria-hidden="true" /> Add a limitation
             </button>
           )}

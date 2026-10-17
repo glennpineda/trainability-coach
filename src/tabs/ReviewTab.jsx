@@ -40,9 +40,9 @@ function Marker({ mark, onMark, busy }) {
           <span style={muted}> on {new Date(mark.at).toLocaleDateString()}</span>
           {mark.comment && <span className="block mt-0.5">“{mark.comment}”</span>}
         </span>
-        <button type="button" className="inline-flex items-center gap-1 text-sm cx-link" disabled={busy}
+        <button type="button" className="cx-btn-row" disabled={busy}
           onClick={() => onMark({ mark: "clear" })}>
-          <Undo2 size={14} aria-hidden="true" /> Take back
+          <Undo2 size={15} aria-hidden="true" /> Take back
         </button>
       </div>
     );
@@ -52,13 +52,15 @@ function Marker({ mark, onMark, busy }) {
       <textarea className="cx-input text-sm" rows={2} maxLength={1000} value={comment} aria-label="Comment"
         placeholder={needsWords ? "Say what's wrong, so it can be fixed" : "A comment (needed to flag)"}
         onChange={e => { setComment(e.target.value); setNeedsWords(false); }} />
+      {/* Row buttons, not primaries: every card on the screen has a pair, and a
+          screen has one primary at most (Studio's CONTRIBUTING). Side by side
+          they share the card's width. */}
       <div className="flex gap-2">
-        <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-1.5" disabled={busy}
+        <button type="button" className="cx-btn-row flex-1" disabled={busy}
           onClick={() => onMark({ mark: "approve", comment })}>
           <Check size={16} aria-hidden="true" /> Approve
         </button>
-        <button type="button" className="px-4 py-2 text-sm rounded-[10px] border inline-flex items-center gap-1.5" disabled={busy}
-          style={{ borderColor: "var(--ember)", color: "var(--ember)" }}
+        <button type="button" className="cx-btn-row flex-1" disabled={busy}
           onClick={() => (comment.trim() ? onMark({ mark: "flag", comment }) : setNeedsWords(true))}>
           <Flag size={16} aria-hidden="true" /> Flag
         </button>
@@ -137,8 +139,8 @@ export function ReviewTab({ onSignedOut }) {
           <section className="cx-card p-4 mb-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto] items-center">
             <Progress label="exercises" done={summary.approved} flagged={summary.flagged} total={summary.total} />
             <Progress label="conditions" done={summary.conditions.approved} flagged={summary.conditions.flagged} total={summary.conditions.total} />
-            <a href="/api/coach-iq/review/export" download className="inline-flex items-center gap-1.5 text-sm cx-link justify-self-start">
-              <Download size={16} aria-hidden="true" /> Download reviews
+            <a href="/api/coach-iq/review/export" download className="text-sm cx-link justify-self-start">
+              <Download size={15} aria-hidden="true" /> Download reviews
             </a>
           </section>
 
@@ -164,14 +166,14 @@ export function ReviewTab({ onSignedOut }) {
                     </option>
                   ))}
                 </select>
-                <button type="button" className="inline-flex items-center gap-1 text-sm cx-link" onClick={next}>
+                <button type="button" className="text-sm cx-link" onClick={next}>
                   {familyId ? "Next family" : "Start with the first not done"} <ChevronRight size={16} aria-hidden="true" />
                 </button>
               </div>
 
               {family && (
                 <>
-                  <h2 className="font-semibold text-lg">{family.label}</h2>
+                  <h2 className="cx-display text-2xl">{family.label}</h2>
                   <p className="text-sm mb-3" style={muted}>
                     {[family.pattern, family.purposes.filter(w => w !== family.pattern).join(", "), family.roles.join(", ")].filter(Boolean).join(" · ")}
                   </p>
@@ -196,7 +198,7 @@ export function ReviewTab({ onSignedOut }) {
                       </article>
                     ))}
                   </div>
-                  <button type="button" className="mt-4 inline-flex items-center gap-1 text-sm cx-link" onClick={next}>
+                  <button type="button" className="mt-4 text-sm cx-link" onClick={next}>
                     Next family <ChevronRight size={16} aria-hidden="true" />
                   </button>
                 </>

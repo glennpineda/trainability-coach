@@ -29,6 +29,13 @@
     --badge-open: #FFFFFF;      /* a badge opened out, and the apps panel */
     --gold-light: #F6DD8A; --gold: #D9AE3B; --gold-deep: #4F3B00;
     --gold-pale-light: #F5EBCB; --gold-pale: #E6D49C;
+    /* The secondary button's wash: the primary's two blues, made pale. */
+    --sky-soft: #E8F2FB;
+    /* Fills with white words on them, the same in light and dark, as Studio's
+       --fill-* (white on a lighter blue stops being readable). */
+    --fill-cerulean: #007BA7;   /* white 4.9:1 */
+    --fill-deep: #0B5C8A;       /* white 7.0:1 */
+    --fill-ember: #B23A27;      /* white 5.6:1 */
     color-scheme: light;
   }
 
@@ -50,6 +57,7 @@
       --soft-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       --wordmark: #4FA8DC;      /* sky, as the dark lockup sets COACH */
       --badge-open: #213749;
+      --sky-soft: #1D3346;
       color-scheme: dark;
     }
   }
@@ -69,9 +77,15 @@
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* Roboto, as Studio (index.html loads it); the device's own face only
+       until it arrives. */
+    font-family: "Roboto", -apple-system, system-ui, "Segoe UI", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* Emphasis is medium, not semibold, as in Studio: Roboto's 600 is nearly
+     its bold. Headings (cx-display) keep their own weight. */
+  .font-semibold:not(.cx-display) { font-weight: 500; }
 }
 
 /* The app's own pieces. Utilities rather than plain classes, so Tailwind's
@@ -97,15 +111,86 @@
   &[readonly] { color: var(--iron); background: var(--ghost-fill); }
 }
 
+/* Headings, Studio's .iw-display: Roboto medium, each about a fifth smaller
+   than its Tailwind size, because Roboto is wide (Studio's theme.jsx). A
+   figure keeps 600. */
+@utility cx-display {
+  font-family: "Roboto", -apple-system, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  &.text-lg { font-size: 0.875rem; }
+  &.text-xl { font-size: 1rem; }
+  &.text-2xl { font-size: 1.25rem; }
+  &.text-3xl { font-size: 1.5rem; }
+  &.text-4xl { font-size: 1.75rem; }
+  &.tabular-nums { font-weight: 600; }
+}
+
+/* ------------------------------------------------------------ buttons
+   Studio's levels (its CONTRIBUTING.md, "Buttons and links": weight follows
+   commitment, not importance), in Coach's blues where Studio has magenta and
+   lilac. `npm run check-ui` keeps them honest.
+
+     cx-btn-primary  the one thing a screen or dialog is for: a filled pill
+                     with a glow. Only one showing at a time.
+     cx-btn-ember    agreeing to something that can't be undone, inside a
+                     confirmation.
+     cx-btn-quiet    any other action that commits: an outline over a pale
+                     wash of the primary's colours, 12px corners, not a pill.
+                     Adding to a list is one, full width, inside its card.
+     cx-btn-row      the same, small and as wide as its words, for one row or
+                     card.
+     cx-link         goes somewhere or shows something, changes nothing:
+                     accent words after an icon, never underlined.
+     cx-quiet        backing out (Cancel, Keep it): plain grey words.
+     cx-icon-btn     an icon with no words that does something: a 2rem grey
+                     square. */
 @utility cx-btn-primary {
-  background: var(--cerulean);
+  background: linear-gradient(135deg, var(--fill-cerulean), var(--fill-deep));
   color: #fff;
-  font-weight: 600;
-  border-radius: 10px;
-  transition: background .15s, transform .05s;
-  &:hover { background: var(--cerulean-deep); }
-  &:active { transform: translateY(1px); }
-  &:disabled { opacity: .45; cursor: default; }
+  font-weight: 500;
+  border-radius: 999px;
+  box-shadow: 0 3px 12px rgba(0, 123, 167, 0.32);
+  transition: box-shadow .15s ease, transform .1s ease;
+  &:hover { box-shadow: 0 4px 16px rgba(0, 123, 167, 0.42); }
+  &:active { transform: translateY(1px); box-shadow: 0 2px 8px rgba(0, 123, 167, 0.32); }
+  &:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
+}
+
+@utility cx-btn-ember {
+  background: var(--fill-ember);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 999px;
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+@utility cx-btn-quiet {
+  background: linear-gradient(135deg, var(--accent-soft), var(--sky-soft));
+  color: var(--ink);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+@utility cx-btn-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--accent-soft), var(--sky-soft));
+  color: var(--ink);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  &:disabled { opacity: .45; cursor: not-allowed; }
 }
 
 @utility cx-link {
@@ -113,7 +198,35 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  &:hover { text-decoration: underline; }
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+@utility cx-quiet {
+  color: var(--iron);
+  &:hover { color: var(--ink); }
+  &:disabled { opacity: .45; }
+}
+
+@utility cx-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--iron);
+  border: 1px solid transparent;
+  transition: border-color .15s ease, color .15s ease;
+  &:hover { border-color: var(--iron-line); color: var(--ink); }
+  &:disabled { opacity: .4; }
+}
+
+/* Busy is not disabled (Studio): a button whose own request is on its way
+   stays at full strength, says what it is doing and spins. */
+@layer base {
+  button[aria-busy="true"]:disabled { opacity: 1; cursor: progress; }
 }
 
 /* ------------------------------------------------------------ the header

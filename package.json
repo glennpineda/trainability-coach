@@ -1,7 +1,7 @@
 {
   "name": "trainability-coach",
   "private": true,
-  "version": "1.0.10",
+  "version": "1.0.11",
   "codename": "Caesious",
   "type": "module",
   "scripts": {
@@ -14,7 +14,8 @@
     "check-docs": "node scripts/manual.mjs --check && node scripts/iq.mjs --check",
     "screenshots": "node scripts/screenshots.mjs",
     "iq": "node scripts/iq.mjs",
-    "check-iq": "node scripts/iq.mjs --check"
+    "check-iq": "node scripts/iq.mjs --check",
+    "check-ui": "node scripts/check-ui.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",

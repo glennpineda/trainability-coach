@@ -50,4 +50,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Installation,** for the Primary Master: **Where files are saved**, as in
   Studio. On the host, files go to its Private Storage (`/private`), which a
   deploy keeps; another folder can be named, and is tried before it is used.
+- **Studio's look throughout.** Roboto, Studio's typeface, with its lighter
+  weights and heading sizes, and its kinds of button in Coach's blues: the
+  main action a blue pill, other actions outlined, small buttons for one card,
+  links with an icon and no underline, Cancel and Keep it in plain grey, and
+  deleting a limitation confirmed in a pale red box.
 - **Light or dark,** following your phone or computer.
