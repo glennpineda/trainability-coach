@@ -8,6 +8,7 @@ import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
 import * as library from "./library.js";
 import * as reviews from "./reviews.js";
+import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
 
 /**
@@ -391,6 +392,27 @@ app.get("/api/coach-iq/review/export", asPrimary("GET /coach-iq/review/export", 
   res.json({ exported: new Date().toISOString(), marks: reviews.exportMarks() });
 }));
 
+/* Installation → Where files are saved (server/durable-home.js), the
+   Primary Master's, as in Studio: the folder is tried before it is accepted,
+   and files already saved are not moved. */
+app.get("/api/storage", asPrimary("GET /storage", async (_req, res) => {
+  await refreshStorage({ force: true });
+  res.json(storageState());
+}));
+
+app.put("/api/storage", asPrimary("PUT /storage", async (req, res, user) => {
+  const given = req.body?.folder;
+  if (given !== undefined && given !== null && typeof given !== "string") {
+    return res.status(400).json({ error: "The folder must be a path, in words.", code: "invalid" });
+  }
+  const before = storageState().folder;
+  const out = await chooseStorage(given);
+  if (out.error) return res.status(400).json({ error: out.error, code: "invalid" });
+  const now = storageState().folder;
+  if (now !== before) console.log(`Files are now saved in ${now} (was ${before}), chosen by ${user.name || user.id}`);
+  res.json(storageState());
+}));
+
 /* Years from a YYYY-MM-DD birthday, or null. */
 function ageOf(dateOfBirth) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateOfBirth || "");
@@ -585,6 +607,7 @@ try {
   await db.migrate();
   await equipment.adoptOldAnswers();
   await reviews.load();
+  await refreshStorage({ force: true });
   console.log(`Database: ${db.describe()}`);
 } catch (err) {
   console.error(`Database not ready (${db.describe()}): ${err.message}`);

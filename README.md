@@ -120,6 +120,19 @@ start command to `npm start` (it builds, then serves), and set
 its environment variables. Live at https://trainabilitycoach.com;
 https://trainabilitycoach.com/api/health reports which Studio it relays to.
 
+### Where files are saved
+
+As in Studio (`server/durable-home.js`): the host rebuilds the app's folder,
+`/app`, on every deploy, and keeps only its Private Storage, `/private`. Where
+the app runs from `/app` and `/private` can be written to, Coach saves its
+files in `/private/trainability-coach`; anywhere else, in
+`~/trainability-coach`. The Primary Master can name another folder under
+Installation → **Where files are saved** (`GET`/`PUT /api/storage`, kept in
+`coach_settings` as `storage_folder`, read at most once a minute). A folder is
+tried before it is accepted and refused if it is inside the app's folder.
+`COACH_FILES_DIR` on the host wins over both, and the screen says so. Files
+are not moved on a change.
+
 ## Brand
 
 `brand/` is the logo kit. The wordmark reads TRAINABILITY® (changed from ™ on

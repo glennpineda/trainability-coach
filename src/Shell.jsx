@@ -8,6 +8,7 @@ import { ClientsTab } from "./tabs/ClientsTab";
 import { EquipmentTab } from "./tabs/EquipmentTab";
 import { ExercisesTab } from "./tabs/ExercisesTab";
 import { ReviewTab } from "./tabs/ReviewTab";
+import { InstallationTab } from "./tabs/InstallationTab";
 import { useClients } from "./hooks/useClients";
 import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
@@ -19,9 +20,9 @@ const TABS = [
   { id: "messages", label: "Messages", icon: MessageCircle },
 ];
 /* Pages with no button on the bar, opened from elsewhere: My equipment, My
-   exercises and, for the Primary Master, Review Coach IQ, all from the
-   account menu. */
-const PAGES = ["equipment", "exercises", "review"];
+   exercises and, for the Primary Master, Review Coach IQ and Installation,
+   all from the account menu. */
+const PAGES = ["equipment", "exercises", "review", "installation"];
 const KEY = "coach-tab";
 
 /* As Studio decides it (its isPrimaryMaster); the server checks again. */
@@ -53,6 +54,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}
         {tab === "review" && isPrimaryMaster(user) && <ReviewTab onSignedOut={onSignedOut} />}
+        {tab === "installation" && isPrimaryMaster(user) && <InstallationTab onSignedOut={onSignedOut} />}
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
       <BottomNav tabs={TABS} activeTab={tab} onChange={open} />

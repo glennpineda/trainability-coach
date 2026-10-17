@@ -32,6 +32,7 @@ of the app gets its own chapter here as it arrives.
    - [3.7 My equipment](#37-my-equipment)
    - [3.8 My exercises](#38-my-exercises)
    - [3.9 Reviewing Coach IQ (Primary Master only)](#39-reviewing-coach-iq-primary-master-only)
+   - [3.10 Installation (Primary Master only)](#310-installation-primary-master-only)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
    - [4.2 Reading the list](#42-reading-the-list)
@@ -289,6 +290,8 @@ so — see 2.4.
      own (3.8).
    - **Review Coach IQ** — only for the Primary Master: passing the library
      (3.9).
+   - **Installation** — only for the Primary Master: settings for this copy of
+     Coach on its server (3.10).
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
@@ -402,6 +405,31 @@ An approval counts straight away: Billy no longer calls that exercise or
 condition a draft. Now and then, tap **Download reviews** and give the file to
 Claude, who writes your marks into the library itself and works through the
 flags.
+
+### 3.10 Installation (Primary Master only)
+
+Settings for this copy of Coach on its server, as in Studio's Installation.
+Nobody else sees this page.
+
+**Where files are saved.** Files Coach keeps are written to one folder on the
+server. The app chooses one by itself: on the host, its Private Storage,
+`/private`, which is kept when the app is deployed again. Coach keeps its
+files in a `trainability-coach` folder inside it. **Saved in now** shows the
+folder in use.
+
+1. Tap your photo or initials in the top right corner, then **Installation**.
+2. To name another folder, type its full path under **Folder on the
+   server**, starting with a slash, and tap **Save folder**.
+3. The app tries the folder first: it makes it, writes a file there and takes
+   the file away. If it cannot, it says why and changes nothing. A folder
+   inside the app's own folder is refused, because that folder is rebuilt on
+   every deploy and part of it is public.
+4. **Let the app choose** goes back to the app's own choice.
+
+**Files already saved are not moved.** If a folder you named can no longer be
+written to, the app goes back to its own choice and says so in red. If the
+host's own settings name the folder, the page says so and it can't be changed
+from here.
 
 <div style="page-break-after: always;"></div>
 

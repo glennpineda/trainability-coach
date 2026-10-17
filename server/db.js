@@ -199,6 +199,13 @@ const SCHEMA = [
     reviewer_name VARCHAR(120) NOT NULL,
     created_at VARCHAR(32) NOT NULL
   )`,
+  /* Settings for this installation, by name (settings.js): so far, where
+     files are saved (durable-home.js). */
+  `CREATE TABLE IF NOT EXISTS coach_settings (
+    name VARCHAR(64) PRIMARY KEY,
+    value VARCHAR(1000) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
 ];
 
 export async function migrate() {

@@ -47,4 +47,7 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   time and the conditions table, each to Approve or Flag with a comment, with
   a count of how far through; trainers' suggestions for the library; and
   Download reviews, to write the marks into the library itself.
+- **Installation,** for the Primary Master: **Where files are saved**, as in
+  Studio. On the host, files go to its Private Storage (`/private`), which a
+  deploy keeps; another folder can be named, and is tried before it is used.
 - **Light or dark,** following your phone or computer.
