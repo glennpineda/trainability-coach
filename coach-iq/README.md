@@ -265,7 +265,8 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
 
 1. Glenn gives the books one PDF at a time, in the session. The PDFs are never
    committed to this repository: they stay on his Mac.
-2. The first book sets the outline: one file per topic in this folder.
+2. The first book sets the outline: one file per topic in `principles/`
+   (book 1, 17 Oct 2026).
    Later books add to those topics, and a new file is made only for a subject
    nothing so far has covered.
 3. Each book's principles are drafted into the topic files in our own words.
@@ -292,7 +293,9 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
   `npm run check-docs`, which runs it) fails when an id, a word or a name is
   wrong or shared, a harder step is missing, lower, or loops, something above
   beginner has no way in, or this page is behind.
-- One file per topic, made from the first book's outline.
+- `principles/`: the principles, one file per topic, made from the first
+  book's outline (17 Oct 2026); its README lists them. Billy doesn't read
+  them yet.
 
 Not to be confused with `NEURALBRAIN.md`, which is the project's own memory
 of how Coach was built.
