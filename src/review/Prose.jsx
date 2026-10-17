@@ -1,4 +1,6 @@
 import React from "react";
+import { convertText } from "../lib/units";
+import { useUnits } from "../hooks/useUnits";
 
 /**
  * Coach IQ's principles drawn from their Markdown, as the files have it:
@@ -6,6 +8,8 @@ import React from "react";
  * tables, **bold**, _italic_ and links. Made into elements, never HTML, so
  * nothing in the text can become part of the page. A link to another topic
  * ("rest.md") calls onTopic with its key; any other link is shown as words.
+ * Weights and distances are shown in the reader's own units (src/lib/
+ * units.js); the text itself, as edited, keeps what was written.
  */
 
 const muted = { color: "var(--iron)" };
@@ -72,9 +76,10 @@ export function blocks(text) {
 }
 
 export function Prose({ text, onTopic }) {
+  const [units] = useUnits();
   return (
     <div className="grid gap-2 text-sm leading-relaxed min-w-0">
-      {blocks(text).map((b, i) => {
+      {blocks(convertText(text, units)).map((b, i) => {
         const k = `b${i}`;
         if (b.type === "h") {
           return b.level <= 2

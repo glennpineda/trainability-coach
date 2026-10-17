@@ -12,6 +12,7 @@ import * as store from "./iq-store.js";
 import * as edit from "./iq-edit.js";
 import * as principles from "./principles.js";
 import * as books from "./books.js";
+import * as trainerSettings from "./trainer-settings.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -174,6 +175,19 @@ const asSignedIn = (what, fn) => async (req, res) => {
     res.status(500).json({ error: "That didn't save. Try again in a minute.", code: "failed" });
   }
 };
+
+/* The signed-in trainer's own settings (trainer-settings.js): their units. */
+app.get("/api/my-settings", asSignedIn("GET /my-settings", async (_req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  res.json(await trainerSettings.settingsOf(user.id));
+}));
+
+app.put("/api/my-settings", asSignedIn("PUT /my-settings", async (req, res, user) => {
+  if (req.body?.units !== undefined && !await trainerSettings.setUnits(user.id, req.body.units)) {
+    return res.status(400).json({ error: "Choose imperial or metric.", code: "invalid" });
+  }
+  res.json(await trainerSettings.settingsOf(user.id));
+}));
 
 app.get("/api/equipment", asSignedIn("GET /equipment", async (_req, res, user) => {
   res.set("Cache-Control", "private, no-store");
@@ -698,8 +712,9 @@ app.post("/api/assistant", async (req, res) => {
       : places.length === 1 ? places[0] : null;
     return place || { error: `Ask which place this is: ${places.map(p => p.name).join(", ")}.` };
   };
+  const units = await trainerSettings.unitsOf(user.id).catch(() => undefined);
   try {
-    const out = await billy.answer(user, history, {
+    const out = await billy.answer({ ...user, units }, history, {
       /* Only what designing training needs (ideas audit, 22): no email,
          phone or birthday, but an age. */
       my_clients: async () => ({ clients: (await myClients(req, user)).map(({ email, phone, dateOfBirth, ...c }) => ({ ...c, age: ageOf(dateOfBirth) })) }),
@@ -713,7 +728,7 @@ app.post("/api/assistant", async (req, res) => {
       find_exercise: async (input) => library.findExercise(user.id, String(input?.name || "").slice(0, 120)),
       /* Only the reviewed principles (principles.js): a draft is not his to
          work from until the Primary Master approves it. */
-      coach_principles: async (input) => principles.principlesFor(String(input?.topic || "").slice(0, 80)),
+      coach_principles: async (input) => principles.principlesFor(String(input?.topic || "").slice(0, 80), units),
       /* Only options that pass come back: the place's equipment, the level
          and the client's limitations are checked here, never left to him. */
       find_alternatives: async (input) => {

@@ -256,6 +256,16 @@ const SCHEMA = [
     updated_at VARCHAR(32) NOT NULL,
     finished_at VARCHAR(32) NULL
   )`,
+  /* A trainer's own settings, by name (trainer-settings.js): so far their
+     units, "imperial" or "metric" (Glenn, 17 Oct 2026). One row per trainer
+     and name, so no id of its own. */
+  `CREATE TABLE IF NOT EXISTS coach_trainer_settings (
+    trainer_id VARCHAR(64) NOT NULL,
+    name VARCHAR(64) NOT NULL,
+    value VARCHAR(200) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL,
+    PRIMARY KEY (trainer_id, name)
+  )`,
   /* Settings for this installation, by name (settings.js): so far, where
      files are saved (durable-home.js). */
   `CREATE TABLE IF NOT EXISTS coach_settings (

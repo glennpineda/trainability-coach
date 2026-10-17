@@ -138,9 +138,32 @@ them.
   accepted topic is saved as reviewed through the library's own checks and
   history (undoable under Changes), with the book among its sources. A topic
   changed since the book was read can't be overwritten: the screen says so.
+- **Units.** Every weight and distance is written in imperial, rounded to
+  what a gym has, and shown to each trainer in their own units (below).
 - **Not copied.** Every request says the book is learned from, never copied:
   no sentences, tables, lists or branded systems; facts, numbers and ranges in
   plain words.
+
+## Units (Glenn, 17 Oct 2026; build 1.0.17)
+
+"I see some of the books recommend in imperial and kg… let's default by
+metric and lbs. but let's have a setting where we can change this. Let's try
+to round up numbers on both denominations." Then, asked: **imperial** by
+default, **only the chosen unit** shown, rounded **to gym-friendly steps**,
+and the setting is **each trainer's own**.
+
+- Each trainer chooses Imperial or Metric under Units in their account menu
+  (`coach_trainer_settings`, `server/trainer-settings.js`).
+- `src/lib/units.js` converts any text: a number with a unit (kg, lb, m, yd,
+  cm, inches written as "inch", ft, km, mi, and their words, ranges too) in
+  the other system becomes the reader's, rounded to 5 lb (1 lb under 10),
+  2.5 kg (1 kg under 10), and tidy distances. A percentage or "1 in 3" is
+  never touched; a unit already in the reader's system is left as written.
+- The principles are shown converted on Review Coach IQ (the text itself
+  keeps what was written), Billy's principles tool gives them in the
+  trainer's units, and his prompt tells him to answer in their units only.
+- Books write every amount in imperial, already rounded, so the stored text
+  is consistent.
 
 ## Exercise names (Glenn, 16 Oct 2026)
 

@@ -3,6 +3,7 @@ import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, ExternalLink, LogOut, 
 import { STUDIO_URL } from "../lib/api";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
+import { useUnits } from "../hooks/useUnits";
 
 const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "Trainer" };
 
@@ -28,6 +29,7 @@ export function AccountMenu({ user, onLogout, onOpen }) {
   }, [open]);
 
   const role = user.isPrimary ? "Primary Master" : ROLE[user.role];
+  const [units, setUnits] = useUnits();
   return (
     <div className="relative" ref={ref}>
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
@@ -78,6 +80,21 @@ export function AccountMenu({ user, onLogout, onOpen }) {
               <Settings size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Installation
             </button>
           )}
+          {/* Each trainer's own (Glenn, 17 Oct 2026: "Each trainer only"):
+              how weights and distances are shown to them, and by Billy. */}
+          <div className="px-3 py-2">
+            <div className="text-xs mb-1.5" style={{ color: "var(--iron)" }} id="units-label">Units</div>
+            <div className="grid grid-cols-2 gap-1 p-0.5 rounded-lg" style={{ background: "var(--ghost-fill)" }} role="radiogroup" aria-labelledby="units-label">
+              {[["imperial", "Imperial", "lb, ft"], ["metric", "Metric", "kg, m"]].map(([key, word, hint]) => (
+                <button key={key} type="button" role="radio" aria-checked={units === key} onClick={() => setUnits(key)}
+                  className="rounded-md px-2 py-1 text-sm"
+                  style={units === key ? { background: "var(--cerulean)", color: "#fff" } : { color: "var(--ink)" }}>
+                  {word} <span className="text-xs" style={{ opacity: 0.8 }}>{hint}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="my-1 border-t" />
           <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
             <ExternalLink size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Open Studio
           </a>

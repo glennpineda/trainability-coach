@@ -157,6 +157,7 @@ const RULES = [
   "So: never copy the book's sentences, tables, lists or headings, and never name its own branded systems or formulas. Facts, numbers and ranges are facts, and may be kept, in plain words.",
   "Write for a personal trainer: short sentences, plain words, British spelling as the existing text has it. Coach IQ covers adults and teenagers, never children's training.",
   "Coach IQ is guidance, never a diagnosis: on health, it says when somebody needs a doctor's go-ahead or should be referred on.",
+  "Write every weight and distance as a number and a short unit, in imperial (lb, in, ft, yd, mi), whatever unit the book uses, rounded to what a gym has: loads to 5 lb (1 lb under 10 lb), distances to tidy numbers. Each trainer sees them in their own units: the app converts them. Never give both units. A percentage stays a percentage.",
 ].join("\n");
 
 /* One request, streamed (they are long), its answer read as JSON in the

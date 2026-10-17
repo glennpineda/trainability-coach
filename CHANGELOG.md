@@ -36,6 +36,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   adds to the principles, topic by topic, asking about anything it shouldn't
   decide alone with a recommended answer. Nothing changes until it is
   accepted.
+- **Imperial or metric, your choice.** Under Units in your account menu.
+  Imperial to start. Weights and distances in Coach IQ and in Billy's answers
+  are shown in your units only, rounded to what a gym has (5 lb or 2.5 kg).
 - **Your account menu.** Your photo in the top corner opens a menu with your
   name, email and kind of account, Open Studio, Log out and the version.
 - **Billy.** Studio's assistant, beside the badges in the header: ask him

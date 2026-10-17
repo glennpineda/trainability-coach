@@ -293,6 +293,12 @@ so — see 2.4.
      the library (3.9).
    - **Installation** — only for the Primary Master: settings for this copy of
      Coach on its server (3.10).
+   - **Units** — **Imperial** (pounds, inches, feet, yards, miles) or
+     **Metric** (kilograms, centimetres, metres, kilometres). Tap one to
+     choose it; it is shaded blue when chosen. It starts on **Imperial**.
+     Weights and distances in Coach IQ, and in Billy's answers, are then
+     shown in your units only, rounded to what a gym has: loads to 5 lb or
+     2.5 kg. It is your own choice; other trainers keep theirs.
    - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
@@ -427,8 +433,9 @@ tap **Save** again, or tap **Cancel**.
    first, and when to send them on. Tap **Edit** to change one, or **+ Add a
    condition** at the foot of the list.
 7. **Principles** lists the topics down the side (Terms, Reps, Rest …). Tap
-   one to read it. Under its title it says when it was reviewed and which
-   books it comes from; a topic not yet approved is marked **Draft**, and
+   one to read it. Weights and distances are shown in your units (3.5),
+   whatever unit was written; **Edit** shows the text as written. Under its
+   title it says when it was reviewed and which books it comes from; a topic not yet approved is marked **Draft**, and
    Billy doesn't use it until you approve it. **Approve** and **Flag** work
    as for an exercise. Tap **Edit** to change its title, the line saying what
    it covers, or its text, then **Save**. In the text, "## " starts a
@@ -710,6 +717,8 @@ page clears it too: Coach does not keep your conversations with Billy.
   sets, load, tempo, rest, how often to train or planning over weeks: only
   the topics you have approved, never a draft. They are guidance; your word
   wins.
+- **He talks in your units** (3.5): every weight and distance in pounds and
+  feet, or kilograms and metres, rounded to what a gym has.
 - **His suggestions come from the library, already checked.** Ask him for
   something instead of an exercise and he only offers ones that fit the
   equipment at the place, the client's level and their limitations. If one

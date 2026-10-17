@@ -1,5 +1,6 @@
 import * as store from "./iq-store.js";
 import * as reviews from "./reviews.js";
+import { convertText } from "../src/lib/units.js";
 
 /**
  * Coach IQ's principles, as the app hands them out: how Trainability designs
@@ -31,9 +32,10 @@ const forBilly = () => all().filter(p => p.status === "reviewed");
 
 /**
  * Billy's tool: with no topic, the list of topics and what each covers; with
- * one, its text. A topic is matched by its key or its title, loosely.
+ * one, its text, its weights and distances in the trainer's units. A topic is
+ * matched by its key or its title, loosely.
  */
-export function principlesFor(topic) {
+export function principlesFor(topic, units) {
   const list = forBilly();
   const index = list.map(p => ({ topic: p.key, title: p.title, covers: p.covers }));
   const want = String(topic || "").trim().toLowerCase();
@@ -41,5 +43,5 @@ export function principlesFor(topic) {
   const hit = list.find(p => p.key === want || p.title.toLowerCase() === want)
     || list.find(p => p.key.includes(want.replace(/\s+/g, "-")) || p.title.toLowerCase().includes(want));
   if (!hit) return { error: "No reviewed principle on that topic.", topics: index };
-  return { topic: hit.key, title: hit.title, text: hit.body };
+  return { topic: hit.key, title: hit.title, text: convertText(hit.body, units) };
 }
