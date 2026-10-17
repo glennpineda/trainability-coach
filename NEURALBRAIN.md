@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Asking what kind of program before making one** (17 Oct 2026; Glenn: "Before creating a new program, ask what kind of program they are think of creating so we can help recommend exercises better."). Build 1.0.25. Not from Next up. Built without a round of questions, as the shape was clear; the choices are easy to change. **The questions** (a first step, `KindForm` in `src/programs/Designer.jsx`, before the details form, which now has "Back to the kind of program"): what kind (`KINDS` in `server/programs.js`: Full body, every day the whole body, 3 days usual; Upper and lower, 4; Push, pull, legs, 3; A circuit, little rest, for conditioning, 3; Mobility and flexibility, 2), each with a line saying what it is; Days a week (1–6, the kind's usual chosen); Anything to focus on? (optional, any number: Legs and glutes, Upper body, Core, Balance and stability, Posture, Conditioning); How long is a session? (30, 45, 60, 75 or 90 minutes, 60 chosen). Next is greyed until a kind is chosen. The details step then has What it's for chosen to suit the kind (general, muscle, muscle, fat loss, mobility). **What the answers do**: the program is made with its days already (`startingDays`): Upper A, Lower A, Upper B, Lower B; Push, Pull, Legs (Push A … Legs B for six); Day A, Day B … for full body and mobility; Circuit A … for a circuit; each day stores what it trains (`DAY_KINDS`: Full body, Upper body, Lower body, Push, Pull, Legs, Circuit, Mobility, each a list of movement patterns, single-muscle work split by body part through the version's main muscles, "isolation-push", "-pull", "-lower"). **Add a day** continues the turn (`nextDay`: Upper C after Lower B), replacing `nextDayName`. A day's pencil can change what it trains. **Suggestions** (`suggestNext`) now take the day's own patterns rather than one list for every day: the day's movements and the program's focus in turn (focus patterns that the day trains, at most two a day, fewer for focus it already has; an upper or push or pull day never gets a lower-body focus, nor the other way round), each the best version passing the place, the level and the limitations as before; the reason says "A focus of this program: core." where it is one; the heading says "Could come next on an upper body day"; and when a day already has about as many exercises as the session holds (`MINUTES`: 30 → 4, 45 → 5, 60 → 6, 75 → 7, 90 → 8, from sets.md's 45–75 minutes) it says "This day has about as much as a 45-minute session holds." **The check** adds a note when a day has more than one over that many exercises, from Sets. The first try put all four of an empty upper day's suggestions into core work (the focus first, four core patterns); changed to taking the day's movements and the focus in turn with the focus capped at two, so a push-up and a row still lead. Day names were first "Upper body A"; shortened to "Upper A". **Stored**: new columns on `coach_programs` (`kind`, `days_per_week`, `minutes`, `focus` JSON) and `coach_program_days` (`kind`), added on start where missing (`COLUMNS` in `db.js`), so older programs read as full body. Checked on the server: an unknown kind, a focus not on the list, a session length not offered and 1–7 days. The program's line, the list and Billy's `my_programs` (kind, focus, session minutes, what each day trains) say them; Edit the details changes the focus and session length. Manual 5.1 (the steps rewritten), 5.2 and 5.5; CHANGELOG. **Tested** against the stand-ins: the vocabulary, the refusals, an upper and lower program of 4 days with a core focus and 45 minutes made with Upper A, Lower A, Upper B, Lower B, its upper day suggesting Push-up, Hollow hold (core), Bent-over dumbbell row, Bird dog (core) and its lower day Cossack squat, Hollow hold, Single-leg glute bridge, Bird dog; a push, pull, legs program with a legs focus suggesting Push-up, Arnold press, Dumbbell fly and Hollow hold on Push, rows, a pulldown, a straight-arm pulldown and a carry on Pull, and leg work on Legs; Add a day giving Upper C; 6-day push, pull, legs, circuit and mobility programs named as above; in Chromium at 400px dark and 1200px light, the first step (Next greyed until a kind, 4 days chosen for upper and lower), the goal chosen to suit it, and the designer showing "Upper and lower · 45-minute sessions · focus: core" with no console errors and no sideways scroll. **Not tested**: Billy's real use of it (no key in the cloud). Commit: build 1.0.25.
+
 - **Making sure phones pick up the new icon** (17 Oct 2026; Glenn: "Can you make sure the icons gets updated?"). Build 1.0.24. Not from Next up. The icon redrawn in build 1.0.19 kept its old addresses (`/apple-touch-icon.png`, `/coach-app-icon-192.png`, `-512.png`), and a phone keeps a home-screen icon by its address, so it can go on showing the old picture. Studio meets this with `?v=2` on its icon addresses (its `index.html` and both `.webmanifest` files, with a note to raise it whenever the icons change); Coach does the same now: `index.html`'s apple-touch-icon is `/apple-touch-icon.png?v=2` with `sizes="180x180"`, the manifest link `/manifest.webmanifest?v=2`, and the manifest's icons `?v=2`, with a note to raise the number with any new icon. The manifest also gained the 512 px icon as `purpose: "maskable"`, as Studio has one, so Android can crop it to its own shape: the tile is full-bleed, and a check of the 512 px PNG found nothing white outside the maskable safe circle (40% of the width from the centre), so the hex is never cut. Express serves the files whatever follows the `?`. Not checked on the live site: the cloud session can't reach trainabilitycoach.com; Glenn checks https://trainabilitycoach.com/apple-touch-icon.png?v=2 after the deploy, then removes the icon from his home screen and adds it again. Commit: build 1.0.24.
 
 - **The sign-in screen made Studio's: the email first** (17 Oct 2026; Glenn: "Can you make the login screen identical to Studio, checking email first as we will eventually let clients login here."). Build 1.0.23. Not from Next up. **Read from Studio** (unchanged): `src/auth/LoginScreen.jsx` asks the email first ("Please use the email you used when you signed up with {business}." in bold accent colour, the box with no caption, placeholder "Your email address", **Continue** saying "One moment…"), then `POST /api/auth/door`, whose answer is `password` for a team account (with `also` when that email is a client's or member's too) and `code` for everybody else, a client, a member or an address nobody has, answered alike so the screen can't be used to learn who is a client, and rate-limited by Studio (`checkDoorAllowed`, a 429 with Retry-After). Password: the email kept as a read-only field (so a password manager saves the pair), Password, Keep me logged in, Log in, Forgot password?, "Use a different email". Code: Studio's `CodeSignIn`, a client's or member's own page at /me. **In Coach**: `/auth/door` added to the relayed routes in `server/index.js` (now five; CLAUDE.md, README and the server's notes say so). `src/auth/LoginScreen.jsx` rewritten to Studio's steps: email (Studio's line with "Trainability" for the business, Studio's box, Continue/One moment…, "Type your email address first." for an empty or incomplete address, the @trainabilitystudio.com shortcut kept), then password as Studio's (and the old app's "Check your email" note kept), then Forgot password? as before with Back to login returning to the password step. **The client's way** ends, for now, at a card of its own, since Coach has no client sign-in yet: "Coach is for Trainability's trainers for now. Clients will be able to sign in here soon." and "If you train with us, your own page is in Studio. Open it and sign in there with {email}.", **Go to my page** (Studio's /me) and Use a different email. A first wording said a code had been sent; Studio's door sends none (its code screen does, when asked), so it was taken out. Left out of Studio's screen, for now: "I have a code" (a client's welcome-email code, for when clients sign in here), "Open my member page instead" (`also`), the demo-mode hint, the business name fetched from Studio (written as Trainability), and Studio's below-the-fold "about the app" panel and drifting hexagons. Manual 2.1 (the steps, and an email that isn't a trainer's), 2.3 step 1, chapter 8 "Type your email address first."; CHANGELOG. **Tested** in Chromium as an iPhone 13 against the stand-in Studio, taught `/api/auth/door` and `/api/auth/login`: Continue with nothing said "Type your email address first."; someone@gmail.com went to the client card with Go to my page pointing at trainabilitystudio.com/me; Use a different email went back; "glenn" became glenn@trainabilitystudio.com and went to the password step; a wrong password said "That email and password don't match."; Forgot password? and Back to login; the right password signed in to Home; no page errors. The relay answered the door directly with Studio's JSON. Commit: build 1.0.23.
@@ -848,19 +850,43 @@ next, and Billy can talk it over with you. Only you see your programs.
 #### 5.1 Starting a program
 
 1. Tap **Programs** on the bar at the bottom (the clipboard).
-2. Tap **New program**.
-3. Choose the **Client**. The **Name** fills in as *Avery's program*; change
+2. Tap **New program**. It asks first: *What kind of program are you
+   thinking of?* Coach IQ uses your answers to suggest exercises for each
+   day.
+3. Tap one:
+   - **Full body**: every day works the whole body.
+   - **Upper and lower**: days take turns, upper body, then lower body.
+   - **Push, pull, legs**: days take turns, pushing, pulling, then legs.
+   - **A circuit**: exercises one after another with little rest, for
+     conditioning.
+   - **Mobility and flexibility**: moving better, with mobility, balance and
+     breathing.
+4. Under **Days a week**, the usual number for that kind is chosen; tap
+   another if you like.
+5. Under **Anything to focus on?**, tap any of **Legs and glutes**, **Upper
+   body**, **Core**, **Balance and stability**, **Posture** and
+   **Conditioning**, or none. Tap one again to take it off.
+6. Under **How long is a session?**, tap **30 min**, **45 min**, **60 min**,
+   **75 min** or **90 min**. Then tap **Next**.
+7. Choose the **Client**. The **Name** fills in as *Avery's program*; change
    it if you like.
-4. Choose **What it's for** (**Strength**, **Power**, **Muscle size**,
-   **Strength endurance**, **Fat loss and conditioning**, **General
-   fitness** or **Mobility**), **The client's level** (**Beginner**,
+8. **What it's for** is chosen to suit the kind (**Muscle size** for upper and
+   lower, say); change it if you like (**Strength**, **Power**, **Muscle
+   size**, **Strength endurance**, **Fat loss and conditioning**, **General
+   fitness** or **Mobility**). Choose **The client's level** (**Beginner**,
    **Intermediate** or **Advanced**) and **Where they train**: one of your
-   places from My equipment (3.7). Add **Notes** if you want.
-5. Tap **Start designing**. The program opens with its first day, **Day A**.
+   places from My equipment (3.7). Add **Notes** if you want. **Back to the
+   kind of program** goes back a step.
+9. Tap **Start designing**. The program opens with its days already made, as
+   many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for
+   upper and lower; **Push**, **Pull**, **Legs** for push, pull, legs;
+   **Day A**, **Day B** … for full body and mobility; **Circuit A** … for a
+   circuit.
 
 Your programs are listed on the Programs page, newest change first, with who
 each is for. Tap one to open it; **All programs** takes you back. To change
-the client, name, goal, level, place or notes later, tap **Edit the details**.
+the client, name, goal, level, place, focus, session length or notes later,
+tap **Edit the details**.
 The box button beside a program in the list (**Put away**) takes it off the
 list; it is kept, not deleted.
 
@@ -869,12 +895,16 @@ list; it is kept, not deleted.
 There are two ways:
 
 - **Take a suggestion.** Under each day, **Could come next** lists exercises
-  Coach IQ suggests, one for each kind of movement the program doesn't have
-  yet (a squat, a hinge, a push, a row …). Every one already fits the
+  Coach IQ suggests for what that day trains (*Could come next on an upper
+  body day*), one for each kind of movement the day doesn't have yet (a
+  squat, a hinge, a push, a row …), taking turns with what you chose to focus
+  on (*A focus of this program: core.*). Every one already fits the
   place's equipment, the client's level and their limitations, and says
   where to start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in
   orange says what to make easier for the client. Tap **Add** to put it on the
-  day with that starting point.
+  day with that starting point. When the day holds about as much as your
+  session length allows, it says so. To change what a day trains, tap its
+  pencil and choose under **What this day trains**.
 - **Find one yourself.** Tap **Add an exercise** and type any name you use
   for it: your own name, one of your own exercises, or the library's name.
   Tap it in the list to add it.
@@ -913,7 +943,8 @@ the suggestions, and talks it through; he changes nothing himself.
 
 #### 5.5 Days, order and supersets
 
-- **Add a day**, at the bottom, adds Day B, then Day C, and so on.
+- **Add a day**, at the bottom, adds the next day in the program's turn:
+  Upper C after Lower B, Day D after Day C.
 - Beside a day's name: the arrows move it up or down, the pencil renames it
   (and gives it a note), and the bin takes it out with its exercises.
 - Beside each exercise: the arrows move it up or down the day, and the bin

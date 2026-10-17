@@ -49,6 +49,10 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   with the blue C and chevron, for the home screen of your phone and the apps
   panel, named just **Coach** under it. Add Coach to your home screen again to
   pick them up.
+- **A new program starts with what kind it is.** Full body, upper and lower,
+  push, pull, legs, a circuit, or mobility; days a week; anything to focus
+  on; and how long a session is. The days are made to match, and Coach IQ's
+  suggestions keep to what each day trains, with the focus taken in turn.
 - **Design programs.** The Programs tab is open: a program for one of your
   clients, day by day, exercise by exercise, with only the exercise needed
   and sets, reps, load, effort, tempo, rest and notes as you like. Coach IQ

@@ -699,19 +699,43 @@ next, and Billy can talk it over with you. Only you see your programs.
 ### 5.1 Starting a program
 
 1. Tap **Programs** on the bar at the bottom (the clipboard).
-2. Tap **New program**.
-3. Choose the **Client**. The **Name** fills in as *Avery's program*; change
+2. Tap **New program**. It asks first: *What kind of program are you
+   thinking of?* Coach IQ uses your answers to suggest exercises for each
+   day.
+3. Tap one:
+   - **Full body**: every day works the whole body.
+   - **Upper and lower**: days take turns, upper body, then lower body.
+   - **Push, pull, legs**: days take turns, pushing, pulling, then legs.
+   - **A circuit**: exercises one after another with little rest, for
+     conditioning.
+   - **Mobility and flexibility**: moving better, with mobility, balance and
+     breathing.
+4. Under **Days a week**, the usual number for that kind is chosen; tap
+   another if you like.
+5. Under **Anything to focus on?**, tap any of **Legs and glutes**, **Upper
+   body**, **Core**, **Balance and stability**, **Posture** and
+   **Conditioning**, or none. Tap one again to take it off.
+6. Under **How long is a session?**, tap **30 min**, **45 min**, **60 min**,
+   **75 min** or **90 min**. Then tap **Next**.
+7. Choose the **Client**. The **Name** fills in as *Avery's program*; change
    it if you like.
-4. Choose **What it's for** (**Strength**, **Power**, **Muscle size**,
-   **Strength endurance**, **Fat loss and conditioning**, **General
-   fitness** or **Mobility**), **The client's level** (**Beginner**,
+8. **What it's for** is chosen to suit the kind (**Muscle size** for upper and
+   lower, say); change it if you like (**Strength**, **Power**, **Muscle
+   size**, **Strength endurance**, **Fat loss and conditioning**, **General
+   fitness** or **Mobility**). Choose **The client's level** (**Beginner**,
    **Intermediate** or **Advanced**) and **Where they train**: one of your
-   places from My equipment (3.7). Add **Notes** if you want.
-5. Tap **Start designing**. The program opens with its first day, **Day A**.
+   places from My equipment (3.7). Add **Notes** if you want. **Back to the
+   kind of program** goes back a step.
+9. Tap **Start designing**. The program opens with its days already made, as
+   many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for
+   upper and lower; **Push**, **Pull**, **Legs** for push, pull, legs;
+   **Day A**, **Day B** … for full body and mobility; **Circuit A** … for a
+   circuit.
 
 Your programs are listed on the Programs page, newest change first, with who
 each is for. Tap one to open it; **All programs** takes you back. To change
-the client, name, goal, level, place or notes later, tap **Edit the details**.
+the client, name, goal, level, place, focus, session length or notes later,
+tap **Edit the details**.
 The box button beside a program in the list (**Put away**) takes it off the
 list; it is kept, not deleted.
 
@@ -720,12 +744,16 @@ list; it is kept, not deleted.
 There are two ways:
 
 - **Take a suggestion.** Under each day, **Could come next** lists exercises
-  Coach IQ suggests, one for each kind of movement the program doesn't have
-  yet (a squat, a hinge, a push, a row …). Every one already fits the
+  Coach IQ suggests for what that day trains (*Could come next on an upper
+  body day*), one for each kind of movement the day doesn't have yet (a
+  squat, a hinge, a push, a row …), taking turns with what you chose to focus
+  on (*A focus of this program: core.*). Every one already fits the
   place's equipment, the client's level and their limitations, and says
   where to start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in
   orange says what to make easier for the client. Tap **Add** to put it on the
-  day with that starting point.
+  day with that starting point. When the day holds about as much as your
+  session length allows, it says so. To change what a day trains, tap its
+  pencil and choose under **What this day trains**.
 - **Find one yourself.** Tap **Add an exercise** and type any name you use
   for it: your own name, one of your own exercises, or the library's name.
   Tap it in the list to add it.
@@ -764,7 +792,8 @@ the suggestions, and talks it through; he changes nothing himself.
 
 ### 5.5 Days, order and supersets
 
-- **Add a day**, at the bottom, adds Day B, then Day C, and so on.
+- **Add a day**, at the bottom, adds the next day in the program's turn:
+  Upper C after Lower B, Day D after Day C.
 - Beside a day's name: the arrows move it up or down, the pencil renames it
   (and gives it a note), and the bin takes it out with its exercises.
 - Beside each exercise: the arrows move it up or down the day, and the bin

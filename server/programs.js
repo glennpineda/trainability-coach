@@ -45,12 +45,94 @@ export const GOALS = {
 };
 export const goalsList = () => Object.entries(GOALS).map(([key, g]) => ({ key, label: g.label }));
 
-/* The movement patterns a balanced program covers, in the order they are
-   offered: the big ones first. Mobility has its own. */
-const PATTERNS_FOR = {
-  default: ["squat", "hinge", "push-horizontal", "pull-horizontal", "lunge", "push-vertical", "pull-vertical", "carry", "core-anti-extension", "core-anti-rotation"],
-  mobility: ["mobility", "breathing", "balance", "core-anti-extension"],
+/* ------------------------------------------------ what kind of program
+
+   Asked before a program is made (Glenn, 17 Oct 2026: "Before creating a
+   new program, ask what kind of program they are think of creating so we can
+   help recommend exercises better"): its kind, which sets what each day
+   trains; the days a week; areas to focus on; and how long a session is. */
+
+/* What a day trains: the movement patterns offered for it, in the order they
+   are offered, the big ones first. "isolation-…" is a single-muscle exercise
+   for that part of the body. */
+export const DAY_KINDS = {
+  full: { label: "Full body", patterns: ["squat", "hinge", "push-horizontal", "pull-horizontal", "lunge", "push-vertical", "pull-vertical", "carry", "core-anti-extension", "core-anti-rotation"] },
+  upper: { label: "Upper body", short: "Upper", patterns: ["push-horizontal", "pull-horizontal", "push-vertical", "pull-vertical", "isolation-push", "isolation-pull", "core-anti-rotation"] },
+  lower: { label: "Lower body", short: "Lower", patterns: ["squat", "hinge", "lunge", "isolation-lower", "core-anti-extension", "carry"] },
+  push: { label: "Push", patterns: ["push-horizontal", "push-vertical", "isolation-push", "core-anti-extension"] },
+  pull: { label: "Pull", patterns: ["pull-horizontal", "pull-vertical", "isolation-pull", "carry"] },
+  legs: { label: "Legs", patterns: ["squat", "hinge", "lunge", "isolation-lower", "core-anti-rotation"] },
+  circuit: { label: "Circuit", patterns: ["conditioning", "squat", "push-horizontal", "hinge", "pull-horizontal", "plyometric", "core-anti-extension", "carry"] },
+  mobility: { label: "Mobility", patterns: ["mobility", "breathing", "balance", "core-anti-extension"] },
 };
+export const dayKindsList = () => Object.entries(DAY_KINDS).map(([key, k]) => ({ key, label: k.label }));
+
+/* The kinds of program: what its days train, in turn, and the days a week
+   it usually has. */
+export const KINDS = {
+  full: { label: "Full body", about: "Every day works the whole body.", cycle: ["full"], days: 3, goal: "general" },
+  "upper-lower": { label: "Upper and lower", about: "Days take turns: upper body, then lower body.", cycle: ["upper", "lower"], days: 4, goal: "muscle" },
+  ppl: { label: "Push, pull, legs", about: "Days take turns: pushing, pulling, then legs.", cycle: ["push", "pull", "legs"], days: 3, goal: "muscle" },
+  circuit: { label: "A circuit", about: "Exercises one after another with little rest, for conditioning.", cycle: ["circuit"], days: 3, goal: "fat-loss" },
+  mobility: { label: "Mobility and flexibility", about: "Moving better: mobility, balance and breathing.", cycle: ["mobility"], days: 2, goal: "mobility" },
+};
+
+/* Areas to focus on: their patterns go first where the day trains them. */
+export const FOCUS = {
+  legs: { label: "Legs and glutes", patterns: ["squat", "hinge", "lunge", "isolation-lower"] },
+  upper: { label: "Upper body", patterns: ["push-horizontal", "pull-horizontal", "push-vertical", "pull-vertical"] },
+  core: { label: "Core", patterns: ["core-anti-extension", "core-anti-rotation", "core-lateral", "core-flexion"] },
+  balance: { label: "Balance and stability", patterns: ["balance", "lunge", "core-anti-rotation"] },
+  posture: { label: "Posture", patterns: ["pull-horizontal", "core-anti-extension", "mobility"] },
+  conditioning: { label: "Conditioning", patterns: ["conditioning", "carry", "plyometric"] },
+};
+
+/* How long a session is, and about how many exercises it holds (sets.md:
+   most sessions take about 45–75 minutes; the set count is what matters). */
+export const MINUTES = { 30: 4, 45: 5, 60: 6, 75: 7, 90: 8 };
+
+export const kindsFor = () => ({
+  kinds: Object.entries(KINDS).map(([key, k]) => ({ key, label: k.label, about: k.about, days: k.days, goal: k.goal })),
+  focus: Object.entries(FOCUS).map(([key, f]) => ({ key, label: f.label })),
+  minutes: Object.keys(MINUTES).map(Number),
+  dayKinds: dayKindsList(),
+});
+
+/* Which muscles count for a single-muscle exercise on a day. */
+const ISOLATION = {
+  "isolation-push": ["chest", "front delts", "side delts", "triceps"],
+  "isolation-pull": ["lats", "upper back", "rear delts", "biceps", "forearms", "traps"],
+  "isolation-lower": ["quads", "hamstrings", "glutes", "adductors", "abductors", "calves", "tibialis", "hip flexors"],
+};
+const UPPER_PATTERNS = new Set(["push-horizontal", "pull-horizontal", "push-vertical", "pull-vertical", "isolation-push", "isolation-pull"]);
+const LOWER_PATTERNS = new Set(["squat", "hinge", "lunge", "isolation-lower"]);
+
+/* Whether a version is of a pattern as the designer means it. */
+function ofPattern(x, pattern) {
+  const p = library.familyOf(x)?.pattern;
+  if (ISOLATION[pattern]) return p === "isolation" && (x.primary || []).some(m => ISOLATION[pattern].includes(m));
+  return p === pattern;
+}
+/* The designer's pattern for a version (isolation split by body part). */
+function patternOfX(x) {
+  const p = library.familyOf(x)?.pattern;
+  if (p !== "isolation") return p;
+  return Object.keys(ISOLATION).find(k => (x.primary || []).some(m => ISOLATION[k].includes(m))) || p;
+}
+
+/* The days a program of a kind starts with: Upper A, Lower A, Upper B … */
+export function startingDays(kindKey, count) {
+  const kind = KINDS[kindKey] || KINDS.full;
+  const n = Math.min(Math.max(Number(count) || kind.days, 1), 7);
+  const cycle = kind.cycle;
+  const rounds = Math.ceil(n / cycle.length);
+  return Array.from({ length: n }, (_, i) => {
+    const dk = cycle[i % cycle.length];
+    const round = Math.floor(i / cycle.length);
+    if (cycle.length === 1) return { kind: dk, name: dk === "circuit" ? `Circuit ${String.fromCharCode(65 + i)}` : `Day ${String.fromCharCode(65 + i)}` };
+    return { kind: dk, name: `${DAY_KINDS[dk].short || DAY_KINDS[dk].label}${rounds > 1 ? ` ${String.fromCharCode(65 + round)}` : ""}` };
+  });
+}
 
 /* ------------------------------------------------------ reading values */
 
@@ -79,6 +161,7 @@ const repSeconds = (tempo) => tempo.split("-").reduce((n, p) => n + (/x/i.test(p
 /* ------------------------------------------------------------ the store */
 
 const now = () => new Date().toISOString();
+const parseList = (s) => { try { const v = JSON.parse(s || "[]"); return Array.isArray(v) ? v : []; } catch { return []; } };
 const text = (v, max) => (typeof v === "string" ? v.trim().replace(/\s+/g, " ").slice(0, max) : "");
 
 /** A program of this trainer's, or null: never another trainer's. */
@@ -101,7 +184,7 @@ export async function list(trainerId) {
   for (const r of rows) {
     const days = await get(`SELECT COUNT(*) AS n FROM coach_program_days WHERE program_id = ?`, [r.id]);
     const ex = await get(`SELECT COUNT(*) AS n FROM coach_program_exercises WHERE program_id = ?`, [r.id]);
-    out.push({ id: r.id, name: r.name, clientId: r.client_id, clientName: r.client_name, goal: r.goal, goalLabel: GOALS[r.goal]?.label || r.goal,
+    out.push({ id: r.id, name: r.name, clientId: r.client_id, clientName: r.client_name, goal: r.goal, goalLabel: GOALS[r.goal]?.label || r.goal, kindLabel: (KINDS[r.kind] || KINDS.full).label,
       level: r.level, days: Number(days.n), exercises: Number(ex.n), updatedAt: r.updated_at });
   }
   return out;
@@ -109,6 +192,10 @@ export async function list(trainerId) {
 
 /** What makes a program's details worth keeping, or the reason not. */
 export function checkDetails(body = {}, { creating = false } = {}) {
+  if (creating && body.kind !== undefined && !KINDS[body.kind]) return "Choose what kind of program it is.";
+  if (creating && body.daysPerWeek !== undefined && !(Number.isInteger(body.daysPerWeek) && body.daysPerWeek >= 1 && body.daysPerWeek <= 7)) return "Choose 1 to 7 days a week.";
+  if (body.focus !== undefined && (!Array.isArray(body.focus) || body.focus.some(f => !FOCUS[f]))) return "Choose what to focus on from the list.";
+  if (body.minutes !== undefined && body.minutes !== null && !MINUTES[body.minutes]) return "Choose how long a session is.";
   if ((creating || body.name !== undefined) && !text(body.name, 120)) return "Give the program a name.";
   if ((creating || body.goal !== undefined) && !GOALS[body.goal]) return "Choose what it is for.";
   if ((creating || body.level !== undefined) && !LEVELS.includes(body.level)) return "Choose the client's level.";
@@ -118,10 +205,13 @@ export function checkDetails(body = {}, { creating = false } = {}) {
 
 export async function create(trainerId, client, placeId, body) {
   const stamp = now();
+  const kind = KINDS[body.kind] ? body.kind : "full";
+  const days = startingDays(kind, body.daysPerWeek);
   const id = await insertWithNewId("program", (newId) => run(
-    `INSERT INTO coach_programs (id, trainer_id, client_id, client_name, place_id, name, goal, level, notes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [newId, trainerId, client.id, `${client.firstName} ${client.lastName}`.trim(), placeId || "", text(body.name, 120), body.goal, body.level, text(body.notes ?? "", 2000), stamp, stamp]));
-  await addDay(id, "Day A");
+    `INSERT INTO coach_programs (id, trainer_id, client_id, client_name, place_id, name, goal, level, notes, kind, days_per_week, minutes, focus, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [newId, trainerId, client.id, `${client.firstName} ${client.lastName}`.trim(), placeId || "", text(body.name, 120), body.goal, body.level, text(body.notes ?? "", 2000),
+      kind, days.length, MINUTES[body.minutes] ? Number(body.minutes) : null, JSON.stringify([...new Set(body.focus || [])]), stamp, stamp]));
+  for (const d of days) await addDay(id, d.name, d.kind);
   return id;
 }
 
@@ -133,6 +223,8 @@ export async function update(program, body, { client, placeId } = {}) {
   if (body.goal !== undefined) f.goal = body.goal;
   if (body.level !== undefined) f.level = body.level;
   if (body.notes !== undefined) f.notes = text(body.notes, 2000);
+  if (body.focus !== undefined) f.focus = JSON.stringify([...new Set(body.focus)]);
+  if (body.minutes !== undefined) f.minutes = MINUTES[body.minutes] ? Number(body.minutes) : null;
   if (placeId !== undefined) f.place_id = placeId;
   if (client) { f.client_id = client.id; f.client_name = `${client.firstName} ${client.lastName}`.trim(); }
   const keys = Object.keys(f);
@@ -147,22 +239,26 @@ export async function archive(program) {
 
 /* ------------------------------------------------------------- the days */
 
-export async function addDay(programId, name) {
+export async function addDay(programId, name, kind = "full") {
   const top = await get(`SELECT MAX(pos) AS top FROM coach_program_days WHERE program_id = ?`, [programId]);
   const id = await insertWithNewId("programDay", (newId) => run(
-    `INSERT INTO coach_program_days (id, program_id, name, pos) VALUES (?, ?, ?, ?)`, [newId, programId, text(name, 80) || "A day", (Number(top?.top) || 0) + 1]));
+    `INSERT INTO coach_program_days (id, program_id, name, pos, kind) VALUES (?, ?, ?, ?, ?)`, [newId, programId, text(name, 80) || "A day", (Number(top?.top) || 0) + 1, DAY_KINDS[kind] ? kind : "full"]));
   await touch(programId);
   return id;
 }
 
-/* The next day's name after the ones there: Day B after Day A. */
-export async function nextDayName(programId) {
-  const days = await all(`SELECT name FROM coach_program_days WHERE program_id = ?`, [programId]);
+/* The next day after the ones there, in the program's turn: Day B after Day
+   A, Lower B after Upper B. */
+export async function nextDay(program) {
+  const days = await all(`SELECT name FROM coach_program_days WHERE program_id = ?`, [program.id]);
+  const kind = KINDS[program.kind] || KINDS.full;
+  const dk = kind.cycle[days.length % kind.cycle.length];
+  const base = kind.cycle.length === 1 ? (dk === "circuit" ? "Circuit" : "Day") : DAY_KINDS[dk].short || DAY_KINDS[dk].label;
   for (let i = 0; i < 26; i++) {
-    const name = `Day ${String.fromCharCode(65 + i)}`;
-    if (!days.some(d => d.name === name)) return name;
+    const name = `${base} ${String.fromCharCode(65 + i)}`;
+    if (!days.some(d => d.name === name || (i === 0 && d.name === base))) return { name, kind: dk };
   }
-  return `Day ${days.length + 1}`;
+  return { name: `${base} ${days.length + 1}`, kind: dk };
 }
 
 export async function updateDay(dayId, programId, body) {
@@ -171,6 +267,10 @@ export async function updateDay(dayId, programId, body) {
     await run(`UPDATE coach_program_days SET name = ? WHERE id = ?`, [text(body.name, 80), dayId]);
   }
   if (body.notes !== undefined) await run(`UPDATE coach_program_days SET notes = ? WHERE id = ?`, [text(body.notes, 1000), dayId]);
+  if (body.kind !== undefined) {
+    if (!DAY_KINDS[body.kind]) return "Choose what the day trains.";
+    await run(`UPDATE coach_program_days SET kind = ? WHERE id = ?`, [body.kind, dayId]);
+  }
   await touch(programId);
   return null;
 }
@@ -292,8 +392,10 @@ export async function full(trainerId, program, { withCheck = true } = {}) {
     id: program.id, name: program.name, clientId: program.client_id, clientName: program.client_name,
     placeId: program.place_id, placeName: ctx.place?.name || null, goal: program.goal, goalLabel: GOALS[program.goal]?.label || program.goal,
     level: program.level, notes: program.notes, createdAt: program.created_at, updatedAt: program.updated_at,
+    kind: program.kind || "full", kindLabel: (KINDS[program.kind] || KINDS.full).label, minutes: program.minutes == null ? null : Number(program.minutes),
+    focus: parseList(program.focus), focusLabels: parseList(program.focus).map(f => FOCUS[f]?.label).filter(Boolean),
     /* With the one above means nothing for a day's first exercise. */
-    days: days.map(d => ({ id: d.id, name: d.name, notes: d.notes, exercises: rows.filter(r => r.day_id === d.id).map(shape).map((e, i) => (i ? e : { ...e, superset: false })) })),
+    days: days.map(d => ({ id: d.id, name: d.name, notes: d.notes, kind: d.kind || "full", kindLabel: (DAY_KINDS[d.kind] || DAY_KINDS.full).label, exercises: rows.filter(r => r.day_id === d.id).map(shape).map((e, i) => (i ? e : { ...e, superset: false })) })),
     places: ctx.places.map(p => ({ id: p.id, name: p.name })),
   };
   if (withCheck) out.check = check(out, rows, ctx, own);
@@ -380,6 +482,8 @@ function check(program, rows, ctx, own) {
       else if (sets > 25) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${sets} sets, over the 20–25 a session usually holds.` });
     }
     if (beginner && dayRows.length > 7) add({ day: day.id, level: "note", from: "starting-out", text: `${day.name}: ${dayRows.length} exercises. A beginner's session is usually 4–7, unless it is a circuit.` });
+    const fits = MINUTES[program.minutes];
+    if (fits && dayRows.length > fits + 1) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: ${dayRows.length} exercises, more than about ${fits} fit in a ${program.minutes}-minute session.` });
   }
   const order = { stop: 0, warn: 1, note: 2 };
   return points.sort((a, b) => order[a.level] - order[b.level]);
@@ -459,21 +563,46 @@ export async function suggestNext(trainerId, program, dayId, limit = 4) {
   const used = new Set(rows.map(r => r.exercise_id));
   const mainsToday = dayRows.filter(r => { const x = library.exerciseById(r.exercise_id); return x && (library.familyOf(x).roles || []).includes("main"); }).length;
   const goal = GOALS[program.goal] || GOALS.general;
-  const patterns = PATTERNS_FOR[program.goal === "mobility" ? "mobility" : "default"];
-  const order = [...patterns.filter(p => !inProgram.has(p)), ...patterns.filter(p => inProgram.has(p) && !inDay.has(p))];
+  /* What this day trains (its kind), the program's focus first where the
+     day trains it, then what neither the day nor the program has yet. */
+  const day = await get(`SELECT kind FROM coach_program_days WHERE id = ?`, [dayId]);
+  const dayKind = DAY_KINDS[day?.kind] ? day.kind : program.goal === "mobility" ? "mobility" : "full";
+  const allowed = DAY_KINDS[dayKind].patterns;
+  const upperOnly = ["upper", "push", "pull"].includes(dayKind), lowerOnly = ["lower", "legs"].includes(dayKind);
+  const focus = parseList(program.focus).filter(f => FOCUS[f]);
+  const focusOf = new Map();
+  for (const f of focus) for (const p of FOCUS[f].patterns) if (!focusOf.has(p)) focusOf.set(p, f);
+  const fits = (p) => !(upperOnly && LOWER_PATTERNS.has(p)) && !(lowerOnly && UPPER_PATTERNS.has(p)) && !(dayKind === "mobility" && !allowed.includes(p) && !p.startsWith("core"));
+  const inDayX = new Set(dayRows.map(r => library.exerciseById(r.exercise_id)).filter(Boolean).map(patternOfX));
+  const open = (p) => !inDayX.has(p) && !inDay.has(p);
+  /* The day's own movements and the focus taken in turn, so the main lifts
+     still come first; at most two for the focus on a day, fewer for what the
+     day already has of it. */
+  const focusInDay = [...inDayX, ...inDay].filter(p => focusOf.has(p)).length;
+  const front = [...focusOf.keys()].filter(fits).filter(open).slice(0, Math.max(0, 2 - focusInDay));
+  const base = [...new Set([...allowed.filter(p => !inProgram.has(p)), ...allowed])].filter(p => open(p) && !front.includes(p));
+  const order = [];
+  for (let i = 0; i < Math.max(base.length, front.length); i++) {
+    if (base[i]) order.push(base[i]);
+    if (front[i]) order.push(front[i]);
+  }
   const pool = candidates(ctx, program.level).filter(x => !used.has(x.id));
   const out = [];
   for (const pattern of order) {
     if (out.length >= limit) break;
-    const role = program.goal === "mobility" ? null : mainsToday + out.length < 2 ? "main" : "accessory";
-    const best = rank(pool.filter(x => library.familyOf(x)?.pattern === pattern), ctx, { level: program.level, purpose: goal.purpose, role })[0];
+    const role = dayKind === "mobility" || dayKind === "circuit" ? null : mainsToday + out.length < 2 ? "main" : "accessory";
+    const best = rank(pool.filter(x => ofPattern(x, pattern) && !out.some(o => o.id === x.id)), ctx, { level: program.level, purpose: goal.purpose, role })[0];
     if (!best) continue;
     const accessory = !(library.familyOf(best).roles || []).includes("main");
-    const why = !inProgram.has(pattern) ? `Nothing in this program for ${patternWords(pattern)} yet.` : `Nothing on this day for ${patternWords(pattern)} yet.`;
+    const why = focusOf.has(pattern) ? `A focus of this program: ${FOCUS[focusOf.get(pattern)].label.toLowerCase()}.`
+      : !inProgram.has(pattern) ? `Nothing in this program for ${patternWords(pattern)} yet.` : `Nothing on this day for ${patternWords(pattern)} yet.`;
     out.push(suggestion(best, ctx, why, doseFor(program.goal, program.level, { accessory })));
   }
+  const holds = MINUTES[program.minutes];
   return {
     suggestions: out,
+    day: DAY_KINDS[dayKind].label,
+    ...(holds && dayRows.length >= holds ? { full: `This day has about as much as a ${program.minutes}-minute session holds.` } : {}),
     ...(ctx.place ? { place: ctx.place.name } : {}),
     ...(ctx.hasLimitations ? { limitationsChecked: true } : {}),
   };
@@ -483,7 +612,9 @@ const PATTERN_WORDS = {
   squat: "a squat", hinge: "a hinge (deadlift, hip thrust)", lunge: "single-leg work", "push-horizontal": "a horizontal push",
   "push-vertical": "an overhead push", "pull-horizontal": "a row", "pull-vertical": "a vertical pull", carry: "a carry",
   "core-anti-extension": "core work against arching", "core-anti-rotation": "core work against twisting", mobility: "mobility",
-  breathing: "breathing", balance: "balance",
+  breathing: "breathing", balance: "balance", conditioning: "conditioning", plyometric: "jumping", "core-lateral": "core work against bending sideways",
+  "core-flexion": "core work bending forward", "isolation-push": "chest, shoulder or triceps work", "isolation-pull": "back or biceps work",
+  "isolation-lower": "single-muscle leg work",
 };
 const patternWords = (p) => PATTERN_WORDS[p] || p;
 
@@ -504,8 +635,9 @@ export async function forBilly(trainerId, program) {
   for (const d of p.days) next[d.name] = (await suggestNext(trainerId, program, d.id, 3)).suggestions.map(s => ({ name: s.name, id: s.id, why: s.why, dose: s.dose, ...(s.askFirst ? { askFirst: s.askFirst } : {}), ...(s.modifyFor ? { modifyFor: s.modifyFor } : {}) }));
   return {
     id: p.id, name: p.name, client: p.clientName, place: p.placeName, goal: p.goalLabel, level: p.level, notes: p.notes,
+    kind: p.kindLabel, ...(p.focusLabels.length ? { focus: p.focusLabels } : {}), ...(p.minutes ? { sessionMinutes: p.minutes } : {}),
     days: p.days.map(d => ({
-      name: d.name, notes: d.notes,
+      name: d.name, notes: d.notes, trains: d.kindLabel,
       exercises: d.exercises.map(e => {
         const out = { name: e.name };
         for (const k of ["sets", "reps", "load", "effort", "tempo", "note"]) if (e[k]) out[k] = e[k];

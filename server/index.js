@@ -669,7 +669,7 @@ const sendProgram = async (res, user, program) => {
 
 app.get("/api/programs", asSignedIn("GET /programs", async (_req, res, user) => {
   res.set("Cache-Control", "private, no-store");
-  res.json({ programs: await programs.list(user.id), goals: programs.goalsList() });
+  res.json({ programs: await programs.list(user.id), goals: programs.goalsList(), ...programs.kindsFor() });
 }));
 
 /* A client of theirs and one of their places, or a 400 saying which. */
@@ -722,7 +722,8 @@ app.delete("/api/programs/:id", asSignedIn("DELETE /programs", async (req, res, 
 app.post("/api/programs/:id/days", asSignedIn("POST /programs/days", async (req, res, user) => {
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
-  await programs.addDay(program.id, req.body?.name || await programs.nextDayName(program.id));
+  const next = await programs.nextDay(program);
+  await programs.addDay(program.id, req.body?.name || next.name, next.kind);
   await sendProgram(res, user, program);
 }));
 

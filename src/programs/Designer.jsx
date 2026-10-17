@@ -178,8 +178,9 @@ function Next({ dayId, version, busy, onTake, units }) {
   return (
     <div className="mt-3 pt-3 border-t" style={line}>
       <div className="text-xs font-medium mb-1.5 inline-flex items-center gap-1" style={{ color: "var(--accent)" }}>
-        <Lightbulb size={13} aria-hidden="true" /> Could come next{out.place ? `, for “${out.place}”` : ""}
+        <Lightbulb size={13} aria-hidden="true" /> Could come next{out.day ? ` on a ${out.day.toLowerCase()} day` : ""}{out.place ? `, for “${out.place}”` : ""}
       </div>
+      {out.full && <p className="text-xs mb-1.5" style={muted}>{out.full}</p>}
       <ul className="grid gap-2">
         {out.suggestions.map(s => (
           <li key={s.id} className="flex items-start justify-between gap-2">
@@ -197,7 +198,7 @@ function Next({ dayId, version, busy, onTake, units }) {
   );
 }
 
-export function Designer({ id, onBack, onSignedOut, billy, goals }) {
+export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
   const [p, setP] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -235,13 +236,16 @@ export function Designer({ id, onBack, onSignedOut, billy, goals }) {
 
       <section className="cx-card p-4">
         {is("details", p.id) ? (
-          <DetailsForm initial={p} goals={goals} places={p.places} busy={busy} onCancel={() => setOpen(null)}
+          <DetailsForm initial={p} goals={goals} vocab={vocab} places={p.places} busy={busy} onCancel={() => setOpen(null)}
             onSave={(body) => call("PATCH", `/programs/${p.id}`, body)} />
         ) : (
           <>
             <h2 className="cx-display text-2xl">{p.name}</h2>
             <div className="text-sm" style={muted}>
               For {p.clientName} · {p.goalLabel} · {p.level} · {p.placeName ? `at “${p.placeName}”` : "no place chosen"}
+            </div>
+            <div className="text-sm" style={muted}>
+              {[p.kindLabel, p.minutes ? `${p.minutes}-minute sessions` : null, p.focusLabels.length ? `focus: ${p.focusLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
             </div>
             {p.notes && <p className="text-sm mt-2 whitespace-pre-wrap">{p.notes}</p>}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
@@ -274,10 +278,10 @@ export function Designer({ id, onBack, onSignedOut, billy, goals }) {
         return (
           <section key={d.id} className="cx-card p-4">
             {is("day", d.id) ? (
-              <DayForm day={d} busy={busy} onCancel={() => setOpen(null)} onSave={(body) => call("PATCH", `/program-days/${d.id}`, body)} />
+              <DayForm day={d} dayKinds={vocab?.dayKinds} busy={busy} onCancel={() => setOpen(null)} onSave={(body) => call("PATCH", `/program-days/${d.id}`, body)} />
             ) : (
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="font-semibold text-lg">{d.name}</h3>
+                <h3 className="font-semibold text-lg">{d.name}{!d.name.toLowerCase().startsWith(d.kindLabel.split(" ")[0].toLowerCase()) && <span className="text-xs font-normal ml-2" style={muted}>{d.kindLabel}</span>}</h3>
                 <div className="flex items-center gap-1">
                   <button type="button" className="cx-icon-btn" disabled={busy || di === 0} onClick={() => call("PATCH", `/program-days/${d.id}`, { move: -1 })} aria-label={`Move ${d.name} up`} title="Move up"><ArrowUp size={16} aria-hidden="true" /></button>
                   <button type="button" className="cx-icon-btn" disabled={busy || di === p.days.length - 1} onClick={() => call("PATCH", `/program-days/${d.id}`, { move: 1 })} aria-label={`Move ${d.name} down`} title="Move down"><ArrowDown size={16} aria-hidden="true" /></button>
@@ -354,11 +358,18 @@ export function Designer({ id, onBack, onSignedOut, billy, goals }) {
   );
 }
 
-function DayForm({ day, busy, onSave, onCancel }) {
-  const [f, setF] = useState({ name: day.name, notes: day.notes || "" });
+function DayForm({ day, dayKinds, busy, onSave, onCancel }) {
+  const [f, setF] = useState({ name: day.name, notes: day.notes || "", kind: day.kind || "full" });
   return (
     <form className="grid gap-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
       <input className="cx-input" value={f.name} maxLength={80} required aria-label="The day's name" onChange={e => setF(d => ({ ...d, name: e.target.value }))} />
+      {dayKinds && (
+        <label className="grid gap-1 text-xs" style={muted}>What this day trains (Coach IQ suggests from it)
+          <select className="cx-input" value={f.kind} onChange={e => setF(d => ({ ...d, kind: e.target.value }))} style={{ color: "var(--ink)" }}>
+            {dayKinds.map(k => <option key={k.key} value={k.key}>{k.label}</option>)}
+          </select>
+        </label>
+      )}
       <input className="cx-input text-sm" value={f.notes} maxLength={1000} placeholder="A note for the day (optional)" aria-label="A note for the day" onChange={e => setF(d => ({ ...d, notes: e.target.value }))} />
       <div className="flex items-center gap-2">
         <button type="submit" className="cx-btn-row" disabled={busy}>Save</button>
@@ -368,11 +379,71 @@ function DayForm({ day, busy, onSave, onCancel }) {
   );
 }
 
-/** A program's details: its name, what it is for, the client's level, where, and notes. */
-export function DetailsForm({ initial = {}, goals, places, clients, busy, onSave, onCancel, word = "Save" }) {
+/* A row of choices, one or several. */
+function Choices({ options, value, onChange, many = false, label }) {
+  const on = (k) => (many ? value.includes(k) : value === k);
+  return (
+    <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
+      {options.map(([k, words]) => (
+        <button key={k} type="button" aria-pressed={on(k)}
+          onClick={() => onChange(many ? (on(k) ? value.filter(v => v !== k) : [...value, k]) : k)}
+          className="px-3 py-1.5 rounded-full text-sm"
+          style={on(k) ? { background: "var(--cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
+          {words}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * The first step of a new program (Glenn, 17 Oct 2026: "Before creating a new
+ * program, ask what kind of program they are think of creating so we can help
+ * recommend exercises better"): what kind, how many days a week, anything to
+ * focus on, and how long a session is. Its days are made from the answers,
+ * and Coach IQ suggests for each day from what that day trains.
+ */
+export function KindForm({ vocab, initial, onNext, onCancel }) {
+  const [f, setF] = useState(() => initial || { kind: "", daysPerWeek: null, focus: [], minutes: 60 });
+  const kind = vocab.kinds.find(k => k.key === f.kind);
+  const lab = (name, el) => <div className="grid gap-1.5"><div className="text-sm font-medium">{name}</div>{el}</div>;
+  return (
+    <form className="grid gap-4" onSubmit={(e) => { e.preventDefault(); if (kind) onNext({ ...f, daysPerWeek: f.daysPerWeek || kind.days }); }}>
+      <div className="grid gap-1.5">
+        <div className="text-sm font-medium">What kind of program are you thinking of?</div>
+        <div className="grid sm:grid-cols-2 gap-2" role="radiogroup" aria-label="What kind of program">
+          {vocab.kinds.map(k => (
+            <button key={k.key} type="button" role="radio" aria-checked={f.kind === k.key}
+              onClick={() => setF(d => ({ ...d, kind: k.key, daysPerWeek: d.kind === k.key ? d.daysPerWeek : k.days }))}
+              className="text-left rounded-xl p-3 border"
+              style={f.kind === k.key ? { borderColor: "var(--cerulean)", background: "var(--accent-soft)" } : { borderColor: "var(--iron-line)" }}>
+              <span className="block font-medium text-sm">{k.label}</span>
+              <span className="block text-xs" style={muted}>{k.about}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      {kind && (
+        <>
+          {lab("Days a week", <Choices label="Days a week" options={[1, 2, 3, 4, 5, 6].map(n => [n, String(n)])} value={f.daysPerWeek || kind.days} onChange={(n) => setF(d => ({ ...d, daysPerWeek: n }))} />)}
+          {lab(<>Anything to focus on? <span className="font-normal" style={muted}>(optional, any number)</span></>, <Choices many label="Focus" options={vocab.focus.map(x => [x.key, x.label])} value={f.focus} onChange={(v) => setF(d => ({ ...d, focus: v }))} />)}
+          {lab("How long is a session?", <Choices label="Session length" options={vocab.minutes.map(m => [m, `${m} min`])} value={f.minutes} onChange={(m) => setF(d => ({ ...d, minutes: m }))} />)}
+        </>
+      )}
+      <div className="flex items-center gap-2">
+        <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={!kind}>Next</button>
+        <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
+      </div>
+    </form>
+  );
+}
+
+/** A program's details: its name, what it is for, the client's level, where, and notes; editing, its focus and session length too. */
+export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy, onSave, onCancel, onBack, word = "Save" }) {
   const [f, setF] = useState({
     name: initial.name || "", goal: initial.goal || "general", level: initial.level || "beginner",
     placeId: initial.placeId ?? places?.[0]?.id ?? "", notes: initial.notes || "", clientId: initial.clientId || "",
+    focus: initial.focus || [], minutes: initial.minutes ?? null,
   });
   const set = (k) => (e) => setF(d => ({ ...d, [k]: e.target.value }));
   /* A new program starts at the first place, once the places have come. */
@@ -381,7 +452,9 @@ export function DetailsForm({ initial = {}, goals, places, clients, busy, onSave
   }, [places, initial.placeId]);
   const lab = (name, el) => <label className="grid gap-1 text-xs" style={muted}>{name}{el}</label>;
   return (
-    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave(clients ? f : { name: f.name, goal: f.goal, level: f.level, placeId: f.placeId, notes: f.notes }); }}>
+    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave(clients ? { name: f.name, goal: f.goal, level: f.level, placeId: f.placeId, notes: f.notes, clientId: f.clientId }
+      : { name: f.name, goal: f.goal, level: f.level, placeId: f.placeId, notes: f.notes, ...(vocab ? { focus: f.focus, minutes: f.minutes } : {}) }); }}>
+      {onBack && <button type="button" className="text-sm cx-link justify-self-start" onClick={onBack}><ChevronLeft size={15} aria-hidden="true" /> Back to the kind of program</button>}
       {clients && lab("Client", (
         <select className="cx-input" value={f.clientId} required onChange={e => {
           const c = clients.find(x => x.id === e.target.value);
@@ -402,6 +475,12 @@ export function DetailsForm({ initial = {}, goals, places, clients, busy, onSave
           </select>
         ))}
       </div>
+      {!clients && vocab && (
+        <>
+          <div className="grid gap-1 text-xs" style={muted}>Focus<Choices many label="Focus" options={vocab.focus.map(x => [x.key, x.label])} value={f.focus} onChange={(v) => setF(d => ({ ...d, focus: v }))} /></div>
+          <div className="grid gap-1 text-xs" style={muted}>How long is a session?<Choices label="Session length" options={vocab.minutes.map(m => [m, `${m} min`])} value={f.minutes} onChange={(m) => setF(d => ({ ...d, minutes: m }))} /></div>
+        </>
+      )}
       {lab("Notes (optional)", <textarea className="cx-input text-sm" rows={2} maxLength={2000} value={f.notes} onChange={set("notes")} style={{ color: "var(--ink)" }} />)}
       <div className="flex items-center gap-2">
         <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy}>{word}</button>

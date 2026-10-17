@@ -326,6 +326,15 @@ const SCHEMA = [
 const COLUMNS = [
   /* The library entry a trainer's suggested exercise became (build 1.0.12). */
   ["coach_private_exercises", "accepted_into", "VARCHAR(40) NOT NULL DEFAULT ''"],
+  /* What kind of program, asked before it is made (build 1.0.25; Glenn, 17
+     Oct 2026: "ask what kind of program they are think of creating"): its
+     kind (programs.js, KINDS), the days a week and the session's minutes
+     asked, the areas to focus on (JSON list), and what each day trains. */
+  ["coach_programs", "kind", "VARCHAR(24) NOT NULL DEFAULT 'full'"],
+  ["coach_programs", "days_per_week", "INTEGER NULL"],
+  ["coach_programs", "minutes", "INTEGER NULL"],
+  ["coach_programs", "focus", "VARCHAR(200) NOT NULL DEFAULT '[]'"],
+  ["coach_program_days", "kind", "VARCHAR(16) NOT NULL DEFAULT 'full'"],
 ];
 
 async function hasColumn(table, column) {
