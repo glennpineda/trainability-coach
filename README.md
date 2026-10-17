@@ -121,6 +121,12 @@ start command to `npm start` (it builds, then serves), and set
 its environment variables. Live at https://trainabilitycoach.com;
 https://trainabilitycoach.com/api/health reports which Studio it relays to.
 
+Airo unpacks each deploy over the last one without emptying `/app` first
+(its log says `cleanAppDirBeforeExtract: false`), so a file deleted from the
+repository can stay on the host. `vite.config.js` sets PostCSS itself, empty,
+for that reason: 0.1.0's `postcss.config.js`, still on the host, broke the
+first deploy of 1.0.12.
+
 ### Where files are saved
 
 As in Studio (`server/durable-home.js`): the host rebuilds the app's folder,
