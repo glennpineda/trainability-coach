@@ -3,7 +3,8 @@ import { insertWithNewId } from "./ids.js";
 
 /**
  * The Primary Master's review of Coach IQ (ideas audit, 24): Approve or Flag,
- * with a comment, on each exercise version and each condition.
+ * with a comment, on each exercise version, each condition and (since build
+ * 1.0.16) each principle.
  *
  * A mark counts in the app at once (Glenn, 17 Oct 2026: "App now, file
  * later"): an approved exercise or condition stops being a draft for Billy
@@ -17,7 +18,7 @@ import { insertWithNewId } from "./ids.js";
  * costs nothing. Every mark stays in the table as its history.
  */
 
-export const KINDS = ["exercise", "condition"];
+export const KINDS = ["exercise", "condition", "principle"];
 export const MARKS = ["approve", "flag", "clear"];
 
 let latest = new Map();

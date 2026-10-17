@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { CATEGORIES } from "../server/equipment.js";
 import { PATTERNS, PIECES, PURPOSES, ROLES, FLAGS, STATUSES, equipmentFor, measureOf, perSideOf, factsOf } from "../server/coach-iq.js";
 import { checkLibrary } from "../server/iq-check.js";
+import { readPrinciples, writePrinciples } from "../server/principles-files.js";
 
 /**
  * Coach IQ's exercise library: checked, and written out for reading.
@@ -13,8 +14,8 @@ import { checkLibrary } from "../server/iq-check.js";
  *                      (npm run check-docs runs it too)
  *   npm run iq -- --import <file>
  *                      writes a library exported from the app (Review Coach
- *                      IQ → Export) into exercises.json and conditions.json,
- *                      then checks and writes the pages as usual
+ *                      IQ → Export) into exercises.json, conditions.json and
+ *                      principles/, then checks and writes the pages as usual
  *
  * Since build 1.0.12 the library lives in the app's database (server/
  * iq-store.js), loaded from these files once; the files are its starting copy
@@ -60,12 +61,15 @@ if (importAt !== -1) {
   const { about } = JSON.parse(readFileSync(CONDITIONS, "utf8"));
   writeFileSync(SOURCE, JSON.stringify({ movements: out.movements, exercises: out.exercises }, null, 1) + "\n");
   writeFileSync(CONDITIONS, conditionsText(about, out.conditions));
-  console.log(`Imported the library exported ${out.exported || "from the app"}: ${Object.keys(out.movements).length} families, ${out.exercises.length} versions, ${out.conditions.length} conditions.`);
+  /* An export made before the principles joined the app has none. */
+  if (Array.isArray(out.principles)) writePrinciples(out.principles);
+  console.log(`Imported the library exported ${out.exported || "from the app"}: ${Object.keys(out.movements).length} families, ${out.exercises.length} versions, ${out.conditions.length} conditions${Array.isArray(out.principles) ? `, ${out.principles.length} principles` : ""}.`);
 }
 
 const { movements, exercises: list } = JSON.parse(readFileSync(SOURCE, "utf8"));
 const { conditions } = JSON.parse(readFileSync(CONDITIONS, "utf8"));
-const { problems, masters, easier } = checkLibrary({ movements, exercises: list, conditions });
+const principles = readPrinciples();
+const { problems, masters, easier } = checkLibrary({ movements, exercises: list, conditions, principles });
 const ids = new Map(list.map(x => [x.id, x]));
 
 const words = (a) => a.join(", ");
@@ -165,7 +169,7 @@ if (process.argv.includes("--check")) {
     console.error("coach-iq/CONDITIONS.md is behind conditions.json. Run: npm run iq");
     process.exit(1);
   }
-  console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions, ${conditions.length} conditions, all consistent.`);
+  console.log(`Coach IQ: ${Object.keys(movements).length} families, ${list.length} versions, ${conditions.length} conditions, ${principles.length} principles, all consistent.`);
 } else {
   writeFileSync(PAGE, page);
   writeFileSync(CONDITIONS_PAGE, condPage);

@@ -227,6 +227,35 @@ const SCHEMA = [
     undoes VARCHAR(40) NOT NULL DEFAULT '',
     undone_by VARCHAR(40) NOT NULL DEFAULT ''
   )`,
+  /* A book read into Coach IQ in the app (books.js; iqb…, Glenn's tag, 17
+     Oct 2026). The PDF waits in the files folder while it is read and is
+     thrown away once it has been; what is kept is ours: notes in our own
+     words (one per part, JSON), what the book is (about), and the proposed
+     changes to the principles, each with its open points, answers and fate
+     (proposals). status: waiting, reading, ready, done, failed or
+     discarded; step says what it is doing now. */
+  `CREATE TABLE IF NOT EXISTS coach_iq_books (
+    id VARCHAR(40) PRIMARY KEY,
+    file_name VARCHAR(200) NOT NULL,
+    bytes INTEGER NOT NULL DEFAULT 0,
+    pages INTEGER NOT NULL DEFAULT 0,
+    parts INTEGER NOT NULL DEFAULT 0,
+    parts_done INTEGER NOT NULL DEFAULT 0,
+    status VARCHAR(16) NOT NULL,
+    step VARCHAR(200) NOT NULL DEFAULT '',
+    error VARCHAR(500) NOT NULL DEFAULT '',
+    about MEDIUMTEXT NOT NULL,
+    notes MEDIUMTEXT NOT NULL,
+    proposals MEDIUMTEXT NOT NULL,
+    model VARCHAR(64) NOT NULL DEFAULT '',
+    tokens_in INTEGER NOT NULL DEFAULT 0,
+    tokens_out INTEGER NOT NULL DEFAULT 0,
+    uploaded_by VARCHAR(64) NOT NULL,
+    uploaded_by_name VARCHAR(120) NOT NULL,
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL,
+    finished_at VARCHAR(32) NULL
+  )`,
   /* Settings for this installation, by name (settings.js): so far, where
      files are saved (durable-home.js). */
   `CREATE TABLE IF NOT EXISTS coach_settings (

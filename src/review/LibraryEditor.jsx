@@ -5,7 +5,7 @@ import { apiRequest } from "../lib/api";
 /**
  * The pieces of the library's editor on Review Coach IQ (the library lives in
  * the app since build 1.0.12; Glenn, 17 Oct 2026): the forms for a version,
- * a family and a condition, the pickers they are made of, and a list of
+ * a family, a condition and a principle, the pickers they are made of, and a list of
  * changes to undo. The server checks every change with Coach IQ's rules and
  * says why when it refuses one; the forms show its reasons as they are.
  */
@@ -272,6 +272,27 @@ export function ConditionForm({ initial = {}, onSave, onCancel, busy, error, wor
 }
 
 /* Changes to the library, newest first, each with Undo while it can be. */
+/** A principle: its title, what it covers, and its text in Markdown. */
+export function PrincipleForm({ initial = {}, onSave, onCancel, busy, error, word }) {
+  const [f, setF] = useState(() => ({ title: initial.title || "", covers: initial.covers || "", body: initial.body || "" }));
+  const set = (k) => (e) => setF(d => ({ ...d, [k]: e.target.value }));
+  return (
+    <form className="grid gap-3 mt-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
+      <Field name="Title"><input className="cx-input" value={f.title} maxLength={80} required onChange={set("title")} /></Field>
+      <Field name="What it covers, in a line"><input className="cx-input" value={f.covers} maxLength={200} required onChange={set("covers")} /></Field>
+      <Field name="The text">
+        <textarea className="cx-input text-sm font-mono" rows={18} value={f.body} required onChange={set("body")} />
+      </Field>
+      <p className="text-xs -mt-2" style={muted}>
+        "## " starts a heading, "- " a point, "1. " a numbered step; **two stars** make words bold. A link to another topic is
+        written [its words](rest.md).
+      </p>
+      <Problems error={error} />
+      <SaveRow busy={busy} onCancel={onCancel} word={word} />
+    </form>
+  );
+}
+
 export function ChangeList({ changes, onUndo, busy, error }) {
   if (!changes) return <p className="text-sm" style={muted}>Loading…</p>;
   if (!changes.length) return <p className="text-sm" style={muted}>No changes yet.</p>;

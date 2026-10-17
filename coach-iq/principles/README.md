@@ -4,11 +4,15 @@ How Trainability designs a training program, in our own words. One file per
 topic. The first book read set the outline (17 Oct 2026); later books add to
 these files, and a new file is made only for a subject none of them covers.
 
-Each file says at its top whether Glenn has reviewed it. A new book's
-additions are drafts until he has. Where a book says something later evidence
-has moved on from, or where books disagree, the draft gives the range and a
-line marked **Open for Glenn** says what is to settle; once he has, the line
-is replaced by his answer, in his words.
+These files are the starting copy. Since build 1.0.16 the principles live in
+the app, edited and approved on Review Coach IQ → Principles, and later books
+are read into them there (Books); `npm run iq -- --import <export>` writes the
+app's copy back into these files.
+
+Each file says at its top whether it has been reviewed, and which books it
+comes from. Where a book says something later evidence has moved on from, or
+where books disagree, Glenn settles it, and his answer is written in, in his
+words. Billy reads only the reviewed topics.
 
 The trainer's word always wins: this is guidance for building a program and
 for Billy's suggestions, never a rule to argue with.

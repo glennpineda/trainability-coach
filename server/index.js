@@ -10,6 +10,8 @@ import * as library from "./library.js";
 import * as reviews from "./reviews.js";
 import * as store from "./iq-store.js";
 import * as edit from "./iq-edit.js";
+import * as principles from "./principles.js";
+import * as books from "./books.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -361,6 +363,7 @@ app.get("/api/coach-iq/review", asPrimary("GET /coach-iq/review", async (_req, r
   res.json({
     ...library.reviewSummary(),
     conditions: { total: conditions.length, approved: conditions.filter(c => c.status === "reviewed").length, flagged: conditions.filter(c => c.mark?.mark === "flag").length },
+    principles: principles.principlesSummary(),
     suggestions: await library.suggestions(),
   });
 }));
@@ -375,10 +378,15 @@ app.get("/api/coach-iq/review/conditions", asPrimary("GET /coach-iq/review/condi
   res.json({ conditions: limitations.conditionsForReview() });
 }));
 
+app.get("/api/coach-iq/review/principles", asPrimary("GET /coach-iq/review/principles", async (_req, res) => {
+  res.json({ principles: principles.principlesForReview() });
+}));
+
 /* Approve, Flag or take back (mark "clear"), with a comment. */
 app.put("/api/coach-iq/review/:kind/:target", asPrimary("PUT /coach-iq/review", async (req, res, user) => {
   const { kind, target } = req.params;
-  const known = kind === "exercise" ? library.isExercise(target) : kind === "condition" ? limitations.isCondition(target) : false;
+  const known = kind === "exercise" ? library.isExercise(target) : kind === "condition" ? limitations.isCondition(target)
+    : kind === "principle" ? principles.isPrinciple(target) : false;
   if (!known) return res.status(404).json({ error: "Not found", code: "not_found" });
   const { mark, comment = "" } = req.body || {};
   if (!reviews.MARKS.includes(mark)) return res.status(400).json({ error: "Approve, flag, or take it back.", code: "invalid" });
@@ -387,14 +395,15 @@ app.put("/api/coach-iq/review/:kind/:target", asPrimary("PUT /coach-iq/review", 
   /* The mark goes into the library itself now it lives in the app: an
      approval makes it reviewed, dated today; a flag, or taking an approval
      back, makes it a draft again. */
-  const doc = kind === "exercise" ? library.exerciseById(target) : store.current().conditions.find(c => c.key === target);
+  const doc = kind === "exercise" ? library.exerciseById(target) : kind === "principle" ? principles.principleByKey(target)
+    : store.current().conditions.find(c => c.key === target);
   const had = reviews.markOf(kind, target);
   const status = mark === "approve" ? { status: "reviewed", reviewed: new Date().toISOString().slice(0, 10) }
     : mark === "flag" || had?.mark === "approve" ? { status: "draft", reviewed: null } : null;
   if (status && doc.status !== "retired" && (doc.status !== status.status || doc.reviewed !== status.reviewed)) {
     const words = { approve: "Approved", flag: "Flagged", clear: "Took back the approval of" }[mark];
     try {
-      await store.change([{ kind, id: target, after: { ...doc, ...status } }], user, `${words} ${doc.name || doc.label}`);
+      await store.change([{ kind, id: target, after: { ...doc, ...status } }], user, `${words} ${doc.name || doc.label || doc.title}`);
     } catch (err) { return refused(res, err); }
   }
   await reviews.setMark(kind, target, { mark, comment }, user);
@@ -499,6 +508,79 @@ app.post("/api/coach-iq/library/conditions", asPrimary("POST /coach-iq/library/c
   } catch (err) { return refused(res, err); }
   res.json({ conditions: limitations.conditionsForReview() });
 }));
+
+/* The principles (build 1.0.16): changed, or a new topic added, in Markdown
+   as the files have it. */
+app.put("/api/coach-iq/library/principles/:key", asPrimary("PUT /coach-iq/library/principles", async (req, res, user) => {
+  const had = principles.principleByKey(req.params.key);
+  if (!had) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const after = edit.principleFrom(req.body, had);
+  try {
+    await store.change([{ kind: "principle", id: had.key, after }], user, `Changed the principles on ${after.title}`);
+  } catch (err) { return refused(res, err); }
+  res.json({ principles: principles.principlesForReview() });
+}));
+
+app.post("/api/coach-iq/library/principles", asPrimary("POST /coach-iq/library/principles", async (req, res, user) => {
+  const after = edit.principleFrom(req.body);
+  if (!after.key) return res.status(400).json({ error: "Give the topic a title.", code: "invalid" });
+  if (principles.isPrinciple(after.key)) return res.status(400).json({ error: "There is a topic by that name already.", code: "invalid" });
+  try {
+    await store.change([{ kind: "principle", id: after.key, after }], user, `Added the principles on ${after.title}`);
+  } catch (err) { return refused(res, err); }
+  res.json({ principles: principles.principlesForReview() });
+}));
+
+/* ---------------------------------------------------- reading a book
+   (books.js): the Primary Master's, like the rest of Review Coach IQ. The
+   PDF comes as the request's own body, streamed to the files folder. */
+app.get("/api/coach-iq/books", asPrimary("GET /coach-iq/books", async (_req, res) => {
+  res.json({ books: await books.list(), available: billy.configured(), model: books.model() });
+}));
+
+app.post("/api/coach-iq/books", asPrimary("POST /coach-iq/books", async (req, res, user) => {
+  if (!/^application\/pdf\b/i.test(req.headers["content-type"] || "")) return res.status(400).json({ error: "Choose a PDF.", code: "invalid" });
+  if (Number(req.headers["content-length"]) > books.MAX_BYTES) return res.status(413).json({ error: "That PDF is over 100 MB. Split it into two and upload the parts as two books.", code: "too_big" });
+  const out = await books.upload(req, user, decodeURIComponent(String(req.headers["x-file-name"] || "")));
+  if (out.error) return res.status(400).json({ error: out.error, code: "invalid" });
+  res.json({ id: out.id, books: await books.list() });
+}));
+
+app.get("/api/coach-iq/books/:id", asPrimary("GET /coach-iq/books/one", async (req, res) => {
+  const book = await books.book(req.params.id);
+  if (!book) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.json(book);
+}));
+
+app.post("/api/coach-iq/books/:id/retry", asPrimary("POST /coach-iq/books/retry", async (req, res) => {
+  if (!await books.retry(req.params.id)) return res.status(400).json({ error: "Only a book that stopped can be tried again.", code: "invalid" });
+  res.json(await books.book(req.params.id));
+}));
+
+app.delete("/api/coach-iq/books/:id", asPrimary("DELETE /coach-iq/books", async (req, res) => {
+  if (!await books.discard(req.params.id)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.json({ books: await books.list() });
+}));
+
+/* One proposed topic: answer its open points, have them written in, change
+   the text, accept it into the principles, or reject it. */
+const onProposal = (what, fn) => asPrimary(what, async (req, res, user) => {
+  const n = Number(req.params.n);
+  if (!Number.isInteger(n) || n < 0) return res.status(404).json({ error: "Not found", code: "not_found" });
+  try {
+    await fn(req.params.id, n, req.body || {}, user);
+  } catch (err) {
+    if (err instanceof books.Wrong) return res.status(400).json({ error: err.message, code: "invalid" });
+    return refused(res, err, "That would break the library, so nothing was saved.");
+  }
+  res.json(await books.book(req.params.id));
+});
+
+app.put("/api/coach-iq/books/:id/proposals/:n/answers", onProposal("PUT /coach-iq/books/answers", (id, n, body) => books.saveAnswers(id, n, body.answers)));
+app.post("/api/coach-iq/books/:id/proposals/:n/write", onProposal("POST /coach-iq/books/write", (id, n, _body, user) => books.startWriteUp(id, n, user)));
+app.put("/api/coach-iq/books/:id/proposals/:n/text", onProposal("PUT /coach-iq/books/text", (id, n, body) => books.editWritten(id, n, body)));
+app.post("/api/coach-iq/books/:id/proposals/:n/accept", onProposal("POST /coach-iq/books/accept", (id, n, _body, user) => books.accept(id, n, user)));
+app.post("/api/coach-iq/books/:id/proposals/:n/reject", onProposal("POST /coach-iq/books/reject", (id, n, _body, user) => books.reject(id, n, user)));
 
 /* A trainer's suggestion, made a version of the library: their names for it
    follow it there, and their own copy is put away. */
@@ -629,6 +711,9 @@ app.post("/api/assistant", async (req, res) => {
       /* The library, searched in code (ideas audit, 4): their own names
          first, then their private exercises, then the library. */
       find_exercise: async (input) => library.findExercise(user.id, String(input?.name || "").slice(0, 120)),
+      /* Only the reviewed principles (principles.js): a draft is not his to
+         work from until the Primary Master approves it. */
+      coach_principles: async (input) => principles.principlesFor(String(input?.topic || "").slice(0, 80)),
       /* Only options that pass come back: the place's equipment, the level
          and the client's limitations are checked here, never left to him. */
       find_alternatives: async (input) => {
@@ -754,6 +839,7 @@ try {
   await reviews.load();
   await store.load();
   await refreshStorage({ force: true });
+  await books.resume();
   console.log(`Database: ${db.describe()}`);
 } catch (err) {
   console.error(`Database not ready (${db.describe()}): ${err.message}`);

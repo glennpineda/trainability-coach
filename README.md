@@ -44,7 +44,9 @@ uses, with the same session, so he sees nothing they can't), and he reads a
 photo or a PDF given to him. He looks exercises up in Coach IQ's library and
 finds alternatives through `server/library.js`, which filters them in code by
 the place's equipment, the level and the client's limitations, so he only
-ever sees options that pass. He changes nothing but the trainer's equipment
+ever sees options that pass. He reads Coach IQ's principles before advising
+on reps, sets, load, tempo, rest or planning (`server/principles.js`): only
+the topics the Primary Master has approved. He changes nothing but the trainer's equipment
 answers and names for exercises, from their own words.
 
 `server/billy.js` asks Claude through Anthropic's SDK; the key stays on the
@@ -57,6 +59,7 @@ names:
 | `ANTHROPIC_API_KEY` | Unset, Billy is not offered: no button, and `/api/assistant` answers 503. |
 | `ASSISTANT_MODEL` | Which model answers. Unset: `claude-sonnet-5-5`; `claude-opus-5-5` is stronger and twice the price. |
 | `ASSISTANT_TRACE` | Logs each turn while debugging. Leave off: the questions are about real clients. |
+| `BOOK_MODEL` | Which model reads a book on Review Coach IQ → Books (`server/books.js`), with the same key. Unset: `claude-opus-5-5` (Glenn: a book is read once, and what it becomes is Coach IQ). |
 | `ASSISTANT_API_BASE` | Never on a host. Points Billy at a stand-in on this machine for testing; only `http://localhost` or `http://127.0.0.1` with a port is taken. |
 
 A photo is shrunk in the browser to 1600 pixels on its longest side and sent
@@ -67,8 +70,8 @@ its 20 kB limit.
 ## Coach's database
 
 Coach keeps its own data (each trainer's equipment, names for exercises and
-own exercises, clients' limitations, and Coach IQ's library itself with its
-history; `coach-iq/README.md`) in a database of
+own exercises, clients' limitations, Coach IQ's library and principles with
+their history, and the books read into it; `coach-iq/README.md`) in a database of
 its own, never Studio's (`server/db.js`). On the host, GoDaddy gives the app a
 new, empty MariaDB and names it with `DB_HOST`, `DB_PORT`, `DB_NAME`,
 `DB_USER` and `DB_PASSWORD`; `DB_SSL=true` if the server asks for TLS.

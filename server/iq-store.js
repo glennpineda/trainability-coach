@@ -2,16 +2,19 @@ import { readFileSync } from "node:fs";
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import { checkLibrary } from "./iq-check.js";
+import { readPrinciples } from "./principles-files.js";
 
 /**
  * Coach IQ's library, kept in the app (Glenn, 17 Oct 2026: "Is there another
  * way so it's app controlled?" … "Yes, use LIH").
  *
  * Its families, versions and conditions are rows in `coach_iq_docs`, each the
- * same JSON as in coach-iq/exercises.json and conditions.json. Those files
- * load it the first time the app starts with an empty table, and stay in the
- * code as its starting copy and a backup (an export from the app can be
- * written back into them: `npm run iq -- --import <file>`).
+ * same JSON as in coach-iq/exercises.json and conditions.json; so are its
+ * principles (kind "principle", keyed by topic: principles-files.js has
+ * their shape), since build 1.0.16 (Glenn, 17 Oct 2026: "Do all 3"). Those
+ * files load it the first time the app starts with none of a kind, and stay
+ * in the code as its starting copy and a backup (an export from the app can
+ * be written back into them: `npm run iq -- --import <file>`).
  *
  * Every change goes through `change()`: the whole library as it would be is
  * checked with Coach IQ's rules (iq-check.js, the same ones `npm run
@@ -30,14 +33,14 @@ const read = (name) => JSON.parse(readFileSync(new URL(`../coach-iq/${name}`, im
 function fromFiles() {
   const { movements, exercises } = read("exercises.json");
   const { conditions } = read("conditions.json");
-  return { movements, exercises, conditions };
+  return { movements, exercises, conditions, principles: readPrinciples() };
 }
 
 let state = fromFiles();
 let fromDatabase = false;
 const listeners = new Set();
 
-/** The library as it stands: { movements, exercises, conditions }. Never change it in place. */
+/** The library as it stands: { movements, exercises, conditions, principles }. Never change it in place. */
 export const current = () => state;
 /** Whether the library is the database's (true) or still the files' (false). */
 export const isLive = () => fromDatabase;
@@ -58,6 +61,7 @@ function assemble(rows) {
     movements: Object.fromEntries(of("family")),
     exercises: of("exercise").map(([, x]) => x),
     conditions: of("condition").map(([, c]) => c),
+    principles: of("principle").map(([, p]) => p),
   };
 }
 
@@ -91,6 +95,18 @@ export async function load() {
       [id, `Loaded from the files: ${Object.keys(lib.movements).length} families, ${lib.exercises.length} versions, ${lib.conditions.length} conditions`, "[]", "", "Coach", stamp]));
     rows = await all(`SELECT kind, id, pos, data FROM coach_iq_docs`);
   }
+  /* The principles joined the library after it first went live (build
+     1.0.16): loaded from their files on their own the first time. */
+  if (!rows.some(r => r.kind === "principle")) {
+    const principles = readPrinciples();
+    let pos = Number((await get(`SELECT MAX(pos) AS top FROM coach_iq_docs`))?.top) || 0;
+    const stamp = now();
+    for (const p of principles) await insertDoc("principle", p.key, p, ++pos, stamp);
+    await insertWithNewId("libraryHistory", (id) => run(
+      `INSERT INTO coach_iq_history (id, summary, changes, changed_by, changed_by_name, changed_at) VALUES (?, ?, ?, ?, ?, ?)`,
+      [id, `Loaded the principles from the files: ${principles.length} topics`, "[]", "", "Coach", stamp]));
+    rows = await all(`SELECT kind, id, pos, data FROM coach_iq_docs`);
+  }
   fromDatabase = true;
   replace(assemble(rows));
 }
@@ -103,6 +119,7 @@ function find(lib, kind, id) {
   if (kind === "family") return lib.movements[id] ?? null;
   if (kind === "exercise") return lib.exercises.find(x => x.id === id) ?? null;
   if (kind === "condition") return lib.conditions.find(c => c.key === id) ?? null;
+  if (kind === "principle") return lib.principles.find(p => p.key === id) ?? null;
   return null;
 }
 
@@ -111,6 +128,7 @@ function withChanges(lib, changes) {
   const movements = { ...lib.movements };
   let exercises = [...lib.exercises];
   let conditions = [...lib.conditions];
+  let principles = [...lib.principles];
   for (const { kind, id, after } of changes) {
     if (kind === "family") {
       if (after) movements[id] = after; else delete movements[id];
@@ -124,9 +142,14 @@ function withChanges(lib, changes) {
       if (!after) conditions = conditions.filter(c => c.key !== id);
       else if (at === -1) conditions.push(after);
       else conditions[at] = after;
+    } else if (kind === "principle") {
+      const at = principles.findIndex(p => p.key === id);
+      if (!after) principles = principles.filter(p => p.key !== id);
+      else if (at === -1) principles.push(after);
+      else principles[at] = after;
     }
   }
-  return { movements, exercises, conditions };
+  return { movements, exercises, conditions, principles };
 }
 
 /** A change the library's rules refuse, with the reasons in plain words. */
@@ -189,10 +212,11 @@ export async function undo(historyId, who) {
   if (!r) return null;
   if (r.undone_by) throw new Refused(["That change has already been undone."]);
   const changes = JSON.parse(r.changes || "[]");
-  if (!changes.length) throw new Refused(["Loading the library from the files can't be undone."]);
+  if (!changes.length) throw new Refused(["Loading from the files can't be undone."]);
   for (const c of changes) {
     if (JSON.stringify(find(state, c.kind, c.id)) !== JSON.stringify(c.after)) {
-      throw new Refused([`${c.after?.name || c.after?.label || c.before?.name || c.before?.label || c.id} has changed since. Undo the later change first.`]);
+      const was = c.after || c.before;
+      throw new Refused([`${was?.name || was?.label || was?.title || c.id} has changed since. Undo the later change first.`]);
     }
   }
   const id = await change(changes.map(c => ({ kind: c.kind, id: c.id, after: c.before })), who, `Undid: ${r.summary}`, { undoes: r.id });

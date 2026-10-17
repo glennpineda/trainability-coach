@@ -2,11 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Check, Flag, Undo2, Download, ChevronRight, Pencil, History, Archive, Plus } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
-import { VersionForm, FamilyForm, ConditionForm, ChangeList, AddButton } from "../review/LibraryEditor";
+import { VersionForm, FamilyForm, ConditionForm, PrincipleForm, ChangeList, AddButton } from "../review/LibraryEditor";
+import { Prose, Standing } from "../review/Prose";
+import { BooksSection } from "../review/Books";
 
 const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
-const SECTIONS = [["exercises", "Exercises"], ["conditions", "Conditions"], ["suggestions", "Suggestions"], ["changes", "Changes"], ["books", "Books"]];
+const SECTIONS = [["exercises", "Exercises"], ["conditions", "Conditions"], ["principles", "Principles"], ["suggestions", "Suggestions"], ["changes", "Changes"], ["books", "Books"]];
 
 /* How far through: a count and a bar. */
 function Progress({ label, done, flagged, total }) {
@@ -81,9 +83,10 @@ function CardActions({ children }) {
  * another way so it's app controlled?") its editor too: the library one
  * family at a time, each version a card to Approve or Flag, Edit, Retire or
  * look back through; families and versions added; the conditions table the
- * same way; trainers' suggestions made library exercises; every change
- * listed under Changes to undo; and Export for a snapshot. A mark and an
- * edit count at once. Books is where reading a book will go.
+ * same way; the principles, topic by topic (build 1.0.16); trainers'
+ * suggestions made library exercises; every change listed under Changes to
+ * undo; Export for a snapshot; and Books, where a book is read into the
+ * principles (build 1.0.16). A mark and an edit count at once.
  */
 export function ReviewTab({ onSignedOut }) {
   const [summary, setSummary] = useState(null);
@@ -91,6 +94,8 @@ export function ReviewTab({ onSignedOut }) {
   const [familyId, setFamilyId] = useState(null);
   const [family, setFamily] = useState(null);
   const [conditions, setConditions] = useState(null);
+  const [principles, setPrinciples] = useState(null);
+  const [topic, setTopic] = useState(null);
   const [changes, setChanges] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -115,6 +120,9 @@ export function ReviewTab({ onSignedOut }) {
 
   const loadConditions = useCallback(() => apiRequest("GET", "/coach-iq/review/conditions").then(({ conditions: c }) => setConditions(c)).catch(fail), [fail]);
   useEffect(() => { if (section === "conditions" && !conditions) loadConditions(); }, [section, conditions, loadConditions]);
+
+  const loadPrinciples = useCallback(() => apiRequest("GET", "/coach-iq/review/principles").then(({ principles: p }) => setPrinciples(p)).catch(fail), [fail]);
+  useEffect(() => { if (section === "principles" && !principles) loadPrinciples(); }, [section, principles, loadPrinciples]);
 
   const loadChanges = useCallback(() => apiRequest("GET", "/coach-iq/library/history").then(({ changes: c }) => setChanges(c)).catch(fail), [fail]);
   useEffect(() => { if (section === "changes") loadChanges(); }, [section, loadChanges]);
@@ -143,6 +151,7 @@ export function ReviewTab({ onSignedOut }) {
     try {
       const { mark: m } = await apiRequest("PUT", `/coach-iq/review/${kind}/${target}`, body);
       if (kind === "exercise") setFamily(f => ({ ...f, versions: f.versions.map(v => (v.id === target ? { ...v, mark: m } : v)) }));
+      else if (kind === "principle") loadPrinciples();
       else setConditions(list => list.map(c => (c.key === target ? { ...c, mark: m } : c)));
       loadSummary();
     } catch (err) { fail(err); } finally { setBusy(false); }
@@ -163,6 +172,7 @@ export function ReviewTab({ onSignedOut }) {
       loadSummary(); loadChanges();
       if (familyId) loadFamily(familyId);
       if (conditions) loadConditions();
+      if (principles) loadPrinciples();
       if (history.id) showHistory(history.id, true);
     } catch (err) {
       if (err.status === 401) onSignedOut?.();
@@ -198,9 +208,10 @@ export function ReviewTab({ onSignedOut }) {
 
       {!summary ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : (
         <>
-          <section className="cx-card p-4 mb-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto] items-center">
+          <section className="cx-card p-4 mb-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_auto] items-center">
             <Progress label="exercises" done={summary.approved} flagged={summary.flagged} total={summary.total} />
             <Progress label="conditions" done={summary.conditions.approved} flagged={summary.conditions.flagged} total={summary.conditions.total} />
+            <Progress label="principles" done={summary.principles.approved} flagged={summary.principles.flagged} total={summary.principles.total} />
             <a href="/api/coach-iq/library/export" download className="text-sm cx-link justify-self-start">
               <Download size={15} aria-hidden="true" /> Export the library
             </a>
@@ -366,6 +377,67 @@ export function ReviewTab({ onSignedOut }) {
             )
           )}
 
+          {section === "principles" && (
+            !principles ? <p className="text-sm" style={muted}>Loading…</p> : (
+              <>
+                <p className="text-sm mb-3" style={muted}>
+                  How Trainability designs a program, one topic at a time. Billy works from the reviewed ones; a draft waits
+                  for your approval.
+                </p>
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] items-start">
+                  <ul className="cx-card p-2 grid">
+                    {principles.map(p => (
+                      <li key={p.key}>
+                        <button type="button" onClick={() => { setTopic(p.key); open(null); }}
+                          className="w-full text-left px-3 py-2 rounded-lg text-sm"
+                          style={topic === p.key ? { background: "var(--ghost-fill)" } : undefined} aria-current={topic === p.key ? "true" : undefined}>
+                          <span className="font-medium">{p.title}</span>
+                          {p.status !== "reviewed" && <span className="ml-2 text-xs px-1.5 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)" }}>Draft</span>}
+                          {p.mark?.mark === "flag" && <Flag size={13} className="inline ml-1.5" style={{ color: "var(--ember)" }} aria-label="Flagged" />}
+                        </button>
+                      </li>
+                    ))}
+                    <li className="mt-1"><AddButton onClick={() => { setTopic(null); open("newPrinciple"); }}>Add a topic</AddButton></li>
+                  </ul>
+                  {is("newPrinciple") ? (
+                    <article className="cx-card p-4">
+                      <div className="font-semibold">A new topic</div>
+                      <PrincipleForm busy={busy} error={formError} word="Add it" onCancel={() => open(null)}
+                        onSave={(body) => save("POST", "/coach-iq/library/principles", body, (out) => { setPrinciples(out.principles); setTopic(out.principles[out.principles.length - 1]?.key); })} />
+                    </article>
+                  ) : (() => {
+                    const p = principles.find(x => x.key === topic);
+                    if (!p) return <p className="text-sm" style={muted}>Choose a topic to read it.</p>;
+                    return (
+                      <article className="cx-card p-4 min-w-0">
+                        {is("principle", p.key) ? (
+                          <>
+                            <div className="font-semibold">Change {p.title}</div>
+                            <PrincipleForm initial={p} busy={busy} error={formError} onCancel={() => open(null)}
+                              onSave={(body) => save("PUT", `/coach-iq/library/principles/${p.key}`, body, (out) => setPrinciples(out.principles))} />
+                          </>
+                        ) : (
+                          <>
+                            <h2 className="cx-display text-2xl">{p.title}</h2>
+                            <div className="text-sm" style={muted}>{p.covers}</div>
+                            <Standing p={p} />
+                            <div className="mt-3"><Prose text={p.body} onTopic={(k) => { setTopic(k); window.scrollTo({ top: 0 }); }} /></div>
+                            <CardActions>
+                              <button type="button" className="cx-btn-row" onClick={() => open("principle", p.key)}><Pencil size={15} aria-hidden="true" /> Edit</button>
+                              <button type="button" className="text-sm cx-link" onClick={() => showHistory(p.key)}><History size={15} aria-hidden="true" /> History</button>
+                            </CardActions>
+                            {historyUnder(p.key)}
+                            <Marker key={p.mark?.at || "none"} mark={p.mark} busy={busy} onMark={(body) => mark("principle", p.key, body)} />
+                          </>
+                        )}
+                      </article>
+                    );
+                  })()}
+                </div>
+              </>
+            )
+          )}
+
           {section === "suggestions" && (
             summary.suggestions.length === 0 ? <p className="text-sm" style={muted}>No trainer has suggested an exercise yet.</p> : (
               <>
@@ -410,14 +482,7 @@ export function ReviewTab({ onSignedOut }) {
             </section>
           )}
 
-          {section === "books" && (
-            <section className="cx-card p-4">
-              <h2 className="font-semibold">Books</h2>
-              <p className="text-sm mt-1" style={muted}>
-                Reading a book into Coach IQ will be done here. Until then, give Claude the PDF in a session.
-              </p>
-            </section>
-          )}
+          {section === "books" && <BooksSection onSignedOut={onSignedOut} onAccepted={() => { loadSummary(); setPrinciples(null); }} />}
         </>
       )}
     </div>

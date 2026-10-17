@@ -2,7 +2,7 @@ import {
   ORDER, WORDS, PATTERNS, PIECES, PURPOSES, ROLES, MUSCLES, JOINTS, FLAGS, LEVELS, MEASURES,
 } from "./coach-iq.js";
 import { CATEGORIES } from "./equipment.js";
-import { DISCIPLINES } from "./iq-check.js";
+import { DISCIPLINES, PRINCIPLE_MAX } from "./iq-check.js";
 
 /**
  * Editing Coach IQ's library on the review page (Glenn, 17 Oct 2026): what
@@ -100,6 +100,25 @@ export function conditionFrom(body = {}, existing = null) {
     refer: text(body.refer, 400),
     status: existing?.status || "draft",
     reviewed: existing?.reviewed ?? null,
+  };
+}
+
+/**
+ * A principle from the page: { title, covers, body }, the body in Markdown as
+ * the files have it. Its key comes from its title the first time and never
+ * changes; its status and sources are kept as they were.
+ */
+export function principleFrom(body = {}, existing = null) {
+  const prose = typeof body.body === "string" ? body.body.replace(/\r\n/g, "\n").trim().slice(0, PRINCIPLE_MAX + 1) : "";
+  return {
+    ...(existing || {}),
+    key: existing?.key || conditionKey(body.title),
+    title: text(body.title, 80),
+    covers: text(body.covers, 200),
+    body: prose,
+    status: existing?.status || "draft",
+    reviewed: existing?.reviewed ?? null,
+    sources: existing?.sources || [],
   };
 }
 

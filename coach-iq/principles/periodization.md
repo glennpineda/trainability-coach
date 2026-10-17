@@ -1,6 +1,6 @@
 # Planning over time (periodization)
 
-_Status: reviewed by Glenn, 17 Oct 2026 (from the first book)._
+_Status: reviewed, 17 Oct 2026. From: Program Design (Paul Chek, 2011)._
 
 Training is planned in phases that change volume, intensity and exercise
 choice on purpose, so progress keeps coming and fatigue is managed. It works

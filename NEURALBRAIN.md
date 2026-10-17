@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **All three next steps for Coach IQ: the principles move into the app, Billy reads them, and a book is read in the app** (17 Oct 2026; Glenn: "Do all 3", after I listed them as the natural next steps when committing build 1.0.15). Build 1.0.16. Not from Next up. Two decisions asked first, with recommendations: the id tag for a book read in the app (Glenn: "iqb", matching iqr) and the model that reads books (Glenn: "Opus 5.5", over Sonnet 5.5 like Billy, because a book is read once and becomes Coach IQ; `BOOK_MODEL` overrides it). **1. The principles in the app.** They join the library in `coach_iq_docs` as kind `principle`, keyed by topic (`rest`, `starting-out` …), each `{ key, title, covers, body, status, reviewed, sources }`, so they share the library's checks, history (`lih…`), undo and export. New `server/principles-files.js` reads and writes the files: the title from `# Title`, `covers` from the line in `principles/README.md`'s table, and the status line, which had to change to be read back: the eleven files' "_Status: reviewed by Glenn, 17 Oct 2026 (from the first book)._" became "_Status: reviewed, 17 Oct 2026. From: Program Design (Paul Chek, 2011)._" (several sources joined with "; "); every file was checked to come out of `principleText` exactly as it went in. `iq-store.js` reads them in `fromFiles()`, and since the library was already live with rows, `load()` loads the principles from the files on their own the first time there are none, with a history record "Loaded the principles from the files: 11 topics"; `find`, `withChanges` and undo's "has changed since" message know the kind. `iq-check.js` checks each principle (key shape, unique, title, covers, a body of at most 40,000 characters, no status line inside the text, sources a list, draft or reviewed with a date). `npm run check-iq` checks the files too and now says "11 principles", and `npm run iq -- --import <export>` writes an export's principles back into the files and rewrites the README's table (tried on an export from the test server, then the files were put back). `iq-edit.js` has `principleFrom` (title, covers, Markdown body; key from the title the first time, never changed); `reviews.js` takes `principle` as a third kind of mark. Routes: `GET /api/coach-iq/review/principles`, `PUT` and `POST /api/coach-iq/library/principles`, and the review mark route takes `principle`; the review summary counts them. On the page, **Principles** sits between Conditions and Suggestions: the topics down the side (a Draft badge, a flag), the chosen one drawn from its Markdown (new `src/review/Prose.jsx`, a small reader that makes elements, never HTML: headings, paragraphs, "- " and "1. " lists with wrapped lines, tables, bold, italic, and a link to another topic's `.md` opening that topic), a line saying when it was reviewed and from which books, Edit (`PrincipleForm` in `LibraryEditor.jsx`: title, what it covers, the text in a textarea, with a line on how to write headings, points and bold), History, Approve and Flag, and **+ Add a topic**; a third count and bar for principles at the top. **2. Billy reads them.** New tool `coach_principles` (`server/principles.js`): no topic gives the list of topics and what each covers, a topic (key or title, loosely) gives its text. Only reviewed topics, never a draft, which is Coach IQ's rule that nothing goes in until reviewed; a flag puts a topic back to draft and so out of his reach. His prompt gained a line: before advising on reps, sets, load, tempo, rest, how often, planning over weeks, a beginner, or a woman or teenager, read the principles and work from them, say when he goes beyond them, the trainer's word wins, and Coach IQ doesn't cover children. His rounds went from 6 to 8 to leave room for the list and a topic. **3. Reading a book in the app** (new `server/books.js`, `src/review/Books.jsx`; the proposal of 16 Oct 2026 in `coach-iq/README.md`). Review Coach IQ → Books, the Primary Master's. The PDF is the request's own body (`POST /api/coach-iq/books`, `Content-Type: application/pdf`, its name in `X-File-Name`), streamed to the files folder (`books/` under Installation's folder) with a 100 MB cap counted as it arrives, then opened with `pdf-lib` (1.17.1, added; the only way to count and cut pages without a native tool) to count its pages; anything that isn't a PDF is refused in words. One `coach_iq_books` row (`iqb…`) keeps the file name, pages, parts, status (waiting, reading, ready, done, failed, discarded), the step in words, the notes, what the book is, the proposals, the model and the tokens used. The reading, one thing at a time in an in-process queue, each step saved so a restart carries on (`resume()` on start): the PDF is cut into parts of 40 pages, a part over 18 MB halved until it fits; each part is read for notes in our own words (structured output: the book's title, author, edition and year if the part shows them, and the notes, with DATED, ONE VIEW and DISAGREES marks); then the topics the book adds to are chosen from all the notes and the principles as they stand (existing keys, or a new topic made a proper key); then each topic is written again (the whole text, what changed, and open points, each with two to four options, the recommended one and why, marked in the text as **Open for Glenn (n)**). Every request is streamed (they are long), at effort high, and its system prompt says the book is learned from, never copied (no sentences, tables, lists, headings or branded systems; facts and ranges in plain words), that Coach IQ covers adults and teenagers, and that lines recording a decision, written (Name, date: "words"), are kept whatever the book says, raised as an open point if it disagrees. When read, the PDF is deleted. The page: an upload card (the bar shows the PDF going up; without Billy's key it says reading needs it), then a card for each book with its state, a bar while reading, the step ("Reading part 2 of 3 (pages 41–80)"), topics decided, tokens read and written, and **Go through it**, **Try again** (failed) or **Put away** (the PDF goes and nothing more is accepted; the row stays, archive rather than delete). Going through it: what the book is and what it adds, then a card for each topic, marked Changes or New topic, with what changed; its open points one at a time ("Point 1 of 2"), the recommended answer chosen already and marked **(recommended)** with why, or **Or in your own words**; **Next point** saves the answers, **Write it up** saves them and queues the write-up, in which the answers are written in as (first name, date: "answer") and nothing else changes; then the text as it would go in, **Accept** or **Reject**, **Change the text first**, **Read the proposed text** / **Read the topic as it was**. Accept saves through `store.change` as reviewed today with the book's label ("Title (Author, Year)") added to the sources, history "From <title>: changed the principles on <topic>"; it is refused if the topic changed since the book was read (the proposal keeps the text it was based on), so a change made meanwhile is never lost, and refused while the text still has an **Open for Glenn** in it. When every topic is accepted or rejected, the book is Done. The write-up's date is the UTC day, the same one an approval is dated with (first written with Pacific time, which gave 16 Oct beside an approval of 17 Oct in testing). Manual 3.9 (three counts; a new step 7 for Principles, steps renumbered), a new 3.11 "Reading a book into Coach IQ (Primary Master only)" in the contents, 5.5 a point on the principles, and four messages in chapter 7; CHANGELOG three bullets under 1.0 Caesious; README (Billy, the database, `BOOK_MODEL`); `.env.example` `BOOK_MODEL`; `coach-iq/README.md` (the book section rewritten as built, How it is written, Files), `principles/README.md`, `READ.md`. **Tested** in the cloud against stand-ins in the session's scratchpad (Studio's sign-in on 4242 with a Primary Master and a trainer; Claude on 4243, through `ASSISTANT_API_BASE`, answering each kind of request with fixed JSON, streamed as server-sent events, and logging what each request carried), on a scratch SQLite database: the principles loaded (11, all reviewed); a trainer was told Not found; an edit, an edit refused for an empty text and for a status line inside the text, undo, flag (back to draft), approve, a new topic (draft) and the export with its principles; Billy listed and read topics, by key and by title, and was refused the draft; a made-up 90-page PDF was refused to a trainer, a JSON body and a non-PDF were refused in words, and the PDF was read in three parts (40, 40 and 10 pages, each request with Opus 5.5, streamed, effort high, JSON schema, the PDF as a document), planned into Rest and a new Warming up, written as two proposals, and deleted from the files folder; writing up before answering and accepting before writing up were refused; an answer in his own words written in; accepting refused after Rest had been changed meanwhile, then accepted once that change was undone, with the book in Rest's sources; a new topic's text changed and the topic rejected; the book then Done. In Chromium at 1200px light and 400px dark: Principles (the table drawn, Edit's text), uploading, the bar, going through, the recommended answer chosen already, Write it up, Accept and Reject, with no console errors and no sideways scroll. **Not tested:** a real book with the real Opus 5.5, since there is no key in the cloud: how good the notes, topics and open points are, how long a 300-page book takes and what it costs are for Glenn's first book in the app; a restart in the middle of a reading (the code carries on from the saved step, but it was not tried); and MariaDB on the host, where the new table is made on start like the others. Commit: build 1.0.16.
+
 - **Coach IQ's first principles, from book 1** (17 Oct 2026; Glenn: "Here is the first part of book 1", "Here is part 2 of book 1", "Ask me one by one and recommend answers", then "Commit as reviewed"). Build 1.0.15. Not from Next up. **How the book came in**: Glenn first found the chat refused the whole PDF ("it says it's too many pages"); I suggested splitting it on his Mac (Preview → Print → a page range → Save as PDF) rather than building in-app book reading first, so the first book could teach us what a book turns into. He sent it in two PDFs: pages 1–100 and 101–129. Read 20 pages at a time with the Read tool's page ranges. The book: *Program Design: Choosing Reps, Sets, Loads, Tempo and Rest Periods*, 2nd edition (2011), Paul Chek, a correspondence-course manual; the teaching is pages 10–92, then references, the course exam (questions 1–100, running into part 2), order forms and the author's biography. **Copyright**: its copyright page forbids reproducing it and asks that its concepts not be used in paid programs without permission. I told Glenn before drafting; his standing decision (16 Oct 2026) is to learn from books and write Trainability's own, no sources shown. So the files are general training principles in our own words: none of the book's text, tables (rep-to-fibre estimates, sport energy table, eccentric percentages) or named systems was copied, and the book is named only in `coach-iq/READ.md`, which is for Glenn alone. **The outline**: as `coach-iq/README.md` ("How it is written") says, the first book sets it: one file per topic, put in a new `coach-iq/principles/` folder (with its own README listing them): `terms.md` (the program variables, volume/intensity/density, effort written as reps in reserve from the book's "−1/−2" notation, training age, kinds of strength, muscle actions and roles, station and circuit), `designing.md` (a health questionnaire first, from an exam question; nine guidelines; matching energy demands, without the book's sport table), `reps.md` (1–5 / 6–12 / 12–20+ and what each develops, very heavy sets, skill learning, the first year), `sets.md` (inverse to reps, building from 1–2 sets, per-session limits, the set window, cut sets not intensity), `load.md` (progression kinds, loading methods, eccentric work's uses and cautions), `tempo.md`, `rest.md`, `periodization.md` (phases, straight-line vs waves vs accumulation/intensification, 2:1 and 3:1 light weeks, tapering), `frequency-and-variety.md`, `starting-out.md`, and `women-and-teenagers.md`. **Dated or one-coach claims** were drafted as ranges with an "Open for Glenn" line (twelve, the twelfth from part 2), and Glenn went through them one by one with my recommendations (AskUserQuestion, one at a time). His answers: 1, a client's level and an exercise's level are **"One shared scale"** (not my recommendation, which was to keep training age separate and named); 2, the fibre-type estimate from reps at 75% **"Leave it out"**; 3, the nervous system's slower recovery kept **without the book's number**; 4, session length **"Add a loose time guide"** (45–75 minutes, a rough planning guide, set count matters; the book's 30–45 minutes for hormones dropped; not my recommendation, which was the set limit only); 5, eccentric work **"Principle only"** (three stages, trainer sets numbers; the book's six-step named progression not used); 6, tempo **"Read both, write four"** (lowering–bottom pause–lifting–top pause; three numbers read as no top pause); 7, rest ranges kept, **hormone reason dropped**; 8, tapering by **size and event length only** (men-taper-longer dropped); 9, contraction mix in **words, no 70/20/10**; 10, very heavy loads **"By technique and supervision"**, not after a fixed 1–2 years; 11, women: **"Program the person"** (the book's cycle-timing and sex-difference specifics dropped); 12, children: **"No youth training in Coach"** (not my recommendation of supervised from about 7–8): Coach IQ covers adults and teenagers only, so the file became `women-and-teenagers.md`, children's play and start ages removed, teenage guidance kept, and "children's training" in `load.md` became teenagers'. Each answer is written into its file in Glenn's words, replacing its Open line. Part 2 added two points from the exam: the health questionnaire, and slower nervous-system recovery; a few exam claims were left out as unsound (the best time to train being when cortisol is highest). Glenn then chose **"Commit as reviewed"**: every file says "reviewed by Glenn, 17 Oct 2026 (from the first book)"; `principles/README.md` says a later book's additions are drafts until he has reviewed them. `READ.md` records the book, the outline it set, that nothing was copied, the twelve settled points, and the copyright notice with Glenn's decision. `coach-iq/README.md` points at `principles/` in "How it is written" and Files. Review copies were sent as single combined files from the scratchpad. **Not yet done**: Billy doesn't read the principles; they are files in the code, not in the app's database like the library. Both are the natural next steps, for Glenn to choose.
 
 - **The deploy that rolled back: a leftover postcss.config.js on the host** (17 Oct 2026; Glenn: "I'm getting this error when I deploy", with Airo's log: "This version did not become healthy, so production was rolled back to the previous version (d5b87c978e2eac0503a83db511bc8f4eebc05102)"). Build 1.0.13. Not from Next up. **What the log showed**: build 1.0.12's `npm start` ran `vite build` (Vite 8.3.4), which failed in `vite:css` on `src/index.css` with "[postcss] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin … install `@tailwindcss/postcss`", so the server never started and Airo went back to the version it had been serving, which turned out to be 0.1.0 (Vite 5.4.21), from before the move to Vite 8 and Tailwind 4. **Why**: the same log says `Skipping cleanup (cleanAppDirBeforeExtract: false)` and `Extracting archive to: /app`: Airo unpacks each deploy over the last without emptying the folder. 0.1.0 shipped a `postcss.config.js` (`plugins: { tailwindcss: {}, autoprefixer: {} }`, from commit 1c55d2f) and a `tailwind.config.js`; both were deleted from the repository in 098b08f ("Vite 8 and Tailwind 4"), but stayed in `/app` on the host. Vite looks for a PostCSS config file whenever none is set in its own config, found the old one, and ran Tailwind 4's package as a PostCSS plugin, which it refuses. Nothing in 1.0.12's own code was wrong; any build after the Tailwind 4 move would have failed there the same way. **Reproduced** here: the repository at HEAD in a scratch folder, with 0.1.0's `postcss.config.js` and `tailwind.config.js` written back in, failed `vite build` loading that config (here on the missing `autoprefixer`, which the host still has from 0.1.0, hence its error reaching Tailwind instead; the same cause). **Fix**: `vite.config.js` sets `css: { postcss: { plugins: [] } }`. Given PostCSS settings of its own, Vite never searches for a config file, and Tailwind 4 runs as the `@tailwindcss/vite` plugin, needing no PostCSS. With both leftover files present the scratch build then succeeded, and the CSS it wrote has the same hash (`index-Cjmn8mSK.css`, 29.16 kB) as the build without the fix, so nothing else changed. README (Deploying) says why the setting is there. A leftover `tailwind.config.js` is harmless: Tailwind 4 reads one only when the CSS names it with `@config`. If Airo has a setting to empty `/app` before unpacking (`cleanAppDirBeforeExtract`), turning it on would also stop other deleted files lingering; that is Glenn's to look at, not needed for this fix. **Deployed** by Glenn the same day, who checked the live site against a list (health showing 1.0.13 on mysql; the account menu's four pages; Installation saving in /private/trainability-coach; Review Coach IQ → Changes starting with "Loaded from the files: 139 families, 301 versions, 14 conditions"; Billy once the key is set) and reported: "Everything looks good". A cloud session can't reach trainabilitycoach.com, so the check was his. This was also the first deploy since 0.1.0: every build from 1.0.1 to 1.0.13 went live together.
@@ -164,6 +166,7 @@ of the app gets its own chapter here as it arrives.
    - [3.8 My exercises](#38-my-exercises)
    - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
    - [3.10 Installation (Primary Master only)](#310-installation-primary-master-only)
+   - [3.11 Reading a book into Coach IQ (Primary Master only)](#311-reading-a-book-into-coach-iq-primary-master-only)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
    - [4.2 Reading the list](#42-reading-the-list)
@@ -503,16 +506,17 @@ before changing it.
 
 #### 3.9 Reviewing and editing Coach IQ (Primary Master only)
 
-Coach IQ's library of exercises and its conditions table live in Coach
-itself. Every exercise and every condition starts as a draft. The Primary
-Master passes each one here, and keeps the library right: changing, adding
-and retiring exercises, and adding trainers' suggestions. Nobody else sees
-this page.
+Coach IQ's library of exercises, its conditions table and its principles (how
+Trainability designs a program) live in Coach itself. Every exercise, condition
+and principle starts as a draft. The Primary Master passes each one here, and
+keeps Coach IQ right: changing, adding and retiring exercises, adding trainers'
+suggestions, and reading books into the principles. Nobody else sees this
+page.
 
 1. Tap your photo or initials in the top right corner, then **Review Coach
    IQ**.
-2. At the top are two counts with bars: how many exercises and how many
-   conditions are approved so far, and how many are flagged.
+2. At the top are three counts with bars: how many exercises, conditions and
+   principles are approved so far, and how many are flagged.
 3. Under **Exercises**, tap **Start with the first not done**, or choose a
    family from the list. Each family's line in the list says how many of its
    exercises are approved, such as *Squat — 3 of 12*.
@@ -555,15 +559,23 @@ tap **Save** again, or tap **Cancel**.
    avoid, what to make easier or supported, whether a doctor's go-ahead comes
    first, and when to send them on. Tap **Edit** to change one, or **+ Add a
    condition** at the foot of the list.
-7. **Suggestions** shows exercises trainers have suggested for everybody's
+7. **Principles** lists the topics down the side (Terms, Reps, Rest …). Tap
+   one to read it. Under its title it says when it was reviewed and which
+   books it comes from; a topic not yet approved is marked **Draft**, and
+   Billy doesn't use it until you approve it. **Approve** and **Flag** work
+   as for an exercise. Tap **Edit** to change its title, the line saying what
+   it covers, or its text, then **Save**. In the text, "## " starts a
+   heading, "- " a point and "1. " a numbered step, and words between two
+   stars on each side are bold. **+ Add a topic**, at the foot of the list,
+   starts a new one.
+8. **Suggestions** shows exercises trainers have suggested for everybody's
    library, who suggested each, and why. Tap **Add to the library**, choose
    its family and fill in its details, then tap **Add to the library** again.
    The trainer's names for it now mean the library's exercise.
-8. **Changes** lists every change to the library, newest first, with who made
+9. **Changes** lists every change to the library, newest first, with who made
    it and when. **Undo** puts back what a change touched. If something it
    touched has changed since, undo the later change first.
-9. **Books** is where reading a book into Coach IQ will be done. Until then,
-   give Claude the PDF in a session.
+10. **Books** is where a book is read into the principles (3.11).
 
 Every change and every approval counts straight away: Billy uses the library
 as it now stands. **Export the library**, at the top, downloads all of it as
@@ -594,6 +606,54 @@ folder in use.
 written to, the app goes back to its own choice and says so in red. If the
 host's own settings name the folder, the page says so and it can't be changed
 from here.
+
+#### 3.11 Reading a book into Coach IQ (Primary Master only)
+
+Coach can read a book about training and suggest what it adds to the
+principles. It reads the book in your own words, not the book's, and asks you
+about anything it shouldn't decide alone. Nothing changes until you accept it.
+
+1. Open **Review Coach IQ** (3.9) and tap **Books**.
+2. Under **Read a book**, tap the file button and choose the book's PDF (up to
+   100 MB). Its name and size appear under the button.
+3. Tap **Read the book**. A bar shows the PDF going up.
+4. The book appears below as a card, saying **Waiting to be read**, then
+   **Reading**, with a bar and the part it is on, such as *Reading part 2 of
+   5 (pages 41–80)*. A long book takes a while. You can leave the page; the
+   reading carries on.
+5. When it says **Ready for you**, tap **Go through it**. At the top is what
+   the book is and what it adds. Below, one card for each topic it adds to,
+   marked **Changes** or **New topic**, with a list of what changed.
+6. Where the book is out of date, is one coach's view, or disagrees with what
+   is there, the card asks you, one point at a time: the question, what the
+   book and the text say, and two to four answers. The one Coach recommends is
+   chosen already and marked **(recommended)**, with why. Choose another, or
+   write your own answer in **Or in your own words**. Tap **Next point**, and
+   after the last one, **Write it up**.
+7. The card says **Writing your answers in. This takes a minute or two.**
+   Then it shows the text as it would go in, with each answer written in
+   with your name and the day.
+8. Read it. To change something first, tap **Change the text first**, change
+   it, and tap **Keep these changes**.
+9. Tap **Accept** to put it into the principles, approved, with the book named
+   as a source. Tap **Reject** to leave the topic as it is. A topic with
+   nothing to ask you goes straight to step 8.
+10. When every topic is accepted or rejected, the book says **Done**.
+
+Under each card, **Read the proposed text** shows the whole topic as the book
+would have it, and **Read the topic as it was** shows it as it stands now.
+An accepted topic can be undone under **Changes**, like any other change.
+
+If the topic was changed after the book was read, **Accept** says so and
+saves nothing: copy what you want into the topic under **Principles**, and
+reject the book's version.
+
+If reading stops, the card says **Stopped** and why; tap **Try again** to
+carry on from where it stopped. **Put away** stops using a book: its PDF is
+thrown away and nothing more is read or accepted from it. The PDF is thrown
+away anyway once the book has been read. Reading a book uses Billy's key and
+costs Claude's time, a few dollars for a long book; the card shows how much it
+read and wrote.
 
 <div style="page-break-after: always;"></div>
 
@@ -779,6 +839,10 @@ page clears it too: Coach does not keep your conversations with Billy.
   and only what designing training needs: not their email, phone number or
   birthday. He reads their limitations (4.7) before suggesting anything, and
   says when something needs a doctor's go-ahead first.
+- **He works from Coach IQ's principles** (3.9) when he talks about reps,
+  sets, load, tempo, rest, how often to train or planning over weeks: only
+  the topics you have approved, never a draft. They are guidance; your word
+  wins.
 - **His suggestions come from the library, already checked.** Ask him for
   something instead of an exercise and he only offers ones that fit the
   equipment at the place, the client's level and their limitations. If one
@@ -869,6 +933,23 @@ Your question is still in the box. Wait a minute and tap the blue arrow again.
 **"Billy isn't working right now: this server's key for him was refused. Tell whoever runs the app."**
 Billy's setup on the server needs fixing. It is not something you did; pass
 the message on.
+
+**"Reading a book needs Billy's key on this server (ANTHROPIC_API_KEY). Ask whoever runs the app."**
+Books (3.11) uses Billy's key, and it isn't set up on this server. Pass the
+message on.
+
+**"That file couldn't be opened as a PDF. Check it opens on your computer, then try again."**
+The file isn't a PDF, or it is damaged. Open it on your computer; if it opens,
+save it again as a PDF and upload that.
+
+**"That PDF is over 100 MB. Split it into two and upload the parts as two books."**
+Save the first half and the second half of the book as two PDFs, and upload
+each as its own book.
+
+**"… has changed since this book was read. Copy what you want from this text into it on Principles, and reject this one."**
+Somebody changed the topic after the book was read, so accepting would undo
+their change. Open the topic under **Principles**, add what you want from the
+book's text, then reject the book's version.
 
 **You are back on the sign-in screen.**
 Your sign-in ran out while the app was open. Sign in again (2.1).

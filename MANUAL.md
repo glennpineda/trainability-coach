@@ -33,6 +33,7 @@ of the app gets its own chapter here as it arrives.
    - [3.8 My exercises](#38-my-exercises)
    - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
    - [3.10 Installation (Primary Master only)](#310-installation-primary-master-only)
+   - [3.11 Reading a book into Coach IQ (Primary Master only)](#311-reading-a-book-into-coach-iq-primary-master-only)
 4. [Your clients](#4-your-clients)
    - [4.1 Opening your clients](#41-opening-your-clients)
    - [4.2 Reading the list](#42-reading-the-list)
@@ -372,16 +373,17 @@ before changing it.
 
 ### 3.9 Reviewing and editing Coach IQ (Primary Master only)
 
-Coach IQ's library of exercises and its conditions table live in Coach
-itself. Every exercise and every condition starts as a draft. The Primary
-Master passes each one here, and keeps the library right: changing, adding
-and retiring exercises, and adding trainers' suggestions. Nobody else sees
-this page.
+Coach IQ's library of exercises, its conditions table and its principles (how
+Trainability designs a program) live in Coach itself. Every exercise, condition
+and principle starts as a draft. The Primary Master passes each one here, and
+keeps Coach IQ right: changing, adding and retiring exercises, adding trainers'
+suggestions, and reading books into the principles. Nobody else sees this
+page.
 
 1. Tap your photo or initials in the top right corner, then **Review Coach
    IQ**.
-2. At the top are two counts with bars: how many exercises and how many
-   conditions are approved so far, and how many are flagged.
+2. At the top are three counts with bars: how many exercises, conditions and
+   principles are approved so far, and how many are flagged.
 3. Under **Exercises**, tap **Start with the first not done**, or choose a
    family from the list. Each family's line in the list says how many of its
    exercises are approved, such as *Squat — 3 of 12*.
@@ -424,15 +426,23 @@ tap **Save** again, or tap **Cancel**.
    avoid, what to make easier or supported, whether a doctor's go-ahead comes
    first, and when to send them on. Tap **Edit** to change one, or **+ Add a
    condition** at the foot of the list.
-7. **Suggestions** shows exercises trainers have suggested for everybody's
+7. **Principles** lists the topics down the side (Terms, Reps, Rest …). Tap
+   one to read it. Under its title it says when it was reviewed and which
+   books it comes from; a topic not yet approved is marked **Draft**, and
+   Billy doesn't use it until you approve it. **Approve** and **Flag** work
+   as for an exercise. Tap **Edit** to change its title, the line saying what
+   it covers, or its text, then **Save**. In the text, "## " starts a
+   heading, "- " a point and "1. " a numbered step, and words between two
+   stars on each side are bold. **+ Add a topic**, at the foot of the list,
+   starts a new one.
+8. **Suggestions** shows exercises trainers have suggested for everybody's
    library, who suggested each, and why. Tap **Add to the library**, choose
    its family and fill in its details, then tap **Add to the library** again.
    The trainer's names for it now mean the library's exercise.
-8. **Changes** lists every change to the library, newest first, with who made
+9. **Changes** lists every change to the library, newest first, with who made
    it and when. **Undo** puts back what a change touched. If something it
    touched has changed since, undo the later change first.
-9. **Books** is where reading a book into Coach IQ will be done. Until then,
-   give Claude the PDF in a session.
+10. **Books** is where a book is read into the principles (3.11).
 
 Every change and every approval counts straight away: Billy uses the library
 as it now stands. **Export the library**, at the top, downloads all of it as
@@ -463,6 +473,54 @@ folder in use.
 written to, the app goes back to its own choice and says so in red. If the
 host's own settings name the folder, the page says so and it can't be changed
 from here.
+
+### 3.11 Reading a book into Coach IQ (Primary Master only)
+
+Coach can read a book about training and suggest what it adds to the
+principles. It reads the book in your own words, not the book's, and asks you
+about anything it shouldn't decide alone. Nothing changes until you accept it.
+
+1. Open **Review Coach IQ** (3.9) and tap **Books**.
+2. Under **Read a book**, tap the file button and choose the book's PDF (up to
+   100 MB). Its name and size appear under the button.
+3. Tap **Read the book**. A bar shows the PDF going up.
+4. The book appears below as a card, saying **Waiting to be read**, then
+   **Reading**, with a bar and the part it is on, such as *Reading part 2 of
+   5 (pages 41–80)*. A long book takes a while. You can leave the page; the
+   reading carries on.
+5. When it says **Ready for you**, tap **Go through it**. At the top is what
+   the book is and what it adds. Below, one card for each topic it adds to,
+   marked **Changes** or **New topic**, with a list of what changed.
+6. Where the book is out of date, is one coach's view, or disagrees with what
+   is there, the card asks you, one point at a time: the question, what the
+   book and the text say, and two to four answers. The one Coach recommends is
+   chosen already and marked **(recommended)**, with why. Choose another, or
+   write your own answer in **Or in your own words**. Tap **Next point**, and
+   after the last one, **Write it up**.
+7. The card says **Writing your answers in. This takes a minute or two.**
+   Then it shows the text as it would go in, with each answer written in
+   with your name and the day.
+8. Read it. To change something first, tap **Change the text first**, change
+   it, and tap **Keep these changes**.
+9. Tap **Accept** to put it into the principles, approved, with the book named
+   as a source. Tap **Reject** to leave the topic as it is. A topic with
+   nothing to ask you goes straight to step 8.
+10. When every topic is accepted or rejected, the book says **Done**.
+
+Under each card, **Read the proposed text** shows the whole topic as the book
+would have it, and **Read the topic as it was** shows it as it stands now.
+An accepted topic can be undone under **Changes**, like any other change.
+
+If the topic was changed after the book was read, **Accept** says so and
+saves nothing: copy what you want into the topic under **Principles**, and
+reject the book's version.
+
+If reading stops, the card says **Stopped** and why; tap **Try again** to
+carry on from where it stopped. **Put away** stops using a book: its PDF is
+thrown away and nothing more is read or accepted from it. The PDF is thrown
+away anyway once the book has been read. Reading a book uses Billy's key and
+costs Claude's time, a few dollars for a long book; the card shows how much it
+read and wrote.
 
 <div style="page-break-after: always;"></div>
 
@@ -648,6 +706,10 @@ page clears it too: Coach does not keep your conversations with Billy.
   and only what designing training needs: not their email, phone number or
   birthday. He reads their limitations (4.7) before suggesting anything, and
   says when something needs a doctor's go-ahead first.
+- **He works from Coach IQ's principles** (3.9) when he talks about reps,
+  sets, load, tempo, rest, how often to train or planning over weeks: only
+  the topics you have approved, never a draft. They are guidance; your word
+  wins.
 - **His suggestions come from the library, already checked.** Ask him for
   something instead of an exercise and he only offers ones that fit the
   equipment at the place, the client's level and their limitations. If one
@@ -738,6 +800,23 @@ Your question is still in the box. Wait a minute and tap the blue arrow again.
 **"Billy isn't working right now: this server's key for him was refused. Tell whoever runs the app."**
 Billy's setup on the server needs fixing. It is not something you did; pass
 the message on.
+
+**"Reading a book needs Billy's key on this server (ANTHROPIC_API_KEY). Ask whoever runs the app."**
+Books (3.11) uses Billy's key, and it isn't set up on this server. Pass the
+message on.
+
+**"That file couldn't be opened as a PDF. Check it opens on your computer, then try again."**
+The file isn't a PDF, or it is damaged. Open it on your computer; if it opens,
+save it again as a PDF and upload that.
+
+**"That PDF is over 100 MB. Split it into two and upload the parts as two books."**
+Save the first half and the second half of the book as two PDFs, and upload
+each as its own book.
+
+**"… has changed since this book was read. Copy what you want from this text into it on Principles, and reject this one."**
+Somebody changed the topic after the book was read, so accepting would undo
+their change. Open the topic under **Principles**, add what you want from the
+book's text, then reject the book's version.
 
 **You are back on the sign-in screen.**
 Your sign-in ran out while the app was open. Sign in again (2.1).

@@ -1,7 +1,9 @@
 # Books read into Coach IQ
 
 For Glenn: which books Coach IQ has learned from, in the order they were read.
-Not shown to trainers and not given to Billy.
+Not shown to trainers and not given to Billy. Since build 1.0.16 books are read
+in the app, on Review Coach IQ → Books, and listed there; this page keeps the
+ones read before.
 
 1. **Program Design: Choosing Reps, Sets, Loads, Tempo and Rest Periods**,
    2nd edition (2011), by Paul Chek (C.H.E.K Institute). Read 17 Oct 2026, in

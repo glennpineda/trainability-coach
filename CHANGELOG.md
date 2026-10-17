@@ -26,6 +26,16 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   and a floating bar at the bottom for Home, Clients, Programs and Messages.
 - **Switch between Coach and Studio.** Tap the Coach logo and a panel folds
   down with both apps; Studio is one tap away.
+- **Coach IQ's principles in the app.** How Trainability designs a program,
+  topic by topic, read, edited, approved and flagged on Review Coach IQ like
+  the exercises, with every change kept to undo.
+- **Billy works from the principles.** When he talks about reps, sets, load,
+  tempo, rest or planning, he reads the approved topics first.
+- **Read a book into Coach IQ.** On Review Coach IQ → Books, the Primary
+  Master uploads a PDF; Coach reads it in the background and proposes what it
+  adds to the principles, topic by topic, asking about anything it shouldn't
+  decide alone with a recommended answer. Nothing changes until it is
+  accepted.
 - **Your account menu.** Your photo in the top corner opens a menu with your
   name, email and kind of account, Open Studio, Log out and the version.
 - **Billy.** Studio's assistant, beside the badges in the header: ask him

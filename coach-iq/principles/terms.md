@@ -1,6 +1,6 @@
 # Terms
 
-_Status: reviewed by Glenn, 17 Oct 2026 (from the first book)._
+_Status: reviewed, 17 Oct 2026. From: Program Design (Paul Chek, 2011)._
 
 ## The variables of a program
 

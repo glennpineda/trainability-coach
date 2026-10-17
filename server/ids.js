@@ -18,6 +18,7 @@ export const PREFIX = {
   /* Glenn's tag, 17 Oct 2026. */
   review: "iqr",         // the Primary Master's mark on Coach IQ: approve or flag, with a comment
   libraryHistory: "lih", // one change to the library, which lives in the app
+  book: "iqb",           // a book read into Coach IQ in the app (Glenn, 17 Oct 2026)
 };
 
 const DIGITS = "0123456789";

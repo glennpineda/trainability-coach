@@ -11,7 +11,7 @@ import {
  * it is saved (iq-store.js), so a change that would break the library is
  * refused rather than written.
  *
- *   checkLibrary({ movements, exercises, conditions })
+ *   checkLibrary({ movements, exercises, conditions, principles })
  *     → { problems: [plain sentences], masters: Map(id → master name),
  *         easier: Map(id → [ids one step easier]) }
  *
@@ -22,7 +22,9 @@ export const KINDS = new Set(CATEGORIES.map(c => c.key));
 export const DISCIPLINES = ["yoga", "pilates"];
 export const CONDITION_KEY = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
-export function checkLibrary({ movements, exercises: list, conditions = [] }) {
+export const PRINCIPLE_MAX = 40_000;
+
+export function checkLibrary({ movements, exercises: list, conditions = [], principles = [] }) {
   const problems = [];
 
   for (const [id, f] of Object.entries(movements)) {
@@ -133,6 +135,23 @@ export function checkLibrary({ movements, exercises: list, conditions = [] }) {
     if (typeof c.clearance !== "boolean") wrong("it must say whether a doctor's clearance comes first");
     if (!["draft", "reviewed"].includes(c.status)) wrong(`unknown status "${c.status}"`);
     if (c.status === "reviewed" && !/^\d{4}-\d{2}-\d{2}$/.test(c.reviewed || "")) wrong("reviewed, but with no date");
+  }
+
+  /* The principles (build 1.0.16): one topic each, in prose. */
+  const topics = new Set();
+  for (const p of principles) {
+    const wrong = (why) => problems.push(`principle ${p.title || p.key}: ${why}`);
+    if (!CONDITION_KEY.test(p.key || "")) wrong("its key must be lowercase words joined by hyphens");
+    if (topics.has(p.key)) wrong("its key is used twice");
+    topics.add(p.key);
+    if (!p.title?.trim()) wrong("it has no title");
+    if (!p.covers?.trim()) wrong("it doesn't say what it covers");
+    if (!p.body?.trim()) wrong("it says nothing");
+    else if (p.body.length > PRINCIPLE_MAX) wrong(`it is longer than ${PRINCIPLE_MAX.toLocaleString("en-US")} characters: split it into two topics`);
+    if (/^_Status:/m.test(p.body || "")) wrong("its text has a status line in it; the status is kept apart");
+    if (!Array.isArray(p.sources)) wrong("its sources must be a list");
+    if (!["draft", "reviewed"].includes(p.status)) wrong(`unknown status "${p.status}"`);
+    if (p.status === "reviewed" && !/^\d{4}-\d{2}-\d{2}$/.test(p.reviewed || "")) wrong("reviewed, but with no date");
   }
 
   return { problems, masters, easier };

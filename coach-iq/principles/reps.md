@@ -1,6 +1,6 @@
 # Reps
 
-_Status: reviewed by Glenn, 17 Oct 2026 (from the first book)._
+_Status: reviewed, 17 Oct 2026. From: Program Design (Paul Chek, 2011)._
 
 **Reps are the most important choice in a program**: the number of reps
 largely decides what the set develops. Total reps is volume, and more volume

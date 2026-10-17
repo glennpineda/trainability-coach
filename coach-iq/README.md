@@ -110,20 +110,37 @@ committing? Is there another way so it's app controlled?" Then: "Yes, use LIH."
 - A change to the library's **shape** (a new kind of attribute, a new word
   list) is still a change to the code; its **content** is not.
 
-## Reading a book in the app (asked 16 Oct 2026, not built)
+## Reading a book in the app (asked 16 Oct 2026; built 17 Oct 2026, build 1.0.16)
 
 "When it comes to the Coach IQ \"knowledge upload\" of PDF, can we can that
-in-app? Have a functionality for the primary master?"
+in-app? Have a functionality for the primary master?" Built with "Do all 3"
+(17 Oct 2026), alongside the principles moving into the app and Billy reading
+them.
 
-The proposal: a Coach IQ page that only the Primary Master sees. They upload a
-PDF; Coach reads it in the background a part at a time (a book is longer than
-one request takes), showing progress, and throws the PDF away once read. The
-result is a draft, topic by topic, of what is new, what changed and where the
-book disagrees with Coach IQ, which the Primary Master accepts, edits or
-rejects; nothing reaches Billy until accepted, and every accepted change keeps
-where it came from and when. The library already lives in Coach's database
-with its history (above), so a book's accepted changes go there the same way.
-Waiting on: the first book.
+- **Review Coach IQ → Books**, the Primary Master's alone. They upload a PDF
+  (up to 100 MB). It waits in the files folder (`books/`, under
+  Installation's folder) while it is read, and is thrown away once it has
+  been. Each book is an `iqb…` record (Glenn's tag).
+- **Read in the background, a part at a time** (`server/books.js`): cut into
+  parts of 40 pages (halved again while a part is over 18 MB), each read for
+  notes in our own words; then the topics the book adds to are chosen from the
+  notes and the principles as they stand; then each topic is written again.
+  One thing at a time, each step saved, so a restart carries on.
+- **Read by Opus 5.5** (Glenn, 17 Oct 2026: "Opus 5.5"); `BOOK_MODEL` changes
+  it. The key is Billy's.
+- **Nothing is decided alone.** Where the book is dated, one coach's view, or
+  disagrees with what is there, the proposal raises an open point with two to
+  four answers and a recommended one, as Glenn asked for the first book ("Ask
+  me one by one and recommend answers"). The Primary Master answers them one
+  at a time; the answers are written in, in their words, as
+  (Name, date: "answer").
+- **Nothing reaches the principles, or Billy, until it is accepted.** An
+  accepted topic is saved as reviewed through the library's own checks and
+  history (undoable under Changes), with the book among its sources. A topic
+  changed since the book was read can't be overwritten: the screen says so.
+- **Not copied.** Every request says the book is learned from, never copied:
+  no sentences, tables, lists or branded systems; facts, numbers and ranges in
+  plain words.
 
 ## Exercise names (Glenn, 16 Oct 2026)
 
@@ -263,21 +280,23 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
 
 ## How it is written
 
-1. Glenn gives the books one PDF at a time, in the session. The PDFs are never
-   committed to this repository: they stay on his Mac.
-2. The first book sets the outline: one file per topic in `principles/`
-   (book 1, 17 Oct 2026).
-   Later books add to those topics, and a new file is made only for a subject
-   nothing so far has covered.
-3. Each book's principles are drafted into the topic files in our own words.
-   Where it disagrees with what is already written, the draft says so for
-   Glenn to settle.
-4. Glenn reviews the draft; it is then committed, and `READ.md` gets the book.
+1. The first book was read in a Claude session (17 Oct 2026) and set the
+   outline: one topic each, in `principles/`. Since build 1.0.16 the
+   principles live in the app with the library (iq-store.js), edited and
+   approved on Review Coach IQ → Principles; the files are their starting
+   copy and a backup, refreshed from an export (`npm run iq -- --import`).
+2. Later books are read in the app, on Review Coach IQ → Books (above). They
+   add to the topics, and a new topic is made only for a subject nothing so
+   far covers. PDFs are never committed to this repository.
+3. Where a book disagrees with what is already written, it is put to Glenn
+   to settle, with a recommended answer; nothing goes in until he accepts it.
+4. The books read in the app are listed under Books, with what each added;
+   `READ.md` keeps the ones read before.
 
 ## Files
 
 - `README.md`: this page.
-- `READ.md`: the books read into Coach IQ so far, for Glenn. Not shown to
+- `READ.md`: the books read into Coach IQ before reading moved into the app, for Glenn. Not shown to
   trainers and not given to Billy.
 - `exercises.json`: the exercise library's starting copy (the library itself
   lives in the app; above), refreshed from an export when wanted: its
@@ -293,9 +312,10 @@ From the ideas audit (Glenn, 16 Oct 2026, all to build):
   `npm run check-docs`, which runs it) fails when an id, a word or a name is
   wrong or shared, a harder step is missing, lower, or loops, something above
   beginner has no way in, or this page is behind.
-- `principles/`: the principles, one file per topic, made from the first
-  book's outline (17 Oct 2026); its README lists them. Billy doesn't read
-  them yet.
+- `principles/`: the principles' starting copy, one file per topic, made from
+  the first book's outline (17 Oct 2026); its README lists them. The
+  principles themselves live in the app (build 1.0.16), and Billy reads the
+  approved ones there (`server/principles.js`).
 
 Not to be confused with `NEURALBRAIN.md`, which is the project's own memory
 of how Coach was built.
