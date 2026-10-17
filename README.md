@@ -67,6 +67,20 @@ as a JPEG (a GIF goes as it is); a PDF goes as it is, up to 15 MB. His route
 takes up to 32 MB, Claude's own limit for one request; every other route keeps
 its 20 kB limit.
 
+## Programs
+
+The Programs tab (`src/tabs/ProgramsTab.jsx`, `src/programs/`) is the program
+designer: a trainer's own programs (`prg…`), each for one client of theirs at
+one of their places, made of days (`prd…`) and exercises on them (`pre…`),
+where only the exercise is needed. `server/programs.js` keeps them, checks
+the whole program against Coach IQ in code on every change (the place's
+equipment, the client's limitations, their level, and the principles' ranges
+for reps, rest, sets per session and tempo, each point naming its source),
+suggests what could come next on a day from the library, and finds swaps.
+Nobody but the trainer who wrote a program can read it; Billy reads it through
+his `my_programs` tool and changes nothing. `/print/program/<id>` is the page
+printed for the client.
+
 ## Coach's database
 
 Coach keeps its own data (each trainer's equipment, names for exercises and

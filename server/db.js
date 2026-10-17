@@ -256,6 +256,50 @@ const SCHEMA = [
     updated_at VARCHAR(32) NOT NULL,
     finished_at VARCHAR(32) NULL
   )`,
+  /* The program designer (programs.js; Glenn, 17 Oct 2026: "Go"). A program
+     (prg…) is one trainer's, for one client of theirs at one of their places,
+     seen by nobody else (Glenn: "Only the trainer who wrote it"); its days
+     (prd…) and each day's exercises (pre…) are kept in order by pos. On an
+     exercise only the exercise is needed (Glenn: "what exercise to do is the
+     most important part"); sets, reps, load, effort, tempo, rest (seconds)
+     and a note are all optional. superset 1 means done together with the
+     one above. client_name is kept for the list and the printed page. */
+  `CREATE TABLE IF NOT EXISTS coach_programs (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    client_id VARCHAR(64) NOT NULL,
+    client_name VARCHAR(200) NOT NULL DEFAULT '',
+    place_id VARCHAR(40) NOT NULL DEFAULT '',
+    name VARCHAR(120) NOT NULL,
+    goal VARCHAR(24) NOT NULL,
+    level VARCHAR(16) NOT NULL,
+    notes VARCHAR(2000) NOT NULL DEFAULT '',
+    archived INTEGER NOT NULL DEFAULT 0,
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS coach_program_days (
+    id VARCHAR(40) PRIMARY KEY,
+    program_id VARCHAR(40) NOT NULL,
+    name VARCHAR(80) NOT NULL,
+    notes VARCHAR(1000) NOT NULL DEFAULT '',
+    pos INTEGER NOT NULL DEFAULT 0
+  )`,
+  `CREATE TABLE IF NOT EXISTS coach_program_exercises (
+    id VARCHAR(40) PRIMARY KEY,
+    program_id VARCHAR(40) NOT NULL,
+    day_id VARCHAR(40) NOT NULL,
+    exercise_id VARCHAR(40) NOT NULL,
+    pos INTEGER NOT NULL DEFAULT 0,
+    superset INTEGER NOT NULL DEFAULT 0,
+    sets VARCHAR(20) NOT NULL DEFAULT '',
+    reps VARCHAR(40) NOT NULL DEFAULT '',
+    load_text VARCHAR(60) NOT NULL DEFAULT '',
+    effort VARCHAR(60) NOT NULL DEFAULT '',
+    tempo VARCHAR(20) NOT NULL DEFAULT '',
+    rest_seconds INTEGER NULL,
+    note VARCHAR(300) NOT NULL DEFAULT ''
+  )`,
   /* A trainer's own settings, by name (trainer-settings.js): so far their
      units, "imperial" or "metric" (Glenn, 17 Oct 2026). One row per trainer
      and name, so no id of its own. */

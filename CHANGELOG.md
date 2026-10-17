@@ -36,6 +36,12 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   adds to the principles, topic by topic, asking about anything it shouldn't
   decide alone with a recommended answer. Nothing changes until it is
   accepted.
+- **Design programs.** The Programs tab is open: a program for one of your
+  clients, day by day, exercise by exercise, with only the exercise needed
+  and sets, reps, load, effort, tempo, rest and notes as you like. Coach IQ
+  checks it as you go and suggests what could come next, fitted to the
+  place's equipment and the client's level and limitations; Swap finds
+  stand-ins; Billy can talk it over. Print it for the client.
 - **Imperial or metric, your choice.** Under Units in your account menu.
   Imperial to start. Weights and distances in Coach IQ and in Billy's answers
   are shown in your units only, rounded to what a gym has (5 lb or 2.5 kg).

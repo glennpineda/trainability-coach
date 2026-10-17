@@ -42,14 +42,21 @@ of the app gets its own chapter here as it arrives.
    - [4.5 Archived clients](#45-archived-clients)
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
-5. [Asking Billy](#5-asking-billy)
-   - [5.1 Opening Billy](#51-opening-billy)
-   - [5.2 Asking a question](#52-asking-a-question)
-   - [5.3 Giving Billy a photo or a PDF](#53-giving-billy-a-photo-or-a-pdf)
-   - [5.4 Starting again](#54-starting-again)
-   - [5.5 What Billy can't do](#55-what-billy-cant-do)
-6. [Words this app uses](#6-words-this-app-uses)
-7. [When something goes wrong](#7-when-something-goes-wrong)
+5. [Designing programs](#5-designing-programs)
+   - [5.1 Starting a program](#51-starting-a-program)
+   - [5.2 Adding exercises](#52-adding-exercises)
+   - [5.3 Sets, reps and the rest](#53-sets-reps-and-the-rest)
+   - [5.4 What Coach IQ says](#54-what-coach-iq-says)
+   - [5.5 Days, order and supersets](#55-days-order-and-supersets)
+   - [5.6 Printing it for the client](#56-printing-it-for-the-client)
+6. [Asking Billy](#6-asking-billy)
+   - [6.1 Opening Billy](#61-opening-billy)
+   - [6.2 Asking a question](#62-asking-a-question)
+   - [6.3 Giving Billy a photo or a PDF](#63-giving-billy-a-photo-or-a-pdf)
+   - [6.4 Starting again](#64-starting-again)
+   - [6.5 What Billy can't do](#65-what-billy-cant-do)
+7. [Words this app uses](#7-words-this-app-uses)
+8. [When something goes wrong](#8-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -201,7 +208,7 @@ Across the top of every screen:
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
 - **Billy's face**, in a lilac square, when Billy is set up for your
-  business — tap it to ask him something (chapter 5).
+  business — tap it to ask him something (chapter 6).
 - **In the corner**, your photo (or your initials) with a small arrow
   pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
@@ -240,13 +247,13 @@ parts of Coach. It has four buttons, as pictures with no words:
 |---|---|---|
 | **Home** | A house | The home screen (3.4). |
 | **Clients** | Two people | Your clients (chapter 4). |
-| **Programs** | A clipboard with a list | Programs — coming soon. |
+| **Programs** | A clipboard with a list | Your programs (chapter 5). |
 | **Messages** | A speech bubble | Messages — coming soon. |
 
 The one you are on sits in a filled blue circle, which slides across when you
 tap another. On a computer, pointing at a button shows its name.
 
-**Programs** and **Messages** are not built yet. Each opens a page
+**Messages** is not built yet. It opens a page
 with its name at the top, a card saying what it will be for, and *This part of
 Coach is being built. It will appear here when it's ready.*
 
@@ -263,11 +270,12 @@ Coach opens on Home. From the top:
 |---|---|
 | **Today** | Your sessions for the day, at a glance. |
 | **Clients** | Everyone you coach, with their contact details and sessions. |
-| **Programs** | Workouts and plans you build and assign. |
+| **Programs** | Programs you design for your clients, with Coach IQ beside you. |
 | **Messages** | Check-ins and notes between you and your clients. |
 
 **Clients** is ready: next to its name it says how many clients you have,
-such as **5 active clients**. The other three are marked **Coming soon**.
+such as **5 active clients**. **Programs** is ready too. **Today** and
+**Messages** are marked **Coming soon**.
 Tapping **Clients**, **Programs** or **Messages** opens its page, the same as
 its button on the bottom bar; **Today** will live on Home itself.
 
@@ -647,7 +655,104 @@ leave it.
 
 ---
 
-## 5. Asking Billy
+## 5. Designing programs
+
+A program is a plan of training days for one of your clients: on each day,
+the exercises, and for each exercise as much or as little as you want to say
+about it. As you build it, Coach IQ checks it and suggests what could come
+next, and Billy can talk it over with you. Only you see your programs.
+
+### 5.1 Starting a program
+
+1. Tap **Programs** on the bar at the bottom (the clipboard).
+2. Tap **New program**.
+3. Choose the **Client**. The **Name** fills in as *Avery's program*; change
+   it if you like.
+4. Choose **What it's for** (**Strength**, **Power**, **Muscle size**,
+   **Strength endurance**, **Fat loss and conditioning**, **General
+   fitness** or **Mobility**), **The client's level** (**Beginner**,
+   **Intermediate** or **Advanced**) and **Where they train**: one of your
+   places from My equipment (3.7). Add **Notes** if you want.
+5. Tap **Start designing**. The program opens with its first day, **Day A**.
+
+Your programs are listed on the Programs page, newest change first, with who
+each is for. Tap one to open it; **All programs** takes you back. To change
+the client, name, goal, level, place or notes later, tap **Edit the details**.
+The box button beside a program in the list (**Put away**) takes it off the
+list; it is kept, not deleted.
+
+### 5.2 Adding exercises
+
+There are two ways:
+
+- **Take a suggestion.** Under each day, **Could come next** lists exercises
+  Coach IQ suggests, one for each kind of movement the program doesn't have
+  yet (a squat, a hinge, a push, a row …). Every one already fits the
+  place's equipment, the client's level and their limitations, and says
+  where to start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in
+  orange says what to make easier for the client. Tap **Add** to put it on the
+  day with that starting point.
+- **Find one yourself.** Tap **Add an exercise** and type any name you use
+  for it: your own name, one of your own exercises, or the library's name.
+  Tap it in the list to add it.
+
+### 5.3 Sets, reps and the rest
+
+Only the exercise is needed. To say more, tap **Sets, reps…** under it and
+fill in what you want: **Sets** (3, or a range such as 1–3), **Reps** (8–12,
+or 30 s), **Load** (45 lb), **Effort** (2 in reserve), **Tempo** (3-1-1-0),
+**Rest** (90 s, or 2 min) and a **Note**. Tap **Save**. What you filled in
+shows under the exercise, such as *3 × 10 · 45 lb · tempo 3-1-1-0 · rest 2
+min*. Loads are shown in your units (3.5).
+
+### 5.4 What Coach IQ says
+
+Coach IQ checks the whole program every time you change it. At the top,
+**Coach IQ's check** counts what it found; each point then shows where it
+applies, under the exercise or the day, with where it comes from in
+brackets.
+
+| Mark | Means | For example |
+|---|---|---|
+| Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
+| Orange triangle | Take care | Something to make easier for the client, or above their level |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly |
+
+They are guidance: your word wins. If one is wrong, it shows where Coach IQ
+needs fixing; tell the Primary Master.
+
+**Swap**, under an exercise, lists exercises that could stand in for it,
+already fitting the place, the level and the limitations. Tap **Use it**.
+
+**Ask Billy about it**, at the top, and **Ask Billy about** a day, open
+Billy's panel with the question asked. He reads the program, its check and
+the suggestions, and talks it through; he changes nothing himself.
+
+### 5.5 Days, order and supersets
+
+- **Add a day**, at the bottom, adds Day B, then Day C, and so on.
+- Beside a day's name: the arrows move it up or down, the pencil renames it
+  (and gives it a note), and the bin takes it out with its exercises.
+- Beside each exercise: the arrows move it up or down the day, and the bin
+  takes it out.
+- **A superset**: in **Sets, reps…**, tick **Done together with the one
+  above (a superset)**. The two then share a number, such as **2a** and
+  **2b**.
+
+### 5.6 Printing it for the client
+
+1. Tap **Print for the client**, at the top of the program. It opens in a
+   new tab.
+2. The page shows the program's name, who it is for and the date, then each
+   day's exercises in your names for them, with whatever you filled in, in
+   your units. Coach IQ's check is not on it.
+3. Tap **Print**, and print it or save it as a PDF to send.
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## 6. Asking Billy
 
 Billy is the assistant you may know from Studio. In Coach he can tell you
 about the clients on your list, and he can read a photo or a PDF you give him
@@ -657,7 +762,7 @@ questions about it.
 If you do not see his face in the bar at the top, Billy has not been set up
 for your business yet.
 
-### 5.1 Opening Billy
+### 6.1 Opening Billy
 
 1. Tap **Billy's face** in the bar at the top, next to your photo.
 2. His panel opens under the bar, with a box at the bottom that says
@@ -668,7 +773,7 @@ keyboard. Closing it keeps the conversation: open it again and it is all
 still there. While it is closed, a small blue dot on his face means he has
 answered and the answer is waiting.
 
-### 5.2 Asking a question
+### 6.2 Asking a question
 
 1. Tap the **Ask Billy…** box and type your question, such as *When did
    Avery last train?* or *Which of my clients have nothing booked?*
@@ -679,7 +784,7 @@ answered and the answer is waiting.
 You can carry on asking: he remembers what was said earlier in the same
 conversation, so *What about Jordan?* works after a question about Avery.
 
-### 5.3 Giving Billy a photo or a PDF
+### 6.3 Giving Billy a photo or a PDF
 
 1. Tap the **paper clip** to the left of the **Ask Billy…** box.
 2. Choose a photo or a PDF. On a phone you can take a photo there and then.
@@ -692,13 +797,13 @@ conversation, so *What about Jordan?* works after a question about Avery.
 Billy reads JPEG, PNG, GIF and WebP photos, and PDFs up to 15 MB. A large
 photo is made smaller before it is sent, which does not stop him reading it.
 
-### 5.4 Starting again
+### 6.4 Starting again
 
 Tap the **round arrow** at the top right of the panel (**New conversation**).
 The conversation is cleared and Billy starts fresh. Leaving or reloading the
 page clears it too: Coach does not keep your conversations with Billy.
 
-### 5.5 What Billy can't do
+### 6.5 What Billy can't do
 
 - **He changes nothing, apart from noting your equipment and your names for
   exercises.** When you tell him what you have — "there's no low row
@@ -717,6 +822,9 @@ page clears it too: Coach does not keep your conversations with Billy.
   sets, load, tempo, rest, how often to train or planning over weeks: only
   the topics you have approved, never a draft. They are guidance; your word
   wins.
+- **He reads your programs** (chapter 5), with Coach IQ's check and what
+  could come next, and suggests from those; he never changes a program
+  himself.
 - **He talks in your units** (3.5): every weight and distance in pounds and
   feet, or kilograms and metres, rounded to what a gym has.
 - **His suggestions come from the library, already checked.** Ask him for
@@ -734,7 +842,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-## 6. Words this app uses
+## 7. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -744,7 +852,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
-| **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
+| **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
+| **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
@@ -757,7 +866,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-## 7. When something goes wrong
+## 8. When something goes wrong
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock

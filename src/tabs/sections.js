@@ -6,6 +6,6 @@ import { CalendarDays, Users, ClipboardList, MessageCircle } from "lucide-react"
 export const SECTIONS = {
   today: { icon: CalendarDays, title: "Today", body: "Your sessions for the day, at a glance." },
   clients: { icon: Users, title: "Clients", body: "Everyone you coach, with their contact details and sessions.", built: true },
-  programs: { icon: ClipboardList, title: "Programs", body: "Workouts and plans you build and assign." },
+  programs: { icon: ClipboardList, title: "Programs", body: "Programs you design for your clients, with Coach IQ beside you.", built: true },
   messages: { icon: MessageCircle, title: "Messages", body: "Check-ins and notes between you and your clients." },
 };

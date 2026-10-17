@@ -9,6 +9,7 @@ import { EquipmentTab } from "./tabs/EquipmentTab";
 import { ExercisesTab } from "./tabs/ExercisesTab";
 import { ReviewTab } from "./tabs/ReviewTab";
 import { InstallationTab } from "./tabs/InstallationTab";
+import { ProgramsTab } from "./tabs/ProgramsTab";
 import { useClients } from "./hooks/useClients";
 import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
@@ -51,6 +52,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
+        {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}
         {tab === "review" && isPrimaryMaster(user) && <ReviewTab onSignedOut={onSignedOut} />}

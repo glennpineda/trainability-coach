@@ -19,6 +19,9 @@ export const PREFIX = {
   review: "iqr",         // the Primary Master's mark on Coach IQ: approve or flag, with a comment
   libraryHistory: "lih", // one change to the library, which lives in the app
   book: "iqb",           // a book read into Coach IQ in the app (Glenn, 17 Oct 2026)
+  program: "prg",        // a trainer's program for one client (Glenn, 17 Oct 2026)
+  programDay: "prd",     // one day of a program: Day A, Monday …
+  programExercise: "pre", // one exercise on a day, with whatever the trainer set for it
 };
 
 const DIGITS = "0123456789";

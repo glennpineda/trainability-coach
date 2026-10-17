@@ -333,3 +333,12 @@
     .cx-billy * { animation: none !important; }
   }
 }
+
+/* A program printed for the client (programs/PrintProgram.jsx): its own
+   buttons stay on the screen, and the page is white on paper whatever the
+   device's theme. */
+@media print {
+  .cx-noprint { display: none !important; }
+  html, body { background: #fff !important; }
+  .cx-print { padding: 0 !important; min-height: 0 !important; }
+}

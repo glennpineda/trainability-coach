@@ -285,6 +285,20 @@ function fitsLimits(x, rules) {
 
 const overlap = (a = [], b = []) => a.filter(v => b.includes(v)).length;
 
+/* For the program designer (programs.js): the same checks, one version at a
+   time, and the library to choose from. */
+export const placeCheck = (x, place) => fitsPlace(x, placeKinds(place));
+export const limitsCheck = (x, rules) => fitsLimits(x, rules);
+export const liveExercises = () => LIVE;
+export const familyOf = (x) => FAMILIES[x.movement];
+export const masterOf = (x) => master(x);
+/** One of a trainer's private exercises, shaped, or null. */
+export async function privateBrief(trainerId, id) {
+  const p = await privateOf(trainerId, id);
+  return p ? shapePrivate(p) : null;
+}
+export const kindLabel = (key) => labelOfKind(key);
+
 /**
  * "Find alternatives" (ideas audit, 4 and 14): versions that do the same job,
  * that pass the place's equipment, the level and the client's limitations.

@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The program designer: Programs, with Coach IQ at every step, printable for the client** (17 Oct 2026; Glenn: "We need to start creating a workout program designer so we can start testing Coach IQ in real time, what do you suggest we do to start this?", then "Ask me one by one and recommend answers", then "Go"). Build 1.0.18. Not from Next up. **Proposed first**: a thin first slice (a program for one client, days, exercises with optional details, Billy's help, a check that cites Coach IQ) with five questions. **Glenn's answers**: (1) the id tags **prg** (a program), **prd** (a day), **pre** (an exercise on a day), as recommended; (2) **"Only the trainer who wrote it"** sees a program (I had recommended all the client's trainers reading it); (3) on load: **"Weight and/or effort should just be optional, what exercise to do is the most important part"**, so on an exercise only the exercise is needed and sets, reps, load, effort, tempo, rest and a note are all optional free fields; (4) Billy **"Day by day, and even as we build exercise by exercise it would be good to recommend as the trainer designs. That's the whole point of being an assistant is being there at every step"** (not the whole draft at once I had recommended); (5) **"Printable for the client"** (not trainer-only for now, which I had recommended). **How "at every step" was built**: Coach IQ's help is worked out in code on every change, instantly and at no cost, and Billy is there to talk it over. `server/programs.js`: `GOALS` (Strength, Power, Muscle size, Strength endurance, Fat loss and conditioning, General fitness, Mobility), each with a starting dose and the reps and rest ranges the check uses, taken from the principles (reps' table, rest's table, sets' "reps and sets go opposite ways" and its set window); `check()` runs over the whole program and gives points of three levels, each naming its source: **stop** (an exercise needing equipment the place doesn't have, from the library's own `placeCheck`, and one the client's limitations say to avoid, from `limitsCheck`, both now exported from `library.js`), **warn** (make easier or supported for the client's limitations, an exercise above the client's level, retired from the library, a day of about 30+ sets, or 36+ for a beginner) and **note** (no place chosen; a beginner with more than 4 days; equipment nobody has answered about; reps outside the goal's range; under 8 reps for a beginner; rest outside the goal's range, not counted on a superset's first half; a tempo not written as 3 or 4 numbers, or a strength set over 60 seconds of work; 25+ sets on a day; more than 7 exercises on a beginner's day; a main lift after an accessory, from the library's roles). A trainer's own exercise is checked only for its equipment. `suggestNext()` (Could come next, under each day): for each movement pattern the program doesn't have yet (squat, hinge, horizontal push, row, single-leg, overhead push, vertical pull, carry, two kinds of core; mobility, breathing and balance for a mobility program), then the ones the day doesn't, the best version that passes the place, the level and the limitations, ranked by the goal's purpose, the role wanted (two main lifts a day, then accessories), nothing to ask first, nothing to modify and closeness to the client's level, with a starting dose from `doseFor` (beginners get a 1–3 set window and at least 8 reps; accessories a set less). `swapsFor()` is `alternativesFor` with the program's place, level and limitations. The trainer's own names show in place of the library's everywhere (their word wins). Rest is typed as "90", "90 s", "2 min" or "1:30" and kept in seconds; anything else is refused in words. Tables `coach_programs` (client name kept for the list and the print), `coach_program_days`, `coach_program_exercises` (`superset` 1 = done with the one above, ignored on a day's first exercise). Routes: `GET`/`POST /api/programs`, `GET`/`PATCH`/`DELETE /api/programs/:id` (delete archives), `POST /api/programs/:id/days`, `PATCH`/`DELETE /api/program-days/:id` (with `move`), `GET /api/program-days/:id/suggestions`, `POST /api/program-days/:id/exercises`, `PATCH`/`DELETE /api/program-exercises/:id` (with `move`, `superset`, a new `exerciseId` to swap), `GET /api/program-exercises/:id/swaps`, `GET /api/programs-find` (their names, their own exercises, the library, as Billy finds them). Every one answers with the whole program, checked again; another trainer is told Not found; a client must be on the trainer's own list and a place one of theirs. **Billy**: a new `my_programs` tool (the list, or one program with its days, Coach IQ's check and what could come next on each day) and a prompt line: read the program first, suggest only from what could come next and from alternatives, work from the check, say plainly what is to stop, dose only from the principles, and change nothing (his hard rule now says not even their programs). **The screens**: Programs on the bottom bar and on Home is built (`sections.js`). `ProgramsTab.jsx` lists the programs (newest change first; Put away archives) and starts one (client, name filled as "Avery's program", what it's for, the client's level, where they train, defaulting to their first place once the places have come, notes). `src/programs/Designer.jsx`: the details and Coach IQ's check counted at the top (program-wide points there, the rest where they apply), each day a card (move, rename with a note, take out), each exercise numbered (a superset 2a, 2b) with its dose in a line in the trainer's units, its points, **Sets, reps…** (all optional, and the superset tick), **Swap**, move and take out; **Add an exercise** (the finder); **Could come next** with **Add**, which puts the exercise on with its starting dose; **Ask Billy about it** and **Ask Billy about Day A**, which open his panel with the question asked; **Add a day** (Day B, Day C …); **Print for the client**. `PrintProgram.jsx` at `/print/program/<id>` (App renders it alone): TRAINABILITY® COACH, the program's name, who for, its goal and date, each day's exercises in the trainer's names with only the columns something was written in, loads in their units, supersets explained, tempo explained; white on paper whatever the theme, its own Print button hidden in print (`@media print` in `index.css`). Manual: a new chapter 5 "Designing programs" (5.1–5.6), Billy, Words and When something goes wrong renumbered to 6, 7 and 8, 3.3 and 3.4 for a built Programs, 6.5 a point on programs, Words "Program"; CHANGELOG; README "Programs". **Tested** in the cloud against the stand-ins (Studio with a Primary Master, a trainer and one client; Claude): by the API, a program refused for an unknown goal or a client not theirs, made with its Day A, suggestions for a beginner with a new knee at a place with dumbbells and a bench but no barbells (Bodyweight squat marked make-easier for the knees, Glute bridge, Wall push-up, One-arm dumbbell row, each 1–3 × 8–12, rest 75 s for muscle size), rest "later" refused, the check's stop for a barbell back squat (no barbells) and a jump squat (to avoid), its warnings and notes (level, limitations, 35 sets on a day, reps and rest outside muscle size's ranges, a tempo "slow"), swaps for the back squat, moving, a superset, a swap, a second day, another trainer refused everything, and Billy's tool returning the program with its check; in Chromium at 1200px light and 400px dark, the whole path from New program through taking a suggestion, finding two exercises, filling in a dose as a superset (2a, 2b, the load typed in kg shown in pounds), swapping, adding a day, asking Billy and the printed page, with no console errors and no sideways scroll. Found and fixed while testing: a new program wasn't taking the first place (the places came after the form), 90 seconds read "1.5 min", the superset mark showed on a day's first exercise after a move, a tempo word was shouted in capitals, the place's name read oddly in a sentence, and the printed numbers wrapped at phone width. **Not tested:** Billy's real answers about a program (no key in the cloud), printing on paper (the page was checked on screen), and the designer against Studio's real clients. The manual has no pictures of it yet; `npm run screenshots` on the Mac can add them. Commit: build 1.0.18.
+
 - **Units: imperial or metric, each trainer's own, rounded to gym steps** (17 Oct 2026; Glenn: "On the IQ, I see some of the books recommend in imperial and kg… let's default by metric and lbs. but let's have a setting where we can change this. Let's try to round up numbers on both denominations"). Build 1.0.17. Not from Next up. **Asked first**, since "metric and lbs" and "both denominations" could be read more than one way, four questions with recommendations; Glenn chose **All imperial** as the default (not my recommendation of metric with pounds for weight), **Only the chosen unit** (not both side by side, which I had recommended), **To gym-friendly steps** (as recommended) and **Each trainer only** (not the installation default plus each trainer I had recommended). **The converter**, `src/lib/units.js`, pure and shared by the page and the server: `convertText(text, "imperial" | "metric")` finds numbers written with a unit (lb, kg, yd, m, ft, inches as "inch"/"inches" only, cm, mi, km, their words and plurals, "1,000", ranges with "–", "-" or "to") and turns those in the other system into the reader's, rounded with `roundTo`: pounds to 5 (1 under 10), kilograms to 2.5 (1 under 10), metres and yards to 1 under 10, 5 under 100, then 10, kilometres and miles to 0.5 under 10, then 1, centimetres, inches and feet to 1. Lengths choose a readable unit: under 5 m becomes feet, centimetres of 36 inches or more become feet, feet and inches become centimetres, or metres from 3 m. A unit already in the reader's system is left as written, a percentage, "1 in 3" (bare "in" is never read as inches) and minutes are never touched. Tried on sample lines: "Carry 20 kg for 30 m" becomes "Carry 45 lb for 35 yd"; "a 400 m run" becomes "a 440 yd run" and back to "400 m" in metric; "20 to 30 kg" becomes "45 to 65 lb"; "2 m box" becomes "7 ft box". **Each trainer's choice**: new table `coach_trainer_settings` (trainer id and name as its key, so no id tag was needed), `server/trainer-settings.js` (imperial until chosen), `GET` and `PUT /api/my-settings` (anything but imperial or metric refused, "Choose imperial or metric."). On the page, `src/hooks/useUnits.js` asks once and shares the answer with every screen, so choosing redraws them at once; the account menu has **Units** with **Imperial** (lb, ft) and **Metric** (kg, m) side by side, the chosen one blue. `Prose.jsx` draws the principles and a book's proposals in the reader's units, while Edit shows the text as written. **Billy** is told the trainer's units in his prompt (every weight and distance in theirs, whatever a source used, rounded to gym steps, never both units), and `coach_principles` returns the text converted. **Books** now write every amount in imperial, already rounded, so stored text is consistent. Manual 3.5 (Units), 3.9 and 5.5; CHANGELOG; `coach-iq/README.md` "Units". **Tested** in the cloud against the stand-ins again: the setting defaulted to imperial, refused "stone", was kept per trainer (another trainer stayed imperial), and refused anyone signed out; Billy's prompt said "They work in imperial" then "metric", and his principles tool gave "440 yd run" then "400 m run"; in Chromium at 1200px light and 400px dark, choosing Imperial and Metric in the menu changed the Designing a program page at once, and the choice held after a reload, with no console errors. **Not tested:** Billy's real answers in each unit (no key in the cloud). The manual's picture of the account menu (04-account) is now behind, as it has no Units yet; `npm run screenshots` on the Mac will retake it. Commit: build 1.0.17.
 
 - **All three next steps for Coach IQ: the principles move into the app, Billy reads them, and a book is read in the app** (17 Oct 2026; Glenn: "Do all 3", after I listed them as the natural next steps when committing build 1.0.15). Build 1.0.16. Not from Next up. Two decisions asked first, with recommendations: the id tag for a book read in the app (Glenn: "iqb", matching iqr) and the model that reads books (Glenn: "Opus 5.5", over Sonnet 5.5 like Billy, because a book is read once and becomes Coach IQ; `BOOK_MODEL` overrides it). **1. The principles in the app.** They join the library in `coach_iq_docs` as kind `principle`, keyed by topic (`rest`, `starting-out` …), each `{ key, title, covers, body, status, reviewed, sources }`, so they share the library's checks, history (`lih…`), undo and export. New `server/principles-files.js` reads and writes the files: the title from `# Title`, `covers` from the line in `principles/README.md`'s table, and the status line, which had to change to be read back: the eleven files' "_Status: reviewed by Glenn, 17 Oct 2026 (from the first book)._" became "_Status: reviewed, 17 Oct 2026. From: Program Design (Paul Chek, 2011)._" (several sources joined with "; "); every file was checked to come out of `principleText` exactly as it went in. `iq-store.js` reads them in `fromFiles()`, and since the library was already live with rows, `load()` loads the principles from the files on their own the first time there are none, with a history record "Loaded the principles from the files: 11 topics"; `find`, `withChanges` and undo's "has changed since" message know the kind. `iq-check.js` checks each principle (key shape, unique, title, covers, a body of at most 40,000 characters, no status line inside the text, sources a list, draft or reviewed with a date). `npm run check-iq` checks the files too and now says "11 principles", and `npm run iq -- --import <export>` writes an export's principles back into the files and rewrites the README's table (tried on an export from the test server, then the files were put back). `iq-edit.js` has `principleFrom` (title, covers, Markdown body; key from the title the first time, never changed); `reviews.js` takes `principle` as a third kind of mark. Routes: `GET /api/coach-iq/review/principles`, `PUT` and `POST /api/coach-iq/library/principles`, and the review mark route takes `principle`; the review summary counts them. On the page, **Principles** sits between Conditions and Suggestions: the topics down the side (a Draft badge, a flag), the chosen one drawn from its Markdown (new `src/review/Prose.jsx`, a small reader that makes elements, never HTML: headings, paragraphs, "- " and "1. " lists with wrapped lines, tables, bold, italic, and a link to another topic's `.md` opening that topic), a line saying when it was reviewed and from which books, Edit (`PrincipleForm` in `LibraryEditor.jsx`: title, what it covers, the text in a textarea, with a line on how to write headings, points and bold), History, Approve and Flag, and **+ Add a topic**; a third count and bar for principles at the top. **2. Billy reads them.** New tool `coach_principles` (`server/principles.js`): no topic gives the list of topics and what each covers, a topic (key or title, loosely) gives its text. Only reviewed topics, never a draft, which is Coach IQ's rule that nothing goes in until reviewed; a flag puts a topic back to draft and so out of his reach. His prompt gained a line: before advising on reps, sets, load, tempo, rest, how often, planning over weeks, a beginner, or a woman or teenager, read the principles and work from them, say when he goes beyond them, the trainer's word wins, and Coach IQ doesn't cover children. His rounds went from 6 to 8 to leave room for the list and a topic. **3. Reading a book in the app** (new `server/books.js`, `src/review/Books.jsx`; the proposal of 16 Oct 2026 in `coach-iq/README.md`). Review Coach IQ → Books, the Primary Master's. The PDF is the request's own body (`POST /api/coach-iq/books`, `Content-Type: application/pdf`, its name in `X-File-Name`), streamed to the files folder (`books/` under Installation's folder) with a 100 MB cap counted as it arrives, then opened with `pdf-lib` (1.17.1, added; the only way to count and cut pages without a native tool) to count its pages; anything that isn't a PDF is refused in words. One `coach_iq_books` row (`iqb…`) keeps the file name, pages, parts, status (waiting, reading, ready, done, failed, discarded), the step in words, the notes, what the book is, the proposals, the model and the tokens used. The reading, one thing at a time in an in-process queue, each step saved so a restart carries on (`resume()` on start): the PDF is cut into parts of 40 pages, a part over 18 MB halved until it fits; each part is read for notes in our own words (structured output: the book's title, author, edition and year if the part shows them, and the notes, with DATED, ONE VIEW and DISAGREES marks); then the topics the book adds to are chosen from all the notes and the principles as they stand (existing keys, or a new topic made a proper key); then each topic is written again (the whole text, what changed, and open points, each with two to four options, the recommended one and why, marked in the text as **Open for Glenn (n)**). Every request is streamed (they are long), at effort high, and its system prompt says the book is learned from, never copied (no sentences, tables, lists, headings or branded systems; facts and ranges in plain words), that Coach IQ covers adults and teenagers, and that lines recording a decision, written (Name, date: "words"), are kept whatever the book says, raised as an open point if it disagrees. When read, the PDF is deleted. The page: an upload card (the bar shows the PDF going up; without Billy's key it says reading needs it), then a card for each book with its state, a bar while reading, the step ("Reading part 2 of 3 (pages 41–80)"), topics decided, tokens read and written, and **Go through it**, **Try again** (failed) or **Put away** (the PDF goes and nothing more is accepted; the row stays, archive rather than delete). Going through it: what the book is and what it adds, then a card for each topic, marked Changes or New topic, with what changed; its open points one at a time ("Point 1 of 2"), the recommended answer chosen already and marked **(recommended)** with why, or **Or in your own words**; **Next point** saves the answers, **Write it up** saves them and queues the write-up, in which the answers are written in as (first name, date: "answer") and nothing else changes; then the text as it would go in, **Accept** or **Reject**, **Change the text first**, **Read the proposed text** / **Read the topic as it was**. Accept saves through `store.change` as reviewed today with the book's label ("Title (Author, Year)") added to the sources, history "From <title>: changed the principles on <topic>"; it is refused if the topic changed since the book was read (the proposal keeps the text it was based on), so a change made meanwhile is never lost, and refused while the text still has an **Open for Glenn** in it. When every topic is accepted or rejected, the book is Done. The write-up's date is the UTC day, the same one an approval is dated with (first written with Pacific time, which gave 16 Oct beside an approval of 17 Oct in testing). Manual 3.9 (three counts; a new step 7 for Principles, steps renumbered), a new 3.11 "Reading a book into Coach IQ (Primary Master only)" in the contents, 5.5 a point on the principles, and four messages in chapter 7; CHANGELOG three bullets under 1.0 Caesious; README (Billy, the database, `BOOK_MODEL`); `.env.example` `BOOK_MODEL`; `coach-iq/README.md` (the book section rewritten as built, How it is written, Files), `principles/README.md`, `READ.md`. **Tested** in the cloud against stand-ins in the session's scratchpad (Studio's sign-in on 4242 with a Primary Master and a trainer; Claude on 4243, through `ASSISTANT_API_BASE`, answering each kind of request with fixed JSON, streamed as server-sent events, and logging what each request carried), on a scratch SQLite database: the principles loaded (11, all reviewed); a trainer was told Not found; an edit, an edit refused for an empty text and for a status line inside the text, undo, flag (back to draft), approve, a new topic (draft) and the export with its principles; Billy listed and read topics, by key and by title, and was refused the draft; a made-up 90-page PDF was refused to a trainer, a JSON body and a non-PDF were refused in words, and the PDF was read in three parts (40, 40 and 10 pages, each request with Opus 5.5, streamed, effort high, JSON schema, the PDF as a document), planned into Rest and a new Warming up, written as two proposals, and deleted from the files folder; writing up before answering and accepting before writing up were refused; an answer in his own words written in; accepting refused after Rest had been changed meanwhile, then accepted once that change was undone, with the book in Rest's sources; a new topic's text changed and the topic rejected; the book then Done. In Chromium at 1200px light and 400px dark: Principles (the table drawn, Edit's text), uploading, the bar, going through, the recommended answer chosen already, Write it up, Accept and Reject, with no console errors and no sideways scroll. **Not tested:** a real book with the real Opus 5.5, since there is no key in the cloud: how good the notes, topics and open points are, how long a 300-page book takes and what it costs are for Glenn's first book in the app; a restart in the middle of a reading (the code carries on from the saved step, but it was not tried); and MariaDB on the host, where the new table is made on start like the others. Commit: build 1.0.16.
@@ -177,14 +179,21 @@ of the app gets its own chapter here as it arrives.
    - [4.5 Archived clients](#45-archived-clients)
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
-5. [Asking Billy](#5-asking-billy)
-   - [5.1 Opening Billy](#51-opening-billy)
-   - [5.2 Asking a question](#52-asking-a-question)
-   - [5.3 Giving Billy a photo or a PDF](#53-giving-billy-a-photo-or-a-pdf)
-   - [5.4 Starting again](#54-starting-again)
-   - [5.5 What Billy can't do](#55-what-billy-cant-do)
-6. [Words this app uses](#6-words-this-app-uses)
-7. [When something goes wrong](#7-when-something-goes-wrong)
+5. [Designing programs](#5-designing-programs)
+   - [5.1 Starting a program](#51-starting-a-program)
+   - [5.2 Adding exercises](#52-adding-exercises)
+   - [5.3 Sets, reps and the rest](#53-sets-reps-and-the-rest)
+   - [5.4 What Coach IQ says](#54-what-coach-iq-says)
+   - [5.5 Days, order and supersets](#55-days-order-and-supersets)
+   - [5.6 Printing it for the client](#56-printing-it-for-the-client)
+6. [Asking Billy](#6-asking-billy)
+   - [6.1 Opening Billy](#61-opening-billy)
+   - [6.2 Asking a question](#62-asking-a-question)
+   - [6.3 Giving Billy a photo or a PDF](#63-giving-billy-a-photo-or-a-pdf)
+   - [6.4 Starting again](#64-starting-again)
+   - [6.5 What Billy can't do](#65-what-billy-cant-do)
+7. [Words this app uses](#7-words-this-app-uses)
+8. [When something goes wrong](#8-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -336,7 +345,7 @@ Across the top of every screen:
   Master. On a computer, point at it and it says which: **Admin**, **Master**
   or **Primary Master**. A trainer's account has no shield.
 - **Billy's face**, in a lilac square, when Billy is set up for your
-  business — tap it to ask him something (chapter 5).
+  business — tap it to ask him something (chapter 6).
 - **In the corner**, your photo (or your initials) with a small arrow
   pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
@@ -375,13 +384,13 @@ parts of Coach. It has four buttons, as pictures with no words:
 |---|---|---|
 | **Home** | A house | The home screen (3.4). |
 | **Clients** | Two people | Your clients (chapter 4). |
-| **Programs** | A clipboard with a list | Programs — coming soon. |
+| **Programs** | A clipboard with a list | Your programs (chapter 5). |
 | **Messages** | A speech bubble | Messages — coming soon. |
 
 The one you are on sits in a filled blue circle, which slides across when you
 tap another. On a computer, pointing at a button shows its name.
 
-**Programs** and **Messages** are not built yet. Each opens a page
+**Messages** is not built yet. It opens a page
 with its name at the top, a card saying what it will be for, and *This part of
 Coach is being built. It will appear here when it's ready.*
 
@@ -398,11 +407,12 @@ Coach opens on Home. From the top:
 |---|---|
 | **Today** | Your sessions for the day, at a glance. |
 | **Clients** | Everyone you coach, with their contact details and sessions. |
-| **Programs** | Workouts and plans you build and assign. |
+| **Programs** | Programs you design for your clients, with Coach IQ beside you. |
 | **Messages** | Check-ins and notes between you and your clients. |
 
 **Clients** is ready: next to its name it says how many clients you have,
-such as **5 active clients**. The other three are marked **Coming soon**.
+such as **5 active clients**. **Programs** is ready too. **Today** and
+**Messages** are marked **Coming soon**.
 Tapping **Clients**, **Programs** or **Messages** opens its page, the same as
 its button on the bottom bar; **Today** will live on Home itself.
 
@@ -782,7 +792,104 @@ leave it.
 
 ---
 
-### 5. Asking Billy
+### 5. Designing programs
+
+A program is a plan of training days for one of your clients: on each day,
+the exercises, and for each exercise as much or as little as you want to say
+about it. As you build it, Coach IQ checks it and suggests what could come
+next, and Billy can talk it over with you. Only you see your programs.
+
+#### 5.1 Starting a program
+
+1. Tap **Programs** on the bar at the bottom (the clipboard).
+2. Tap **New program**.
+3. Choose the **Client**. The **Name** fills in as *Avery's program*; change
+   it if you like.
+4. Choose **What it's for** (**Strength**, **Power**, **Muscle size**,
+   **Strength endurance**, **Fat loss and conditioning**, **General
+   fitness** or **Mobility**), **The client's level** (**Beginner**,
+   **Intermediate** or **Advanced**) and **Where they train**: one of your
+   places from My equipment (3.7). Add **Notes** if you want.
+5. Tap **Start designing**. The program opens with its first day, **Day A**.
+
+Your programs are listed on the Programs page, newest change first, with who
+each is for. Tap one to open it; **All programs** takes you back. To change
+the client, name, goal, level, place or notes later, tap **Edit the details**.
+The box button beside a program in the list (**Put away**) takes it off the
+list; it is kept, not deleted.
+
+#### 5.2 Adding exercises
+
+There are two ways:
+
+- **Take a suggestion.** Under each day, **Could come next** lists exercises
+  Coach IQ suggests, one for each kind of movement the program doesn't have
+  yet (a squat, a hinge, a push, a row …). Every one already fits the
+  place's equipment, the client's level and their limitations, and says
+  where to start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in
+  orange says what to make easier for the client. Tap **Add** to put it on the
+  day with that starting point.
+- **Find one yourself.** Tap **Add an exercise** and type any name you use
+  for it: your own name, one of your own exercises, or the library's name.
+  Tap it in the list to add it.
+
+#### 5.3 Sets, reps and the rest
+
+Only the exercise is needed. To say more, tap **Sets, reps…** under it and
+fill in what you want: **Sets** (3, or a range such as 1–3), **Reps** (8–12,
+or 30 s), **Load** (45 lb), **Effort** (2 in reserve), **Tempo** (3-1-1-0),
+**Rest** (90 s, or 2 min) and a **Note**. Tap **Save**. What you filled in
+shows under the exercise, such as *3 × 10 · 45 lb · tempo 3-1-1-0 · rest 2
+min*. Loads are shown in your units (3.5).
+
+#### 5.4 What Coach IQ says
+
+Coach IQ checks the whole program every time you change it. At the top,
+**Coach IQ's check** counts what it found; each point then shows where it
+applies, under the exercise or the day, with where it comes from in
+brackets.
+
+| Mark | Means | For example |
+|---|---|---|
+| Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
+| Orange triangle | Take care | Something to make easier for the client, or above their level |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly |
+
+They are guidance: your word wins. If one is wrong, it shows where Coach IQ
+needs fixing; tell the Primary Master.
+
+**Swap**, under an exercise, lists exercises that could stand in for it,
+already fitting the place, the level and the limitations. Tap **Use it**.
+
+**Ask Billy about it**, at the top, and **Ask Billy about** a day, open
+Billy's panel with the question asked. He reads the program, its check and
+the suggestions, and talks it through; he changes nothing himself.
+
+#### 5.5 Days, order and supersets
+
+- **Add a day**, at the bottom, adds Day B, then Day C, and so on.
+- Beside a day's name: the arrows move it up or down, the pencil renames it
+  (and gives it a note), and the bin takes it out with its exercises.
+- Beside each exercise: the arrows move it up or down the day, and the bin
+  takes it out.
+- **A superset**: in **Sets, reps…**, tick **Done together with the one
+  above (a superset)**. The two then share a number, such as **2a** and
+  **2b**.
+
+#### 5.6 Printing it for the client
+
+1. Tap **Print for the client**, at the top of the program. It opens in a
+   new tab.
+2. The page shows the program's name, who it is for and the date, then each
+   day's exercises in your names for them, with whatever you filled in, in
+   your units. Coach IQ's check is not on it.
+3. Tap **Print**, and print it or save it as a PDF to send.
+
+<div style="page-break-after: always;"></div>
+
+---
+
+### 6. Asking Billy
 
 Billy is the assistant you may know from Studio. In Coach he can tell you
 about the clients on your list, and he can read a photo or a PDF you give him
@@ -792,7 +899,7 @@ questions about it.
 If you do not see his face in the bar at the top, Billy has not been set up
 for your business yet.
 
-#### 5.1 Opening Billy
+#### 6.1 Opening Billy
 
 1. Tap **Billy's face** in the bar at the top, next to your photo.
 2. His panel opens under the bar, with a box at the bottom that says
@@ -803,7 +910,7 @@ keyboard. Closing it keeps the conversation: open it again and it is all
 still there. While it is closed, a small blue dot on his face means he has
 answered and the answer is waiting.
 
-#### 5.2 Asking a question
+#### 6.2 Asking a question
 
 1. Tap the **Ask Billy…** box and type your question, such as *When did
    Avery last train?* or *Which of my clients have nothing booked?*
@@ -814,7 +921,7 @@ answered and the answer is waiting.
 You can carry on asking: he remembers what was said earlier in the same
 conversation, so *What about Jordan?* works after a question about Avery.
 
-#### 5.3 Giving Billy a photo or a PDF
+#### 6.3 Giving Billy a photo or a PDF
 
 1. Tap the **paper clip** to the left of the **Ask Billy…** box.
 2. Choose a photo or a PDF. On a phone you can take a photo there and then.
@@ -827,13 +934,13 @@ conversation, so *What about Jordan?* works after a question about Avery.
 Billy reads JPEG, PNG, GIF and WebP photos, and PDFs up to 15 MB. A large
 photo is made smaller before it is sent, which does not stop him reading it.
 
-#### 5.4 Starting again
+#### 6.4 Starting again
 
 Tap the **round arrow** at the top right of the panel (**New conversation**).
 The conversation is cleared and Billy starts fresh. Leaving or reloading the
 page clears it too: Coach does not keep your conversations with Billy.
 
-#### 5.5 What Billy can't do
+#### 6.5 What Billy can't do
 
 - **He changes nothing, apart from noting your equipment and your names for
   exercises.** When you tell him what you have — "there's no low row
@@ -852,6 +959,9 @@ page clears it too: Coach does not keep your conversations with Billy.
   sets, load, tempo, rest, how often to train or planning over weeks: only
   the topics you have approved, never a draft. They are guidance; your word
   wins.
+- **He reads your programs** (chapter 5), with Coach IQ's check and what
+  could come next, and suggests from those; he never changes a program
+  himself.
 - **He talks in your units** (3.5): every weight and distance in pounds and
   feet, or kilograms and metres, rounded to what a gym has.
 - **His suggestions come from the library, already checked.** Ask him for
@@ -869,7 +979,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-### 6. Words this app uses
+### 7. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -879,7 +989,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
-| **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 5). |
+| **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
+| **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
@@ -892,7 +1003,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-### 7. When something goes wrong
+### 8. When something goes wrong
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock

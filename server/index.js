@@ -13,6 +13,7 @@ import * as edit from "./iq-edit.js";
 import * as principles from "./principles.js";
 import * as books from "./books.js";
 import * as trainerSettings from "./trainer-settings.js";
+import * as programs from "./programs.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -654,6 +655,146 @@ app.put("/api/storage", asPrimary("PUT /storage", async (req, res, user) => {
   res.json(storageState());
 }));
 
+/* ------------------------------------------------- the program designer
+   (programs.js). A program is its writer's alone (Glenn, 17 Oct 2026: "Only
+   the trainer who wrote it"): anyone else is told there is no such thing.
+   Every change answers with the whole program, checked again. */
+const notFound = (res) => res.status(404).json({ error: "Not found", code: "not_found" });
+const sendProgram = async (res, user, program) => {
+  res.set("Cache-Control", "private, no-store");
+  res.json(await programs.full(user.id, await programs.programOf(user.id, program.id)));
+};
+
+app.get("/api/programs", asSignedIn("GET /programs", async (_req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  res.json({ programs: await programs.list(user.id), goals: programs.goalsList() });
+}));
+
+/* A client of theirs and one of their places, or a 400 saying which. */
+async function programWorld(req, user, { clientId, placeId }) {
+  let client, place;
+  if (clientId !== undefined) {
+    client = (await myClients(req, user)).find(c => c.id === clientId);
+    if (!client) return { error: "Choose one of your clients." };
+  }
+  if (placeId !== undefined && placeId !== "") {
+    place = await equipment.placeOf(user.id, placeId);
+    if (!place) return { error: "Choose one of your places." };
+  }
+  return { client, placeId: placeId === undefined ? undefined : place?.id || "" };
+}
+
+app.post("/api/programs", asSignedIn("POST /programs", async (req, res, user) => {
+  const wrong = programs.checkDetails(req.body, { creating: true });
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  const world = await programWorld(req, user, { clientId: req.body.clientId ?? "", placeId: req.body.placeId ?? "" });
+  if (world.error) return res.status(400).json({ error: world.error, code: "invalid" });
+  const id = await programs.create(user.id, world.client, world.placeId, req.body);
+  await sendProgram(res, user, { id });
+}));
+
+app.get("/api/programs/:id", asSignedIn("GET /programs/one", async (req, res, user) => {
+  const program = await programs.programOf(user.id, req.params.id);
+  if (!program) return notFound(res);
+  await sendProgram(res, user, program);
+}));
+
+app.patch("/api/programs/:id", asSignedIn("PATCH /programs", async (req, res, user) => {
+  const program = await programs.programOf(user.id, req.params.id);
+  if (!program) return notFound(res);
+  const wrong = programs.checkDetails(req.body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  const world = await programWorld(req, user, { clientId: req.body.clientId, placeId: req.body.placeId });
+  if (world.error) return res.status(400).json({ error: world.error, code: "invalid" });
+  await programs.update(program, req.body, world);
+  await sendProgram(res, user, program);
+}));
+
+app.delete("/api/programs/:id", asSignedIn("DELETE /programs", async (req, res, user) => {
+  const program = await programs.programOf(user.id, req.params.id);
+  if (!program) return notFound(res);
+  await programs.archive(program);
+  res.json({ programs: await programs.list(user.id) });
+}));
+
+app.post("/api/programs/:id/days", asSignedIn("POST /programs/days", async (req, res, user) => {
+  const program = await programs.programOf(user.id, req.params.id);
+  if (!program) return notFound(res);
+  await programs.addDay(program.id, req.body?.name || await programs.nextDayName(program.id));
+  await sendProgram(res, user, program);
+}));
+
+app.patch("/api/program-days/:id", asSignedIn("PATCH /program-days", async (req, res, user) => {
+  const program = await programs.programOfDay(user.id, req.params.id);
+  if (!program) return notFound(res);
+  if (req.body?.move) await programs.moveDay(req.params.id, program.id, Number(req.body.move));
+  const wrong = await programs.updateDay(req.params.id, program.id, req.body || {});
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await sendProgram(res, user, program);
+}));
+
+app.delete("/api/program-days/:id", asSignedIn("DELETE /program-days", async (req, res, user) => {
+  const program = await programs.programOfDay(user.id, req.params.id);
+  if (!program) return notFound(res);
+  await programs.deleteDay(req.params.id, program.id);
+  await sendProgram(res, user, program);
+}));
+
+/* What could come next on a day, from Coach IQ. */
+app.get("/api/program-days/:id/suggestions", asSignedIn("GET /program-days/suggestions", async (req, res, user) => {
+  const program = await programs.programOfDay(user.id, req.params.id);
+  if (!program) return notFound(res);
+  res.set("Cache-Control", "private, no-store");
+  res.json(await programs.suggestNext(user.id, program, req.params.id));
+}));
+
+/* An exercise on a day: the library's or one of their own, by its id. */
+app.post("/api/program-days/:id/exercises", asSignedIn("POST /program-days/exercises", async (req, res, user) => {
+  const program = await programs.programOfDay(user.id, req.params.id);
+  if (!program) return notFound(res);
+  if (!await programs.canUse(user.id, req.body?.exerciseId)) return res.status(400).json({ error: "Choose an exercise from the library or your own.", code: "invalid" });
+  const dose = programs.doseFrom(req.body);
+  if (dose.error) return res.status(400).json({ error: dose.error, code: "invalid" });
+  await programs.addExercise(program, req.params.id, req.body.exerciseId, dose);
+  await sendProgram(res, user, program);
+}));
+
+app.patch("/api/program-exercises/:id", asSignedIn("PATCH /program-exercises", async (req, res, user) => {
+  const program = await programs.programOfExercise(user.id, req.params.id);
+  if (!program) return notFound(res);
+  if (req.body?.exerciseId !== undefined && !await programs.canUse(user.id, req.body.exerciseId)) {
+    return res.status(400).json({ error: "Choose an exercise from the library or your own.", code: "invalid" });
+  }
+  if (req.body?.move) await programs.moveExercise(req.params.id, program.id, Number(req.body.move));
+  const dose = programs.doseFrom(req.body || {});
+  if (dose.error) return res.status(400).json({ error: dose.error, code: "invalid" });
+  await programs.updateExercise(req.params.id, program.id, dose, req.body?.exerciseId);
+  await sendProgram(res, user, program);
+}));
+
+app.delete("/api/program-exercises/:id", asSignedIn("DELETE /program-exercises", async (req, res, user) => {
+  const program = await programs.programOfExercise(user.id, req.params.id);
+  if (!program) return notFound(res);
+  await programs.deleteExercise(req.params.id, program.id);
+  await sendProgram(res, user, program);
+}));
+
+/* Alternatives for one exercise in a program, fitted to it. */
+app.get("/api/program-exercises/:id/swaps", asSignedIn("GET /program-exercises/swaps", async (req, res, user) => {
+  const program = await programs.programOfExercise(user.id, req.params.id);
+  if (!program) return notFound(res);
+  const row = await db.get(`SELECT exercise_id FROM coach_program_exercises WHERE id = ?`, [req.params.id]);
+  res.set("Cache-Control", "private, no-store");
+  res.json(await programs.swapsFor(user.id, program, row.exercise_id));
+}));
+
+/* Finding an exercise to add: their own names first, then their own
+   exercises, then the library (library.findExercise, as Billy finds them). */
+app.get("/api/programs-find", asSignedIn("GET /programs-find", async (req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  res.json(await library.findExercise(user.id, String(req.query.q || "").slice(0, 120)));
+}));
+
 /* Years from a YYYY-MM-DD birthday, or null. */
 function ageOf(dateOfBirth) {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateOfBirth || "");
@@ -728,6 +869,16 @@ app.post("/api/assistant", async (req, res) => {
       find_exercise: async (input) => library.findExercise(user.id, String(input?.name || "").slice(0, 120)),
       /* Only the reviewed principles (principles.js): a draft is not his to
          work from until the Primary Master approves it. */
+      /* Their own programs only (programs.js): read, with Coach IQ's check
+         and what could come next on each day, never changed by him. */
+      my_programs: async (input) => {
+        const want = String(input?.program || "").trim().toLowerCase();
+        const list = await programs.list(user.id);
+        if (!want) return { programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName, goal: p.goalLabel, days: p.days, exercises: p.exercises })) };
+        const hit = list.find(p => p.id === want) || list.filter(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want))[0];
+        if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };
+        return programs.forBilly(user.id, await programs.programOf(user.id, hit.id));
+      },
       coach_principles: async (input) => principles.principlesFor(String(input?.topic || "").slice(0, 80), units),
       /* Only options that pass come back: the place's equipment, the level
          and the client's limitations are checked here, never left to him. */
