@@ -109,12 +109,16 @@ export const WORK_ON = {
   mobility: { label: "Mobility", patterns: ["mobility", "breathing"] },
   balance: { label: "Balance", patterns: ["balance"] },
 };
+/* The top-level groups, in Glenn's words and order (18 Oct 2026: "chest,
+   shoulders, arms, core, legs as the top level muscle group categories",
+   with Back added as a sixth when asked), each opening to its own muscles. */
 export const MUSCLE_GROUPS = [
-  { label: "Legs and hips", muscles: ["quads", "hamstrings", "glutes", "adductors", "abductors", "hip flexors", "calves", "tibialis"] },
-  { label: "Chest and shoulders", muscles: ["chest", "front delts", "side delts", "rear delts", "rotator cuff"] },
-  { label: "Back", muscles: ["lats", "upper back", "traps", "lower back"] },
-  { label: "Arms", muscles: ["biceps", "triceps", "forearms"] },
-  { label: "Core", muscles: ["core", "obliques", "pelvic floor"] },
+  { key: "chest", label: "Chest", muscles: ["chest"] },
+  { key: "shoulders", label: "Shoulders", muscles: ["front delts", "side delts", "rear delts", "rotator cuff"] },
+  { key: "back", label: "Back", muscles: ["lats", "upper back", "traps", "lower back"] },
+  { key: "arms", label: "Arms", muscles: ["biceps", "triceps", "forearms"] },
+  { key: "core", label: "Core", muscles: ["core", "obliques", "pelvic floor"] },
+  { key: "legs", label: "Legs", muscles: ["quads", "hamstrings", "glutes", "adductors", "abductors", "hip flexors", "calves", "tibialis"] },
 ];
 const ALL_MUSCLES = new Set(MUSCLE_GROUPS.flatMap(g => g.muscles));
 
@@ -593,13 +597,27 @@ export async function suggestFor(trainerId, program, dayId, { workOn = null, mus
   const hits = (x) => {
     const main = (x.primary || []).filter(m => want.includes(m));
     const other = (x.secondary || []).filter(m => want.includes(m));
-    return { main, other, score: main.length * 3 + other.length };
+    /* Main muscles count, capped at two, so an exercise touching many of a
+       whole group's muscles doesn't outrank the usual lifts for it; other
+       muscles count only where no main one matches. Past that, the usual
+       ranking (the goal, the level, a main lift) decides. */
+    return { main, other, score: main.length ? Math.min(main.length, 2) * 3 : other.length ? 1 : 0 };
   };
+  /* Stretches and breathing only when asked for (Mobility) or the program is
+     for mobility: "the lats" otherwise means training them. */
+  const stretches = workOn === "mobility" || program.goal === "mobility";
   const pool = candidates(ctx, program.level).filter(x => !onDay.has(x.id)
     && (!kind || kind.patterns.some(p => ofPattern(x, p)))
+    && (stretches || !["mobility", "breathing"].includes(library.familyOf(x)?.pattern))
     && (!want.length || hits(x).score > 0));
-  const base = rank(pool, ctx, { level: program.level, purpose: goal.purpose, role: null });
-  const order = want.length ? [...base].sort((a, b) => hits(b).score - hits(a).score) : base;
+  /* Main lifts first unless a kind of movement was asked for (its own order
+     stands), and one version of each family before a second, so the list
+     shows different movements rather than one in three versions. */
+  const base = rank(pool, ctx, { level: program.level, purpose: goal.purpose, role: kind ? null : "main" });
+  const sorted = want.length ? [...base].sort((a, b) => hits(b).score - hits(a).score) : base;
+  const seen = new Set();
+  const firsts = sorted.filter(x => (seen.has(x.movement) ? false : seen.add(x.movement)));
+  const order = [...firsts, ...sorted.filter(x => !firsts.includes(x))];
   const out = order.slice(0, limit).map(x => {
     const h = hits(x);
     const and = (list) => (list.length > 1 ? `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}` : list[0]);

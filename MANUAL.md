@@ -746,10 +746,14 @@ list; it is kept, not deleted.
 2. **What are we working on?** (optional). Tap a kind of movement, such as
    **Squat**, **Hinge**, **Single leg**, **Push**, **Pull**, **Core**,
    **Carry**, **Jumping**, **Conditioning**, **Mobility** or **Balance**; tap
-   it again to clear it. For more, tap **Muscle groups** and tap any muscles,
-   grouped as legs and hips, chest and shoulders, back, arms and core. Coach
-   IQ's suggestions below narrow to match (*Coach IQ suggests: Pull ·
-   biceps*), each saying what it works, such as *Works the biceps.* If
+   it again to clear it. Under **Muscle groups**, tap any of **Chest**,
+   **Shoulders**, **Back**, **Arms**, **Core** and **Legs**: that means the
+   whole group, and its own muscles open underneath (*Legs: all of them, or
+   tap to narrow*); tap some of them to narrow further, such as **glutes**.
+   Tap the group again to close it. Coach IQ's suggestions below narrow to
+   match (*Coach IQ suggests: Pull · biceps*, or *legs*), different movements
+   first, each saying what it works, such as *Works the biceps.* Stretches
+   only come up when you choose **Mobility**. If
    nothing fits the place, the client's level and limitations, it says so:
    choose fewer muscles, or another kind of movement. **Ask Billy for
    ideas** closes the box and asks Billy, with what you chose.

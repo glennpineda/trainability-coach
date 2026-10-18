@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { ChevronDown, ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
 
 /**
@@ -191,17 +191,29 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly }) {
   const [found, setFound] = useState(null);
   const [next, setNext] = useState(null);
   const [workOn, setWorkOn] = useState(null);
-  const [muscles, setMuscles] = useState([]);
-  const [showMuscles, setShowMuscles] = useState(false);
+  /* Muscle groups chosen, and within them any muscles picked to narrow: a
+     group with none picked means all of its muscles. */
+  const [groups, setGroups] = useState([]);
+  const [picked, setPicked] = useState([]);
+  const muscles = useMemo(() => (vocab?.muscleGroups || []).filter(g => groups.includes(g.key))
+    .flatMap(g => { const mine = g.muscles.filter(m => picked.includes(m)); return mine.length ? mine : g.muscles; }), [vocab, groups, picked]);
+  const toggleGroup = (key) => {
+    const g = vocab.muscleGroups.find(x => x.key === key);
+    if (groups.includes(key)) { setGroups(groups.filter(k => k !== key)); setPicked(picked.filter(m => !g.muscles.includes(m))); }
+    else setGroups([...groups, key]);
+  };
   useEffect(() => {
     let alive = true;
     setNext(null);
     const query = [workOn && `workOn=${workOn}`, muscles.length && `muscles=${encodeURIComponent(muscles.join(","))}`].filter(Boolean).join("&");
     apiRequest("GET", `/program-days/${dayId}/suggestions${query ? `?${query}` : ""}`).then(o => alive && setNext(o)).catch(() => alive && setNext({ suggestions: [] }));
     return () => { alive = false; };
-  }, [dayId, workOn, muscles]);
+  }, [dayId, workOn, muscles.join(",")]); // eslint-disable-line react-hooks/exhaustive-deps
   const narrowed = !!(workOn || muscles.length);
   const workOnLabel = vocab?.workOn?.find(w => w.key === workOn)?.label;
+  /* In words for Billy: a whole group by its name, else the muscles picked in it. */
+  const musclesWords = (vocab?.muscleGroups || []).filter(g => groups.includes(g.key))
+    .map(g => { const mine = g.muscles.filter(m => picked.includes(m)); return mine.length ? mine.join(", ") : g.label.toLowerCase(); }).join(", ");
   useEffect(() => {
     if (q.trim().length < 2) { setFound(null); return undefined; }
     let alive = true;
@@ -226,20 +238,19 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly }) {
         <div className="grid gap-1.5">
           <div className="text-sm font-medium">What are we working on? <span className="font-normal" style={muted}>(optional)</span></div>
           <Chips label="What are we working on" options={vocab.workOn.map(w => [w.key, w.label])} value={workOn} onChange={setWorkOn} />
-          <button type="button" className="text-sm cx-link justify-self-start" aria-expanded={showMuscles} onClick={() => setShowMuscles(v => !v)}>
-            <ChevronDown size={15} aria-hidden="true" style={{ transform: showMuscles ? "rotate(180deg)" : undefined }} />
-            Muscle groups{muscles.length ? ` (${muscles.length})` : ""} <span style={muted}>(optional)</span>
-          </button>
-          {showMuscles && (
-            <div className="grid gap-2 pl-1">
-              {vocab.muscleGroups.map(g => (
-                <div key={g.label} className="grid gap-1">
-                  <div className="text-xs" style={muted}>{g.label}</div>
-                  <Chips many label={g.label} options={g.muscles.map(m => [m, m])} value={muscles} onChange={setMuscles} />
-                </div>
-              ))}
+          <div className="text-sm font-medium mt-1">Muscle groups <span className="font-normal" style={muted}>(optional)</span></div>
+          <Chips many label="Muscle groups" options={vocab.muscleGroups.map(g => [g.key, g.label])} value={groups} onChange={(next) => {
+            const added = next.find(k => !groups.includes(k)); const gone = groups.find(k => !next.includes(k));
+            toggleGroup(added || gone);
+          }} />
+          {/* A chosen group opens to its own muscles, to narrow further. */}
+          {vocab.muscleGroups.filter(g => groups.includes(g.key) && g.muscles.length > 1).map(g => (
+            <div key={g.key} className="grid gap-1 pl-3 border-l-2" style={{ borderColor: "var(--cerulean)" }}>
+              <div className="text-xs" style={muted}>{g.label}: all of them, or tap to narrow</div>
+              <Chips many label={`${g.label} muscles`} options={g.muscles.map(m => [m, m])} value={picked.filter(m => g.muscles.includes(m))}
+                onChange={(mine) => setPicked([...picked.filter(m => !g.muscles.includes(m)), ...mine])} />
             </div>
-          )}
+          ))}
         </div>
       )}
       {onBack && <button type="button" className="text-sm cx-quiet justify-self-start inline-flex items-center gap-1" onClick={onBack}><ChevronLeft size={15} aria-hidden="true" /> Back</button>}
@@ -257,7 +268,7 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly }) {
       )) : !next ? <p className="text-xs" style={muted}>Coach IQ is looking…</p> : (
         <div className="grid gap-1.5">
           <div className="text-xs font-medium inline-flex items-center gap-1" style={{ color: "var(--accent)" }}>
-            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{narrowed ? `: ${next.narrowed}` : next.day ? ` for a ${next.day.toLowerCase()} day` : ""}
+            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{narrowed ? `: ${[workOnLabel, musclesWords].filter(Boolean).join(" · ")}` : next.day ? ` for a ${next.day.toLowerCase()} day` : ""}
           </div>
           {next.suggestions.length > 0 ? (
             <ul className="rounded-lg overflow-hidden border" style={line}>
@@ -269,7 +280,7 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly }) {
       {onAskBilly && (
         <button type="button" className="text-sm cx-link justify-self-start"
           onClick={() => onAskBilly(narrowed
-            ? `For ${dayName}, I'm working on ${[workOnLabel?.toLowerCase(), muscles.length ? muscles.join(", ") : null].filter(Boolean).join(", for the ")}. What would you add?`
+            ? `For ${dayName}, I'm working on ${[workOnLabel?.toLowerCase(), musclesWords || null].filter(Boolean).join(", for the ")}. What would you add?`
             : `What should I add next on ${dayName}?`)}>
           <Sparkles size={15} aria-hidden="true" /> Ask Billy for ideas
         </button>
