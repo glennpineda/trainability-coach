@@ -390,6 +390,27 @@ const SCHEMA = [
     created_at VARCHAR(32) NOT NULL,
     updated_at VARCHAR(32) NOT NULL
   )`,
+  /* A client's fitness test results (server/fitness-tests.js; Glenn, 18 Oct
+     2026): kind step, rockport or vo2; what was entered as JSON in `data`;
+     the result worked out (heart rate, or VO2 max) and the step test's
+     rating, with the age and table (sex) it was worked out with. */
+  `CREATE TABLE IF NOT EXISTS coach_fitness_tests (
+    id VARCHAR(40) PRIMARY KEY,
+    client_id VARCHAR(64) NOT NULL,
+    trainer_id VARCHAR(64) NOT NULL,
+    trainer_name VARCHAR(120) NOT NULL DEFAULT '',
+    kind VARCHAR(16) NOT NULL,
+    taken_on VARCHAR(10) NOT NULL,
+    age INTEGER NULL,
+    sex VARCHAR(8) NOT NULL DEFAULT '',
+    data VARCHAR(1000) NOT NULL DEFAULT '{}',
+    result REAL NULL,
+    rating VARCHAR(24) NULL,
+    rating_ages VARCHAR(12) NULL,
+    note VARCHAR(1000) NOT NULL DEFAULT '',
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS coach_conversations (
     id VARCHAR(40) PRIMARY KEY,
     trainer_id VARCHAR(64) NOT NULL,

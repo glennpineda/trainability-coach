@@ -170,6 +170,18 @@ export async function measurementsAttachment(owner, { set, previous, clientName,
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
+/** A fitness test result kept as a copy, waiting to be sent, with the one before it of the same test. */
+export async function testAttachment(owner, { test, previous, clientName }) {
+  const data = { testId: test.id, clientName, kind: test.kind, takenOn: test.takenOn, takenBy: test.takenBy, age: test.age, sex: test.sex,
+    data: test.data, result: test.result, rating: test.rating, ratingAges: test.ratingAges, note: test.note,
+    previous: previous ? { takenOn: previous.takenOn, result: previous.result, rating: previous.rating } : null };
+  const id = await insertWithNewId("attachment", (newId) => run(
+    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, 'test', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, `Test, ${test.takenOn}`, JSON.stringify(data), now()]));
+  return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
+}
+
 function shapeAttachment(r, { full = false } = {}) {
   const out = { id: r.id, kind: r.kind, name: r.name, mime: r.mime, bytes: Number(r.bytes) || 0,
     width: r.width == null ? null : Number(r.width), height: r.height == null ? null : Number(r.height) };
@@ -180,6 +192,7 @@ function shapeAttachment(r, { full = false } = {}) {
   }
   /* Small enough to come whole every time. */
   if (r.kind === "measurements") out.measurements = parse(r.data);
+  if (r.kind === "test") out.test = parse(r.data);
   return out;
 }
 const parse = (s) => { try { return JSON.parse(s || "{}"); } catch { return {}; } };

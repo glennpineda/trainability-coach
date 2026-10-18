@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUp, ChevronLeft, ClipboardList, Loader2, MessageCircle, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
+import { ArrowUp, HeartPulse, ChevronLeft, ClipboardList, Loader2, MessageCircle, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
 import { rowsOf } from "../lib/measures";
+import { TESTS, describe } from "../lib/fitness-tests";
 
 /*
  * Messages (Glenn, 18 Oct 2026: "Let's do messages now, apart from basic
@@ -207,6 +208,22 @@ function Attachment({ a }) {
       </a>
     );
   }
+  if (a.kind === "test") {
+    const d = a.test || {};
+    const shown = d.kind ? describe(d) : null;
+    return (
+      <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
+        className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
+        <span className="flex-none w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--accent-soft)" }}>
+          <HeartPulse size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
+        </span>
+        <span className="min-w-0">
+          <span className="block font-medium truncate" style={{ color: "var(--ink)" }}>{TESTS[d.kind]?.short || "Fitness test"}{d.takenOn ? ` · ${shortDate(d.takenOn)}` : ""}</span>
+          <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>{shown ? [shown.text, shown.rating].filter(Boolean).join(" · ") : ""}</span>
+        </span>
+      </a>
+    );
+  }
   return null;
 }
 
@@ -324,6 +341,19 @@ function Composer({ clientId, first, onSent }) {
     try { update(key, { att: await apiRequest("POST", "/attachments/measurements", { measurementId: set.id }), progress: 1 }); }
     catch (err) { update(key, { error: err.message }); }
   }
+  /* The client's fitness test results, newest first, to attach one. */
+  const [tests, setTests] = useState(null);
+  function openTests() {
+    setMenu("tests");
+    apiRequest("GET", `/clients/${encodeURIComponent(clientId)}/tests`).then(d => setTests(d.tests || [])).catch(() => setTests([]));
+  }
+  async function attachTest(t) {
+    setMenu(null);
+    const key = `${Date.now()}-${t.id}`;
+    setItems(xs => [...xs, { key, kind: "test", name: `${TESTS[t.kind].short}, ${setDate(t.takenOn)}`, progress: 0 }]);
+    try { update(key, { att: await apiRequest("POST", "/attachments/test", { testId: t.id }), progress: 1 }); }
+    catch (err) { update(key, { error: err.message }); }
+  }
   const remove = (key) => setItems(xs => { const x = xs.find(y => y.key === key); if (x?.preview) URL.revokeObjectURL(x.preview); return xs.filter(y => y.key !== key); });
 
   async function send(e) {
@@ -354,12 +384,13 @@ function Composer({ clientId, first, onSent }) {
                 : <span className="w-8 h-8 rounded-md flex items-center justify-center flex-none" style={{ background: "var(--accent-soft)" }}>
                     {x.kind === "program" ? <ClipboardList size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : x.kind === "measurements" ? <Ruler size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
+                      : x.kind === "test" ? <HeartPulse size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : <ImageIcon size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />}
                   </span>}
               <span className="min-w-0">
                 <span className="block truncate max-w-[10rem]">{x.name || (x.kind === "video" ? "Video" : "Picture")}</span>
                 <span className="block text-[11px]" style={{ color: x.error ? "var(--ember)" : "var(--iron)" }}>
-                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
+                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", test: "Fitness test", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
                 </span>
               </span>
               <button type="button" className="cx-icon-btn" aria-label={`Remove ${x.name}`} onClick={() => remove(x.key)}><X size={14} aria-hidden="true" /></button>
@@ -388,6 +419,14 @@ function Composer({ clientId, first, onSent }) {
               <MenuItem icon={ImageIcon} label="Picture or video" onClick={() => pick.current?.click()} />
               <MenuItem icon={ClipboardList} label="Program" onClick={openPrograms} />
               <MenuItem icon={Ruler} label="Measurements" onClick={openMeasurements} />
+              <MenuItem icon={HeartPulse} label="Fitness test" onClick={openTests} />
+            </>
+          ) : menu === "tests" ? (
+            <>
+              <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>{first}&apos;s fitness tests</div>
+              {tests === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+                : tests.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No fitness tests for {first} yet. Add them on the Clients page.</p>
+                : tests.map(t => { const d = describe(t); return <MenuItem key={t.id} icon={HeartPulse} label={`${TESTS[t.kind].short} · ${setDate(t.takenOn)}`} note={[d.text, d.rating].filter(Boolean).join(" · ")} onClick={() => attachTest(t)} />; })}
             </>
           ) : menu === "measurements" ? (
             <>

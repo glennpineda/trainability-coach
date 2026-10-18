@@ -31,6 +31,8 @@ export const PREFIX = {
   attachment: "att",     // a picture, video, program or measurements on a message
   /* Glenn's tag, 18 Oct 2026 (Measurements). */
   measurement: "msr",    // one day's body measurements for one client
+  /* Glenn's tag, 18 Oct 2026 (Tests). */
+  fitnessTest: "tst",    // one fitness test result for one client
 };
 
 const DIGITS = "0123456789";

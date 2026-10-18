@@ -44,6 +44,7 @@ of the app gets its own chapter here as it arrives.
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
    - [4.8 A client's measurements](#48-a-clients-measurements)
+   - [4.9 A client's fitness tests](#49-a-clients-fitness-tests)
 5. [Designing programs](#5-designing-programs)
    - [5.1 Starting a program](#51-starting-a-program)
    - [5.2 Adding exercises](#52-adding-exercises)
@@ -980,6 +981,69 @@ them.
 
 To send a set to the client, attach it to a message (7.3).
 
+### 4.9 A client's fitness tests
+
+Under **Measurements**, a client's details show their **Fitness tests**: how
+fit their heart and lungs are, from three tests. Every trainer of the client
+sees the results, with who recorded each one.
+
+- **3-minute step test**: they step up and down a 12-inch step in time to a
+  metronome for three minutes, then sit down while you count their heart rate
+  for one full minute. Coach rates it, from **Excellent** to **Very poor**,
+  against the tables for their age and for women or men.
+- **Rockport 1-mile walk**: they walk one mile as fast as they can. From the
+  time, the heart rate at the end, their age, weight and the table for women
+  or men, Coach works out their **VO2 max** (ml/kg/min), with the formula from
+  the original Rockport study.
+- **VO2 max from a lab or watch**: a VO2 max from a gym or lab treadmill test,
+  or reported by a watch such as a Garmin.
+
+**Reading them.** The latest result of each test is shown: its name, the day
+and who recorded it, the result (such as *97 bpm* or *VO2 max 32.7
+ml/kg/min*) and, for the step test, the rating, such as **Above average**,
+with *Rated for women aged 26–35*. Under it is how it changed since the same
+test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
+test a lower heart rate is fitter; for VO2 max a higher number is. Tap
+**Earlier results** to see the older ones, and **Show only the latest** to
+fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
+rated: the tables start at 18.
+
+**Adding a result:**
+
+1. Open the client (4.3) and tap **Add a test result**.
+2. Under **Which test?**, tap the test. Each says how it is done.
+3. The form shows again how it is done. **Day of the test** starts on today.
+4. For the step test and the walk, **Age on the day** is filled in from their
+   birthday, and **Table** (**Women** or **Men**) from their gender, where
+   their details have them. Otherwise fill them in.
+5. Fill in the result:
+   - Step test: **Heart rate in the minute after** (bpm).
+   - Rockport walk: **Time for the mile** (minutes and seconds, such as
+     14:30), **Heart rate at the end** (bpm) and **Weight**. The weight is
+     filled in from their latest measurements (4.8); change it if it is
+     different today.
+   - VO2 max: the **VO2 max** (ml/kg/min), and **Where it came from**:
+     **Lab or gym test**, **Garmin**, **Apple Watch**, **Fitbit** or **Other
+     watch or app**.
+6. Add a **Note** if it helps, such as how they felt.
+7. Tap **Save**. **Cancel** leaves without saving.
+
+Under the form is a reminder: feeling agitated or moody, sleeping badly, off
+their food, low or stressed can be signs of overtraining; back off for at
+least a week before testing again.
+
+Something missing or a number no person could have is caught, such as
+*Choose which table to use: women's or men's.*, *Fill in the time for the
+mile as minutes and seconds, such as 14:30.* or *A heart rate of 400 doesn't
+look right. Check it and try again.* A day still to come can't be chosen.
+
+**Changing or deleting a result.** Only the trainer who recorded a result can
+change it (the pencil) or delete it (the bin). Deleting asks *Delete this
+result? Its trainers will no longer see it.*; tap **Delete**, or **Keep it**
+to leave it.
+
+To send a result to the client, attach it to a message (7.3).
+
 <div style="page-break-after: always;"></div>
 
 ---
@@ -1273,8 +1337,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 ## 7. Messages
 
 Messages is where you and your clients write to each other. Besides words, a
-message can carry pictures, videos, the programs you design for them, and
-their measurements (4.8).
+message can carry pictures, videos, the programs you design for them,
+their measurements (4.8) and their fitness test results (4.9).
 
 ### 7.1 Your messages
 
@@ -1325,18 +1389,23 @@ so a reply appears without you doing anything.
    - **Measurements**: this client's sets are listed by date (**…'s
      measurements**), with who took each. Tap one. If there are none it says
      *No measurements for … yet. Add them on the Clients page.*
+   - **Fitness test**: this client's results are listed (**…'s fitness
+     tests**), newest first. Tap one. If there are none it says *No fitness
+     tests for … yet. Add them on the Clients page.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
 To take one off before sending, tap the **X** beside it.
 
-A program, or a set of measurements, is sent as it is at that moment. If you change it afterwards, the
+A program, a set of measurements or a test result is sent as it is at that moment. If you change it afterwards, the
 copy in the message stays as it was, so your client always has what you
 sent. Tap a program in a conversation to open it laid out like the printed
 program (5.6), in its own tab, ready to print.
 
 Tap a set of measurements to open it as a page of its own, ready to print:
-each measurement, and how it changed since the set before.
+each measurement, and how it changed since the set before. A fitness test
+result opens the same way: the result, its rating, how it changed since the
+same test before, and how the test is done.
 
 Tap a picture to open it full size in its own tab. A video plays where it is.
 
@@ -1379,6 +1448,8 @@ can write to them here.*
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
+| **Fitness test** | A test of how fit a client's heart and lungs are: the 3-minute step test, the Rockport 1-mile walk, or a VO2 max from a lab or watch (4.9). |
+| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
 | **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |

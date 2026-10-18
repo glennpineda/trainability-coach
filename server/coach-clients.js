@@ -116,5 +116,6 @@ export async function moved(trainerId, id, studioId, name) {
   await run(`UPDATE coach_programs SET client_id = ?, client_name = ? WHERE client_id = ? AND trainer_id = ?`, [studioId, name, id, trainerId]);
   await run(`UPDATE coach_limitations SET client_id = ? WHERE client_id = ?`, [studioId, id]);
   await run(`UPDATE coach_measurements SET client_id = ? WHERE client_id = ?`, [studioId, id]);
+  await run(`UPDATE coach_fitness_tests SET client_id = ? WHERE client_id = ?`, [studioId, id]);
   await run(`DELETE FROM coach_clients WHERE id = ? AND trainer_id = ?`, [id, trainerId]);
 }

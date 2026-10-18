@@ -1,7 +1,7 @@
 {
   "name": "trainability-coach",
   "private": true,
-  "version": "1.0.64",
+  "version": "1.0.65",
   "codename": "Caesious",
   "type": "module",
   "scripts": {

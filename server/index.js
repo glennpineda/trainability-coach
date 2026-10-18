@@ -21,6 +21,7 @@ import * as today from "./today.js";
 import * as messages from "./messages.js";
 import * as push from "./push.js";
 import * as measurements from "./measurements.js";
+import * as fitnessTests from "./fitness-tests.js";
 import { previousOf } from "../src/lib/measures.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
@@ -605,6 +606,19 @@ app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurem
   }));
 }));
 
+/* A fitness test result kept as a copy to attach, with the one of the same
+   test from an earlier day for the change. */
+app.post("/api/attachments/test", asSignedIn("POST /attachments/test", async (req, res, user) => {
+  const row = await fitnessTests.testById(String(req.body?.testId || ""));
+  const client = row && (await myClients(req, user)).find(c => c.id === row.client_id);
+  if (!row || !client) return res.status(404).json({ error: "That test result is no longer there.", code: "not_found" });
+  const list = (await fitnessTests.testsOf(row.client_id, user.id)).filter(t => t.kind === row.kind);
+  const at = list.findIndex(t => t.id === row.id);
+  res.json(await messages.testAttachment(user.id, {
+    test: list[at], previous: list.find(t => t.takenOn < list[at].takenOn) || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
+  }));
+}));
+
 /* An attachment for the trainer: its details (a program's copy in full), or its file. */
 app.get("/api/attachments/:id", asSignedIn("GET /attachments", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
@@ -808,6 +822,46 @@ app.delete("/api/measurements/:id", asSignedIn("DELETE /measurements", async (re
   const done = await measurements.remove(row.id, user.id);
   if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who took them can delete them.", code: "not_yours" });
   res.json(await measurementsAnswer(row.client_id, user));
+}));
+
+/* A client's fitness tests (server/fitness-tests.js), as measurements: only
+   for a client on the trainer's list, seen by all their trainers, changed
+   and deleted only by the one who did them. */
+const testsAnswer = async (clientId, user) => ({
+  tests: await fitnessTests.testsOf(clientId, user.id), units: await trainerSettings.unitsOf(user.id),
+});
+app.get("/api/clients/:client/tests", asSignedIn("GET /clients/tests", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  res.set("Cache-Control", "private, no-store");
+  res.json(await testsAnswer(req.params.client, user));
+}));
+app.post("/api/clients/:client/tests", asSignedIn("POST /clients/tests", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  const checked = fitnessTests.check(req.body);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  await fitnessTests.add(req.params.client, user, checked.row);
+  res.json(await testsAnswer(req.params.client, user));
+}));
+const ownTest = async (req, res, user) => {
+  const row = await fitnessTests.testById(req.params.id);
+  if (!row) { res.status(404).json({ error: "Not found", code: "not_found" }); return null; }
+  return await ownClient(req, res, user, row.client_id) ? row : null;
+};
+app.put("/api/tests/:id", asSignedIn("PUT /tests", async (req, res, user) => {
+  const row = await ownTest(req, res, user);
+  if (!row) return;
+  const checked = fitnessTests.check(req.body);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  const done = await fitnessTests.update(row.id, user.id, checked.row);
+  if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who did the test can change it.", code: "not_yours" });
+  res.json(await testsAnswer(row.client_id, user));
+}));
+app.delete("/api/tests/:id", asSignedIn("DELETE /tests", async (req, res, user) => {
+  const row = await ownTest(req, res, user);
+  if (!row) return;
+  const done = await fitnessTests.remove(row.id, user.id);
+  if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who did the test can delete it.", code: "not_yours" });
+  res.json(await testsAnswer(row.client_id, user));
 }));
 
 /* A place of the trainer's own, or a 404: never another trainer's. */

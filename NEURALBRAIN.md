@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Fitness tests: the step test, the Rockport walk and VO2 max** (18 Oct 2026; Glenn: "Now let's add other measurements but now in tests, let's first read this page for cardiovascular fitness test: https://www.verywellfit.com/cardiovascular-fitness-1230820 and what you can up with to support and check this", then "Let's do it"). Build 1.0.65. Not from Next up; straight after build 1.0.64. **The source**: verywellfit.com was refused from the cloud session (the environment's network policy, and the site blocks crawlers), so Glenn printed the page to a PDF: Paige Waehner, CPT, "Cardiovascular Fitness: How Do You Test It?", updated 22 May 2024. It describes the 3-minute step test (with ratings tables by age and sex), the Rockport 1-mile walk (pointing to "a Rockport 1-mile walk calculator" for VO2 max, with no formula), lab VO2 max tests (graded exercise test, Bruce protocol) and watches such as a Garmin reporting VO2 max, and warns of overtraining. Studio has no fitness tests to copy; the section copies Coach's own Measurements (4.8) for its look, its inline delete confirmation (Limitations'), who-may-change rules and its attachment and print. **Glenn's decisions** (asked one at a time): which tests, "All three"; the Rockport VO2 max, "The original study's formula" (Kline et al., 1987: 132.853 − 0.0769 × weight in lb − 0.3877 × age + 6.315 × sex (1 male) − 3.2649 × minutes − 0.1565 × heart rate, to one decimal); the step tables' gaps and one misprint, "Fill gaps down, fix misprint"; the id tag, "tst". VO2 max is shown as a number with no rating, the article giving none. **The step tables** (`STEP_TABLE` in `src/lib/fitness-tests.js`) are the article's ranges transcribed per sex and age band (18–25, 26–35, 36–45, 46–55, 56–65, 65+) and checked against the PDF. Each band's top is what counts: a heart rate above one rating's top and up to the next one's is in the next (women 18–25 Excellent 52–81, Good 85–93, so 82–84 is Good). Above Very poor's top is still Very poor, below Excellent's bottom still Excellent; under 18 is not rated ("Not rated: the article's tables start at 18"). The misprint: men 46–55 Good printed "97–93", read as 83–94 (between Excellent's 82 and Above average's 95). **Files**: `src/lib/fitness-tests.js` (new, shared by page and server, pure: `TESTS` with each test's label, short name, how-to and tip; `VO2_SOURCES` Lab or gym test, Garmin, Apple Watch, Fitbit, Other watch or app; `stepRating`; `rockportVo2`; `clockOf`/`secondsOf` for "14:30"; `ageOn(birthday, day)`; `sexOf(gender)`, which reads only plain words such as F, female, woman, M, male, man and otherwise asks; `describe`; `changeOf`, the step test's falling heart rate shown as "−11 bpm"); `server/fitness-tests.js` (new: table `coach_fitness_tests`, id `tst`, with client, trainer and name, kind, day, age, sex, data JSON, result, rating, rated ages, note; `check` validates and works out the result: age 5–110 and a table required for the step test and the walk ("Choose which table to use: women's or men's."), step heart rate 40–220, walk time 7:00–40:00 and heart rate 60–220, weight in the trainer's units through `fromShown` and required ("Fill in their weight: the formula needs it."), VO2 max 10–95 with its source required, a day not still to come); `server/index.js` (GET/POST `/api/clients/:client/tests`, PUT/DELETE `/api/tests/:id`, each answering `{ tests, units }`; only the trainer who recorded a result may change or delete it, "not_yours"; POST `/api/attachments/test` with `{ testId }`, its previous result the same test from an earlier day); `server/messages.js` (`testAttachment`, kind `test`, a copy made at attach time); `server/ids.js` (`fitnessTest: "tst"`); `server/db.js` (the schema); `server/coach-clients.js` and `server/accounts.js` (a moved client's and a linked account's results are re-keyed, as measurements are); `src/clients/FitnessTests.jsx` (new: the section under Measurements, HeartPulse icon, latest result of each test with "Earlier results (n)", "Add a test result" → "Which test?" → the form with the how-to in Coach IQ's card colours, Day of the test, Age on the day from the birthday, Table Women/Men from the gender, the test's fields, the Rockport weight from the latest measurements, a note and the article's overtraining line; a row is a render function, not an inner component, so the form isn't remounted on each keystroke); `src/clients/PrintTest.jsx` (new: the printed sheet with Result, Rating, Rated, "Since <date>" with what it was, how the test is done and the note); `src/programs/PrintProgram.jsx` (the sent-attachment route opens kind `test` as `PrintTest`); `src/tabs/MessagesTab.jsx` ("Fitness test" in the paperclip menu, "…'s fitness tests" list, "No fitness tests for … yet. Add them on the Clients page.", the card "Step test · 18 Oct" with "97 bpm · Above average"); `src/tabs/ClientsTab.jsx`. MANUAL.md: new 4.9, 7.3's **Fitness test**, chapter 7's intro, and Fitness test and VO2 max in Words; CHANGELOG. **Checked**: in node, the gap (women 18–25, 83 → Good), the misprint (men 46–55: 83 and 94 Good, 95 Above average), under 18 → not rated, Rockport man 40, 180 lb, 14:00, 140 bpm → 42.2 and woman 35, 140 lb, 15:30, 150 bpm → 34.4. At the API on the session's stand-in Studio: a missing table, a heart rate of 400, a mile in 3:00 and a VO2 max with no source all refused with their messages; a step test of 97 for a woman of 34 → Above average (26–35), 108 → Average, Rockport results 32.7 and 28.8, a Garmin 38.5; another trainer's result can't be changed. In the session's Chromium at phone width: the section ("3-minute step test | Oct 18, 2026 · by you | 97 bpm | Above average | Rated for women aged 26–35 · −11 bpm since Sep 20, 2026"), the Rockport form with weight 183.2 and age 34 filled in, the attach menu, the message card and the printed sheet ("−11 bpm (was Average)"), with no page errors. **Untested**: sign-in end to end against Studio's fixture (a cloud session has only this repository); Billy doesn't read fitness tests yet; there is no chart of results over time; the client's own view in Studio's /me inbox is not built (a Studio session); `sexOf` guesses the table only from plain words, so any other gender asks the trainer to choose.
 - **Measurements: shoulders, waist to hip, resting heart rate and blood pressure** (18 Oct 2026; Glenn: "Ahh shoulder to the measurements to, and waist to hip ratio, heart rate (optional), blood pressure (optional)"). Build 1.0.64. Not from Next up; straight after build 1.0.63. **Added** to `src/lib/measures.js`: Shoulders (a length, 60–200 cm, after Neck), Resting heart rate (kind `rate`, bpm, 25–220) and Blood pressure as a pair (kind `pressure`, mmHg: top/systolic 60–260, bottom/diastolic 30–160); bpm and mmHg are the same in either units and kept and shown whole. Every measure is optional, as before. Columns `shoulders`, `heart_rate`, `bp_sys`, `bp_dia` added to `coach_measurements` through `COLUMNS` (`server/db.js`), so an existing table gains them. `check` (`server/measurements.js`) also asks for both blood pressure numbers or neither ("Fill in both blood pressure numbers, or neither.") and the top the higher ("Blood pressure's top number is the higher one. Check them and try again."). **Waist to hip** is never typed: `waistToHip` divides the waist by the hips (both kept in cm, so the same in either units) to two places wherever both were taken. **One way of showing a set** now: `rowsOf(values, previous, units)` gives the rows in order, the ratio after Hips and blood pressure as one row ("121/79 mmHg", its change "−7/−5 mmHg"), each with its change since the set before; the client's details (`Measurements.jsx`), a message's card (`MessagesTab.jsx`) and the printed sheet (`PrintMeasurements.jsx`) all use it rather than three copies. The form's pairs are now any run of measures with a `pair` and a `side` word (Left and Right; Top (systolic) and Bottom (diastolic)), laid out in `MEASURES`' order: Weight to Hips two to a row, Arm, Thigh and Calf, Resting heart rate, then Blood pressure. **What turned out differently**: the test data had two sets on one day and the newest was compared with one taken minutes before ("changes since Oct 18, 2026"); the set a change counts from is now the newest taken on an earlier day (`previousOf`), on the client's details and in an attached set. **Tested** against the stand-in Studio at the API (one blood pressure number, the numbers upside down and a heart rate of 600 refused; a set with all four new ones kept and shown with the ratio 0.87 and its change −0.03, heart rate −6 bpm and blood pressure −7/−5 mmHg) and in Chromium at phone width (the section, the form's new boxes, and the printed sheet); no page errors. MANUAL 4.8 and Words, and CHANGELOG, updated. Files: `src/lib/measures.js`, `server/measurements.js`, `server/db.js`, `server/index.js`, `src/clients/Measurements.jsx`, `src/clients/PrintMeasurements.jsx`, `src/tabs/MessagesTab.jsx`, MANUAL.md, CHANGELOG.md.
 
 - **Measurements: a client's body measurements, kept, compared and sent in Messages** (18 Oct 2026; Glenn: "Go with 2", after "What's next?" offered measurements as the attachment he had said was coming). Build 1.0.63. Not from Next up. **Studio first**: Studio has no body measurements (a search of its server and src: only unrelated words), so this was designed here, in the shape of Coach's limitations. **Decisions, asked one at a time**: (1) which: offered the usual set (recommended), the usual set left and right, or just weight and body fat; Glenn chose **"Usual set, left and right"**: weight, body fat %, neck, chest, waist, hips, and arm, thigh and calf each left and right, plus a note, each optional. (2) the id tag: offered msr (recommended) or bdy; Glenn chose **msr**. (3) who sees them: offered all the client's trainers, as limitations (recommended), or only the one who took them, as programs; Glenn chose **all the client's trainers**, changed and deleted only by the trainer who took a set. **Shared rules** (`src/lib/measures.js`, used by the page and the server, as units.js is): the twelve measures with their words, kind (mass, percent, length) and a person's plausible range in metric; kept in kg and cm to two decimal places, shown in the trainer's units (Units in the account menu): lb to a tenth, inches to the nearest quarter as a tape reads them, metric and % to a tenth. **What turned out differently**: the first build stored to one decimal of a centimetre or kilogram, so 14.25 in came back as 14.3 and 186.4 lb as 186.3; two decimals made what was typed come back as typed, and a set typed in centimetres then read as 36.81 in until inches were shown to the nearest quarter (36.75). **Server** (`server/measurements.js`): table `coach_measurements` (one row per day taken; weight, body_fat, neck, chest, waist, hips, arm_l, arm_r, thigh_l, thigh_r, calf_l, calf_r as REAL, note, the trainer and their name), `check` (a day that has been and not before 1990, at least one value, each a number inside its range in the trainer's words, "Weight of 1800 doesn't look right. Check it and try again."), add, update and remove for the trainer who took the set ("Only the trainer who took them can change them." otherwise). Routes `GET`/`POST /api/clients/:client/measurements` (the client must be on the trainer's list, as limitations), `PUT`/`DELETE /api/measurements/:id`, each answering the list newest first with the trainer's units. A Coach account's client moved into Studio takes its measurements to Studio's id (`coach-clients.moved`), and a linked Coach account's sets become the Studio user's (`accounts.link`). **Page**: `src/clients/Measurements.jsx`, under Limitations on a client's details and laid out as they are: the latest set ("Latest: Oct 18, 2026", who took it, "changes since …"), each value with its change since the set before in grey (up or down is shown as a fact, not as good or bad), one column on a phone and two from `sm` (two on a phone cut "Arm, right" short), the note, Earlier measurements (n) to open the rest, Add measurements opening a form (Taken on, today by default; Weight, Body fat, Neck, Chest, Waist, Hips; Arm, Thigh and Calf each Left and Right; Note; each box with its unit), the pencil and bin on the trainer's own sets, and Limitations' red inline confirmation for a delete. **In Messages**: the paperclip's Measurements, until now Coming soon, lists the client's sets by date and who took them ("No measurements for … yet. Add them on the Clients page." with none); a set is attached as a copy (`messages.measurementsAttachment`, kind `measurements`, with the set before it for the changes and the trainer's units), shown in the thread as a card "Measurements · Oct 18" with the first three values, and opening `/print/sent/<att>` as a sheet of its own (`src/clients/PrintMeasurements.jsx`, through PrintProgram's sent route): each measurement, its value and the change since the set before, black on white, ready to print. Studio's client page will get the same copy through the client link. **Tested** against the stand-in Studio, with Glenn (Imperial) and Tess (Metric) on one client: at the API (an empty set, a future day and a slip refused; pounds and inches kept as kilograms and centimetres and back again exactly; another trainer's set seen but not changed or deleted; an attachment carrying the set before it); in Chromium at phone width (the section with sets by two trainers and their changes, the form, a new set saved in inches and pounds, the attach menu, the card in a thread, and the printed sheet at 800 wide); no page errors. **Not done**: Billy doesn't read measurements yet; no chart of a measurement over time; Studio's client page doesn't show them until its inbox is built. Files: `src/lib/measures.js`, `server/measurements.js`, `src/clients/Measurements.jsx`, `src/clients/PrintMeasurements.jsx` (new), `server/index.js`, `server/db.js`, `server/ids.js` (msr), `server/messages.js`, `server/coach-clients.js`, `server/accounts.js`, `src/tabs/ClientsTab.jsx`, `src/tabs/MessagesTab.jsx`, `src/programs/PrintProgram.jsx`, MANUAL.md (4.8 new, 7 and 7.3, Words), CHANGELOG.md.
@@ -273,6 +274,7 @@ of the app gets its own chapter here as it arrives.
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
    - [4.8 A client's measurements](#48-a-clients-measurements)
+   - [4.9 A client's fitness tests](#49-a-clients-fitness-tests)
 5. [Designing programs](#5-designing-programs)
    - [5.1 Starting a program](#51-starting-a-program)
    - [5.2 Adding exercises](#52-adding-exercises)
@@ -1209,6 +1211,69 @@ them.
 
 To send a set to the client, attach it to a message (7.3).
 
+#### 4.9 A client's fitness tests
+
+Under **Measurements**, a client's details show their **Fitness tests**: how
+fit their heart and lungs are, from three tests. Every trainer of the client
+sees the results, with who recorded each one.
+
+- **3-minute step test**: they step up and down a 12-inch step in time to a
+  metronome for three minutes, then sit down while you count their heart rate
+  for one full minute. Coach rates it, from **Excellent** to **Very poor**,
+  against the tables for their age and for women or men.
+- **Rockport 1-mile walk**: they walk one mile as fast as they can. From the
+  time, the heart rate at the end, their age, weight and the table for women
+  or men, Coach works out their **VO2 max** (ml/kg/min), with the formula from
+  the original Rockport study.
+- **VO2 max from a lab or watch**: a VO2 max from a gym or lab treadmill test,
+  or reported by a watch such as a Garmin.
+
+**Reading them.** The latest result of each test is shown: its name, the day
+and who recorded it, the result (such as *97 bpm* or *VO2 max 32.7
+ml/kg/min*) and, for the step test, the rating, such as **Above average**,
+with *Rated for women aged 26–35*. Under it is how it changed since the same
+test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
+test a lower heart rate is fitter; for VO2 max a higher number is. Tap
+**Earlier results** to see the older ones, and **Show only the latest** to
+fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
+rated: the tables start at 18.
+
+**Adding a result:**
+
+1. Open the client (4.3) and tap **Add a test result**.
+2. Under **Which test?**, tap the test. Each says how it is done.
+3. The form shows again how it is done. **Day of the test** starts on today.
+4. For the step test and the walk, **Age on the day** is filled in from their
+   birthday, and **Table** (**Women** or **Men**) from their gender, where
+   their details have them. Otherwise fill them in.
+5. Fill in the result:
+   - Step test: **Heart rate in the minute after** (bpm).
+   - Rockport walk: **Time for the mile** (minutes and seconds, such as
+     14:30), **Heart rate at the end** (bpm) and **Weight**. The weight is
+     filled in from their latest measurements (4.8); change it if it is
+     different today.
+   - VO2 max: the **VO2 max** (ml/kg/min), and **Where it came from**:
+     **Lab or gym test**, **Garmin**, **Apple Watch**, **Fitbit** or **Other
+     watch or app**.
+6. Add a **Note** if it helps, such as how they felt.
+7. Tap **Save**. **Cancel** leaves without saving.
+
+Under the form is a reminder: feeling agitated or moody, sleeping badly, off
+their food, low or stressed can be signs of overtraining; back off for at
+least a week before testing again.
+
+Something missing or a number no person could have is caught, such as
+*Choose which table to use: women's or men's.*, *Fill in the time for the
+mile as minutes and seconds, such as 14:30.* or *A heart rate of 400 doesn't
+look right. Check it and try again.* A day still to come can't be chosen.
+
+**Changing or deleting a result.** Only the trainer who recorded a result can
+change it (the pencil) or delete it (the bin). Deleting asks *Delete this
+result? Its trainers will no longer see it.*; tap **Delete**, or **Keep it**
+to leave it.
+
+To send a result to the client, attach it to a message (7.3).
+
 <div style="page-break-after: always;"></div>
 
 ---
@@ -1502,8 +1567,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 ### 7. Messages
 
 Messages is where you and your clients write to each other. Besides words, a
-message can carry pictures, videos, the programs you design for them, and
-their measurements (4.8).
+message can carry pictures, videos, the programs you design for them,
+their measurements (4.8) and their fitness test results (4.9).
 
 #### 7.1 Your messages
 
@@ -1554,18 +1619,23 @@ so a reply appears without you doing anything.
    - **Measurements**: this client's sets are listed by date (**…'s
      measurements**), with who took each. Tap one. If there are none it says
      *No measurements for … yet. Add them on the Clients page.*
+   - **Fitness test**: this client's results are listed (**…'s fitness
+     tests**), newest first. Tap one. If there are none it says *No fitness
+     tests for … yet. Add them on the Clients page.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
 To take one off before sending, tap the **X** beside it.
 
-A program, or a set of measurements, is sent as it is at that moment. If you change it afterwards, the
+A program, a set of measurements or a test result is sent as it is at that moment. If you change it afterwards, the
 copy in the message stays as it was, so your client always has what you
 sent. Tap a program in a conversation to open it laid out like the printed
 program (5.6), in its own tab, ready to print.
 
 Tap a set of measurements to open it as a page of its own, ready to print:
-each measurement, and how it changed since the set before.
+each measurement, and how it changed since the set before. A fitness test
+result opens the same way: the result, its rating, how it changed since the
+same test before, and how the test is done.
 
 Tap a picture to open it full size in its own tab. A video plays where it is.
 
@@ -1608,6 +1678,8 @@ can write to them here.*
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
+| **Fitness test** | A test of how fit a client's heart and lungs are: the 3-minute step test, the Rockport 1-mile walk, or a VO2 max from a lab or watch (4.9). |
+| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
 | **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |

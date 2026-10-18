@@ -98,6 +98,14 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   before. Every trainer of the client sees them; only the one who took a set
   can change or delete it. A set can be attached to a message, and opens as a
   page ready to print.
+- **Fitness tests.** On a client's details, under Measurements: the
+  3-minute step test, rated Excellent to Very poor for their age and for women
+  or men; the Rockport 1-mile walk, with their VO2 max worked out; and a VO2
+  max from a lab or watch. Age, table and weight are filled in from their
+  details and measurements, and each result shows how it changed since the
+  same test before. Every trainer of the client sees them; only the one who
+  recorded a result can change or delete it. A result can be attached to a
+  message, and opens as a page ready to print.
 - **Notifications.** Turn them on for a phone or computer from the account
   menu, as in Studio, and be told when a client writes to you in Messages:
   who, and the start of what they wrote. A tap opens the conversation. Send a
