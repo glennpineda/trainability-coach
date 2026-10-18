@@ -104,3 +104,16 @@ export async function editClient(trainerId, id, f) {
 
 export const archiveClient = (trainerId, id, archived) =>
   run(`UPDATE coach_clients SET archived = ?, updated_at = ? WHERE id = ? AND trainer_id = ?`, [archived ? 1 : 0, now(), id, trainerId]);
+
+/** Whether this client is one kept here for this trainer. */
+export const isKept = async (trainerId, id) => !!await get(`SELECT 1 AS x FROM coach_clients WHERE id = ? AND trainer_id = ?`, [id, trainerId]);
+
+/** The client rows kept here for a trainer, as stored, for moving them into Studio. */
+export const rowsOf = (trainerId) => all(`SELECT * FROM coach_clients WHERE trainer_id = ? ORDER BY created_at, id`, [trainerId]);
+
+/** A client moved into Studio: what pointed at them here now points at Studio's id, and their row goes. */
+export async function moved(trainerId, id, studioId, name) {
+  await run(`UPDATE coach_programs SET client_id = ?, client_name = ? WHERE client_id = ? AND trainer_id = ?`, [studioId, name, id, trainerId]);
+  await run(`UPDATE coach_limitations SET client_id = ? WHERE client_id = ?`, [studioId, id]);
+  await run(`DELETE FROM coach_clients WHERE id = ? AND trainer_id = ?`, [id, trainerId]);
+}

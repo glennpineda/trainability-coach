@@ -20,10 +20,12 @@ described in `README.md`.
   Oct 2026), kept in Coach's database, answered before the relay (`cx_session`
   cookie), with its clients kept in Coach too (`server/coach-clients.js`,
   `coach_clients`, ids `cli…`, Glenn's tag), in the same shape as Studio's so
-  every screen works alike. Still to come, in order: linking a Coach account
-  to a Studio account when they join Studio (asking before their clients
-  move there, since the business can see Studio's clients), and password
-  reset by email (BRAINSTORM, Next up). Most Coach work should need no change to
+  every screen works alike. A Coach account is linked to a Studio account
+  (`accounts.link`: same email at sign-in, or the account menu's Link your
+  Trainability account) and becomes it, its data re-keyed to the Studio user;
+  its clients stay in Coach until the trainer moves them
+  (`/api/clients/move`), since the business can see Studio's clients. Still
+  to come: password reset by email (BRAINSTORM, Next up). Most Coach work should need no change to
   Studio. If one seems needed, say so and ask first.
 - The stack matches Studio's: React 18, Vite 8, Tailwind 4 (CSS-first: no tailwind.config.js), lucide icons and
   Express. So does the look: Roboto for text and headings (500, 0.01em),

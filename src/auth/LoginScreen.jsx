@@ -41,6 +41,7 @@ function Field({ label, children }) {
  */
 export function LoginScreen({ onLogin, onSignup, offline }) {
   const [mode, setMode] = useState("email"); // email | password | client | signup | forgot
+  const [linking, setLinking] = useState(false); // a Coach account whose email now has a Trainability account
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -63,7 +64,8 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
       const out = await apiRequest("POST", "/auth/door", { email: address });
       /* A team account's password is Studio's; a Coach account's ("coach")
          is Coach's own; anybody else may make a Coach account. */
-      setMode(out.door === "password" || out.door === "coach" ? "password" : "client");
+      setLinking(out.door === "link");
+      setMode(out.door === "password" || out.door === "coach" || out.door === "link" ? "password" : "client");
     } catch (err) {
       setError(err.status >= 500 || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "That didn't work. Try again.");
     } finally { setBusy(false); }
@@ -116,7 +118,7 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
     } finally { setBusy(false); }
   }
 
-  function backToEmail() { setMode("email"); setPassword(""); setName(""); setError(""); setMoved(false); }
+  function backToEmail() { setMode("email"); setPassword(""); setName(""); setError(""); setMoved(false); setLinking(false); }
   function backToLogin() { setMode("password"); setResetResult(null); setError(""); }
 
   return (
@@ -203,6 +205,14 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
             </form>
           ) : mode === "password" ? (
             <form onSubmit={handleLogin} className="space-y-4" noValidate>
+              {linking && (
+                /* Stage three: their Coach account and a Trainability account
+                   share this email; Trainability's password joins them. */
+                <div className="text-sm rounded-lg p-3" style={{ background: "var(--accent-soft)", color: "var(--ink-soft)" }}>
+                  <strong className="block" style={{ color: "var(--ink)" }}>This email now has a Trainability account.</strong>
+                  Log in with its password, and your Coach account will be connected to it: everything you made in Coach stays yours.
+                </div>
+              )}
               <Field label="Email">
                 {/* Kept as a field so a password manager fills and saves the pair; changing it starts again. */}
                 <input type="email" className="cx-input" value={email} readOnly autoComplete="username" style={{ color: "var(--iron)" }} />

@@ -1,5 +1,5 @@
-import React from "react";
-import { KeyRound } from "lucide-react";
+import React, { useState } from "react";
+import { KeyRound, Link2, X } from "lucide-react";
 import { STUDIO_URL } from "../lib/api";
 import { SECTIONS } from "./sections";
 import { ComingSoonCard } from "./ComingSoonCard";
@@ -20,6 +20,7 @@ function clientCount(clients) {
 /* Where Coach opens: the date, a greeting by name, and the parts of Coach on
    the way. Each card but Today opens its own tab. */
 export function HomeTab({ user, onOpen, clients }) {
+  const [linked, setLinked] = useState(() => { try { const v = sessionStorage.getItem("cx-linked"); sessionStorage.removeItem("cx-linked"); return !!v; } catch { return false; } });
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
     <>
@@ -33,6 +34,18 @@ export function HomeTab({ user, onOpen, clients }) {
       </section>
 
       <div className="max-w-5xl mx-auto px-4 -mt-10">
+        {linked && (
+          /* Once, just after a Coach account was joined to its Trainability
+             account (stage three). */
+          <div className="cx-card p-4 mb-4 flex items-start gap-3" role="status" style={{ borderColor: "var(--accent)" }}>
+            <Link2 size={20} className="flex-none mt-0.5" style={{ color: "var(--accent)" }} aria-hidden="true" />
+            <div className="text-sm flex-1">
+              <strong className="block">Your Coach account is now connected to your Trainability account.</strong>
+              <span style={{ color: "var(--iron)" }}>From now on, sign in with your Trainability password. Everything you made in Coach is still here.</span>
+            </div>
+            <button type="button" className="cx-icon-btn" aria-label="Dismiss" onClick={() => setLinked(false)}><X size={16} aria-hidden="true" /></button>
+          </div>
+        )}
         {user.mustChangePassword && (
           <div className="cx-card p-4 mb-4 flex items-start gap-3" style={{ borderColor: "var(--accent)" }}>
             <KeyRound size={20} className="flex-none mt-0.5" style={{ color: "var(--accent)" }} aria-hidden="true" />

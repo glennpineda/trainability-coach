@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
+import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
+import { LinkDialog } from "../auth/LinkDialog";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
 import { useUnits } from "../hooks/useUnits";
@@ -15,6 +16,7 @@ const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "
  */
 export function AccountMenu({ user, onLogout, onOpen, billy }) {
   const [open, setOpen] = useState(false);
+  const [linking, setLinking] = useState(false);
   const ref = useRef(null);
   const btnRef = useRef(null);
 
@@ -37,6 +39,7 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
   const [units, setUnits] = useUnits();
   return (
     <div className="relative cx-account" ref={ref}>
+      {linking && <LinkDialog onClose={() => setLinking(false)} />}
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
         aria-label={`${user.name}: account menu`}
         className="flex items-center gap-1.5 rounded-full pl-0.5 pr-1.5 h-9 transition-colors hover:bg-(--ghost-fill)"
@@ -83,6 +86,14 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
             <button role="menuitem" type="button" onClick={() => { setOpen(false); onOpen("installation"); }}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
               <Settings size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Installation
+            </button>
+          )}
+          {/* A Coach account can be joined to a Trainability account with
+              another email (stage three). */}
+          {user.coachAccount && (
+            <button role="menuitem" type="button" onClick={() => { setOpen(false); setLinking(true); }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
+              <Link2 size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Link your Trainability account
             </button>
           )}
           {/* Each trainer's own (Glenn, 17 Oct 2026: "Each trainer only"):

@@ -153,6 +153,22 @@ With a Coach account, everything works the same: clients (chapter 4),
 programs, equipment, exercises and Billy. A Coach account's clients are its
 own; no one else sees them.
 
+**If you also have a Trainability account.** Your Coach account can be
+connected to it, so you have one sign-in:
+
+- If your Trainability account has the same email, the password step says
+  *This email now has a Trainability account. Log in with its password, and
+  your Coach account will be connected to it: everything you made in Coach
+  stays yours.* Log in with your **Trainability** password (your old Coach
+  password no longer works).
+- If it has a different email, sign in to Coach, open your account menu
+  (3.5), tap **Link your Trainability account**, type that account's email
+  and password, and tap **Link accounts**.
+
+Either way, Home then says *Your Coach account is now connected to your
+Trainability account.* Your programs, equipment, exercises and settings are
+all still there. Your clients stay private until you move them (4.6).
+
 **A client.** Coach has no sign-in for clients yet. Under the Coach account
 button the box says *Training with us as a client? Your own page is in
 Studio.*, with **Go to my page**, which opens it.
@@ -364,6 +380,8 @@ so — see 2.4.
      Weights and distances in Coach IQ, and in Billy's answers, are then
      shown in your units only, rounded to what a gym has: loads to 5 lb or
      2.5 kg. It is your own choice; other trainers keep theirs.
+   - **Link your Trainability account** — only with a Coach account (2.1):
+     connects it to a Trainability account with another email.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.1 · Caesious*. If you ever report a problem, say which
@@ -728,6 +746,22 @@ required*.
 at the bottom. The same form opens, headed *Edit Jamie's details*, with what
 is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
 details saved.*
+
+**Clients from a Coach account.** If you have just connected a Coach account
+to your Trainability account (2.1), the Clients page shows its clients with
+the rest, and above them: *2 clients from your Coach account aren't in
+Trainability yet. Move them there? Trainability (the business) will be able
+to see them, as it sees all its clients. Until then, only you can.*
+
+1. Tap **Move them to Trainability** to move them. It says, for example,
+   *2 clients moved to Trainability.* Their programs and limitations go with
+   them. Anyone Trainability already has, by the same email, is put on your
+   list instead of being added twice.
+2. Or tap **Not now**: they stay as they are, private to you, and you're
+   asked again next time you open Clients.
+
+If one can't be moved (for example, their phone number is another client's),
+it stays as it is and is named, with why. Tap **OK**.
 
 ### 4.7 A client's limitations
 

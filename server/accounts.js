@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { promisify } from "node:util";
-import { get, run } from "./db.js";
+import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 
 /**
@@ -61,7 +61,9 @@ export function checkSignup({ name, email, password } = {}) {
   return null;
 }
 
-export const accountByEmail = (email) => get(`SELECT * FROM coach_accounts WHERE email = ?`, [emailKey(email)]);
+/* An account that still signs in here: one linked to Studio signs in with
+   Studio's password, so it no longer answers. */
+export const accountByEmail = (email) => get(`SELECT * FROM coach_accounts WHERE email = ? AND studio_user_id = ''`, [emailKey(email)]);
 
 /* A new account's id must not already be a trainer here: ids share Studio's
    tag, so one that happened to match a Studio trainer's would mix two
@@ -115,6 +117,37 @@ export const endSession = (token) => token ? run(`DELETE FROM coach_sessions WHE
 
 /** An account as the app sees a signed-in person: a trainer, marked as Coach's own. */
 export const asUser = (a) => ({ id: a.id, name: a.name, email: a.email, role: "trainer", coachAccount: true });
+
+/**
+ * A Coach account joined to its owner's Studio account (stage three; Glenn,
+ * 18 Oct 2026: "if they have an account on Studio, it's just linked"). From
+ * now on they sign in with Studio's password, as Studio's user, so everything
+ * this account made here becomes that user's: their places and equipment,
+ * programs, own names and private exercises, settings, and clients still
+ * kept in Coach (they move into Studio only when the trainer says so, since
+ * the business can see Studio's clients). Where the Studio user already has
+ * one of a kind (a setting, an own name for the same word), theirs is kept.
+ * The account's sessions end; it no longer signs in here.
+ */
+export async function link(account, studioUser) {
+  const from = account.id, to = studioUser.id;
+  if (from !== to) {
+    for (const table of ["coach_places", "coach_place_equipment", "coach_programs", "coach_private_exercises", "coach_clients"]) {
+      await run(`UPDATE ${table} SET trainer_id = ? WHERE trainer_id = ?`, [to, from]);
+    }
+    /* One of each per trainer: theirs wins, the account's goes. */
+    for (const [table, key] of [["coach_trainer_settings", "name"], ["coach_own_names", "name_key"]]) {
+      const had = new Set((await all(`SELECT ${key} AS k FROM ${table} WHERE trainer_id = ?`, [to])).map(r => r.k));
+      for (const r of await all(`SELECT ${key} AS k FROM ${table} WHERE trainer_id = ?`, [from])) {
+        if (had.has(r.k)) await run(`DELETE FROM ${table} WHERE trainer_id = ? AND ${key} = ?`, [from, r.k]);
+        else await run(`UPDATE ${table} SET trainer_id = ? WHERE trainer_id = ? AND ${key} = ?`, [to, from, r.k]);
+      }
+    }
+    await run(`UPDATE coach_limitations SET written_by = ?, written_by_name = ? WHERE written_by = ?`, [to, String(studioUser.name || account.name).slice(0, 120), from]);
+  }
+  await run(`UPDATE coach_accounts SET studio_user_id = ?, linked_at = ? WHERE id = ?`, [to, now(), from]);
+  await run(`DELETE FROM coach_sessions WHERE account_id = ?`, [from]);
+}
 
 /* Sign-in and sign-up tries in fifteen minutes, then a wait: ten for one
    email, fifty from one address (a gym's trainers can share one). */

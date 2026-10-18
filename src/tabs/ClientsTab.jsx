@@ -151,7 +151,53 @@ const ADDED = {
 /* The Clients tab: everyone on this trainer's own list, kept in Studio and
    read from there (useClients): added, changed, archived and put back here,
    with nothing on the page saying where they are kept. */
-export function ClientsTab({ clients, error, retry, add, edit, archive, onSignedOut }) {
+/* A linked Coach account's clients, still kept in Coach, offered a move into
+   Trainability, said plainly because it changes who can see them (Glenn, 18
+   Oct 2026: "someone that creates an account on Coach doesn't necessarily
+   have to be part of the business on Studio"). Not now hides it until the
+   page is opened again. */
+function MoveOffer({ count, move }) {
+  const [busy, setBusy] = useState(false);
+  const [later, setLater] = useState(false);
+  const [result, setResult] = useState(null);
+  if (result) {
+    return (
+      <div className="cx-card p-4 mb-4 text-sm grid gap-2" role="status">
+        <p>{result.moved ? `${plural(result.moved, "client")} moved to Trainability.` : "No clients were moved."}</p>
+        {result.kept?.length > 0 && (
+          <>
+            <p style={{ color: "var(--iron)" }}>These stayed as they are, so only you can see them:</p>
+            <ul className="list-disc pl-5" style={{ color: "var(--iron)" }}>
+              {result.kept.map(k => <li key={k.name}><span style={{ color: "var(--ink)" }}>{k.name}</span>: {k.why}</li>)}
+            </ul>
+          </>
+        )}
+        <button type="button" className="cx-quiet justify-self-start text-sm" onClick={() => setResult(null)}>OK</button>
+      </div>
+    );
+  }
+  if (!count || later) return null;
+  const go = async () => {
+    setBusy(true);
+    try { setResult(await move()); }
+    catch (err) { setResult({ moved: 0, kept: [{ name: "Your clients", why: err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Try again in a minute." : err.message }] }); }
+    finally { setBusy(false); }
+  };
+  return (
+    <div className="cx-card p-4 mb-4 grid gap-3">
+      <p className="text-sm">
+        <strong>{plural(count, "client")} from your Coach account {count === 1 ? "isn't" : "aren't"} in Trainability yet.</strong>{" "}
+        Move them there? Trainability (the business) will be able to see them, as it sees all its clients. Until then, only you can.
+      </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" className="cx-btn-primary px-4 py-2 text-sm" disabled={busy} onClick={go}>{busy ? "Moving…" : "Move them to Trainability"}</button>
+        <button type="button" className="cx-quiet px-3 py-2 text-sm" disabled={busy} onClick={() => setLater(true)}>Not now</button>
+      </div>
+    </div>
+  );
+}
+
+export function ClientsTab({ clients, error, retry, add, edit, archive, toMove, move, onSignedOut }) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
   const [openId, setOpenId] = useState(null);
@@ -196,6 +242,7 @@ export function ClientsTab({ clients, error, retry, add, edit, archive, onSigned
         )}
       </div>
       {said && <p className="text-sm mb-3" role="status" style={{ color: "var(--accent)" }}>{said}</p>}
+      {move && <MoveOffer count={toMove} move={move} />}
       {adding && (
         <ClientForm key={adding === true ? "new" : adding.id} initial={adding === true ? null : adding}
           onAdd={adding === true ? add : (fields) => edit(adding.id, fields)} onCancel={() => setAdding(false)}

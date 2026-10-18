@@ -22,14 +22,6 @@ finished stays here.
 
 _Things actually ready to do._
 
-- **Coach accounts, stage three: linking to Studio.** When a Coach account's
-  email turns out to have a Studio team account, ask for the Studio password
-  at sign-in and link them, from then on signing in with Studio's password;
-  "Link your Studio account" in the account menu for a different email. Their
-  clients move into Studio (no duplicates; programs and limitations follow)
-  only after the trainer confirms, since Trainability can see Studio's
-  clients (Glenn: "someone that creates an account on Coach doesn't
-  necessarily have to be part of the business on Studio").
 - **Coach accounts, stage four: password reset by email**, which needs Coach
   to send email.
 

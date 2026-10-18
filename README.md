@@ -40,6 +40,20 @@ Studio clients `myClients` returns, so `/api/clients`, its edit and archive
 routes, limitations, programs and Billy work the same for both kinds of
 account. One account's clients are never another's.
 
+A Coach account is **linked** to a Studio account when its email turns out to
+have one (`/api/auth/door` says "link"; Studio's password at
+`/api/auth/login` links them) or from the account menu (`/api/auth/link`, a
+Studio sign-in with another email). `accounts.link` moves everything the
+account made (places and equipment, programs, private exercises, own names
+and settings, where the Studio user has none of the same, limitations it
+wrote, and its clients) to the Studio user's id, marks the account linked
+(`studio_user_id`), and ends its sessions; it signs in with Studio's password
+from then on. Its clients stay in Coach, listed with the Studio clients
+(`myClients`), until the trainer moves them with `POST /api/clients/move`:
+each through Studio's own add steps (`studioAdd`), archived there if archived
+here, with programs and limitations re-pointed to Studio's id; one Studio
+won't take stays and is named.
+
 Clients work the same way. Coach keeps no copy: `GET /api/clients` on
 Coach's server asks Studio's own `/api/clients` and `/api/auth/me` with the
 same session, keeps only the clients on the signed-in account's own list (a

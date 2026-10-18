@@ -14,12 +14,15 @@ import { apiRequest } from "../lib/api";
 export function useClients(onSignedOut) {
   const [clients, setClients] = useState(undefined);
   const [error, setError] = useState("");
+  /* A linked Coach account's clients still kept in Coach, waiting for the
+     trainer to say they may move into Trainability (stage three). */
+  const [toMove, setToMove] = useState(0);
 
   const load = useCallback(() => {
     let alive = true;
     setError("");
     apiRequest("GET", "/clients")
-      .then(({ clients }) => { if (alive) setClients(clients || []); })
+      .then(({ clients, toMove }) => { if (alive) { setClients(clients || []); setToMove(toMove || 0); } })
       .catch((err) => {
         if (!alive) return;
         if (err.status === 401) return onSignedOut?.();
@@ -61,5 +64,12 @@ export function useClients(onSignedOut) {
   const edit = useCallback((id, fields) => send("PATCH", `/clients/${id}`, fields), [send]);
   const archive = useCallback((id, archived) => send("POST", `/clients/${id}/archive`, { archived }), [send]);
 
-  return { clients, error, retry, refresh: load, add, edit, archive };
+  /* Moving them: { moved, kept: [{ name, why }] }. */
+  const move = useCallback(async () => {
+    const out = await send("POST", "/clients/move");
+    setToMove(out.toMove || 0);
+    return out;
+  }, [send]);
+
+  return { clients, error, retry, refresh: load, add, edit, archive, toMove, move };
 }

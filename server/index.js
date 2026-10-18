@@ -153,6 +153,14 @@ async function myClients(req, user) {
   const r = await studio(req, "/clients");
   if (!r.ok) throw new StudioRefused(r.status, await r.text());
   const { clients = [] } = await r.json();
+  /* A linked Coach account's clients not yet moved into Studio (stage
+     three) are still theirs, kept here: listed with the rest. */
+  const kept = await coachClients.clientsOf(user.id);
+  return [...studioShape(clients, user), ...kept].sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`));
+}
+
+/* Studio's clients, cut to this account's own list and to what Coach shows. */
+function studioShape(clients, user) {
   return clients
     .filter(c => !c.bookingOnly && !c.deskOnly && (c.trainerIds || []).includes(user.id))
     .map(c => ({
@@ -180,14 +188,62 @@ async function myClients(req, user) {
 
 app.get("/api/clients", async (req, res) => {
   try {
-    const clients = await myClients(req, await signedIn(req));
+    const user = await signedIn(req);
+    const clients = await myClients(req, user);
     res.set("Cache-Control", "private, no-store");
-    res.json({ clients });
+    /* toMove: how many are a linked Coach account's, still kept here, for
+       the Clients page to offer moving them into Studio. */
+    res.json({ clients, ...(user.coachAccount ? {} : { toMove: (await coachClients.rowsOf(user.id)).length }) });
   } catch (err) {
     if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
     unreachable(res, "GET /clients", err);
   }
 });
+
+/* A client added in Studio, the way Studio's Add client does it (see POST
+   /api/clients): { done, clientId }, or { status, refused } with Studio's
+   words. Studio's own refusals are thrown as StudioRefused. */
+async function studioAdd(req, user, f) {
+  const ask = async (route, body) => {
+    const r = await studio(req, route, { method: "POST", body });
+    if (!r.ok) throw new StudioRefused(r.status, await r.text());
+    return r.json();
+  };
+  /* Studio's four, asked first in its words, so a half-filled form isn't
+     matched on what little it has. */
+  const missing = [["firstName", "First name"], ["lastName", "Last name"], ["email", "Email"], ["phone", "Phone"]].filter(([k]) => !f[k]).map(([, l]) => l);
+  if (missing.length) {
+    const list = missing.length < 2 ? missing[0] : `${missing.slice(0, -1).join(", ")} and ${missing.at(-1)}`;
+    return { status: 400, refused: { error: `${list} ${missing.length === 1 ? "is" : "are"} required`, code: "missing_fields", fields: missing } };
+  }
+  let done, clientId;
+  const { match } = await ask("/clients/match", { email: f.email, phone: f.phone });
+  /* Linked on its own only when the email is the same: a phone alone is
+     often a family's or twins', and linking the wrong person would show
+     this trainer somebody else's record. */
+  const sameEmail = !!match?.email && match.email.toLowerCase() === f.email.toLowerCase();
+  if (match?.id && !sameEmail) {
+    return { status: 409, refused: { code: "phone_taken", name: `${match.firstName || ""} ${match.lastName || ""}`.trim(),
+      error: `${`${match.firstName || ""} ${match.lastName || ""}`.trim() || "Another client"} already has that phone number. If this is them, use the email they gave us; if it's someone else, use a different phone number.` } };
+  }
+  if (match?.id) {
+    const mine = (match.trainerIds || []).includes(user.id);
+    const archivedHere = (match.archivedBy || []).includes(user.id);
+    if (mine && !archivedHere) {
+      done = "already";
+    } else {
+      await ask(`/clients/${encodeURIComponent(match.id)}/link`, { trainerId: user.id, email: f.email, phone: f.phone });
+      done = mine ? "back" : "linked";
+    }
+    clientId = match.id;
+  } else {
+    const before = new Set((await myClients(req, user)).map(c => c.id));
+    await ask("/clients", f);
+    clientId = (await myClients(req, user)).find(c => !before.has(c.id))?.id || null;
+    done = "added";
+  }
+  return { done, clientId };
+}
 
 /*
  * A new client, added from Coach and kept in Studio (Glenn, 18 Oct 2026:
@@ -221,44 +277,9 @@ app.post("/api/clients", async (req, res) => {
       ...(b.gender ? { gender: String(b.gender).trim().slice(0, 40) } : {}),
       ...(b.pronouns ? { pronouns: String(b.pronouns).trim().toLowerCase().slice(0, 30) } : {}),
     };
-    const ask = async (route, body) => {
-      const r = await studio(req, route, { method: "POST", body });
-      if (!r.ok) throw new StudioRefused(r.status, await r.text());
-      return r.json();
-    };
-    /* Studio's four, asked first in its words, so a half-filled form isn't
-       matched on what little it has. */
-    const missing = [["firstName", "First name"], ["lastName", "Last name"], ["email", "Email"], ["phone", "Phone"]].filter(([k]) => !f[k]).map(([, l]) => l);
-    if (missing.length) {
-      const list = missing.length < 2 ? missing[0] : `${missing.slice(0, -1).join(", ")} and ${missing.at(-1)}`;
-      return res.status(400).json({ error: `${list} ${missing.length === 1 ? "is" : "are"} required`, code: "missing_fields", fields: missing });
-    }
-    let done, clientId;
-    const { match } = await ask("/clients/match", { email: f.email, phone: f.phone });
-    /* Linked on its own only when the email is the same: a phone alone is
-       often a family's or twins', and linking the wrong person would show
-       this trainer somebody else's record. */
-    const sameEmail = !!match?.email && match.email.toLowerCase() === f.email.toLowerCase();
-    if (match?.id && !sameEmail) {
-      return res.status(409).json({ code: "phone_taken", name: `${match.firstName || ""} ${match.lastName || ""}`.trim(),
-        error: `${`${match.firstName || ""} ${match.lastName || ""}`.trim() || "Another client"} already has that phone number. If this is them, use the email they gave us; if it's someone else, use a different phone number.` });
-    }
-    if (match?.id) {
-      const mine = (match.trainerIds || []).includes(user.id);
-      const archivedHere = (match.archivedBy || []).includes(user.id);
-      if (mine && !archivedHere) {
-        done = "already";
-      } else {
-        await ask(`/clients/${encodeURIComponent(match.id)}/link`, { trainerId: user.id, email: f.email, phone: f.phone });
-        done = mine ? "back" : "linked";
-      }
-      clientId = match.id;
-    } else {
-      const before = new Set((await myClients(req, user)).map(c => c.id));
-      await ask("/clients", f);
-      clientId = (await myClients(req, user)).find(c => !before.has(c.id))?.id || null;
-      done = "added";
-    }
+    const out = await studioAdd(req, user, f);
+    if (out.refused) return res.status(out.status).json(out.refused);
+    const { done, clientId } = out;
     res.set("Cache-Control", "private, no-store");
     res.json({ done, clientId, clients: await myClients(req, user) });
   } catch (err) {
@@ -286,8 +307,9 @@ async function onClient(req, res, what, send, own) {
   try {
     const user = await signedIn(req);
     if (!(await myClients(req, user)).some(c => c.id === req.params.id)) return res.status(404).json({ error: "Not found", code: "not_found" });
-    /* A Coach account's client is changed in Coach (coach-clients.js). */
-    if (user.coachAccount) {
+    /* A client kept in Coach (a Coach account's, or a linked one's not yet
+       moved) is changed in Coach (coach-clients.js). */
+    if (user.coachAccount || await coachClients.isKept(user.id, req.params.id)) {
       const wrong = await own(user);
       if (wrong) return res.status(wrong.code === "duplicate_client" ? 409 : 400).json(wrong);
     } else {
@@ -307,6 +329,51 @@ app.patch("/api/clients/:id", (req, res) => onClient(req, res, "PATCH /clients",
 app.post("/api/clients/:id/archive", (req, res) => onClient(req, res, "POST /clients/archive",
   (user) => studio(req, `/clients/${encodeURIComponent(req.params.id)}/archive`, { method: "POST", body: { trainerId: user.id, archived: req.body?.archived !== false } }),
   (user) => coachClients.archiveClient(user.id, req.params.id, req.body?.archived !== false).then(() => null)));
+
+/*
+ * A linked Coach account's clients, still kept here, moved into Studio (stage
+ * three), only when the trainer says so: the business can see Studio's
+ * clients (Glenn, 18 Oct 2026: "someone that creates an account on Coach
+ * doesn't necessarily have to be part of the business on Studio"). Each goes
+ * through Studio's own add steps (studioAdd: somebody Studio has by the same
+ * email is put on the list, not made twice), one archived here is archived
+ * there too, and their programs and limitations follow them to Studio's id.
+ * One Studio won't take (the same phone as another client, or refused) stays
+ * here and is named, with why.
+ */
+app.post("/api/clients/move", async (req, res) => {
+  try {
+    const user = await signedIn(req);
+    if (user.coachAccount) return res.status(400).json({ error: "Link your Trainability account first.", code: "not_linked" });
+    let moved = 0;
+    const kept = [];
+    for (const r of await coachClients.rowsOf(user.id)) {
+      const name = `${r.first_name} ${r.last_name}`.trim();
+      const f = { firstName: r.first_name, lastName: r.last_name, email: r.email, phone: r.phone,
+        ...(r.date_of_birth ? { dateOfBirth: r.date_of_birth } : {}), ...(r.gender ? { gender: r.gender } : {}), ...(r.pronouns ? { pronouns: r.pronouns } : {}) };
+      try {
+        const out = await studioAdd(req, user, f);
+        if (out.refused) { kept.push({ name, why: out.refused.error }); continue; }
+        if (!out.clientId) { kept.push({ name, why: "Trainability didn't say which client it was." }); continue; }
+        if (Number(r.archived)) {
+          await studio(req, `/clients/${encodeURIComponent(out.clientId)}/archive`, { method: "POST", body: { trainerId: user.id, archived: true } });
+        }
+        await coachClients.moved(user.id, r.id, out.clientId, name);
+        moved++;
+      } catch (err) {
+        if (!(err instanceof StudioRefused)) throw err;
+        let why = "Trainability didn't take them.";
+        try { why = JSON.parse(err.body).error || why; } catch { /* not JSON */ }
+        kept.push({ name, why });
+      }
+    }
+    res.set("Cache-Control", "private, no-store");
+    res.json({ moved, kept, clients: await myClients(req, user), toMove: (await coachClients.rowsOf(user.id)).length });
+  } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
+    unreachable(res, "POST /clients/move", err);
+  }
+});
 
 /* The trainer's equipment, the first part of their personal memory
    (server/equipment.js). Each person's own: the trainer is whoever Studio
@@ -1298,9 +1365,28 @@ async function studioDoor(req, email) {
 
 /* Which way in an email takes: "coach" for a Coach account, else Studio's
    answer, passed on as it is. */
+/* Studio's sign-in, asked for a Coach account being linked: Studio's own
+   cookie passed on as the relay does (host-only), and Studio's answer. */
+async function studioLogin(req, res, body) {
+  const r = await studio(req, "/auth/login", { method: "POST", body });
+  for (const c of r.headers.getSetCookie?.() || []) {
+    if (c.startsWith(`${SESSION_COOKIE}=`)) res.append("Set-Cookie", c.replace(/;\s*Domain=[^;]*/i, ""));
+  }
+  const retry = r.headers.get("retry-after");
+  if (retry) res.set("Retry-After", retry);
+  let json = {};
+  try { json = await r.json(); } catch { /* not JSON */ }
+  return { ok: r.ok, status: r.status, json };
+}
+
+/* Which way in an email takes: "coach" for a Coach account; "link" for one
+   whose email now also has a Studio team account (stage three: Studio's
+   password links the two); else Studio's answer, passed on as it is. */
 app.post("/api/auth/door", async (req, res, next) => {
   try {
-    if (await accounts.accountByEmail(req.body?.email)) return res.json({ door: "coach" });
+    if (await accounts.accountByEmail(req.body?.email)) {
+      return res.json({ door: await studioDoor(req, accounts.emailKey(req.body.email)) === "password" ? "link" : "coach" });
+    }
   } catch (err) { console.error(`Coach door failed: ${err.message}`); }
   next();
 });
@@ -1315,6 +1401,20 @@ app.post("/api/auth/login", async (req, res, next) => {
     return next();
   }
   if (slowDown(req, res, email)) return;
+  /* The email has a Studio team account now too: Studio's password signs in
+     and links the two (stage three). Studio's own refusals come back as
+     they are. */
+  if (await studioDoor(req, accounts.emailKey(email)) === "password") {
+    try {
+      const out = await studioLogin(req, res, { email, password, remember });
+      if (!out.ok) return res.status(out.status).json(out.json);
+      await accounts.link(account, out.json.user);
+      res.append("Set-Cookie", clearCookie(accounts.COOKIE));
+      return res.json({ ...out.json, linked: true });
+    } catch (err) {
+      return unreachable(res, "POST /auth/login (link)", err);
+    }
+  }
   const ok = await accounts.checkLogin(email, password);
   if (!ok) {
     for (const k of tryKeys(req, email)) accounts.counted(k);
@@ -1325,6 +1425,29 @@ app.post("/api/auth/login", async (req, res, next) => {
   res.append("Set-Cookie", sessionCookie(req, token, maxAge));
   res.append("Set-Cookie", clearCookie(SESSION_COOKIE));
   res.json({ user: accounts.asUser(ok) });
+});
+
+/* Linking a Coach account to a Studio account with another email (the
+   account menu's Link your Studio account): signed in to Coach's account,
+   they sign in to Studio once with that email and password; from then on
+   it's Studio's sign-in. */
+app.post("/api/auth/link", async (req, res) => {
+  try {
+    const account = await coachAccount(req);
+    if (!account) return res.status(401).json({ error: "Not signed in", code: "not_signed_in" });
+    const { email, password } = req.body || {};
+    if (slowDown(req, res, email)) return;
+    const out = await studioLogin(req, res, { email, password, remember: true });
+    if (!out.ok) {
+      for (const k of tryKeys(req, email)) accounts.counted(k);
+      return res.status(out.status).json(out.json);
+    }
+    await accounts.link(account, out.json.user);
+    res.append("Set-Cookie", clearCookie(accounts.COOKIE));
+    res.json({ ...out.json, linked: true });
+  } catch (err) {
+    unreachable(res, "POST /auth/link", err);
+  }
 });
 
 /* A new Coach account: name, email and password. Not for an email that

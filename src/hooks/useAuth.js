@@ -29,7 +29,9 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(async (email, password, remember) => {
-    const { user } = await apiRequest("POST", "/auth/login", { email, password, remember });
+    const { user, linked } = await apiRequest("POST", "/auth/login", { email, password, remember });
+    /* A Coach account just joined to its Trainability account: Home says so once. */
+    if (linked) { try { sessionStorage.setItem("cx-linked", "1"); } catch { /* not kept */ } }
     setOffline(false);
     setUser(user);
     return user;

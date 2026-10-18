@@ -383,6 +383,11 @@ const COLUMNS = [
      follows Studio's and it can't be renamed or removed here. */
   ["coach_places", "studio_place_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
   ["coach_places", "from_studio", "INTEGER NOT NULL DEFAULT 0"],
+  /* A Coach account joined to a Studio account (accounts.js, link; stage
+     three, Glenn, 18 Oct 2026): Studio's user id, and when. Linked, it signs
+     in with Studio's password and its data is that Studio user's. */
+  ["coach_accounts", "studio_user_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
+  ["coach_accounts", "linked_at", "VARCHAR(32) NULL"],
 ];
 
 async function hasColumn(table, column) {
