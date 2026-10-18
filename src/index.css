@@ -53,9 +53,9 @@
     --fill-deep: #0B5C8A;       /* white 7.0:1 */
     --fill-ember: #B23A27;      /* white 5.6:1 */
     /* The brand's big blue grounds, as tokens so a theme can recolor them:
-       Home's band, the sign-in screen's field, and the glow under a primary
+       Home's band (deep, middle and light, left to right), the sign-in screen's field, and the glow under a primary
        button and the lit tab. */
-    --band-from: #007BA7; --band-to: #0B4F6E;
+    --band-from: #00668C; --band-via: #007BA7; --band-to: #4FA8DC;
     --ground: linear-gradient(150deg, #007BA7 0%, #0B4F6E 45%, #172A3A 100%);
     --accent-glow: rgba(0, 123, 167, 0.32);
     --accent-ring: rgba(0, 123, 167, 0.18);

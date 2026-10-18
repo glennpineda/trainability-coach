@@ -342,7 +342,9 @@ number on the corner of **Messages** says how many messages are waiting.
 
 Coach opens on Home. From the top:
 
-- **The blue band.** Today's date, and a greeting with your first name:
+- **The blue band**, shading from deep blue on the left to sky blue on the
+  right (in your theme's colors if you chose one, 3.6). On it, today's date,
+  and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.
 - **Today**: your sessions, read from Trainability's schedule (see *Today*,

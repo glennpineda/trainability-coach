@@ -25,7 +25,7 @@
   --fill-cerulean: #5B4BC4; --fill-deep: #43358F;
   --ink: #241D45; --ink-soft: #433B66; --iron: #645E86; --iron-line: #DCD6EF;
   --paper: #F5F3FC; --ghost-fill: #ECE8F7;
-  --band-from: #5B4BC4; --band-to: #3A2D80;
+  --band-from: #43358F; --band-via: #5B4BC4; --band-to: #8E7CE8;
   --ground: linear-gradient(150deg, #5B4BC4 0%, #3A2D80 45%, #1E1740 100%);
   --accent-glow: rgba(91, 75, 196, 0.32); --accent-ring: rgba(91, 75, 196, 0.2);
   --hex-1: #5B4BC4; --hex-2: #8E7CE8; --hex-3: #43358F; --hex-4: #7A6BD8;
@@ -43,7 +43,7 @@
   --fill-cerulean: #1F4E8C; --fill-deep: #13325E;
   --ink: #14223A; --ink-soft: #33435E; --iron: #586577; --iron-line: #D3DCE8;
   --paper: #F2F5FA; --ghost-fill: #E6ECF4;
-  --band-from: #1F4E8C; --band-to: #13325E;
+  --band-from: #13325E; --band-via: #1F4E8C; --band-to: #4D7CC4;
   --ground: linear-gradient(150deg, #1F4E8C 0%, #13325E 45%, #0A1A33 100%);
   --accent-glow: rgba(31, 78, 140, 0.32); --accent-ring: rgba(31, 78, 140, 0.2);
   --hex-1: #1F4E8C; --hex-2: #4D7CC4; --hex-3: #13325E; --hex-4: #3866AA;
@@ -62,7 +62,7 @@
   --ink: #2B1D14; --ink-soft: #4A382D; --iron: #78665A; --iron-line: #EADCD0;
   --paper: #FCF6F1; --ghost-fill: #F5EBE3;
   --ember: #B3264E; --ember-soft: #F8DCE3; --fill-ember: #B3264E;
-  --band-from: #C93A00; --band-to: #8A2800;
+  --band-from: #8A2800; --band-via: #C93A00; --band-to: #EE7B3A;
   --ground: linear-gradient(150deg, #C93A00 0%, #8A2800 45%, #3A1608 100%);
   --accent-glow: rgba(201, 58, 0, 0.3); --accent-ring: rgba(201, 58, 0, 0.2);
   --hex-1: #C93A00; --hex-2: #EE7B3A; --hex-3: #8A2800; --hex-4: #E05A1A;
@@ -82,7 +82,7 @@
   --ink: #2A2E14; --ink-soft: #474C2E; --iron: #66694F; --iron-line: #DCDFC9;
   --paper: #F5F6EE; --ghost-fill: #ECEEE0;
   --moss: #2F6F62; --moss-soft: #D5E8E2;
-  --band-from: #6B7230; --band-to: #454C1C;
+  --band-from: #454C1C; --band-via: #6B7230; --band-to: #97A04F;
   --ground: linear-gradient(150deg, #6B7230 0%, #454C1C 45%, #22260E 100%);
   --accent-glow: rgba(107, 114, 48, 0.32); --accent-ring: rgba(107, 114, 48, 0.2);
   --hex-1: #6B7230; --hex-2: #97A04F; --hex-3: #4F5522; --hex-4: #828B3E;
@@ -109,7 +109,7 @@
   --iq-card: #F2F2F2; --iq-card-line: #C7C7C7; --iq-ink: #262626;
   --gold-light: #E6E6E6; --gold: #9E9E9E; --gold-deep: #262626; --gold-pale-light: #FAFAFA; --gold-pale: #D9D9D9;
   --control-line: #7A7A7A;
-  --band-from: #474747; --band-to: #474747; --ground: #3D3D3D;
+  --band-from: #474747; --band-via: #474747; --band-to: #474747; --ground: #3D3D3D;
   --sky: var(--cerulean); --sky-soft: var(--accent-soft);
   color-scheme: light;
 }
@@ -124,7 +124,7 @@
   --iq-card: #262626; --iq-card-line: #3B3B3B; --iq-ink: #E6E6E6;
   --gold-light: #3B3B3B; --gold: #7A7A7A; --gold-deep: #E6E6E6; --gold-pale-light: #262626; --gold-pale: #3B3B3B;
   --control-line: #7A7A7A;
-  --band-from: #2B2B2B; --band-to: #2B2B2B; --ground: #1C1C1C;
+  --band-from: #2B2B2B; --band-via: #2B2B2B; --band-to: #2B2B2B; --ground: #1C1C1C;
   --sky: var(--cerulean); --sky-soft: var(--accent-soft);
   color-scheme: dark;
 }
@@ -150,7 +150,7 @@ html:root:root[data-hc][data-scheme="light"] {
   --ember: #9B0000; --ember-soft: #FFE3E3; --fill-ember: #A80000;
   --moss: #1D5620; --moss-soft: #E0F0E0; --amber: #5E4500;
   --iq-card: #FFFFFF; --iq-card-line: #000000; --iq-ink: #000000;
-  --band-from: #00334F; --band-to: #00334F; --ground: #00334F;
+  --band-from: #00334F; --band-via: #00334F; --band-to: #00334F; --ground: #00334F;
   --soft-shadow: none; --accent-glow: transparent; --accent-ring: transparent;
   color-scheme: light;
 }
@@ -162,7 +162,7 @@ html:root:root[data-hc][data-scheme="dark"] {
   --ember: #FF9A90; --ember-soft: #3D0A06; --fill-ember: #A80000;
   --moss: #A6E3A1; --moss-soft: #0F2B12; --amber: #FFD966;
   --iq-card: #121212; --iq-card-line: #F5F5F5; --iq-ink: #F5F5F5;
-  --band-from: #00334F; --band-to: #00334F; --ground: #00334F;
+  --band-from: #00334F; --band-via: #00334F; --band-to: #00334F; --ground: #00334F;
   --soft-shadow: none; --accent-glow: transparent; --accent-ring: transparent;
   color-scheme: dark;
 }

@@ -13,7 +13,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   password is reset from the sign-in screen, and the temporary one works in
   both apps. Each app keeps its own sign-in, so signing in or out of one
   leaves the other as it was.
-- **The home screen.** Today's date and a greeting by name, your day, and
+- **The home screen.** Today's date and a greeting by name on a band shading
+  from deep cerulean to sky (a theme's own colors under a theme), your day, and
   cards for Clients, Programs and Messages, with how many clients you have
   and how many messages are waiting.
 - **Messages.** Write to a client from the Messages tab and attach pictures,
