@@ -54,11 +54,14 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
-- **Your place in Studio is one of your places.** The trainer's default
-  place in Studio shows first in My equipment, with its own checklist and
-  Studio's name, and a new program starts there.
+- **Studio's places are your places.** Every place in Studio shows in My
+  equipment under Studio's name, yours (your default place) first, each
+  with its own checklist; they follow renames and closures in Studio. A new
+  program starts at your place in Studio.
 - **A client's gym in Studio is where their program starts.** Their home
-  gym, or a membership, is chosen for "Where they train" on a new program.
+  gym, or a membership, is chosen for "Where they train" on a new program,
+  read from Studio each time; a program made for another of Studio's places
+  says so when opened, and offers the new one.
 - **The Primary Master sets the equipment at Studio's places.** Their
   answers show, locked, for every trainer whose place in Studio it is;
   trainers answer only what is left.

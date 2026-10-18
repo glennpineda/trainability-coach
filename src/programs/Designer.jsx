@@ -153,7 +153,10 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
     else setError(err.message);
   }, [onSignedOut]);
 
-  useEffect(() => { apiRequest("GET", `/programs/${id}`).then(setP).catch(fail); }, [id, fail]);
+  /* The client's gym in Studio, when it isn't where this program is: asked
+     on opening, and gone once the place is changed. */
+  const [gym, setGym] = useState(null);
+  useEffect(() => { apiRequest("GET", `/programs/${id}`).then(o => { setP(o); setGym(o.gym || null); }).catch(fail); }, [id, fail]);
 
   const call = async (method, path, body, keepOpen = false) => {
     setBusy(true); setError("");
@@ -205,6 +208,12 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
               {[p.kindLabel, p.minutes ? `${p.minutes}-minute sessions` : null, p.focusLabels.length ? `focus: ${p.focusLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
             </div>
             {p.notes && <p className="text-sm mt-2 whitespace-pre-wrap">{p.notes}</p>}
+            {gym && p.placeId !== gym.placeId && (
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-sm">
+                <span className="inline-flex items-start gap-1.5"><Info size={15} className="flex-none mt-0.5" style={{ color: "var(--iron)" }} aria-hidden="true" />{gym.text}</span>
+                <button type="button" className="cx-link" disabled={busy} onClick={() => call("PATCH", `/programs/${p.id}`, { placeId: gym.placeId })}>Use {gym.name}</button>
+              </div>
+            )}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
               <button type="button" className="cx-btn-row" onClick={() => setOpen({ kind: "details", id: p.id })}><Pencil size={15} aria-hidden="true" /> Edit the details</button>
               <a className="text-sm cx-link" href={`/print/program/${p.id}`} target="_blank" rel="noreferrer"><Printer size={15} aria-hidden="true" /> Print for the client</a>

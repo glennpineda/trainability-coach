@@ -168,7 +168,7 @@ export function EquipmentTab({ onSignedOut }) {
               </p>
             ) : place.fromStudio ? (
               <p className="text-xs mt-3" style={{ color: "var(--iron)" }}>
-                Your place in Studio. Its name comes from Studio, so it's changed there.
+                {place.yours ? "Your place in Studio." : "One of Studio's places."} Its name comes from Studio, so it's changed there.
                 {(place.categories.some(c => c.locked) || place.items.some(i => i.locked)) && " Answers marked Set for everyone come from the Primary Master; ask them to change one."}
               </p>
             ) : naming !== place.id && (

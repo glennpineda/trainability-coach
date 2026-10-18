@@ -196,29 +196,25 @@ app.put("/api/my-settings", asSignedIn("PUT /my-settings", async (req, res, user
 }));
 
 /*
- * The trainer's place in Studio, as one of their places here (Glenn, 18 Oct
- * 2026: "if the trainer is connected to a place in Studio, let's get that
- * information from Studio as well and make that an option here"). Studio
- * links a trainer to a place by their default place (`defaultPlaceId` on
- * /auth/me) and names it in /locations, which any signed-in account may read.
- * Asked at most every ten minutes per trainer; if Studio can't be reached the
- * places stay as they were.
+ * Studio's places, as places of the trainer's here (Glenn, 18 Oct 2026: "if
+ * the trainer is connected to a place in Studio, let's get that information
+ * from Studio as well", then "make sure all the places within that business
+ * … syncs with the trainer here as well"). /locations, which any signed-in
+ * account may read, lists them; `defaultPlaceId` on /auth/me is the
+ * trainer's own. Asked at most every ten minutes per trainer (`force` asks
+ * now); if Studio can't be reached the places stay as they were.
  */
 const studioPlaceAsked = new Map();
-async function syncStudioPlace(req, user) {
-  if (Date.now() - (studioPlaceAsked.get(user.id) || 0) < 10 * 60 * 1000) return;
+async function syncStudioPlace(req, user, { force = false } = {}) {
+  if (!force && Date.now() - (studioPlaceAsked.get(user.id) || 0) < 10 * 60 * 1000) return;
   try {
-    let place = null;
-    if (user.defaultPlaceId) {
-      const r = await studio(req, "/locations");
-      if (!r.ok) return;
-      const { places = [] } = await r.json();
-      place = places.find(p => p.id === user.defaultPlaceId && !p.archivedAt) || null;
-    }
-    await equipment.linkStudioPlace(user.id, place);
+    const r = await studio(req, "/locations");
+    if (!r.ok) return;
+    const { places = [] } = await r.json();
+    await equipment.syncStudioPlaces(user.id, places, user.defaultPlaceId || null);
     studioPlaceAsked.set(user.id, Date.now());
   } catch (err) {
-    console.warn("Studio's place couldn't be read:", err.message);
+    console.warn("Studio's places couldn't be read:", err.message);
   }
 }
 
@@ -260,19 +256,17 @@ app.get("/api/coach-iq/conditions", asSignedIn("GET /coach-iq/conditions", async
   res.json({ conditions: limitations.conditionsList(), facts: FLAGS, joints: JOINTS });
 }));
 
-/* Where a client trains, from Studio: their gym there, as one of this
-   trainer's places (made the first time, with the equipment the Primary
-   Master set for it), for a new program's form. null when Studio has none. */
+/* Where a client trains, from Studio: their gym there, read from Studio each
+   time so a change there shows at once, as the trainer's place linked to it
+   (with the equipment the Primary Master set for it), for a new program's
+   form. null when Studio has none. */
 app.get("/api/clients/:client/place", asSignedIn("GET /clients/place", async (req, res, user) => {
   const client = (await myClients(req, user)).find(c => c.id === req.params.client);
   if (!client) return res.status(404).json({ error: "Not found", code: "not_found" });
   res.set("Cache-Control", "private, no-store");
   if (!client.studioPlaceId) return res.json({ place: null });
-  const r = await studio(req, "/locations");
-  if (!r.ok) return res.json({ place: null });
-  const { places = [] } = await r.json();
-  const sp = places.find(p => p.id === client.studioPlaceId && !p.archivedAt);
-  res.json({ place: sp ? await equipment.linkClientPlace(user.id, sp) : null });
+  await syncStudioPlace(req, user, { force: true });
+  res.json({ place: await equipment.placeForStudio(user.id, client.studioPlaceId) });
 }));
 
 /* What the trainer's programs for a client say about their level, for a new
@@ -335,7 +329,7 @@ app.delete("/api/places/:place", asSignedIn("DELETE /places", async (req, res, u
   if (!await ownPlace(req, res, user)) return;
   const refused = await equipment.archivePlace(user.id, req.params.place);
   if (refused === "last") return res.status(400).json({ error: "Keep at least one place.", code: "last_place" });
-  if (refused === "studio") return res.status(400).json({ error: "This is your place in Studio, so it stays.", code: "from_studio" });
+  if (refused === "studio") return res.status(400).json({ error: "This place comes from Studio, so it stays while Studio has it.", code: "from_studio" });
   res.json(await equipmentFor(req, user));
 }));
 
@@ -813,7 +807,23 @@ app.post("/api/programs", asSignedIn("POST /programs", async (req, res, user) =>
 app.get("/api/programs/:id", asSignedIn("GET /programs/one", async (req, res, user) => {
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
-  await sendProgram(res, user, program);
+  res.set("Cache-Control", "private, no-store");
+  const out = await programs.full(user.id, program);
+  /* The client's gym in Studio, read now: if it has changed since the program
+     was made for one of Studio's places (or none), say so, and offer it. A
+     place of the trainer's own choosing (a client's home) is left alone. */
+  try {
+    const client = (await myClients(req, user)).find(c => c.id === program.client_id);
+    const here = program.place_id ? await equipment.placeOf(user.id, program.place_id) : null;
+    if (client?.studioPlaceId && (!here || here.fromStudio) && here?.studioPlaceId !== client.studioPlaceId) {
+      await syncStudioPlace(req, user);
+      const gym = await equipment.placeForStudio(user.id, client.studioPlaceId);
+      if (gym) out.gym = { placeId: gym.id, text: `${client.firstName}'s gym in Studio is ${gym.name}${here ? `; this program is for ${here.name}` : ""}.`, name: gym.name };
+    }
+  } catch (err) {
+    console.warn("The client's gym couldn't be checked:", err.message);
+  }
+  res.json(out);
 }));
 
 app.patch("/api/programs/:id", asSignedIn("PATCH /programs", async (req, res, user) => {

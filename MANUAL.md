@@ -363,13 +363,14 @@ exercises you can actually do where you are training. It is yours alone:
 nobody else sees it.
 
 1. Tap your photo or initials in the top right corner, then **My equipment**.
-2. Across the top are your places. If you have a place in Studio (your
-   default place there), it comes first, under the name Studio gives it, and
-   says *Your place in Studio. Its name comes from Studio, so it's changed
-   there.* It can't be renamed or removed here. Otherwise you start with
-   **Where I usually train**. Tap a place to see its equipment. If your place
-   in Studio changes, the new one is added and the old one stays as one of
-   your places, with its answers.
+2. Across the top are your places. Every place in Studio is one of them,
+   under the name Studio gives it: your own place in Studio (your default
+   place there) first, saying *Your place in Studio. Its name comes from
+   Studio, so it's changed there.*, then Studio's others (*One of Studio's
+   places.*), then places of your own, such as **Where I usually train**.
+   Studio's places can't be renamed or removed here; they follow Studio, and
+   one Studio closes goes away, its answers kept. Tap a place to see its
+   equipment.
    - To add one, such as a client's home or the park, tap **+ Add a place**,
      type its name and tap the tick.
    - To change a place's name, choose it and tap **Rename**.
@@ -750,8 +751,9 @@ next, and Billy can talk it over with you. Only you see your programs.
    **Where they train**: one of your places from My equipment (3.7),
    starting on your place in Studio if you have one. If the client has a gym
    in Studio (their home gym, or a membership), it starts there instead and
-   says *Jordan's gym in Studio.*; that gym is added to your places, with
-   anything the Primary Master set there. Add
+   says *Jordan's gym in Studio.*, with anything the Primary Master set
+   there. It is read from Studio each time, so a change there shows at once.
+   Add
    **Notes** if you want. **Back to the kind of program** goes back a step.
 9. Tap **Start designing**. The program opens with its days already made, as
    many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for
@@ -863,7 +865,13 @@ needs fixing; tell the Primary Master.
 already fitting the place, the level and the limitations. Tap **Use it**.
 
 **Ask Billy about it**, at the top, and **Ask Billy about** a day, open
-Billy's panel with the question asked. He reads the program, its check and
+Billy's panel with the question asked.
+
+If a client's gym in Studio has changed since their program was made for
+one of Studio's places, opening the program says so (*Jordan's gym in Studio
+is Trainability Eastgate; this program is for Trainability Northside.*). Tap
+**Use Trainability Eastgate** to move it there, or leave it as it is. A place
+of your own, such as a client's home, is never questioned. He reads the program, its check and
 the suggestions, and talks it through; he changes nothing himself.
 
 ### 5.5 Days, order and supersets
