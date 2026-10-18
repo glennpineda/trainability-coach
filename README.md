@@ -194,7 +194,8 @@ server's log instead, since only its hash is kept.
 The email is drawn in Studio's own template (`server/email-template.js`, a
 copy of Studio's `emailShell` and its pieces): the same band, card, panel,
 pill and Trainability signature, with Coach's logo (`public/coach-mark.png`)
-in the band and Coach where Studio names itself. Its pictures, the logo and
+in the band, Coach where Studio names itself, and Coach's colours (Cerulean,
+Sky, Navy and its pale blues) where Studio has its magenta and lilac. Its pictures, the logo and
 the signature's hexagon and wordmark (`public/trainability-logo.png`,
 `public/trainability-wordmark.png`, Studio's own files), are fetched from
 `APP_ORIGIN`, so they show only once that is a real address.

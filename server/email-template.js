@@ -7,14 +7,26 @@
  * logo editions, letterheads or stop links yet.
  *
  * Inline styles and tables, as Studio's, because an email client is not a
- * browser. The palette is Studio's frozen copy of its light theme.
+ * browser. The palette is Coach's own (below), in Studio's places.
  */
 
+/* Coach's light theme (src/index.css), frozen, in the places Studio's
+   palette goes (Glenn, 18 Oct 2026: "Also use Coach's colors for the email
+   template"): Studio's magenta is Coach's cerulean, its violet edge Coach's
+   sky, its lilac band Coach's pale blue. */
 export const MAIL = {
-  paper: "#EEEEF1", card: "#F7F7F9", line: "#DCDCE2", rule: "#DCDCE2",
-  ink: "#1A1A1E", inkSoft: "#37373C", faint: "#6A6A70",
-  magenta: "#A73886", fillMagenta: "#B23C8F", lilac: "#7C4FA3",
-  skyTop: "#FCF8FE", sky: "#EDE1F5",
+  paper: "#F3F7FA",      // the page behind the card        --paper
+  card: "#FFFFFF",       // the card itself                 --chalk
+  line: "#D5DEE5",       // its border                      --iron-line
+  rule: "#D5DEE5",       // the rules inside it             --iron-line
+  ink: "#172A3A",        //                                 --ink (Navy)
+  inkSoft: "#3B4F60",    //                                 --ink-soft
+  faint: "#5B6B78",      // the last footer line            --iron
+  accent: "#007BA7",     // the password, a figure          --accent (Cerulean)
+  fill: "#007BA7",       // the button, white on it          --fill-cerulean
+  edge: "#4FA8DC",       // the edge's far end              --sky
+  bandTop: "#F5FAFD",    // the band's top
+  band: "#E3F1F8",       // the band's bottom, and its flat --accent-soft
 };
 
 /* Who signs every email, under the card and at the foot of its plain text. */
@@ -44,7 +56,7 @@ export function siteOf(origin = process.env.APP_ORIGIN || "") {
 }
 
 const PILL = "border-radius:999px;font-size:15px;font-weight:600;display:inline-block;";
-const PILL_FILLED = `background:${MAIL.fillMagenta};color:#fff;padding:12px 22px;border:0;${PILL}`;
+const PILL_FILLED = `background:${MAIL.fill};color:#fff;padding:12px 22px;border:0;${PILL}`;
 
 export const button = (href, label) =>
   `<a href="${esc(href)}" style="${PILL_FILLED}text-decoration:none;">${esc(label)}</a>`;
@@ -67,14 +79,14 @@ export const rows = (pairs) => pairs
 
 /** A code or password to copy. */
 export const mono = (text, { size = 17 } = {}) =>
-  `<strong style="font-family:${MONO};font-size:${size}px;color:${MAIL.magenta};font-weight:700;">${esc(text)}</strong>`;
+  `<strong style="font-family:${MONO};font-size:${size}px;color:${MAIL.accent};font-weight:700;">${esc(text)}</strong>`;
 
 export const para = (html, { size = 15, color = MAIL.ink, top = 0, bottom = 14 } = {}) =>
   `<p style="margin:${top}px 0 ${bottom}px;font-size:${size}px;line-height:1.55;color:${color};">${html}</p>`;
 
 /**
  * One email, Studio's emailShell: the brand's edge along the top, the logo
- * alone in the sky band (Coach's mark where Studio has its own), the title,
+ * alone in the band (Coach's mark where Studio has its own), the title,
  * the body and the footer lines (the last fainter), then Trainability signed
  * under the card in its hexagon and wordmark with the copyright under it.
  */
@@ -103,8 +115,8 @@ export function emailShell({ name = "Trainability Coach", title, body, footer = 
   return `
 <div style="margin:0;padding:24px;background:${MAIL.paper};color-scheme:light;font-family:${FONT};">
   <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px;margin:0 auto;background:${MAIL.card};border:1px solid ${MAIL.line};border-radius:14px;overflow:hidden;">
-    <tr><td height="4" bgcolor="${MAIL.fillMagenta}" style="height:4px;line-height:4px;font-size:0;background:${MAIL.fillMagenta};background-image:linear-gradient(90deg,${MAIL.fillMagenta},${MAIL.lilac});">&nbsp;</td></tr>
-    <tr><td align="center" bgcolor="${MAIL.sky}" style="padding:26px 26px 22px;text-align:center;background:${MAIL.sky};background-image:linear-gradient(180deg,${MAIL.skyTop},${MAIL.sky});border-bottom:1px solid ${MAIL.rule};">${header}
+    <tr><td height="4" bgcolor="${MAIL.fill}" style="height:4px;line-height:4px;font-size:0;background:${MAIL.fill};background-image:linear-gradient(90deg,${MAIL.fill},${MAIL.edge});">&nbsp;</td></tr>
+    <tr><td align="center" bgcolor="${MAIL.band}" style="padding:26px 26px 22px;text-align:center;background:${MAIL.band};background-image:linear-gradient(180deg,${MAIL.bandTop},${MAIL.band});border-bottom:1px solid ${MAIL.rule};">${header}
     </td></tr>
     <tr><td style="padding:26px 26px 8px;">
       ${title ? `<div style="font-size:22px;font-weight:600;color:${MAIL.ink};margin-bottom:18px;text-align:center;line-height:1.3;">${esc(title)}</div>` : ""}
