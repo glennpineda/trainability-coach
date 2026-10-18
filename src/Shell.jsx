@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { House, Users, ClipboardList, MessageCircle } from "lucide-react";
 import { Header } from "./chrome/Header";
 import { DriftingHexes } from "./chrome/DriftingHexes";
@@ -56,6 +56,31 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
     return () => clearInterval(t);
   }, [tab]);
   const open = (id) => { setTab(id); window.scrollTo({ top: 0 }); };
+  /* A notification tapped (public/push-sw.js): its address says where, such
+     as /?open=messages&client=… for a client's message. Opened from scratch
+     the address is the page's own, read once and tidied away; with Coach
+     already open, the worker says it in a message instead. The Messages tab
+     is started again so it opens on that conversation. */
+  const [opened, setOpened] = useState(0);
+  const goTo = useCallback((href) => {
+    let at;
+    try { at = new URL(href, window.location.origin); } catch { return; }
+    const where = at.searchParams.get("open");
+    if (where !== "messages") return;
+    const client = at.searchParams.get("client");
+    try { client ? sessionStorage.setItem("coach-thread", client) : sessionStorage.removeItem("coach-thread"); } catch { /* not kept */ }
+    setOpened(n => n + 1);
+    open("messages");
+  }, []);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("open")) {
+      goTo(window.location.href);
+      window.history.replaceState(null, "", "/");
+    }
+    const heard = (e) => { if (e.data?.type === "push-open") goTo(e.data.url); };
+    navigator.serviceWorker?.addEventListener("message", heard);
+    return () => navigator.serviceWorker?.removeEventListener("message", heard);
+  }, [goTo]);
   /* From Today: a client's program, opened in Programs, or the client,
      opened out in Clients. */
   const openProgram = (id) => { try { sessionStorage.setItem("coach-program", id); } catch { /* not kept */ } open("programs"); };
@@ -76,7 +101,7 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} unread={unread} onOpenProgram={openProgram} onOpenClient={openClient} onSignedOut={onSignedOut} />}
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
         {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} />}
-        {tab === "messages" && <MessagesTab clients={clients.clients} onSignedOut={onSignedOut} onUnread={setUnread} />}
+        {tab === "messages" && <MessagesTab key={opened} clients={clients.clients} onSignedOut={onSignedOut} onUnread={setUnread} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}
         {tab === "review" && isPrimaryMaster(user) && <ReviewTab onSignedOut={onSignedOut} />}

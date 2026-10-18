@@ -19,7 +19,7 @@ import nodemailer from "nodemailer";
 const smtpConfigured = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 const gatewayEnabled = () => /^(1|true|on|yes)$/i.test(process.env.EMAIL_GATEWAY || "");
 export const EMAIL_CONFIGURED = () => smtpConfigured() || gatewayEnabled();
-const messagesOff = () => /^(1|true|on|yes)$/i.test(process.env.MESSAGES_OFF || "");
+export const messagesOff = () => /^(1|true|on|yes)$/i.test(process.env.MESSAGES_OFF || "");
 const allowlist = () => (process.env.EMAIL_ALLOWLIST || "").split(",").map(a => a.trim().toLowerCase()).filter(Boolean);
 export const looksLikeEmail = (raw) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(raw || "").trim());
 

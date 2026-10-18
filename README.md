@@ -238,6 +238,23 @@ the servers. The notice email's button opens `STUDIO_PUBLIC_URL/me#messages`
 | `COACH_LINK_SECRET` | The client link's secret, a long random string, the same in Studio. |
 | `STUDIO_PUBLIC_URL` | Studio's address for people, if it differs from `STUDIO_ORIGIN`. |
 
+## Notifications
+
+Web push, as Studio's (`server/push.js`, `public/push-sw.js`, the account
+menu's Notifications): a trainer turns it on per device, and is told when a
+client writes in Messages (`client_message`, sent from the client link's
+reply route). Rows are `coach_push_subscriptions`, one per trainer and
+browser. Off until the keys are set:
+
+| Setting | |
+|---|---|
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | Coach's own pair: `npx web-push generate-vapid-keys`. Not Studio's; each app is its own site to a browser. |
+| `VAPID_SUBJECT` | A `mailto:` or `https:` address the push services can reach; `APP_ORIGIN` if unset and https. |
+| `MESSAGES_OFF=on` | Nothing is pushed, as nothing is emailed. |
+
+`PUSH_FAKE_ORIGIN` lets a fake push service on the same machine be used in
+tests. Never set it on a host.
+
 ## Deploying (GoDaddy Airo)
 
 Like Studio: push the repository to GitHub, point an Airo app at it, set the

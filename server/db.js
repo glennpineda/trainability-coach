@@ -357,6 +357,24 @@ const SCHEMA = [
      client link. One trainer and one client to a conversation for now (the
      id is its own so more can join one day). `*_read_at` is when each side
      last read it; `notified_at` when the client was last emailed about it. */
+  /* Notifications on a device (server/push.js; Glenn, 18 Oct 2026), Studio's
+     push_subscriptions: one row per trainer and browser, kept by the
+     endpoint's hash and the trainer together, so a row needs no id of its
+     own. kinds is a comma list of what the device is told about. */
+  `CREATE TABLE IF NOT EXISTS coach_push_subscriptions (
+    endpoint_hash VARCHAR(64) NOT NULL,
+    user_id VARCHAR(64) NOT NULL,
+    endpoint VARCHAR(1024) NOT NULL,
+    p256dh VARCHAR(255) NOT NULL,
+    auth VARCHAR(255) NOT NULL,
+    kinds VARCHAR(255) NOT NULL DEFAULT '',
+    user_agent VARCHAR(255) NULL,
+    created_at VARCHAR(32) NOT NULL,
+    last_ok_at VARCHAR(32) NULL,
+    failures INTEGER NOT NULL DEFAULT 0,
+    last_error VARCHAR(255) NULL,
+    PRIMARY KEY (endpoint_hash, user_id)
+  )`,
   `CREATE TABLE IF NOT EXISTS coach_conversations (
     id VARCHAR(40) PRIMARY KEY,
     trainer_id VARCHAR(64) NOT NULL,

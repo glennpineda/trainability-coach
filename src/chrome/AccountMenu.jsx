@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Accessibility, BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
+import { Accessibility, Bell, BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
 import { LinkDialog } from "../auth/LinkDialog";
 import { AccessibilityDialog } from "./AccessibilityDialog";
+import { NotificationsDialog, currentSubscription } from "./NotificationsDialog";
+import { apiRequest } from "../lib/api";
 import { lookOf, lookSummary } from "../lib/look";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
@@ -20,6 +22,26 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
   const [open, setOpen] = useState(false);
   const [linking, setLinking] = useState(false);
   const [looking, setLooking] = useState(false);
+  /* Notifications (server/push.js): what the server offers, and whether this
+     device is on. No line at all while the server has no push keys, or the
+     account has nothing to be told (Studio's way: an On that could never
+     work is worse than no row). */
+  const [push, setPush] = useState(null);
+  const [pushState, setPushState] = useState({ on: false, kinds: [] });
+  const [notifying, setNotifying] = useState(false);
+  useEffect(() => {
+    let live = true;
+    (async () => {
+      try {
+        const got = await apiRequest("GET", "/push");
+        if (!live || !got.publicKey) return;
+        const sub = await currentSubscription().catch(() => null);
+        if (sub) { const found = await apiRequest("POST", "/push/lookup", { endpoint: sub.endpoint }); if (live) setPushState(found); }
+        if (live) setPush(got);
+      } catch { /* no line is the right answer to a server that can't say */ }
+    })();
+    return () => { live = false; };
+  }, [user.id]);
   const ref = useRef(null);
   const btnRef = useRef(null);
 
@@ -43,6 +65,7 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
   return (
     <div className="relative cx-account" ref={ref}>
       {linking && <LinkDialog onClose={() => setLinking(false)} />}
+      {notifying && push && <NotificationsDialog info={push} state={pushState} setState={setPushState} onClose={() => setNotifying(false)} />}
       {looking && chooseLook && <AccessibilityDialog user={user} chooseLook={chooseLook} onClose={() => setLooking(false)} />}
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
         aria-label={`${user.name}: account menu`}
@@ -123,6 +146,16 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
               <span className="min-w-0">
                 <span className="block">Accessibility</span>
                 <span className="block text-xs" style={{ color: "var(--iron)" }}>{lookSummary(lookOf(user))}</span>
+              </span>
+            </button>
+          )}
+          {push && (
+            <button role="menuitem" type="button" onClick={() => { setOpen(false); setNotifying(true); }}
+              className="w-full flex items-start gap-2.5 px-3 py-2 rounded-lg text-sm text-left hover:bg-(--ghost-fill)">
+              <Bell size={16} className="mt-0.5 flex-none" style={{ color: "var(--accent)" }} aria-hidden="true" />
+              <span className="min-w-0">
+                <span className="block">Notifications</span>
+                <span className="block text-xs" style={{ color: "var(--iron)" }}>{pushState.on ? "On for this device" : "Off on this device"}</span>
               </span>
             </button>
           )}

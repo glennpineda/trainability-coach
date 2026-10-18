@@ -1,7 +1,7 @@
 {
   "name": "trainability-coach",
   "private": true,
-  "version": "1.0.61",
+  "version": "1.0.62",
   "codename": "Caesious",
   "type": "module",
   "scripts": {
@@ -29,7 +29,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "web-push": "^3.6.7"
   },
   "engines": {
     "node": ">=22.12"

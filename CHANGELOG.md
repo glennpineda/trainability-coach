@@ -90,6 +90,11 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   the header, the sign-in screen, the browser tab and the emails; a slightly
   bigger mark in the icon. Remove Coach from your home screen and add it
   again to see the new icon.
+- **Notifications.** Turn them on for a phone or computer from the account
+  menu, as in Studio, and be told when a client writes to you in Messages:
+  who, and the start of what they wrote. A tap opens the conversation. Send a
+  test shows one arriving. On an iPhone, Coach needs to be on the Home Screen
+  first.
 - **Accessibility, as in Studio.** In the account menu: light or dark, a
   theme (Default, Purple, Blue, Orange or Green, Coach's own versions),
   contrast, reduced color, motion and text size, with Studio's choices and

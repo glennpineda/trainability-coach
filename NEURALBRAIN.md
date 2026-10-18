@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Notifications on a phone or computer, Studio's web push** (18 Oct 2026; Glenn: "Enable in-app push notifications here, put in the profile settings somewhere for now"). Build 1.0.62. Not from Next up. **Studio first**: its `server/push.js`, `public/push-sw.js`, `src/components/PushNotifications.jsx` and the five `/api/push` routes (main). Copied: VAPID keys from the environment and off without them (no row on screen either); the endpoint checked against the push services' own hosts before it is stored (Google's FCM, Mozilla, Apple, Windows), with `PUSH_FAKE_ORIGIN` for a fake one in tests; per-device subscriptions with `kinds`; subscribe, look up, turn off (letting the browser's own subscription go only when nobody else on it still wants it), and Send a test; `deliver` encrypting and signing with `web-push` (3.6.7, Studio's version, now a dependency) and posting itself with a 10-second timeout, a 24-hour TTL and the tag as the topic; a 404 or 410 deleting the row, anything else counted; `MESSAGES_OFF` stopping every push; the service worker doing nothing but notifications (no fetch, no cache), registered only when On is tapped, a tap bringing an open window forward and telling it where to go (`push-open`) or opening one; the dialog's words ("Notifications weren't allowed, so nothing changed.", "Sent. It should arrive in a few seconds.", the iPhone Home Screen and blocked-in-settings notes, "Messages are switched off on this server…"), the browser's own Allow box only after On is tapped, never on load. **Coach's**: one kind, `client_message`, "Messages from clients — When a client writes to you in Messages: who, and the start of what they wrote." It is pushed from the client link's reply route (`POST /api/client-link/conversations/:id/messages`) to the conversation's trainer: the client's name as the title, the first 140 characters as the body, `/?open=messages&client=<id>` as the address, `msg-<conversation>` as the tag so a run of messages is one entry. A Coach account has no clients who can write yet, so it is offered nothing (`kindsFor`) and has no menu line. Table `coach_push_subscriptions` keyed by the endpoint's hash and the trainer together, so a row needs no id and no new tag (Studio's has an id, `psh`). "The profile settings" is the account menu (Coach has no Profile tab): a **Notifications** line under Accessibility, "On for this device" / "Off on this device", opening `src/chrome/NotificationsDialog.jsx` in Coach's switch rather than Studio's chips, with the one kind written out under it (Studio shows a single kind's detail and ticks for several, kept for later kinds). **Added beyond Studio**: the browser's request to its push service is given up after 20 seconds with "This device couldn't reach its notification service. Check the connection and try again.", because in this sandbox it never answered and the button spun for good. `Shell.jsx` opens Messages on the client named in the address (from scratch, read once and tidied off the address bar), or on a `push-open` message from the worker, starting the Messages tab again so it lands on that conversation. `messagesOff` is now exported from `server/email.js`. **Tested** with a pair of VAPID keys made for the test and a fake push service on this machine: at the API (an address that isn't a push service's refused; subscribe, an unknown kind refused, look up, Send a test, off; a client's reply through the client link pushed, and the fake service's copy decrypted with the subscription's keys to `{"title":"Avery Stone","body":"Running 10 minutes late today, sorry! Traffic on the bridge.","url":"/?open=messages&client=c1","tag":"msg-…"}`; a Coach account offered nothing), and in Chromium at phone width (the menu line, the dialog Off, then On, Send a test arriving at the fake service, the line saying On, then Off; `/?open=messages&client=c1` opening Avery's conversation). The test Chromium can't reach Google's push service from the sandbox, so its subscription was a stand-in pointing at the fake service: the browser's own subscribe, a real phone's notification and its tap were not seen. **Glenn's to do** on the host: set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (`npx web-push generate-vapid-keys`) and, if `APP_ORIGIN` isn't https, `VAPID_SUBJECT`; on the iPhone, Coach from the Home Screen. Files: `server/push.js`, `public/push-sw.js`, `src/chrome/NotificationsDialog.jsx` (new), `server/index.js`, `server/db.js`, `server/email.js`, `src/chrome/AccountMenu.jsx`, `src/Shell.jsx`, `package.json`, `package-lock.json`, MANUAL.md (3.5's Notifications, 7.1), README.md (Notifications), CHANGELOG.md.
+
 - **Home's band fades into the page, under the cards** (18 Oct 2026; Glenn, with a screenshot of Home in dark: "That is not a gradient.. that's a sharp border", then "Can you put the today contents on top of that gradient band. Otherwise, frost the panels so you can see them"). Build 1.0.61. Not from Next up. Build 1.0.60 shaded the band left to right but it still stopped in a hard line where the page began, half way down the Today card. Now it runs on down behind the first card and fades out: `.cx-band` (`src/index.css`) masks it from solid at 45% of its height to clear at its foot, so it melts into the page and the drifting hexagons, with no edge; its bottom padding went from `pb-16` to `pb-32`, and the cards' pull-up from `-mt-10` to `-mt-[6.5rem]`, so as much band shows below the greeting as before. **What went wrong first**: a mask makes the band a layer of its own, which drew it over the cards that come after it, washing the Today card out (the screenshot that brought the second message); the cards' column is now `relative`, which puts it back on top. That answered "put the today contents on top", so frosting the cards wasn't needed. **Tested** in Chromium against the stand-in: Home at phone width in Default light and dark and the four themes, and at 1280 wide: cards solid over the band, the band fading with no line; no page errors. MANUAL 3.4 says it fades into the page. Files: `src/tabs/HomeTab.jsx`, `src/index.css`, MANUAL.md.
 
 - **Home's band as a gradient you can see** (18 Oct 2026; Glenn: "Can you make the top colored header on the home tab gradient?"). Build 1.0.60. Not from Next up. It was already a gradient, at 150° from #007BA7 to #0B4F6E, two cerulean shades too close to read as one. **Studio first**: Studio's Today has no colored band (its page ground, with a faint 16-second wave of five tints only on its tab bar, `.iw-navbar`, and none on its header since 26 Sep), so this was designed here. Now three stops at 115° (`HomeTab.jsx`, `linear-gradient(115deg, var(--band-from) 0%, var(--band-via) 45%, var(--band-to) 100%)`): deep under the date and greeting on the left, the theme's main color in the middle, its light one at the far corner where nothing is written. Default #00668C, #007BA7, #4FA8DC (Sky); Purple #43358F, #5B4BC4, #8E7CE8; Blue #13325E, #1F4E8C, #4D7CC4; Orange #8A2800, #C93A00, #EE7B3A; Green #454C1C, #6B7230, #97A04F (`src/index.css`, `src/look.css`, the new `--band-via`); reduced color and high contrast keep a flat band (all three stops the same). **Checked**: white on the first two stops is 4.8:1 or more in every theme (Default 6.4 and 4.8, Purple 9.8 and 6.5, Blue 12.8 and 8.3, Orange 8.8 and 5.1, Green 9.1 and 5.2); the light end is 2.6–4.2, under no text: on a phone the words end before it, and on a wide screen they sit in the centred column's left side. **Tested** in Chromium against the stand-in: Home at phone width in Default light and dark and in the four themes, and at 1280 wide; no page errors. MANUAL 3.4 and CHANGELOG describe the band. Files: `src/tabs/HomeTab.jsx`, `src/index.css`, `src/look.css`, MANUAL.md, CHANGELOG.md.
@@ -657,6 +659,10 @@ your Trainability account.* (3.5).
    - **Accessibility** — light or dark, the app's colors, contrast, motion and
      text size (3.6). The line under it says what you have chosen, such as
      *Matches this device* or *Dark · High contrast*.
+   - **Notifications** — news from Coach on this phone or computer (see
+     *Notifications*, below). The line under it says *On for this device* or
+     *Off on this device*. It isn't there with a Coach account, which has
+     nothing to be told yet, or while Coach's server isn't set up for them.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.1 · Caesious*. If you ever report a problem, say which
@@ -664,6 +670,30 @@ your Trainability account.* (3.5).
 
 To close it without choosing anything, tap the photo again, tap anywhere else,
 or press Esc on a keyboard.
+
+##### Notifications
+
+Coach can tell you when a client writes to you in Messages (chapter 7), with
+a notification on your phone or computer, even when Coach isn't open. It is
+turned on for one device at a time: do it on each one you want told.
+
+1. Open your account menu and tap **Notifications**.
+2. Tap **On**. Your phone or computer asks whether Coach may show
+   notifications; tap **Allow**. (If you tap **Don't Allow** there, it can only
+   be changed in the browser's own settings, so the box says so.)
+3. It says what you will be told about: *Messages from clients. When a client
+   writes to you in Messages: who, and the start of what they wrote.*
+4. Tap **Send a test** to see one arrive: *Sent. It should arrive in a few
+   seconds.*
+
+Tapping a notification opens Coach on that client's conversation.
+
+To stop them on this device, open **Notifications** again and tap **Off**.
+
+**On an iPhone or iPad**, notifications only work once Coach is on your Home
+Screen (2.6). In Safari the box says *On an iPhone or iPad, notifications
+work once Coach is on your Home Screen*, with the steps. Add it, open Coach
+from its icon, and turn them on there.
 
 #### 3.6 Accessibility — light or dark, theme, contrast, color, motion and text size
 
@@ -1434,6 +1464,9 @@ Measurements will come later.
 4. Tap a conversation to open it.
 
 With no conversations yet, the page says **No messages yet.**
+
+To be told on your phone when a client writes, turn on **Notifications** in
+your account menu (3.5).
 
 #### 7.2 Writing to a client
 

@@ -19,6 +19,7 @@ import * as accounts from "./accounts.js";
 import * as coachClients from "./coach-clients.js";
 import * as today from "./today.js";
 import * as messages from "./messages.js";
+import * as push from "./push.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -481,6 +482,29 @@ app.get("/api/today", asSignedIn("GET /today", async (req, res, user) => {
   res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, programs: mine, limits }) });
 }));
 
+/* ------------------------------------------------------------ notifications
+
+   Studio's five calls (its /api/push), for the signed-in trainer's own
+   devices (server/push.js). GET says whether there is anything to turn on:
+   no key, or nothing this account can be told about, and the account menu
+   shows nothing. */
+const pushRoute = (what, fn) => asSignedIn(what, async (req, res, user) => {
+  try { await fn(req, res, user); } catch (err) {
+    if (err.status && err.code?.startsWith("push_")) return res.status(err.status).json({ error: err.message, code: err.code });
+    throw err;
+  }
+});
+app.get("/api/push", pushRoute("GET /push", async (_req, res, user) => {
+  const kinds = push.kindChoices(user);
+  res.set("Cache-Control", "private, no-store");
+  res.json({ publicKey: kinds.length ? push.publicKey() : null, kinds });
+}));
+app.post("/api/push/lookup", pushRoute("POST /push/lookup", async (req, res, user) => res.json(await push.lookup(user, req.body?.endpoint))));
+app.put("/api/push", pushRoute("PUT /push", async (req, res, user) =>
+  res.json(await push.subscribe(user, { subscription: req.body?.subscription, kinds: req.body?.kinds, userAgent: req.get("user-agent") }))));
+app.post("/api/push/off", pushRoute("POST /push/off", async (req, res, user) => res.json(await push.unsubscribe(user, req.body?.endpoint))));
+app.post("/api/push/test", pushRoute("POST /push/test", async (req, res, user) => res.json(await push.pushTest(user, req.body?.endpoint))));
+
 /* ------------------------------------------------------------ messages */
 
 /*
@@ -646,6 +670,14 @@ app.post("/api/client-link/conversations/:id/messages", linkRoute("client-link r
   const bad = messages.checkMessage({ text: req.body?.text });
   if (bad) return res.status(400).json({ error: bad === "Write a message or attach something." ? "Write a message." : bad, code: "invalid" });
   await messages.sendFromClient(c, { clientName: req.body?.clientName, text: req.body.text });
+  /* Their trainer's devices told, if they asked (push.js, client_message):
+     who, and the start of it. A tap opens the conversation. Not waited for. */
+  const words = String(req.body.text).trim().replace(/\s+/g, " ");
+  push.pushTo(c.trainer_id, "client_message", {
+    title: String(req.body?.clientName || c.client_name || "A client"),
+    body: words.length > 140 ? `${words.slice(0, 139)}…` : words,
+    url: `/?open=messages&client=${encodeURIComponent(c.client_id)}`, tag: `msg-${c.id}`,
+  }).catch(() => {});
   res.json(forClient(req, await messages.clientThread(c)));
 }));
 /* A file for the client's browser, by a signed link from the client link. */

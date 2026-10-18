@@ -434,6 +434,10 @@ your Trainability account.* (3.5).
    - **Accessibility** — light or dark, the app's colors, contrast, motion and
      text size (3.6). The line under it says what you have chosen, such as
      *Matches this device* or *Dark · High contrast*.
+   - **Notifications** — news from Coach on this phone or computer (see
+     *Notifications*, below). The line under it says *On for this device* or
+     *Off on this device*. It isn't there with a Coach account, which has
+     nothing to be told yet, or while Coach's server isn't set up for them.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.1 · Caesious*. If you ever report a problem, say which
@@ -441,6 +445,30 @@ your Trainability account.* (3.5).
 
 To close it without choosing anything, tap the photo again, tap anywhere else,
 or press Esc on a keyboard.
+
+#### Notifications
+
+Coach can tell you when a client writes to you in Messages (chapter 7), with
+a notification on your phone or computer, even when Coach isn't open. It is
+turned on for one device at a time: do it on each one you want told.
+
+1. Open your account menu and tap **Notifications**.
+2. Tap **On**. Your phone or computer asks whether Coach may show
+   notifications; tap **Allow**. (If you tap **Don't Allow** there, it can only
+   be changed in the browser's own settings, so the box says so.)
+3. It says what you will be told about: *Messages from clients. When a client
+   writes to you in Messages: who, and the start of what they wrote.*
+4. Tap **Send a test** to see one arrive: *Sent. It should arrive in a few
+   seconds.*
+
+Tapping a notification opens Coach on that client's conversation.
+
+To stop them on this device, open **Notifications** again and tap **Off**.
+
+**On an iPhone or iPad**, notifications only work once Coach is on your Home
+Screen (2.6). In Safari the box says *On an iPhone or iPad, notifications
+work once Coach is on your Home Screen*, with the steps. Add it, open Coach
+from its icon, and turn them on there.
 
 ### 3.6 Accessibility — light or dark, theme, contrast, color, motion and text size
 
@@ -1211,6 +1239,9 @@ Measurements will come later.
 4. Tap a conversation to open it.
 
 With no conversations yet, the page says **No messages yet.**
+
+To be told on your phone when a client writes, turn on **Notifications** in
+your account menu (3.5).
 
 ### 7.2 Writing to a client
 
