@@ -168,7 +168,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
 }
 
 /* A row of chips: one (tap again to clear) or several. */
-function Chips({ options, value, onChange, many = false, label }) {
+function Chips({ options, value, onChange, many = false, label, iq = false }) {
   const on = (k) => (many ? value.includes(k) : value === k);
   return (
     <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
@@ -176,7 +176,7 @@ function Chips({ options, value, onChange, many = false, label }) {
         <button key={k} type="button" aria-pressed={on(k)}
           onClick={() => onChange(many ? (on(k) ? value.filter(v => v !== k) : [...value, k]) : (on(k) ? null : k))}
           className="px-2.5 py-1 rounded-full text-sm"
-          style={on(k) ? { background: "var(--cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
+          style={on(k) ? { background: "var(--cerulean)", color: "#fff" } : iq ? { background: "var(--iq-chip)", color: "var(--iq-ink)" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
           {words}
         </button>
       ))}
@@ -234,24 +234,26 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly }) {
   );
   return (
     <div className="overflow-y-auto px-4 pb-4 grid gap-3" style={{ overscrollBehavior: "contain" }}>
+      {/* Coach IQ's questions, in a card of its own (Glenn, 18 Oct 2026). */}
       {vocab?.workOn && (
-        <div className="grid gap-1.5">
-          <div className="text-sm font-medium">What are we working on? <span className="font-normal" style={muted}>(optional)</span></div>
-          <Chips label="What are we working on" options={vocab.workOn.map(w => [w.key, w.label])} value={workOn} onChange={setWorkOn} />
-          <div className="text-sm font-medium mt-1">Muscle groups <span className="font-normal" style={muted}>(optional)</span></div>
-          <Chips many label="Muscle groups" options={vocab.muscleGroups.map(g => [g.key, g.label])} value={groups} onChange={(next) => {
+        <section className="grid gap-1.5 rounded-xl p-3 border" aria-label="Coach IQ" style={{ background: "var(--iq-card)", borderColor: "var(--iq-card-line)", color: "var(--iq-ink)" }}>
+          <div className="text-sm font-semibold inline-flex items-center gap-1.5"><Lightbulb size={15} aria-hidden="true" /> Coach IQ</div>
+          <div className="text-sm font-medium">What are we working on?</div>
+          <Chips iq label="What are we working on" options={vocab.workOn.map(w => [w.key, w.label])} value={workOn} onChange={setWorkOn} />
+          <div className="text-sm font-medium mt-1">Muscle groups</div>
+          <Chips iq many label="Muscle groups" options={vocab.muscleGroups.map(g => [g.key, g.label])} value={groups} onChange={(next) => {
             const added = next.find(k => !groups.includes(k)); const gone = groups.find(k => !next.includes(k));
             toggleGroup(added || gone);
           }} />
           {/* A chosen group opens to its own muscles, to narrow further. */}
           {vocab.muscleGroups.filter(g => groups.includes(g.key) && g.muscles.length > 1).map(g => (
             <div key={g.key} className="grid gap-1 pl-3 border-l-2" style={{ borderColor: "var(--cerulean)" }}>
-              <div className="text-xs" style={muted}>{g.label}: all of them, or tap to narrow</div>
-              <Chips many label={`${g.label} muscles`} options={g.muscles.map(m => [m, m])} value={picked.filter(m => g.muscles.includes(m))}
+              <div className="text-xs" style={{ opacity: 0.8 }}>{g.label}: all of them, or tap to narrow</div>
+              <Chips iq many label={`${g.label} muscles`} options={g.muscles.map(m => [m, m])} value={picked.filter(m => g.muscles.includes(m))}
                 onChange={(mine) => setPicked([...picked.filter(m => !g.muscles.includes(m)), ...mine])} />
             </div>
           ))}
-        </div>
+        </section>
       )}
       {onBack && <button type="button" className="text-sm cx-quiet justify-self-start inline-flex items-center gap-1" onClick={onBack}><ChevronLeft size={15} aria-hidden="true" /> Back</button>}
       <label className="grid gap-1 text-sm">

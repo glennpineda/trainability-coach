@@ -743,7 +743,8 @@ list; it is kept, not deleted.
 
 1. Under a day, tap **Add an exercise**. A box opens: *Add an exercise to
    Day A*.
-2. **What are we working on?** (optional). Tap the kind of training:
+2. At the top is a yellow card headed **Coach IQ**, with two questions you
+   can answer or leave. **What are we working on?** Tap the kind of training:
    **Strength** (lifts and resistance work), **Power** (jumps, throws,
    swings), **Cardio** (running, rowing, intervals), **Balance** or
    **Mobility** (stretches and breathing); tap it again to clear it. Under **Muscle groups**, tap any of **Chest**,

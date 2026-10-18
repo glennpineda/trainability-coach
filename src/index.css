@@ -29,6 +29,10 @@
     --badge-open: #FFFFFF;      /* a badge opened out, and the apps panel */
     --gold-light: #F6DD8A; --gold: #D9AE3B; --gold-deep: #4F3B00;
     --gold-pale-light: #F5EBCB; --gold-pale: #E6D49C;
+    /* Coach IQ's own card (the add-an-exercise dialog's questions; Glenn,
+       18 Oct 2026: "put these optional questions inside a yellow card, with
+       Coach IQ as title"): pale gold with the gold's deep ink. */
+    --iq-card: #FBF3D6; --iq-card-line: #E6D49C; --iq-ink: #4F3B00; --iq-chip: rgba(255, 255, 255, 0.75);
     /* The secondary button's wash: the primary's two blues, made pale. */
     --sky-soft: #E8F2FB;
     /* Fills with white words on them, the same in light and dark, as Studio's
@@ -58,6 +62,7 @@
       --wordmark: #4FA8DC;      /* sky, as the dark lockup sets COACH */
       --badge-open: #213749;
       --sky-soft: #1D3346;
+      --iq-card: #33290E; --iq-card-line: #6B5A22; --iq-ink: #F6DD8A; --iq-chip: rgba(0, 0, 0, 0.28);
       color-scheme: dark;
     }
   }
