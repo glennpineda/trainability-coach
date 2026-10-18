@@ -35,6 +35,18 @@ described in `README.md`.
   `#007BA7` (main), Sky `#4FA8DC`, Navy `#172A3A`. The wordmark is
   TRAINABILITY® (not ™).
 
+## Studio is the template
+
+- **Before building anything new, look in Studio first** (Glenn, 18 Oct
+  2026: "Whenever we create new functionalities, let's use Studio as a
+  template and check if that exists already that we can replicate"). If
+  Studio already does it (a screen, a form, a rule, a message, a server
+  check), copy its way: the same steps, fields, wording, limits and look, in
+  Coach's colours. Read its code, not only its manual: main, and any branch
+  with newer work (its `account-menu` branch held the account menu's role
+  badge). Say what was copied and from where. Only where Studio has nothing,
+  or Glenn asks for something different, design it fresh.
+
 ## BRAINSTORM.md is the working queue
 
 - The single word **"brainstorm"** (or "next up") means: read **Next up** and
