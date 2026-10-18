@@ -25,6 +25,10 @@ export const PREFIX = {
   /* Glenn's tag, 18 Oct 2026: the same as Studio's users. */
   account: "usr",        // a Coach account, for a trainer who isn't on Trainability's team
   client: "cli",         // a Coach account's client (the same as Studio's clients)
+  /* Glenn's tags, 18 Oct 2026 (Messages). */
+  conversation: "cnv",   // a conversation: a trainer and a client, more people one day
+  message: "msg",        // one message in a conversation
+  attachment: "att",     // a picture, video, program (or, later, measurements) on a message
 };
 
 const DIGITS = "0123456789";

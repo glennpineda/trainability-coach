@@ -13,13 +13,22 @@ import { labelsFor } from "./Designer";
  * units. Only the columns something was written in are printed. Nothing of
  * Coach IQ's check goes on it: that is for the trainer.
  */
-export function PrintProgram({ id }) {
+/* `sent`, instead of `id`: a program as it was sent in a message, the copy
+   kept with it (server/messages.js), in the units it was sent in. */
+export function PrintProgram({ id, sent }) {
   const [p, setP] = useState(null);
   const [error, setError] = useState("");
-  const [units] = useUnits();
+  const [ownUnits] = useUnits();
   useEffect(() => {
+    if (sent) {
+      apiRequest("GET", `/attachments/${sent}`)
+        .then(a => setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) }))
+        .catch(err => setError(err.status === 404 ? "That program isn't one you sent." : err.message));
+      return;
+    }
     apiRequest("GET", `/programs/${id}`).then(setP).catch(err => setError(err.status === 404 ? "That program isn't one of yours." : err.message));
-  }, [id]);
+  }, [id, sent]);
+  const units = (sent && p?.units) || ownUnits;
   useEffect(() => { if (p) document.title = `${p.name} · ${p.clientName}`; }, [p]);
 
   if (!p) return <div className="cx-print p-8 text-sm">{error || "Loading…"}</div>;

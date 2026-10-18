@@ -1,4 +1,5 @@
 import express from "express";
+import crypto from "node:crypto";
 import path from "node:path";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -17,6 +18,7 @@ import * as programs from "./programs.js";
 import * as accounts from "./accounts.js";
 import * as coachClients from "./coach-clients.js";
 import * as today from "./today.js";
+import * as messages from "./messages.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -67,6 +69,8 @@ app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
    else stays small. The first parser to read a body marks it read, so the
    small one leaves his alone. */
 app.use("/api/assistant", express.json({ limit: "32mb" }));
+/* A video's still, taken in the browser, comes with the end of its upload. */
+app.use("/api/attachments", express.json({ limit: "1mb" }));
 app.use("/api", express.json({ limit: "20kb" }));
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN, database: db.dialect() }));
@@ -471,6 +475,181 @@ app.get("/api/today", asSignedIn("GET /today", async (req, res, user) => {
     for (const r of rows) limits.set(r.client_id, Number(r.n));
   }
   res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, programs: mine, limits }) });
+}));
+
+/* ------------------------------------------------------------ messages */
+
+/*
+ * Messages (server/messages.js; Glenn, 18 Oct 2026). The trainer's side is
+ * here, with their own session; the client's is Studio's client page, which
+ * asks through the client link below. Only a client kept in Trainability can
+ * be written to: the client page is where they read it, and a client kept in
+ * Coach has none.
+ */
+const STUDIO_PUBLIC = (process.env.STUDIO_PUBLIC_URL || STUDIO_ORIGIN).replace(/\/+$/, "");
+const studioClientsOf = async (req, user) => {
+  if (user.coachAccount) return [];
+  const kept = new Set((await coachClients.rowsOf(user.id)).map(r => r.id));
+  return (await myClients(req, user)).filter(c => !kept.has(c.id));
+};
+const sendFailure = (res, err) => res.status(err.status).json({ error: err.message, code: err.code });
+
+app.get("/api/messages", asSignedIn("GET /messages", async (req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  if (user.coachAccount) return res.json({ available: false, conversations: [], unread: 0 });
+  const clients = await studioClientsOf(req, user);
+  const conversations = await messages.trainerConversations(user.id, new Set(clients.map(c => c.id)));
+  res.json({ available: true, conversations, unread: conversations.reduce((n, c) => n + c.unread, 0) });
+}));
+
+/* One client's conversation, read now; `messages: []` before the first. */
+app.get("/api/messages/:client", asSignedIn("GET /messages/client", async (req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  const client = (await studioClientsOf(req, user)).find(c => c.id === req.params.client);
+  if (!client) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const thread = await messages.trainerThread(user.id, client.id);
+  res.json({ client: { id: client.id, firstName: client.firstName, lastName: client.lastName }, ...(thread || { id: null, clientReadAt: null, messages: [] }) });
+}));
+
+app.post("/api/messages/:client", asSignedIn("POST /messages/client", async (req, res, user) => {
+  const clients = await studioClientsOf(req, user);
+  const client = clients.find(c => c.id === req.params.client);
+  if (!client) {
+    if (await coachClients.isKept(user.id, req.params.client)) {
+      return res.status(409).json({ error: "Messages reach clients on Trainability's client page. Move this client into Trainability first, on the Clients page.", code: "not_in_trainability" });
+    }
+    return res.status(404).json({ error: "Not found", code: "not_found" });
+  }
+  const attachmentIds = Array.isArray(req.body?.attachments) ? req.body.attachments : [];
+  const bad = messages.checkMessage({ text: req.body?.text, attachments: attachmentIds });
+  if (bad) return res.status(400).json({ error: bad, code: "invalid" });
+  try {
+    const sent = await messages.sendFromTrainer(user, client, { text: req.body.text, attachmentIds });
+    if (sent.notify) {
+      /* Not waited for: the trainer's message is sent whether or not the email goes. */
+      messages.notifyClient(sent.conversationId, {
+        email: client.email, clientFirst: client.firstName, trainerName: user.name,
+        inboxUrl: `${STUDIO_PUBLIC}/me#messages`, origin: process.env.APP_ORIGIN || `${req.protocol}://${req.get("host")}`,
+      }).catch(err => console.error(`Message notice failed: ${err.message}`));
+    }
+    res.json(await messages.trainerThread(user.id, client.id));
+  } catch (err) {
+    if (err.status) return sendFailure(res, err);
+    throw err;
+  }
+}));
+
+/* A picture or a video, sent in pieces as Studio's ad videos are, then kept
+   waiting in the composer until the message goes. */
+app.post("/api/attachments/begin", asSignedIn("POST /attachments/begin", async (req, res, user) => {
+  if (user.coachAccount) return res.status(403).json({ error: "Not available", code: "forbidden" });
+  try { res.json(await messages.beginUpload({ kind: req.body?.kind, bytes: req.body?.bytes })); } catch (err) { if (err.status) return sendFailure(res, err); throw err; }
+}));
+app.post("/api/attachments/:upload/chunk", express.raw({ type: "application/octet-stream", limit: "8mb" }), asSignedIn("POST /attachments/chunk", async (req, res) => {
+  if (!Buffer.isBuffer(req.body) || !req.body.length) return res.status(400).json({ error: "That piece arrived empty", code: "empty_chunk" });
+  try { res.json(await messages.appendUpload(req.params.upload, req.body)); } catch (err) { if (err.status) return sendFailure(res, err); throw err; }
+}));
+app.post("/api/attachments/:upload/finish", asSignedIn("POST /attachments/finish", async (req, res, user) => {
+  try { res.json(await messages.finishUpload(req.params.upload, user.id, req.body || {})); } catch (err) { if (err.status) return sendFailure(res, err); throw err; }
+}));
+/* A program of theirs for this client, kept as a copy to attach. */
+app.post("/api/attachments/program", asSignedIn("POST /attachments/program", async (req, res, user) => {
+  const program = await programs.programOf(user.id, String(req.body?.programId || ""));
+  if (!program) return res.status(404).json({ error: "That program isn't one of yours.", code: "not_found" });
+  const full = await programs.full(user.id, program, { withCheck: false });
+  res.json(await messages.programAttachment(user.id, full, await trainerSettings.unitsOf(user.id)));
+}));
+
+/* An attachment for the trainer: its details (a program's copy in full), or its file. */
+app.get("/api/attachments/:id", asSignedIn("GET /attachments", async (req, res, user) => {
+  const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
+  if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.set("Cache-Control", "private, no-store");
+  res.json(messages.attachmentShape(a));
+}));
+const sendAttachmentFile = (res, a) => {
+  if (a.kind !== "picture" && a.kind !== "video") return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.set("Content-Type", a.mime);
+  res.set("X-Content-Type-Options", "nosniff");
+  res.set("Content-Disposition", "inline");
+  /* sendFile answers the range requests a <video> makes as it plays. */
+  res.sendFile(messages.attachmentPath(a.id), { headers: { "Cache-Control": "private, max-age=3600" } }, (err) => {
+    if (err && !res.headersSent) res.status(404).json({ error: "Not found", code: "not_found" });
+  });
+};
+app.get("/api/attachments/:id/file", asSignedIn("GET /attachments/file", async (req, res, user) => {
+  const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
+  if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
+  sendAttachmentFile(res, a);
+}));
+
+/*
+ * The client link: Studio's client page asking for a client's messages,
+ * server to server. Studio has checked who the client is (their own sign-in
+ * on its client page) and says so in `clientId`; the secret both apps hold
+ * (`COACH_LINK_SECRET`) is what lets it. Without the secret set, it is off.
+ * Pictures and videos come back as signed links good for an hour, so the
+ * client's browser loads them from Coach without a Coach session.
+ */
+const LINK_SECRET = () => process.env.COACH_LINK_SECRET || "";
+function linked(req, res) {
+  const secret = LINK_SECRET();
+  if (!secret) { res.status(503).json({ error: "The client link is not set up.", code: "not_configured" }); return null; }
+  const given = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+  const a = Buffer.from(given), b = Buffer.from(secret);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) { res.status(401).json({ error: "Not allowed", code: "not_allowed" }); return null; }
+  const clientId = String(req.query.clientId || req.body?.clientId || "");
+  if (!clientId) { res.status(400).json({ error: "Which client?", code: "invalid" }); return null; }
+  res.set("Cache-Control", "private, no-store");
+  return clientId;
+}
+const coachOrigin = (req) => process.env.APP_ORIGIN || `${req.protocol}://${req.get("host")}`;
+const forClient = (req, thread) => ({
+  ...thread,
+  messages: thread.messages.map(m => ({ ...m, attachments: m.attachments.map(a => (a.kind === "picture" || a.kind === "video")
+    ? { ...a, url: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET()) } : a) })),
+});
+const linkRoute = (what, fn) => async (req, res) => {
+  try { await fn(req, res); } catch (err) {
+    console.error(`${what} failed: ${err.message}`);
+    res.status(500).json({ error: "That didn't work. Try again in a minute.", code: "failed" });
+  }
+};
+
+app.get("/api/client-link/conversations", linkRoute("client-link conversations", async (req, res) => {
+  const clientId = linked(req, res);
+  if (!clientId) return;
+  res.json({ conversations: await messages.clientConversations(clientId) });
+}));
+app.get("/api/client-link/conversations/:id", linkRoute("client-link thread", async (req, res) => {
+  const clientId = linked(req, res);
+  if (!clientId) return;
+  const c = await messages.conversationById(req.params.id);
+  if (!c || c.client_id !== clientId) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const thread = await messages.clientThread(c);
+  /* A program in full, for the client page to lay out like the printed one. */
+  for (const m of thread.messages) {
+    m.attachments = await Promise.all(m.attachments.map(async a => (a.kind === "program"
+      ? messages.attachmentShape(await messages.attachmentFor(a.id, { clientId })) : a)));
+  }
+  res.json(forClient(req, thread));
+}));
+app.post("/api/client-link/conversations/:id/messages", linkRoute("client-link reply", async (req, res) => {
+  const clientId = linked(req, res);
+  if (!clientId) return;
+  const c = await messages.conversationById(req.params.id);
+  if (!c || c.client_id !== clientId) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const bad = messages.checkMessage({ text: req.body?.text });
+  if (bad) return res.status(400).json({ error: bad === "Write a message or attach something." ? "Write a message." : bad, code: "invalid" });
+  await messages.sendFromClient(c, { clientName: req.body?.clientName, text: req.body.text });
+  res.json(forClient(req, await messages.clientThread(c)));
+}));
+/* A file for the client's browser, by a signed link from the client link. */
+app.get("/api/files/:id", linkRoute("signed file", async (req, res) => {
+  if (!messages.checkSignature(req.params.id, req.query.exp, req.query.sig, LINK_SECRET())) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const a = await messages.sentAttachment(req.params.id);
+  if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
+  sendAttachmentFile(res, a);
 }));
 
 app.get("/api/equipment", asSignedIn("GET /equipment", async (req, res, user) => {

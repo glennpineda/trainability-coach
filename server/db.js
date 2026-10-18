@@ -352,6 +352,51 @@ const SCHEMA = [
   /* A Coach account signed in on one device: a random token in the browser's
      cx_session cookie, only its SHA-256 kept here, so a copy of this table
      signs nobody in. */
+  /* Messages (server/messages.js; Glenn, 18 Oct 2026). Messages sent from
+     Coach are kept in Coach; Studio's client page reads them through the
+     client link. One trainer and one client to a conversation for now (the
+     id is its own so more can join one day). `*_read_at` is when each side
+     last read it; `notified_at` when the client was last emailed about it. */
+  `CREATE TABLE IF NOT EXISTS coach_conversations (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    trainer_name VARCHAR(120) NOT NULL DEFAULT '',
+    client_id VARCHAR(64) NOT NULL,
+    client_name VARCHAR(200) NOT NULL DEFAULT '',
+    created_at VARCHAR(32) NOT NULL,
+    last_at VARCHAR(32) NOT NULL,
+    trainer_read_at VARCHAR(32) NULL,
+    client_read_at VARCHAR(32) NULL,
+    notified_at VARCHAR(32) NULL
+  )`,
+  /* author_kind is "trainer" or "client". */
+  `CREATE TABLE IF NOT EXISTS coach_messages (
+    id VARCHAR(40) PRIMARY KEY,
+    conversation_id VARCHAR(40) NOT NULL,
+    author_kind VARCHAR(16) NOT NULL,
+    author_id VARCHAR(64) NOT NULL,
+    author_name VARCHAR(120) NOT NULL DEFAULT '',
+    text VARCHAR(4000) NOT NULL DEFAULT '',
+    created_at VARCHAR(32) NOT NULL
+  )`,
+  /* kind: picture, video or program (measurements to come). A picture or a
+     video is a file in the files folder (messages/<id>); a program is a copy
+     of it as it was sent, in `data` (JSON). message_id is empty while the
+     attachment waits in the composer; owner_id is whoever uploaded it. */
+  `CREATE TABLE IF NOT EXISTS coach_attachments (
+    id VARCHAR(40) PRIMARY KEY,
+    message_id VARCHAR(40) NOT NULL DEFAULT '',
+    owner_id VARCHAR(64) NOT NULL,
+    kind VARCHAR(16) NOT NULL,
+    name VARCHAR(200) NOT NULL DEFAULT '',
+    mime VARCHAR(60) NOT NULL DEFAULT '',
+    bytes INTEGER NOT NULL DEFAULT 0,
+    width INTEGER NULL,
+    height INTEGER NULL,
+    still MEDIUMTEXT NULL,
+    data MEDIUMTEXT NULL,
+    created_at VARCHAR(32) NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS coach_sessions (
     token_hash VARCHAR(64) PRIMARY KEY,
     account_id VARCHAR(40) NOT NULL,

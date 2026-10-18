@@ -176,8 +176,10 @@ As in Studio:
 
 ## Email
 
-Coach sends one email so far: a Coach account's temporary password, when
-Forgot password? is used (`server/accounts.js`, `resetPassword`). It is sent
+Coach sends two emails: a Coach account's temporary password, when Forgot
+password? is used (`server/accounts.js`, `resetPassword`), and a client's
+notice that their trainer sent them a message (`server/messages.js`,
+`noticeEmail`; see Messages). Both are sent
 by `server/email.js`, Studio's own mailer cut down, with Studio's settings:
 
 | Setting | |
@@ -199,6 +201,37 @@ Sky, Navy and its pale blues) where Studio has its magenta and lilac. Its pictur
 the signature's hexagon and wordmark (`public/trainability-logo.png`,
 `public/trainability-wordmark.png`, Studio's own files), are fetched from
 `APP_ORIGIN`, so they show only once that is a real address.
+
+## Messages
+
+A trainer writes to a client on the Messages tab, with pictures, videos (up
+to 100 MB, sent in 8 MB pieces) and copies of programs attached
+(`server/messages.js`). Messages sent from Coach are kept in Coach
+(`coach_conversations`, `coach_messages`, `coach_attachments`; ids `cnv`,
+`msg`, `att`), and pictures and videos are files in the files folder, under
+`messages/` (see Where files are saved). Only clients kept in Studio can be
+written to.
+
+The client reads and answers on Studio's client page (`/me`), which shows
+Coach's messages and, one day, Studio's own in one inbox. Studio's server asks
+Coach's, as the client it has signed in, through the **client link**:
+
+| Route | |
+|---|---|
+| `GET /api/client-link/conversations?clientId=…` | The client's conversations, the latest first, each with its last message and how many are unread. |
+| `GET /api/client-link/conversations/:id?clientId=…` | One conversation's messages, oldest first, marked read. A program comes in full (`program.days`, as printed); a picture or video has a `url` signed for an hour (`/api/files/:id?exp=…&sig=…`), for the client's browser to load straight from Coach. |
+| `POST /api/client-link/conversations/:id/messages` | The client's answer: `{ clientId, clientName, text }`. Words only, for now. |
+
+Every call carries `Authorization: Bearer <COACH_LINK_SECRET>`, the same
+secret set on both apps; without it set on Coach the link is off (503).
+Studio is trusted to say which client is asking, so the secret must stay on
+the servers. The notice email's button opens `STUDIO_PUBLIC_URL/me#messages`
+(`STUDIO_ORIGIN` if unset).
+
+| Setting | |
+|---|---|
+| `COACH_LINK_SECRET` | The client link's secret, a long random string, the same in Studio. |
+| `STUDIO_PUBLIC_URL` | Studio's address for people, if it differs from `STUDIO_ORIGIN`. |
 
 ## Deploying (GoDaddy Airo)
 

@@ -14,8 +14,15 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   both apps. Each app keeps its own sign-in, so signing in or out of one
   leaves the other as it was.
 - **The home screen.** Today's date and a greeting by name, your day, and
-  cards for Clients, Programs and Messages. Clients is open, with how many
-  clients you have; Messages is marked Coming soon.
+  cards for Clients, Programs and Messages, with how many clients you have
+  and how many messages are waiting.
+- **Messages.** Write to a client from the Messages tab and attach pictures,
+  videos (up to 100 MB) and their programs; a program goes as a copy of it as
+  it was, which opens laid out like the printed one. The client is emailed
+  that there is a message (not what it says, and once for a run of them) and
+  reads and answers it on their page in Trainability. A red number on the
+  Messages button counts the replies you haven't read. Measurements are
+  listed as Coming soon. Messages from Coach are kept in Coach.
 - **Today, on Home.** Your own sessions from Trainability's schedule, today
   and over the next 7 days, laid out as Studio's Today: the time and length,
   the client, where, and First session, New client or Nothing booked after

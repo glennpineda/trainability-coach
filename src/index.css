@@ -368,6 +368,14 @@
   .cx-billy-you { max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 14px 14px 4px 14px; font-size: 0.875rem;
     background: var(--accent-soft); white-space: pre-wrap; overflow-wrap: anywhere; }
   .cx-billy-says { overflow-wrap: anywhere; }
+  /* Messages (MessagesTab): the trainer's own on the right in Billy's pale
+     accent, the client's on the left in the ghost fill. */
+  .cx-msg-mine, .cx-msg-theirs { max-width: 85%; padding: 0.5rem 0.75rem; font-size: 0.9375rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cx-msg-mine { border-radius: 16px 16px 4px 16px; background: var(--accent-soft); }
+  .cx-msg-theirs { border-radius: 16px 16px 16px 4px; background: var(--ghost-fill); }
+  /* The box to write in stays just over the bottom bar, so it and its
+     attach menu are never under the bar, however long the conversation. */
+  .cx-msg-composer { position: sticky; z-index: 31; bottom: calc(76px + max(10px, calc(env(safe-area-inset-bottom, 0px) - 14px))); }
   .cx-billy-file { display: inline-flex; align-items: center; gap: 8px; max-width: 85%; padding: 4px 6px 4px 4px;
     border: 1px solid var(--iron-line); border-radius: 10px; font-size: 0.8125rem; background: var(--chalk); }
   .cx-billy-icon { width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center;

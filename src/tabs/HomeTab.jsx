@@ -20,7 +20,7 @@ function clientCount(clients) {
 /* Where Coach opens: the date, a greeting by name, the day's sessions
    (TodayCard), and a card for each of the other parts of Coach, opening its
    own tab. */
-export function HomeTab({ user, onOpen, clients, onOpenProgram, onOpenClient, onSignedOut }) {
+export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOpenClient, onSignedOut }) {
   const [linked, setLinked] = useState(() => { try { const v = sessionStorage.getItem("cx-linked"); sessionStorage.removeItem("cx-linked"); return !!v; } catch { return false; } });
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
@@ -51,7 +51,7 @@ export function HomeTab({ user, onOpen, clients, onOpenProgram, onOpenClient, on
         <div className="grid gap-4 sm:grid-cols-2">
           {Object.entries(SECTIONS).filter(([id]) => id !== "today").map(([id, section]) => (
             <ComingSoonCard key={id} section={section} onOpen={() => onOpen(id)}
-              badge={id === "clients" ? clientCount(clients) : undefined} />
+              badge={id === "clients" ? clientCount(clients) : id === "messages" && unread ? `${unread} new` : undefined} />
           ))}
         </div>
       </div>

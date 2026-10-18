@@ -19,5 +19,8 @@ export default function App() {
   /* A program printed for the client, in its own tab (programs/PrintProgram.jsx). */
   const print = /^\/print\/program\/([a-z0-9]+)$/.exec(window.location.pathname);
   if (print) return <PrintProgram id={print[1]} />;
+  /* A program as it was sent in a message (MessagesTab), printed the same way. */
+  const sent = /^\/print\/sent\/([a-z0-9]+)$/.exec(window.location.pathname);
+  if (sent) return <PrintProgram sent={sent[1]} />;
   return <Shell user={user} onLogout={logout} onSignedOut={signedOut} />;
 }

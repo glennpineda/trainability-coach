@@ -56,8 +56,13 @@ of the app gets its own chapter here as it arrives.
    - [6.3 Giving Billy a photo or a PDF](#63-giving-billy-a-photo-or-a-pdf)
    - [6.4 Starting again](#64-starting-again)
    - [6.5 What Billy can't do](#65-what-billy-cant-do)
-7. [Words this app uses](#7-words-this-app-uses)
-8. [When something goes wrong](#8-when-something-goes-wrong)
+7. [Messages](#7-messages)
+   - [7.1 Your messages](#71-your-messages)
+   - [7.2 Writing to a client](#72-writing-to-a-client)
+   - [7.3 Attaching a picture, a video or a program](#73-attaching-a-picture-a-video-or-a-program)
+   - [7.4 How your client reads it](#74-how-your-client-reads-it)
+8. [Words this app uses](#8-words-this-app-uses)
+9. [When something goes wrong](#9-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -70,9 +75,9 @@ of the app gets its own chapter here as it arrives.
 Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
-programs you build for them, and your messages with them. Your day, your
-list of clients (chapter 4) and your programs (chapter 5) are here already;
-Messages is still being built — the app shows it as **Coming soon** (3.3).
+programs you build for them, and your messages with them. Your day (3.4), your
+list of clients (chapter 4), your programs (chapter 5) and your messages
+with clients (chapter 7) are all here.
 
 ### One account for every Trainability app
 
@@ -325,14 +330,13 @@ parts of Coach. It has four buttons, as pictures with no words:
 | **Home** | A house | The home screen (3.4). |
 | **Clients** | Two people | Your clients (chapter 4). |
 | **Programs** | A clipboard with a list | Your programs (chapter 5). |
-| **Messages** | A speech bubble | Messages — coming soon. |
+| **Messages** | A speech bubble | Your messages with clients (chapter 7). |
 
 The one you are on sits in a filled blue circle, which slides across when you
 tap another. On a computer, pointing at a button shows its name.
 
-**Messages** is not built yet. It opens a page
-with its name at the top, a card saying what it will be for, and *This part of
-Coach is being built. It will appear here when it's ready.*
+When a client has written to you and you haven't read it yet, a small red
+number on the corner of **Messages** says how many messages are waiting.
 
 ### 3.4 The home screen
 
@@ -349,12 +353,12 @@ Coach opens on Home. From the top:
 |---|---|
 | **Clients** | Everyone you coach, with their contact details and sessions. |
 | **Programs** | Programs you design for your clients, with Coach IQ beside you. |
-| **Messages** | Check-ins and notes between you and your clients. |
+| **Messages** | Messages with your clients: words, pictures, videos and programs. |
 
-**Clients** is ready: next to its name it says how many clients you have,
-such as **5 active clients**. **Programs** is ready too. **Messages** is
-marked **Coming soon**. Tapping a card opens its page, the same as its button
-on the bottom bar.
+Next to **Clients** it says how many clients you have, such as **5 active
+clients**; next to **Messages**, how many messages from clients are waiting,
+such as **2 new**. Tapping a card opens its page, the same as its button on
+the bottom bar.
 
 #### Today
 
@@ -1115,7 +1119,91 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-## 7. Words this app uses
+## 7. Messages
+
+Messages is where you and your clients write to each other. Besides words, a
+message can carry pictures, videos and the programs you design for them.
+Measurements will come later.
+
+### 7.1 Your messages
+
+1. Tap **Messages** on the bottom bar (the speech bubble).
+2. Your conversations are listed, the latest first. Each shows the client's
+   name, when the last message was sent, and its first words. **You:** in
+   front means you wrote it.
+3. A conversation with messages you haven't read has the client's name in
+   bold and a blue number at its end: how many are waiting.
+4. Tap a conversation to open it.
+
+With no conversations yet, the page says **No messages yet.**
+
+### 7.2 Writing to a client
+
+1. On **Messages**, tap **New message**.
+2. Your clients are listed. Type in **Write to…** to find one by name, then
+   tap their name. (Tap **X** to close the list.)
+3. Their conversation opens. Before the first message it says *No messages
+   with … yet. Write the first one below; … is emailed to say it's there.*
+4. Type your message in the box at the bottom (**Message …**).
+5. Tap the blue arrow to send it. On a computer, the **Enter** key sends it
+   too, and **Shift** and **Enter** starts a new line.
+
+Your messages are on the right, in pale blue; your client's are on the left,
+in grey. The time is under each one, and the day above the first message of
+each day (**Today**, **Yesterday**, or the date). **Seen** next to the time
+of your last message means your client has read it.
+
+Tap the arrow at the top left to go back to all your messages.
+
+A conversation opened on screen checks for new messages every 15 seconds,
+so a reply appears without you doing anything.
+
+### 7.3 Attaching a picture, a video or a program
+
+1. In a conversation, tap the paperclip, left of the box.
+2. Choose what to attach:
+   - **Picture or video**: pick one or more from your phone or computer.
+     Each is shown above the box with **Uploading …%** until it is ready.
+     Pictures are made smaller before they are sent, so they send quickly.
+     A video can be up to 100 MB.
+   - **Program**: your programs for this client are listed (**…'s
+     programs**). Tap one. If there are none it says *No programs for … yet.*
+   - **Measurements** says **Coming soon**: it can't be chosen yet.
+3. Add words if you like, then tap the blue arrow. You can send attachments
+   with no words.
+
+To take one off before sending, tap the **X** beside it.
+
+A program is sent as it is at that moment. If you change it afterwards, the
+copy in the message stays as it was, so your client always has what you
+sent. Tap a program in a conversation to open it laid out like the printed
+program (5.6), in its own tab, ready to print.
+
+Tap a picture to open it full size in its own tab. A video plays where it is.
+
+If something can't be sent, it says why beside it, for example *That video
+is too large. Keep it under 100 MB.* or *That file is not a video Coach can
+send. Send an MP4 or a video from your phone's camera.*
+
+### 7.4 How your client reads it
+
+Your client reads your messages, and answers them, on their own page in
+Trainability: the same page where they see their sessions. When you send a
+message, they are emailed **… sent you a message**, with a button to open
+their messages. The email doesn't contain the message itself. However many
+messages you send in a few minutes, they get one email.
+
+Messages can only be sent to clients kept in Trainability. With a Coach
+account (2.1), your clients are kept in Coach, so Messages says *Your clients
+read messages on Trainability's client page. Once your Coach account is
+linked to your Trainability account and your clients are moved there, you
+can write to them here.*
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## 8. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -1126,6 +1214,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
 | **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
+| **Conversation** | All the messages between you and one client, in Messages (chapter 7). |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
@@ -1139,7 +1228,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-## 8. When something goes wrong
+## 9. When something goes wrong
 
 **"Type your email address first."**
 **Continue** was tapped with no email, or one missing its @ or its ending.
@@ -1176,6 +1265,16 @@ or, on the Clients page, **Try again**.
 **"Your clients couldn't be loaded. Try again in a minute."**
 Studio answered, but not with your list. Wait a minute and tap **Try again**.
 If it keeps happening, tell whoever looks after the app.
+
+**"Your messages couldn't be loaded. Try again in a minute."**
+Messages couldn't read your conversations. Wait a minute and tap **Try
+again**. If it keeps happening, tell whoever looks after the app.
+
+**My client says they didn't get the email about my message.**
+The email goes to the address on their client record, at most once every
+few minutes for one conversation. Ask them to look in their junk mail, and
+check their email on the Clients page (4.3). Their messages are on their
+page in Trainability whether or not the email arrives.
 
 **A client is missing from your list.**
 Coach shows the clients on your own list in Studio. Check that they are under

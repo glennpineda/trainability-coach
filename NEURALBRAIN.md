@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Messages, Coach's half: words, pictures, videos and programs** (18 Oct 2026; Glenn: "Let's do messages now, apart from basic messaging, we should be able to attach pictures, videos, workout programs, and even measurements (we are adding in the future)"). Build 1.0.56. Not from Next up. **Studio first**: Studio has no messaging to copy (an Explore pass over its main: composed emails kept in `sent_mail`, client texts forwarded by email, Billy's phone messages; no conversations, and nothing a client answers in the app; no workouts or measurements). Clients sign in to Studio with a code (`ts_client`, `client_sessions`, its `/me` page); clients are rows in `clients`, with no role. **Decisions, asked one at a time**: (1) where clients read: offered Coach with Studio's code sign-in (recommended), Studio's client page, or email only; Glenn chose **Studio's client page**. (2) where messages are kept: offered Studio (recommended) or Coach; Glenn: "We will enable messages for Studio as well eventually, but messages sent from Coach should be stored on Coach, messages sent from Studio in the future is stored on Studio. But /me will enable viewing them all in one inbox." (3) id tags: offered msg and att, or msg, att and cnv; Glenn chose **msg, att and cnv** (a conversation its own id, so more people can join one later; one trainer and one client for now). (4) the client's notice: Glenn chose **an email with no content** (recommended), at most one per conversation every 15 minutes, nothing under MESSAGES_OFF. **Copied from Studio**: the video upload in 8 MB pieces with its 100 MB limit, the random 32-hex upload name checked before it touches a path, the sweep of uploads left unfinished for a day, and the `ftyp` check for an MP4 or QuickTime (its `ads-media.js` and `/api/ads/video/*` routes); the still taken in the browser from a video's first frame (its ad videos); pictures shrunk in the browser before they go (its photos; Coach's to 2048 px JPEG, a GIF left alone); the count on the corner of a bottom-bar button (its BottomNav `count`, in ember rather than its magenta, since Coach's lit circle is the accent and a cerulean count vanished on it); the email in its template. Billy's panel gave the bubbles (the trainer's own in the pale accent on the right, the client's in the ghost fill on the left), the paperclip and the round send arrow. **Server** (`server/messages.js`, routes in `server/index.js`): tables `coach_conversations` (trainer and client, their names kept fresh, `trainer_read_at`, `client_read_at`, `notified_at`), `coach_messages` (`author_kind` trainer or client) and `coach_attachments` (kind picture, video or program; a picture or video a file at `messages/<att id>` in the files folder, sniffed from its first bytes, never trusted from the uploader; a program a JSON copy of `programs.full` at the moment it is attached, with the trainer's units, so what the client has doesn't change when the program does; waiting with no `message_id` until sent, owned by its uploader). Trainer routes: `GET /api/messages` (conversations with unread counts, only clients still on the list), `GET`/`POST /api/messages/:client` (a client kept in Coach refused with "Messages reach clients on Trainability's client page. Move this client into Trainability first, on the Clients page."), `/api/attachments/begin`, `/:upload/chunk` (raw, 8 MB), `/:upload/finish`, `/api/attachments/program`, `GET /api/attachments/:id` and `/:id/file` (sendFile, so a video's range requests work). The **client link** for Studio's `/me`: `/api/client-link/conversations` (list), `/conversations/:id` (thread, marked read; programs in full; pictures and videos with a URL signed with HMAC for an hour, served by `/api/files/:id`), `POST /conversations/:id/messages` (the client's answer, words only for now), all needing `Authorization: Bearer COACH_LINK_SECRET` (constant-time compare; off with a 503 when unset), Studio vouching for `clientId`. The notice email's button goes to `STUDIO_PUBLIC_URL` (else `STUDIO_ORIGIN`) `/me#messages`; Studio's page for it doesn't exist yet. **Screen** (`src/tabs/MessagesTab.jsx`, `src/messages/upload.js`): the list (bold name and a count where unread, "You:" before the trainer's own), **New message** with a searchable picker of active clients, one conversation with day lines, times, "Seen" on the trainer's last message once the client has read it, pictures (tap for full size), videos with their still, and programs as cards opening `/print/sent/<att>` (PrintProgram, given the sent copy instead of the live program). The box sticks just above the bottom bar (`.cx-msg-composer`): at first it sat at the page's end and the attach menu opened under the bar, unseen; and the newest message scrolled behind it until the end marker was given a 200 px scroll margin. The text box grows as it is typed in; Enter sends on a computer only. The attach menu: Picture or video, Program (the client's programs), and Measurements, Coming soon. A thread asks again every 15 s, the list every 30 s, and the Shell every minute for the bottom bar's count (also on Home's Messages card, "2 new"); opening a conversation clears the count at once (it didn't on the first try, until the thread's load asked the list again). A Coach account's Messages page says its clients read messages on Trainability's client page and that it can write once linked and its clients are moved. Files: `server/messages.js` (new), `server/index.js`, `server/db.js`, `server/ids.js` (cnv, msg, att), `src/tabs/MessagesTab.jsx` (new), `src/messages/upload.js` (new), `src/Shell.jsx`, `src/App.jsx`, `src/programs/PrintProgram.jsx`, `src/chrome/BottomNav.jsx`, `src/tabs/HomeTab.jsx`, `src/tabs/sections.js` (Messages built), `src/index.css`, MANUAL.md (new chapter 7 Messages; Words and When something goes wrong now 8 and 9; 1, 3.3 and 3.4 updated), README.md (Messages and the client link), CHANGELOG.md. **Tested** with the stand-in Studio, at the API (sending with a picture and a program; an empty message refused; the link refused without the secret and for another client's conversation; the client's list, thread, signed picture URL served and refused with a wrong signature; a client's answer showing as unread for the trainer; a random file refused as a video; 200 MB refused) and in Chromium at phone and desktop width (list with a count, a conversation, the attach menu, a program picked, a JPEG and a video uploaded and sent, the still taken, the picker, the sent program printed, a Coach account's page; the email rendered). The test Chromium has no H.264, so its still came from a VP9 MP4; an iPhone's H.264 or HEVC video was not tried. **Not tested / not built**: Studio's side, the `/me` inbox that shows these to clients, is Studio work for a Studio session (this one can't change Studio), so no client can read a message yet; `COACH_LINK_SECRET` and `STUDIO_PUBLIC_URL` need setting on both hosts; real email; MariaDB; clients sending pictures (the link takes words only); deleting or editing a message; push notices; measurements.
+
 - **Today, on Home** (18 Oct 2026; Glenn: "Let's do the Today tab"). Build 1.0.55. Not from Next up (it was empty); the next part of Coach after "What's next?". **Studio first** (CLAUDE.md, "Studio is the template"): copied from Studio's `src/tabs/TodayTab.jsx` (main), its "Today" and "→ 7 days" tabs and nothing of its money, cards, session counts, check-ins, milestones, birthdays, desk requests or standby weeks, which belong to Studio's business side. Copied as they are: the row (the time with the length under it in `w-[3.9rem]`, the client's name with " · Assessment", `whereLabel`'s "Place · Room" from `/api/locations` studios and places, a green tick for a trained session, a struck-through name with "Cancelled" for a cancelled one, "Private" for a session with no client); the flags and their colours from its `flags(a)`: "First session" (ink, bold) when no earlier session with this trainer is still on (an assessment counts, Studio's Run 11), "New client" (ink) for the second and third (`NEW_UNTIL = 3`), and "Nothing booked after this" (amber, bold) until the session is over; the empty states "Nothing booked today." with "Next: {Tue, Oct 20} at {10:00 AM} with {Sam}." and "Nothing booked in the next 7 days."; the 7 days list as day lines "{Weekday}, {Mon d} · N appointments" (today in the accent, as Studio's magenta) that open on a tap, the first day with something booked open (Studio's `flippedDays`); a clock turning with the minute (Studio's `useMinute`) so "Nothing booked after this" goes when a session ends and the day rolls over at midnight. Studio's `--amber` (light `#5E4500`, dark `#FFD966`) added to `src/index.css`, as Coach had none. **Coach's own**: under each client, their program (the one changed last, in the accent with the clipboard icon) or "No program yet", and "N limitations" in amber when any are written; tapping a row opens the program in Programs (`coach-program` in sessionStorage, as the Programs tab already remembers it), or with no program the client opened out on Clients (a new `coach-client` key, read once by `ClientsTab`). Studio's row opens its appointment sheet and holds a menu; Coach books nothing, so it has neither. **Where**: Home, not a tab, as `sections.js` always said ("Today lives on Home"): a card under the greeting band, in place of the Today "Coming soon" card; the other three cards follow it. A first try had a "Today" heading over the tabs, which read "Today / Today" on screen; Studio's card has no heading either, so the tabs are its top and the name is kept for screen readers (`sr-only` h2). **Server**: `GET /api/today?date=YYYY-MM-DD` (`server/index.js`), with the browser's own date so the day turns at the trainer's midnight; it asks Studio for `/appointments` with no range (as Studio's own app loads the schedule, which the First session and New client counts need) and `/locations`, keeps only the trainer's own (`trainerId === user.id`; a master is sent others' too), and builds the rows in the new `server/today.js` (`todayOf`), joined with `myClients`, `programs.list` and a count of `coach_limitations` per client. A client not on the trainer's list shows as "Client", as in Studio. A Coach account answers `{ schedule: false }` and the card says "Your sessions show here once your Coach account is linked to your Trainability account." Files: `server/today.js` (new), `server/index.js`, `src/tabs/TodayCard.jsx` (new), `src/tabs/HomeTab.jsx`, `src/tabs/sections.js` (Today built), `src/Shell.jsx`, `src/tabs/ClientsTab.jsx`, `src/index.css`, MANUAL.md (1, 3.4 with a Today part; the line about a temporary-password box on Home, gone since build 1.0.52, removed), CHANGELOG.md. **Tested** against the stand-in Studio (its `/api/appointments` taught a schedule: a trained, an assessment that is a first session, a new client with two limitations, a private one, a cancelled one, another trainer's left out, and days ahead; `EMPTY_TODAY` for an empty day) and a Coach account, at the API and in Chromium at phone and desktop width: rows, flags, tabs, day lines, empty states, the tap to a program and to a client's details. **Not tested**: Studio's real `/api/appointments` and the fixture (a cloud session can't run it), a master's schedule with other trainers' sessions in it from the real server, and the day turning at midnight.
 
 - **The email template in Coach's colours** (18 Oct 2026; Glenn: "Also use Coach's colors for the email template"). Build 1.0.54. Not from Next up. `server/email-template.js`'s palette is now Coach's light theme from `src/index.css`, frozen, in the places Studio's went: the page `--paper` #F3F7FA, the card `--chalk` #FFFFFF, its border and rules `--iron-line` #D5DEE5, text `--ink` Navy #172A3A and `--ink-soft` #3B4F60, the last footer line `--iron` #5B6B78; Studio's magenta becomes Cerulean #007BA7 (the password in mono, `accent`, and the button, `fill`, white on it 4.9:1), the top edge runs Cerulean to Sky #4FA8DC (Studio's magenta to violet), and the band behind the logo is pale blue, #F5FAFD to `--accent-soft` #E3F1F8 (Studio's lilac sky). The keys were renamed for what they are (`accent`, `fill`, `edge`, `bandTop`, `band`). The signature under the card keeps Trainability's own hexagon and wordmark images, which are the business's brand rather than Studio's. **Tested**: the reset email rendered in Chromium; screenshot sent to Glenn. Commit: build 1.0.54.
@@ -267,8 +269,13 @@ of the app gets its own chapter here as it arrives.
    - [6.3 Giving Billy a photo or a PDF](#63-giving-billy-a-photo-or-a-pdf)
    - [6.4 Starting again](#64-starting-again)
    - [6.5 What Billy can't do](#65-what-billy-cant-do)
-7. [Words this app uses](#7-words-this-app-uses)
-8. [When something goes wrong](#8-when-something-goes-wrong)
+7. [Messages](#7-messages)
+   - [7.1 Your messages](#71-your-messages)
+   - [7.2 Writing to a client](#72-writing-to-a-client)
+   - [7.3 Attaching a picture, a video or a program](#73-attaching-a-picture-a-video-or-a-program)
+   - [7.4 How your client reads it](#74-how-your-client-reads-it)
+8. [Words this app uses](#8-words-this-app-uses)
+9. [When something goes wrong](#9-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -281,9 +288,9 @@ of the app gets its own chapter here as it arrives.
 Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
-programs you build for them, and your messages with them. Your day, your
-list of clients (chapter 4) and your programs (chapter 5) are here already;
-Messages is still being built — the app shows it as **Coming soon** (3.3).
+programs you build for them, and your messages with them. Your day (3.4), your
+list of clients (chapter 4), your programs (chapter 5) and your messages
+with clients (chapter 7) are all here.
 
 #### One account for every Trainability app
 
@@ -536,14 +543,13 @@ parts of Coach. It has four buttons, as pictures with no words:
 | **Home** | A house | The home screen (3.4). |
 | **Clients** | Two people | Your clients (chapter 4). |
 | **Programs** | A clipboard with a list | Your programs (chapter 5). |
-| **Messages** | A speech bubble | Messages — coming soon. |
+| **Messages** | A speech bubble | Your messages with clients (chapter 7). |
 
 The one you are on sits in a filled blue circle, which slides across when you
 tap another. On a computer, pointing at a button shows its name.
 
-**Messages** is not built yet. It opens a page
-with its name at the top, a card saying what it will be for, and *This part of
-Coach is being built. It will appear here when it's ready.*
+When a client has written to you and you haven't read it yet, a small red
+number on the corner of **Messages** says how many messages are waiting.
 
 #### 3.4 The home screen
 
@@ -560,12 +566,12 @@ Coach opens on Home. From the top:
 |---|---|
 | **Clients** | Everyone you coach, with their contact details and sessions. |
 | **Programs** | Programs you design for your clients, with Coach IQ beside you. |
-| **Messages** | Check-ins and notes between you and your clients. |
+| **Messages** | Messages with your clients: words, pictures, videos and programs. |
 
-**Clients** is ready: next to its name it says how many clients you have,
-such as **5 active clients**. **Programs** is ready too. **Messages** is
-marked **Coming soon**. Tapping a card opens its page, the same as its button
-on the bottom bar.
+Next to **Clients** it says how many clients you have, such as **5 active
+clients**; next to **Messages**, how many messages from clients are waiting,
+such as **2 new**. Tapping a card opens its page, the same as its button on
+the bottom bar.
 
 ##### Today
 
@@ -1326,7 +1332,91 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-### 7. Words this app uses
+### 7. Messages
+
+Messages is where you and your clients write to each other. Besides words, a
+message can carry pictures, videos and the programs you design for them.
+Measurements will come later.
+
+#### 7.1 Your messages
+
+1. Tap **Messages** on the bottom bar (the speech bubble).
+2. Your conversations are listed, the latest first. Each shows the client's
+   name, when the last message was sent, and its first words. **You:** in
+   front means you wrote it.
+3. A conversation with messages you haven't read has the client's name in
+   bold and a blue number at its end: how many are waiting.
+4. Tap a conversation to open it.
+
+With no conversations yet, the page says **No messages yet.**
+
+#### 7.2 Writing to a client
+
+1. On **Messages**, tap **New message**.
+2. Your clients are listed. Type in **Write to…** to find one by name, then
+   tap their name. (Tap **X** to close the list.)
+3. Their conversation opens. Before the first message it says *No messages
+   with … yet. Write the first one below; … is emailed to say it's there.*
+4. Type your message in the box at the bottom (**Message …**).
+5. Tap the blue arrow to send it. On a computer, the **Enter** key sends it
+   too, and **Shift** and **Enter** starts a new line.
+
+Your messages are on the right, in pale blue; your client's are on the left,
+in grey. The time is under each one, and the day above the first message of
+each day (**Today**, **Yesterday**, or the date). **Seen** next to the time
+of your last message means your client has read it.
+
+Tap the arrow at the top left to go back to all your messages.
+
+A conversation opened on screen checks for new messages every 15 seconds,
+so a reply appears without you doing anything.
+
+#### 7.3 Attaching a picture, a video or a program
+
+1. In a conversation, tap the paperclip, left of the box.
+2. Choose what to attach:
+   - **Picture or video**: pick one or more from your phone or computer.
+     Each is shown above the box with **Uploading …%** until it is ready.
+     Pictures are made smaller before they are sent, so they send quickly.
+     A video can be up to 100 MB.
+   - **Program**: your programs for this client are listed (**…'s
+     programs**). Tap one. If there are none it says *No programs for … yet.*
+   - **Measurements** says **Coming soon**: it can't be chosen yet.
+3. Add words if you like, then tap the blue arrow. You can send attachments
+   with no words.
+
+To take one off before sending, tap the **X** beside it.
+
+A program is sent as it is at that moment. If you change it afterwards, the
+copy in the message stays as it was, so your client always has what you
+sent. Tap a program in a conversation to open it laid out like the printed
+program (5.6), in its own tab, ready to print.
+
+Tap a picture to open it full size in its own tab. A video plays where it is.
+
+If something can't be sent, it says why beside it, for example *That video
+is too large. Keep it under 100 MB.* or *That file is not a video Coach can
+send. Send an MP4 or a video from your phone's camera.*
+
+#### 7.4 How your client reads it
+
+Your client reads your messages, and answers them, on their own page in
+Trainability: the same page where they see their sessions. When you send a
+message, they are emailed **… sent you a message**, with a button to open
+their messages. The email doesn't contain the message itself. However many
+messages you send in a few minutes, they get one email.
+
+Messages can only be sent to clients kept in Trainability. With a Coach
+account (2.1), your clients are kept in Coach, so Messages says *Your clients
+read messages on Trainability's client page. Once your Coach account is
+linked to your Trainability account and your clients are moved there, you
+can write to them here.*
+
+<div style="page-break-after: always;"></div>
+
+---
+
+### 8. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -1337,6 +1427,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
 | **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
+| **Conversation** | All the messages between you and one client, in Messages (chapter 7). |
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
@@ -1350,7 +1441,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 ---
 
-### 8. When something goes wrong
+### 9. When something goes wrong
 
 **"Type your email address first."**
 **Continue** was tapped with no email, or one missing its @ or its ending.
@@ -1387,6 +1478,16 @@ or, on the Clients page, **Try again**.
 **"Your clients couldn't be loaded. Try again in a minute."**
 Studio answered, but not with your list. Wait a minute and tap **Try again**.
 If it keeps happening, tell whoever looks after the app.
+
+**"Your messages couldn't be loaded. Try again in a minute."**
+Messages couldn't read your conversations. Wait a minute and tap **Try
+again**. If it keeps happening, tell whoever looks after the app.
+
+**My client says they didn't get the email about my message.**
+The email goes to the address on their client record, at most once every
+few minutes for one conversation. Ask them to look in their junk mail, and
+check their email on the Clients page (4.3). Their messages are on their
+page in Trainability whether or not the email arrives.
 
 **A client is missing from your list.**
 Coach shows the clients on your own list in Studio. Check that they are under
