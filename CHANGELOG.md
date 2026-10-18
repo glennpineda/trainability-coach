@@ -84,9 +84,10 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Your role badge is in your account menu.** The shield for an Admin,
   Master or Primary Master moved from the top bar to under your name in the
   menu, as in Studio.
-- **The new logo.** The mark now has a dot in the middle and a bolder
-  chevron, everywhere: the app icon (flat navy), the header, the sign-in
-  screen and the browser tab; a slightly bigger mark in the icon since. Remove Coach from your home screen and add it
+- **The new logo.** A bolder chevron and an open C with nothing inside it
+  (the dot it had for a while is gone), everywhere: the app icon (flat navy),
+  the header, the sign-in screen, the browser tab and the emails; a slightly
+  bigger mark in the icon. Remove Coach from your home screen and add it
   again to see the new icon.
 - **Studio's type.** Roboto throughout, headings at medium weight, and
   "Trainability" as a word in Quicksand, as in Studio.

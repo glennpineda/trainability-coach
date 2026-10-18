@@ -2,7 +2,7 @@ TRAINABILITY COACH - LOGO KIT
 
 Colors
   Cerulean  #007BA7  (badge on light backgrounds, C on dark)
-  Sky       #4FA8DC  (chevron, dot and "COACH" on dark)
+  Sky       #4FA8DC  (chevron and "COACH" on dark)
   Navy      #172A3A  (dark background, "TRAINABILITY" on light)
   White     #FFFFFF
 
@@ -20,7 +20,7 @@ Notes
   Wordmark is set in Poppins Bold as a stand-in. Swap in the Studio wordmark font
   before final release so Coach and Studio match.
 
-  Mark: soft hexagon badge, a C that follows the hexagon outline, a centered dot,
+  Mark: soft hexagon badge, a C that follows the hexagon outline,
   and a chevron that picks up where the C stops. On light backgrounds the badge
   is cerulean with everything inside in white.
   The ® symbol should only be used where TRAINABILITY is a registered mark for
