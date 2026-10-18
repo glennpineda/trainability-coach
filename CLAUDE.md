@@ -89,6 +89,12 @@ described in `README.md`.
 - A cloud session has only this repository, so it cannot run Studio's fixture
   and cannot test sign-in end to end. Build, run `npm run check-docs`, and check
   the pages that don't need a session. Say plainly what went untested.
+- **In a cloud session, show Glenn screenshots** of anything on screen that
+  was built or changed (Glenn, 18 Oct 2026: "Make sure you show me
+  screenshots when I'm asking on cloud environment"): take them in the
+  session's Chromium (phone width, and desktop where it matters) and send them
+  to him with the report, not only look at them. He can't open the cloud's
+  copy of the app himself.
 - Local settings live in `server/.env` (as in Studio). It is never committed. A
   cloud session won't have it; it gets what it needs from the environment's
   variables.
