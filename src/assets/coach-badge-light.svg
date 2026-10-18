@@ -2,5 +2,6 @@
 <title>Trainability Coach</title>
 <path d="M 105.00 14.00 L 139.60 34.00 Q 160.40 46.00 160.40 70.00 L 160.40 110.00 Q 160.40 134.00 139.60 146.00 L 105.00 166.00 Q 84.20 178.00 63.40 166.00 L 28.80 146.00 Q 8.00 134.00 8.00 110.00 L 8.00 70.00 Q 8.00 46.00 28.80 34.00 L 63.40 14.00 Q 84.20 2.00 105.00 14.00 Z" fill="#007BA7"/>
 <path d="M 109.30 46.50 L 97.90 39.90 Q 84.20 32.00 70.50 39.90 L 47.70 53.10 Q 34.00 61.00 34.00 76.80 L 34.00 103.20 Q 34.00 119.00 47.70 126.90 L 70.50 140.10 Q 84.20 148.00 97.90 140.10 L 109.30 133.50" fill="none" stroke="#FFFFFF" stroke-width="19.00" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M 128.40 79.10 L 139.30 90.00 L 128.40 100.90" fill="none" stroke="#FFFFFF" stroke-width="13.00" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 122.20 70.00 L 135.20 90.00 L 122.20 110.00" fill="none" stroke="#FFFFFF" stroke-width="19.00" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="84.20" cy="90.00" r="12.00" fill="#FFFFFF"/>
 </svg>

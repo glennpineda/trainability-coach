@@ -54,6 +54,10 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **The new logo.** The mark now has a dot in the middle and a bolder
+  chevron, everywhere: the app icon (flat navy), the header, the sign-in
+  screen and the browser tab. Remove Coach from your home screen and add it
+  again to see the new icon.
 - **Studio's type.** Roboto throughout, headings at medium weight, and
   "Trainability" as a word in Quicksand, as in Studio.
 - **Billy's panel joined to his button.** Open, his button and panel are
