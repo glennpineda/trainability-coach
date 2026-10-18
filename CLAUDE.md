@@ -16,7 +16,10 @@ described in `README.md`.
   separate session. Most Coach work should need no change to Studio. If one
   seems needed, say so and ask first.
 - The stack matches Studio's: React 18, Vite 8, Tailwind 4 (CSS-first: no tailwind.config.js), lucide icons and
-  Express. So does the look: Roboto, Studio's heading sizes, and its button
+  Express. So does the look: Roboto for text and headings (500, 0.01em),
+  Quicksand 600 for "Trainability" written as text (`cx-wordmark`, standing
+  in for the logo's licensed Katahdin Round; no other fonts), all imported
+  once at the top of `src/index.css`; Studio's heading sizes, and its button
   levels in Coach's colors (`src/index.css`, "buttons"; Studio's
   CONTRIBUTING.md, "Buttons and links"). `npm run check-ui` checks them. The color tokens use Studio's names in `src/index.css`: Cerulean
   `#007BA7` (main), Sky `#4FA8DC`, Navy `#172A3A`. The wordmark is

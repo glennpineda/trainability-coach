@@ -1,3 +1,8 @@
+/* The Trainability family's type, as Studio loads it (its theme.jsx), in one
+   import (Glenn, 18 Oct 2026): Roboto for everything, Quicksand for the
+   "Trainability" wordmark, the free stand-in for the logo's Katahdin Round
+   (licensed, not in the repo). No other faces. First, as an @import must be. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 /* Coach's colors, from the logo kit (brand/README.txt). Studio's screens are
@@ -82,10 +87,18 @@
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    /* Roboto, as Studio (index.html loads it); the device's own face only
-       until it arrives. */
-    font-family: "Roboto", -apple-system, system-ui, "Segoe UI", Arial, sans-serif;
+    /* UI and body text: Roboto, as Studio; the device's own face only until
+       it arrives. */
+    font-family: 'Roboto', -apple-system, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Headings and display text: Roboto medium, a little open (Studio's
+     .iw-display; cx-display below for headings styled as such). */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', -apple-system, system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   /* Emphasis is medium, not semibold, as in Studio: Roboto's 600 is nearly
@@ -120,7 +133,7 @@
    than its Tailwind size, because Roboto is wide (Studio's theme.jsx). A
    figure keeps 600. */
 @utility cx-display {
-  font-family: "Roboto", -apple-system, system-ui, sans-serif;
+  font-family: 'Roboto', -apple-system, system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0.01em;
   &.text-lg { font-size: 0.875rem; }
@@ -129,6 +142,15 @@
   &.text-3xl { font-size: 1.5rem; }
   &.text-4xl { font-size: 1.75rem; }
   &.tabular-nums { font-weight: 600; }
+}
+
+/* The "Trainability" wordmark written as text (Studio's .iw-wordmark):
+   Quicksand semibold, standing in for the logo's Katahdin Round. The logo
+   itself is drawn from the kit's SVGs. */
+@utility cx-wordmark {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 /* ------------------------------------------------------------ buttons

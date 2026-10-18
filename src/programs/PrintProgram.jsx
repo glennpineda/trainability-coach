@@ -34,7 +34,7 @@ export function PrintProgram({ id }) {
           <Printer size={16} aria-hidden="true" /> Print
         </button>
       </div>
-      <div className="text-xs tracking-widest font-semibold" style={{ color: "#007BA7" }}>TRAINABILITY® COACH</div>
+      <div className="text-xs cx-wordmark" style={{ color: "#007BA7" }}>TRAINABILITY® COACH</div>
       <h1 className="text-3xl font-medium mt-1">{p.name}</h1>
       <div className="text-sm mt-1" style={{ color: "#5b6b78" }}>
         For {p.clientName} · {p.goalLabel} · {new Date(p.updatedAt).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}
