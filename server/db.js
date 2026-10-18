@@ -335,6 +335,13 @@ const COLUMNS = [
   ["coach_programs", "minutes", "INTEGER NULL"],
   ["coach_programs", "focus", "VARCHAR(200) NOT NULL DEFAULT '[]'"],
   ["coach_program_days", "kind", "VARCHAR(16) NOT NULL DEFAULT 'full'"],
+  /* A place that is one of Studio's (build 1.0.34; Glenn, 18 Oct 2026: "if
+     the trainer is connected to a place in Studio, let's get that
+     information from Studio as well"): Studio's id for it, and 1 while it is
+     the trainer's place in Studio (their default place), so its name
+     follows Studio's and it can't be renamed or removed here. */
+  ["coach_places", "studio_place_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
+  ["coach_places", "from_studio", "INTEGER NOT NULL DEFAULT 0"],
 ];
 
 async function hasColumn(table, column) {

@@ -28,7 +28,7 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
   const fail = useCallback((err) => { if (err.status === 401) onSignedOut?.(); else setError(err.message); }, [onSignedOut]);
   const load = useCallback(() => apiRequest("GET", "/programs").then(setData).catch(fail), [fail]);
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { if (making) apiRequest("GET", "/equipment").then(o => setPlaces(o.places.map(p => ({ id: p.id, name: p.name })))).catch(fail); }, [making, fail]);
+  useEffect(() => { if (making) apiRequest("GET", "/equipment").then(o => setPlaces(o.places.map(p => ({ id: p.id, name: p.name, fromStudio: !!p.fromStudio })))).catch(fail); }, [making, fail]);
 
   const create = async (body) => {
     setBusy(true); setError("");

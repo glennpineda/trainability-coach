@@ -363,8 +363,13 @@ exercises you can actually do where you are training. It is yours alone:
 nobody else sees it.
 
 1. Tap your photo or initials in the top right corner, then **My equipment**.
-2. Across the top are your places. You start with one, **Where I usually
-   train**. Tap a place to see its equipment.
+2. Across the top are your places. If you have a place in Studio (your
+   default place there), it comes first, under the name Studio gives it, and
+   says *Your place in Studio. Its name comes from Studio, so it's changed
+   there.* It can't be renamed or removed here. Otherwise you start with
+   **Where I usually train**. Tap a place to see its equipment. If your place
+   in Studio changes, the new one is added and the old one stays as one of
+   your places, with its answers.
    - To add one, such as a client's home or the park, tap **+ Add a place**,
      type its name and tap the tick.
    - To change a place's name, choose it and tap **Rename**.
@@ -731,7 +736,8 @@ next, and Billy can talk it over with you. Only you see your programs.
    intermediate.*). Change it if you know better. For a client with no
    programs yet it says *No programs for Jordan yet. What's their fitness
    level?*: choose one, as the program can't start without it. Then choose
-   **Where they train**: one of your places from My equipment (3.7). Add
+   **Where they train**: one of your places from My equipment (3.7),
+   starting on your place in Studio if you have one. Add
    **Notes** if you want. **Back to the kind of program** goes back a step.
 9. Tap **Start designing**. The program opens with its days already made, as
    many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for

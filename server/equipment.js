@@ -60,21 +60,51 @@ const shapeItem = (r) => ({
 
 /* ---------------------------------------------------------------- places */
 
-/** This trainer's places, oldest first; the first one is made if they have none. */
+const shapePlace = (r) => ({ id: r.id, name: r.name, ...(Number(r.from_studio) ? { fromStudio: true } : {}) });
+const PLACES = `SELECT * FROM coach_places WHERE trainer_id = ? AND archived = 0 ORDER BY from_studio DESC, created_at, id`;
+
+/** This trainer's places, their place in Studio first, then oldest first; the first one is made if they have none. */
 export async function placesOf(trainerId) {
-  let rows = await all(`SELECT * FROM coach_places WHERE trainer_id = ? AND archived = 0 ORDER BY created_at, id`, [trainerId]);
+  let rows = await all(PLACES, [trainerId]);
   if (!rows.length) {
     await insertWithNewId("place", (id) => run(
       `INSERT INTO coach_places (id, trainer_id, name, archived, created_at) VALUES (?, ?, ?, 0, ?)`, [id, trainerId, FIRST_PLACE, now()]));
-    rows = await all(`SELECT * FROM coach_places WHERE trainer_id = ? AND archived = 0 ORDER BY created_at, id`, [trainerId]);
+    rows = await all(PLACES, [trainerId]);
   }
-  return rows.map(r => ({ id: r.id, name: r.name }));
+  return rows.map(shapePlace);
 }
 
 /** One of this trainer's own places, or null. Never another trainer's. */
 export async function placeOf(trainerId, placeId) {
   const r = await get(`SELECT * FROM coach_places WHERE id = ? AND trainer_id = ? AND archived = 0`, [placeId, trainerId]);
-  return r ? { id: r.id, name: r.name } : null;
+  return r ? shapePlace(r) : null;
+}
+
+/**
+ * The trainer's place in Studio (their default place there) as one of their
+ * places here, with its own equipment answers like any other. Made the first
+ * time it is seen, named as Studio names it and renamed when Studio's name
+ * changes, and brought back if it was put away. When Studio's place for them
+ * changes, the old one stays, as an ordinary place of theirs, with its
+ * answers. `place` is null when Studio has none for them.
+ */
+export async function linkStudioPlace(trainerId, place) {
+  const rows = await all(`SELECT * FROM coach_places WHERE trainer_id = ? AND studio_place_id != ''`, [trainerId]);
+  for (const r of rows) {
+    if (Number(r.from_studio) && r.studio_place_id !== place?.id) await run(`UPDATE coach_places SET from_studio = 0 WHERE id = ?`, [r.id]);
+  }
+  if (!place) return;
+  const name = String(place.name || "").trim().slice(0, 80) || "My studio";
+  const mine = rows.find(r => r.studio_place_id === place.id);
+  if (mine) {
+    if (mine.name !== name || Number(mine.archived) || !Number(mine.from_studio)) {
+      await run(`UPDATE coach_places SET name = ?, archived = 0, from_studio = 1 WHERE id = ?`, [name, mine.id]);
+    }
+    return;
+  }
+  await insertWithNewId("place", (id) => run(
+    `INSERT INTO coach_places (id, trainer_id, name, archived, created_at, studio_place_id, from_studio) VALUES (?, ?, ?, 0, ?, ?, 1)`,
+    [id, trainerId, name, now(), place.id]));
 }
 
 export async function addPlace(trainerId, name) {
@@ -89,9 +119,10 @@ export async function renamePlace(trainerId, placeId, name) {
 /** Put away, never deleted: its answers stay, as everything in memory does. The last place stays. */
 export async function archivePlace(trainerId, placeId) {
   const places = await placesOf(trainerId);
-  if (places.length <= 1) return false;
+  if (places.length <= 1) return "last";
+  if (places.find(p => p.id === placeId)?.fromStudio) return "studio";
   await run(`UPDATE coach_places SET archived = 1 WHERE id = ? AND trainer_id = ?`, [placeId, trainerId]);
-  return true;
+  return null;
 }
 
 export const checkPlaceName = (name) =>

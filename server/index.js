@@ -192,7 +192,35 @@ app.put("/api/my-settings", asSignedIn("PUT /my-settings", async (req, res, user
   res.json(await trainerSettings.settingsOf(user.id));
 }));
 
-app.get("/api/equipment", asSignedIn("GET /equipment", async (_req, res, user) => {
+/*
+ * The trainer's place in Studio, as one of their places here (Glenn, 18 Oct
+ * 2026: "if the trainer is connected to a place in Studio, let's get that
+ * information from Studio as well and make that an option here"). Studio
+ * links a trainer to a place by their default place (`defaultPlaceId` on
+ * /auth/me) and names it in /locations, which any signed-in account may read.
+ * Asked at most every ten minutes per trainer; if Studio can't be reached the
+ * places stay as they were.
+ */
+const studioPlaceAsked = new Map();
+async function syncStudioPlace(req, user) {
+  if (Date.now() - (studioPlaceAsked.get(user.id) || 0) < 10 * 60 * 1000) return;
+  try {
+    let place = null;
+    if (user.defaultPlaceId) {
+      const r = await studio(req, "/locations");
+      if (!r.ok) return;
+      const { places = [] } = await r.json();
+      place = places.find(p => p.id === user.defaultPlaceId && !p.archivedAt) || null;
+    }
+    await equipment.linkStudioPlace(user.id, place);
+    studioPlaceAsked.set(user.id, Date.now());
+  } catch (err) {
+    console.warn("Studio's place couldn't be read:", err.message);
+  }
+}
+
+app.get("/api/equipment", asSignedIn("GET /equipment", async (req, res, user) => {
+  await syncStudioPlace(req, user);
   res.set("Cache-Control", "private, no-store");
   res.json(await equipment.equipmentOf(user.id));
 }));
@@ -258,6 +286,8 @@ app.post("/api/places", asSignedIn("POST /places", async (req, res, user) => {
 
 app.patch("/api/places/:place", asSignedIn("PATCH /places", async (req, res, user) => {
   if (!await ownPlace(req, res, user)) return;
+  const place = await equipment.placeOf(user.id, req.params.place);
+  if (place?.fromStudio) return res.status(400).json({ error: "This place's name comes from Studio. Change it there.", code: "from_studio" });
   const wrong = equipment.checkPlaceName(req.body?.name);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
   await equipment.renamePlace(user.id, req.params.place, req.body.name);
@@ -266,9 +296,9 @@ app.patch("/api/places/:place", asSignedIn("PATCH /places", async (req, res, use
 
 app.delete("/api/places/:place", asSignedIn("DELETE /places", async (req, res, user) => {
   if (!await ownPlace(req, res, user)) return;
-  if (!await equipment.archivePlace(user.id, req.params.place)) {
-    return res.status(400).json({ error: "Keep at least one place.", code: "last_place" });
-  }
+  const refused = await equipment.archivePlace(user.id, req.params.place);
+  if (refused === "last") return res.status(400).json({ error: "Keep at least one place.", code: "last_place" });
+  if (refused === "studio") return res.status(400).json({ error: "This is your place in Studio, so it stays.", code: "from_studio" });
   res.json(await equipment.equipmentOf(user.id));
 }));
 
@@ -676,7 +706,8 @@ const sendProgram = async (res, user, program) => {
   res.json(await programs.full(user.id, await programs.programOf(user.id, program.id)));
 };
 
-app.get("/api/programs", asSignedIn("GET /programs", async (_req, res, user) => {
+app.get("/api/programs", asSignedIn("GET /programs", async (req, res, user) => {
+  await syncStudioPlace(req, user);
   res.set("Cache-Control", "private, no-store");
   res.json({ programs: await programs.list(user.id), goals: programs.goalsList(), ...programs.kindsFor() });
 }));
@@ -861,6 +892,7 @@ app.post("/api/assistant", async (req, res) => {
   if (!billy.configured()) {
     return res.status(503).json({ error: "Billy isn't set up on this server yet.", code: "not_configured" });
   }
+  await syncStudioPlace(req, user);
   const history = req.body?.messages;
   const wrong = billy.checkHistory(history);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });

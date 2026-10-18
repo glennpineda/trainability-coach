@@ -501,7 +501,7 @@ export async function full(trainerId, program, { withCheck = true } = {}) {
     focus: parseList(program.focus), focusLabels: parseList(program.focus).map(f => FOCUS[f]?.label).filter(Boolean),
     /* With the one above means nothing for a day's first exercise. */
     days: days.map(d => ({ id: d.id, name: d.name, notes: d.notes, kind: d.kind || "full", kindLabel: (DAY_KINDS[d.kind] || DAY_KINDS.full).label, exercises: rows.filter(r => r.day_id === d.id).map(shape).map((e, i) => (i ? e : { ...e, superset: false })) })),
-    places: ctx.places.map(p => ({ id: p.id, name: p.name })),
+    places: ctx.places.map(p => ({ id: p.id, name: p.name, ...(p.fromStudio ? { fromStudio: true } : {}) })),
   };
   if (withCheck) out.check = check(out, rows, ctx, own);
   return out;

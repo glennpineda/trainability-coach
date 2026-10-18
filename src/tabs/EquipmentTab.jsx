@@ -134,7 +134,11 @@ export function EquipmentTab({ onSignedOut }) {
                 </button>
               )}
             </div>
-            {naming !== place.id && (
+            {place.fromStudio ? (
+              <p className="text-xs mt-3" style={{ color: "var(--iron)" }}>
+                Your place in Studio. Its name comes from Studio, so it's changed there.
+              </p>
+            ) : naming !== place.id && (
               <div className="flex flex-wrap items-center gap-4 mt-3">
                 <button type="button" className="text-sm cx-link" onClick={() => setNaming(place.id)}>
                   <Pencil size={15} aria-hidden="true" /> Rename

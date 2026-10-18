@@ -54,6 +54,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **Your place in Studio is one of your places.** The trainer's default
+  place in Studio shows first in My equipment, with its own checklist and
+  Studio's name, and a new program starts there.
 - **The client's level comes from their programs.** A new program's level
   is filled in from the ones you made for them before (the next level up
   after 12 weeks at one without stepping back), with the reason shown; with
