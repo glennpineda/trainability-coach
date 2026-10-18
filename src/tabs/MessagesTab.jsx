@@ -4,7 +4,7 @@ import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
 import { rowsOf } from "../lib/measures";
-import { TESTS, describe } from "../lib/fitness-tests";
+import { describe, titleOf } from "../lib/fitness-tests";
 
 /*
  * Messages (Glenn, 18 Oct 2026: "Let's do messages now, apart from basic
@@ -210,7 +210,7 @@ function Attachment({ a }) {
   }
   if (a.kind === "test") {
     const d = a.test || {};
-    const shown = d.kind ? describe(d) : null;
+    const shown = d.kind ? describe(d, d.units) : null;
     return (
       <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
         className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
@@ -218,7 +218,7 @@ function Attachment({ a }) {
           <HeartPulse size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
         </span>
         <span className="min-w-0">
-          <span className="block font-medium truncate" style={{ color: "var(--ink)" }}>{TESTS[d.kind]?.short || "Fitness test"}{d.takenOn ? ` · ${shortDate(d.takenOn)}` : ""}</span>
+          <span className="block font-medium truncate" style={{ color: "var(--ink)" }}>{d.kind ? titleOf(d, { short: true }) : "Fitness test"}{d.takenOn ? ` · ${shortDate(d.takenOn)}` : ""}</span>
           <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>{shown ? [shown.text, shown.rating].filter(Boolean).join(" · ") : ""}</span>
         </span>
       </a>
@@ -343,14 +343,15 @@ function Composer({ clientId, first, onSent }) {
   }
   /* The client's fitness test results, newest first, to attach one. */
   const [tests, setTests] = useState(null);
+  const [testUnits, setTestUnits] = useState("imperial");
   function openTests() {
     setMenu("tests");
-    apiRequest("GET", `/clients/${encodeURIComponent(clientId)}/tests`).then(d => setTests(d.tests || [])).catch(() => setTests([]));
+    apiRequest("GET", `/clients/${encodeURIComponent(clientId)}/tests`).then(d => { setTests(d.tests || []); setTestUnits(d.units || "imperial"); }).catch(() => setTests([]));
   }
   async function attachTest(t) {
     setMenu(null);
     const key = `${Date.now()}-${t.id}`;
-    setItems(xs => [...xs, { key, kind: "test", name: `${TESTS[t.kind].short}, ${setDate(t.takenOn)}`, progress: 0 }]);
+    setItems(xs => [...xs, { key, kind: "test", name: `${titleOf(t, { short: true })}, ${setDate(t.takenOn)}`, progress: 0 }]);
     try { update(key, { att: await apiRequest("POST", "/attachments/test", { testId: t.id }), progress: 1 }); }
     catch (err) { update(key, { error: err.message }); }
   }
@@ -426,7 +427,7 @@ function Composer({ clientId, first, onSent }) {
               <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>{first}&apos;s fitness tests</div>
               {tests === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
                 : tests.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No fitness tests for {first} yet. Add them on the Clients page.</p>
-                : tests.map(t => { const d = describe(t); return <MenuItem key={t.id} icon={HeartPulse} label={`${TESTS[t.kind].short} · ${setDate(t.takenOn)}`} note={[d.text, d.rating].filter(Boolean).join(" · ")} onClick={() => attachTest(t)} />; })}
+                : tests.map(t => { const d = describe(t, testUnits); return <MenuItem key={t.id} icon={HeartPulse} label={`${titleOf(t, { short: true })} · ${setDate(t.takenOn)}`} note={[d.text, d.rating].filter(Boolean).join(" · ")} onClick={() => attachTest(t)} />; })}
             </>
           ) : menu === "measurements" ? (
             <>

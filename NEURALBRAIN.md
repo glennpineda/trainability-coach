@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Strength tests: 1RM, jumps, holds and velocity loss** (18 Oct 2026; Glenn: "After this, let's add strength tests, here's the website printed."). Build 1.0.66. Not from Next up; straight after build 1.0.65. **The source**: Glenn printed GymAware's "Muscular strength tests to track fitness progress" by Loek Vossen (gymaware.com, 30 pages). It lists fifteen tests (1RM, muscular endurance, Dynamic Strength Index, Reactive Strength Index, drop jump, vertical jump, countermovement jump, rate of force development, power, bar speed, force- and load-velocity profiling, muscular profiling, bar path, muscle recovery), gives **no ratings tables** for any of them, and most need a bar-speed sensor (GymAware RS or FLEX: the article is theirs). Studio has no strength tests to copy (searched for 1RM, one-rep, strength test, vertical jump). **Glenn's decisions** (asked one at a time): which tests, "1RM, Jumps, Muscular endurance" (not the sensor-only power, bar speed, DSI and recovery tests); the 1RM from a lighter set, "Brzycki, up to 10 reps" (1RM = weight × 36 ÷ (37 − reps); the article's own way is two bar speeds on a load-velocity line, which needs a sensor); where, "One section, two groups": the Fitness tests section with **Heart and lungs** and **Strength** headings, in the same table `coach_fitness_tests` (no new id tag; `kind` is VARCHAR(16), `data` JSON). Muscular endurance was offered as wall sit or plank holds, plus velocity loss with a sensor (the article's own way), so both were built. **The tests** (`src/lib/fitness-tests.js`): `onerm` (an exercise from Coach IQ's library, `method` tested or estimated, the weight, the reps 1–10, an optional body weight shown as "1.38 × body weight"; result in kg to two places), `jump` (style Hands on hips or Arm swing, height, optional tool Wall reach, Jump mat, Phone app, Sensor), `rsi` (height, ground contact 80–1500 ms, optional box; RSI = height m ÷ contact s, to two places), `hold` (Wall sit, Plank, Side plank left or right; 5 s to 60 min; "1:30" or bare seconds "45"), `vloss` (exercise, % of 1RM 20–100, reps 2–30, loss 0–100%, optional weight). Weights and heights are typed in the trainer's units and kept in metric through `fromShown`, as measurements are (new measure-like objects `LIFT` 1–500 kg, `HEIGHT` 2–150 cm, `BOX` 10–120 cm). The how-to texts paraphrase the article; the hold's and jump's tips are Coach's own (compare like with like). The strength forms' reminder is the article's bar-path point ("Only good form counts…") rather than Verywell's overtraining line. **Compared like with like**: `seriesOf(t)` (kind plus exercise, jump style or hold) decides which results are compared and grouped, so a bench press 1RM is never compared with a squat's; `titleOf` names them ("1RM · Barbell back squat", "Hold · Plank", "Vertical jump · Hands on hips"). `describe(t, units)` and `changeOf(t, before, units)` now take the trainer's units ("+15 lb", "+1.25 in", "+0:27"; velocity loss in points). The section lists one block per series in the groups' order with a heading where the group changes; the Which test? list is grouped too. **Files**: `src/lib/fitness-tests.js` (TESTS gains five kinds; TEST_GROUPS, NEEDS_WHO (step and rockport only), JUMP_STYLES, JUMP_TOOLS, HOLDS, MAX_REPS, LIFT, HEIGHT, BOX, brzycki, rsiOf, seriesOf, titleOf), `server/fitness-tests.js` (`strength()` checks and works out each, the exercise looked up by id in the library with its name kept), `server/index.js` (the attachment's previous result is the same series; the trainer's units are kept on the copy), `server/messages.js` (units on the copy), `src/clients/FitnessTests.jsx` (the forms: the library search reused from My exercises, `LibraryPicker` now exported from `src/tabs/ExercisesTab.jsx`, with Change; a live "1RM about 192.4 lb" as the set is typed; body weight filled from the latest measurements), `src/clients/PrintTest.jsx` (titled by `titleOf`, units from the copy, Details only where there are some), `src/tabs/MessagesTab.jsx` (names and cards by `titleOf`, units). MANUAL 4.9 (the two groups, each strength test, the steps, the 10-rep message), Words (1RM, RSI, Fitness test), CHANGELOG. **Checked** at the API on the stand-in Studio: Brzycki 225 lb × 5 → 253.1 lb (114.82 kg), 155 × 8 → 192.4; 12 reps refused with its message; an exercise not in the library, a weight of 5000, a jump with no style, 20 ms on the ground, a hold of "abc" and a velocity loss of 180 all refused; RSI 12 in in 240 ms → 1.27; a plank of "75" kept as 1:15. In Chromium at phone width and on a desktop: the section with both headings and changes ("+15 lb since Sep 20, 2026", "+0:27"), the grouped Which test? list, the 1RM form with the exercise picked, body weight 183.2 filled in and the live estimate, the hold and drop jump forms, the attach menu, the message card "1RM · Barbell back squat" and the printed sheet; no page errors. **What turned out differently**: my first screenshot script clicked the picker's X instead of an exercise (the clients list is itself a list, so "li button" matched outside the picker), which looked like the form closing on a pick; a test-script fault, not the app's. **Untested**: sign-in against Studio's fixture (cloud session); another trainer's strength result (the same not_yours path as the heart and lungs tests, which was checked); Billy doesn't read tests; no chart over time; no strength ratings, since the article has none.
 - **Fitness tests: the step test, the Rockport walk and VO2 max** (18 Oct 2026; Glenn: "Now let's add other measurements but now in tests, let's first read this page for cardiovascular fitness test: https://www.verywellfit.com/cardiovascular-fitness-1230820 and what you can up with to support and check this", then "Let's do it"). Build 1.0.65. Not from Next up; straight after build 1.0.64. **The source**: verywellfit.com was refused from the cloud session (the environment's network policy, and the site blocks crawlers), so Glenn printed the page to a PDF: Paige Waehner, CPT, "Cardiovascular Fitness: How Do You Test It?", updated 22 May 2024. It describes the 3-minute step test (with ratings tables by age and sex), the Rockport 1-mile walk (pointing to "a Rockport 1-mile walk calculator" for VO2 max, with no formula), lab VO2 max tests (graded exercise test, Bruce protocol) and watches such as a Garmin reporting VO2 max, and warns of overtraining. Studio has no fitness tests to copy; the section copies Coach's own Measurements (4.8) for its look, its inline delete confirmation (Limitations'), who-may-change rules and its attachment and print. **Glenn's decisions** (asked one at a time): which tests, "All three"; the Rockport VO2 max, "The original study's formula" (Kline et al., 1987: 132.853 − 0.0769 × weight in lb − 0.3877 × age + 6.315 × sex (1 male) − 3.2649 × minutes − 0.1565 × heart rate, to one decimal); the step tables' gaps and one misprint, "Fill gaps down, fix misprint"; the id tag, "tst". VO2 max is shown as a number with no rating, the article giving none. **The step tables** (`STEP_TABLE` in `src/lib/fitness-tests.js`) are the article's ranges transcribed per sex and age band (18–25, 26–35, 36–45, 46–55, 56–65, 65+) and checked against the PDF. Each band's top is what counts: a heart rate above one rating's top and up to the next one's is in the next (women 18–25 Excellent 52–81, Good 85–93, so 82–84 is Good). Above Very poor's top is still Very poor, below Excellent's bottom still Excellent; under 18 is not rated ("Not rated: the article's tables start at 18"). The misprint: men 46–55 Good printed "97–93", read as 83–94 (between Excellent's 82 and Above average's 95). **Files**: `src/lib/fitness-tests.js` (new, shared by page and server, pure: `TESTS` with each test's label, short name, how-to and tip; `VO2_SOURCES` Lab or gym test, Garmin, Apple Watch, Fitbit, Other watch or app; `stepRating`; `rockportVo2`; `clockOf`/`secondsOf` for "14:30"; `ageOn(birthday, day)`; `sexOf(gender)`, which reads only plain words such as F, female, woman, M, male, man and otherwise asks; `describe`; `changeOf`, the step test's falling heart rate shown as "−11 bpm"); `server/fitness-tests.js` (new: table `coach_fitness_tests`, id `tst`, with client, trainer and name, kind, day, age, sex, data JSON, result, rating, rated ages, note; `check` validates and works out the result: age 5–110 and a table required for the step test and the walk ("Choose which table to use: women's or men's."), step heart rate 40–220, walk time 7:00–40:00 and heart rate 60–220, weight in the trainer's units through `fromShown` and required ("Fill in their weight: the formula needs it."), VO2 max 10–95 with its source required, a day not still to come); `server/index.js` (GET/POST `/api/clients/:client/tests`, PUT/DELETE `/api/tests/:id`, each answering `{ tests, units }`; only the trainer who recorded a result may change or delete it, "not_yours"; POST `/api/attachments/test` with `{ testId }`, its previous result the same test from an earlier day); `server/messages.js` (`testAttachment`, kind `test`, a copy made at attach time); `server/ids.js` (`fitnessTest: "tst"`); `server/db.js` (the schema); `server/coach-clients.js` and `server/accounts.js` (a moved client's and a linked account's results are re-keyed, as measurements are); `src/clients/FitnessTests.jsx` (new: the section under Measurements, HeartPulse icon, latest result of each test with "Earlier results (n)", "Add a test result" → "Which test?" → the form with the how-to in Coach IQ's card colours, Day of the test, Age on the day from the birthday, Table Women/Men from the gender, the test's fields, the Rockport weight from the latest measurements, a note and the article's overtraining line; a row is a render function, not an inner component, so the form isn't remounted on each keystroke); `src/clients/PrintTest.jsx` (new: the printed sheet with Result, Rating, Rated, "Since <date>" with what it was, how the test is done and the note); `src/programs/PrintProgram.jsx` (the sent-attachment route opens kind `test` as `PrintTest`); `src/tabs/MessagesTab.jsx` ("Fitness test" in the paperclip menu, "…'s fitness tests" list, "No fitness tests for … yet. Add them on the Clients page.", the card "Step test · 18 Oct" with "97 bpm · Above average"); `src/tabs/ClientsTab.jsx`. MANUAL.md: new 4.9, 7.3's **Fitness test**, chapter 7's intro, and Fitness test and VO2 max in Words; CHANGELOG. **Checked**: in node, the gap (women 18–25, 83 → Good), the misprint (men 46–55: 83 and 94 Good, 95 Above average), under 18 → not rated, Rockport man 40, 180 lb, 14:00, 140 bpm → 42.2 and woman 35, 140 lb, 15:30, 150 bpm → 34.4. At the API on the session's stand-in Studio: a missing table, a heart rate of 400, a mile in 3:00 and a VO2 max with no source all refused with their messages; a step test of 97 for a woman of 34 → Above average (26–35), 108 → Average, Rockport results 32.7 and 28.8, a Garmin 38.5; another trainer's result can't be changed. In the session's Chromium at phone width: the section ("3-minute step test | Oct 18, 2026 · by you | 97 bpm | Above average | Rated for women aged 26–35 · −11 bpm since Sep 20, 2026"), the Rockport form with weight 183.2 and age 34 filled in, the attach menu, the message card and the printed sheet ("−11 bpm (was Average)"), with no page errors. **Untested**: sign-in end to end against Studio's fixture (a cloud session has only this repository); Billy doesn't read fitness tests yet; there is no chart of results over time; the client's own view in Studio's /me inbox is not built (a Studio session); `sexOf` guesses the table only from plain words, so any other gender asks the trainer to choose.
 - **Measurements: shoulders, waist to hip, resting heart rate and blood pressure** (18 Oct 2026; Glenn: "Ahh shoulder to the measurements to, and waist to hip ratio, heart rate (optional), blood pressure (optional)"). Build 1.0.64. Not from Next up; straight after build 1.0.63. **Added** to `src/lib/measures.js`: Shoulders (a length, 60–200 cm, after Neck), Resting heart rate (kind `rate`, bpm, 25–220) and Blood pressure as a pair (kind `pressure`, mmHg: top/systolic 60–260, bottom/diastolic 30–160); bpm and mmHg are the same in either units and kept and shown whole. Every measure is optional, as before. Columns `shoulders`, `heart_rate`, `bp_sys`, `bp_dia` added to `coach_measurements` through `COLUMNS` (`server/db.js`), so an existing table gains them. `check` (`server/measurements.js`) also asks for both blood pressure numbers or neither ("Fill in both blood pressure numbers, or neither.") and the top the higher ("Blood pressure's top number is the higher one. Check them and try again."). **Waist to hip** is never typed: `waistToHip` divides the waist by the hips (both kept in cm, so the same in either units) to two places wherever both were taken. **One way of showing a set** now: `rowsOf(values, previous, units)` gives the rows in order, the ratio after Hips and blood pressure as one row ("121/79 mmHg", its change "−7/−5 mmHg"), each with its change since the set before; the client's details (`Measurements.jsx`), a message's card (`MessagesTab.jsx`) and the printed sheet (`PrintMeasurements.jsx`) all use it rather than three copies. The form's pairs are now any run of measures with a `pair` and a `side` word (Left and Right; Top (systolic) and Bottom (diastolic)), laid out in `MEASURES`' order: Weight to Hips two to a row, Arm, Thigh and Calf, Resting heart rate, then Blood pressure. **What turned out differently**: the test data had two sets on one day and the newest was compared with one taken minutes before ("changes since Oct 18, 2026"); the set a change counts from is now the newest taken on an earlier day (`previousOf`), on the client's details and in an attached set. **Tested** against the stand-in Studio at the API (one blood pressure number, the numbers upside down and a heart rate of 600 refused; a set with all four new ones kept and shown with the ratio 0.87 and its change −0.03, heart rate −6 bpm and blood pressure −7/−5 mmHg) and in Chromium at phone width (the section, the form's new boxes, and the printed sheet); no page errors. MANUAL 4.8 and Words, and CHANGELOG, updated. Files: `src/lib/measures.js`, `server/measurements.js`, `server/db.js`, `server/index.js`, `src/clients/Measurements.jsx`, `src/clients/PrintMeasurements.jsx`, `src/tabs/MessagesTab.jsx`, MANUAL.md, CHANGELOG.md.
 
@@ -1213,9 +1214,11 @@ To send a set to the client, attach it to a message (7.3).
 
 #### 4.9 A client's fitness tests
 
-Under **Measurements**, a client's details show their **Fitness tests**: how
-fit their heart and lungs are, from three tests. Every trainer of the client
+Under **Measurements**, a client's details show their **Fitness tests**, in
+two groups: **Heart and lungs** and **Strength**. Every trainer of the client
 sees the results, with who recorded each one.
+
+**Heart and lungs:**
 
 - **3-minute step test**: they step up and down a 12-inch step in time to a
   metronome for three minutes, then sit down while you count their heart rate
@@ -1228,12 +1231,33 @@ sees the results, with who recorded each one.
 - **VO2 max from a lab or watch**: a VO2 max from a gym or lab treadmill test,
   or reported by a watch such as a Garmin.
 
-**Reading them.** The latest result of each test is shown: its name, the day
+**Strength:**
+
+- **1RM (one-repetition maximum)**: the heaviest weight lifted once in one
+  exercise, chosen from the library. Either the weight **Lifted once**, or
+  **From a lighter set**: the weight and the reps done to failure, 10 or
+  fewer, and Coach works out the 1RM with Brzycki's formula. With their body
+  weight, it also shows the 1RM against it, such as *1.38 × body weight*.
+- **Vertical jump**: the height jumped from standing, **Hands on hips** or
+  with an **Arm swing**.
+- **Drop jump (Reactive Strength Index)**: they step off a box and jump
+  straight back up. The height jumped divided by the time on the ground gives
+  the RSI, such as *RSI 1.27*.
+- **Hold: wall sit or plank**: how long they held a **Wall sit**, a
+  **Plank**, or a **Side plank, left** or **right**.
+- **Velocity loss in a set**: for trainers with a bar-speed sensor, how far
+  the bar's speed fell over one set at a fixed weight.
+
+None of the strength tests is rated: each is a number to follow over time.
+
+**Reading them.** The latest result of each test is shown (of a 1RM, for each
+exercise; of a jump or a hold, for each kind): its name, the day
 and who recorded it, the result (such as *97 bpm* or *VO2 max 32.7
 ml/kg/min*) and, for the step test, the rating, such as **Above average**,
 with *Rated for women aged 26–35*. Under it is how it changed since the same
 test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
-test a lower heart rate is fitter; for VO2 max a higher number is. Tap
+test a lower heart rate is fitter, as is less velocity loss; for the rest a
+higher number is. Tap
 **Earlier results** to see the older ones, and **Show only the latest** to
 fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
 rated: the tables start at 18.
@@ -1246,6 +1270,7 @@ rated: the tables start at 18.
 4. For the step test and the walk, **Age on the day** is filled in from their
    birthday, and **Table** (**Women** or **Men**) from their gender, where
    their details have them. Otherwise fill them in.
+   The strength tests don't ask for these.
 5. Fill in the result:
    - Step test: **Heart rate in the minute after** (bpm).
    - Rockport walk: **Time for the mile** (minutes and seconds, such as
@@ -1255,17 +1280,37 @@ rated: the tables start at 18.
    - VO2 max: the **VO2 max** (ml/kg/min), and **Where it came from**:
      **Lab or gym test**, **Garmin**, **Apple Watch**, **Fitbit** or **Other
      watch or app**.
+   - 1RM: under **Exercise**, search the library and tap the exercise (tap
+     **Change** to choose another). Under **How it was found**, tap **From a
+     lighter set** and fill in **Weight of the set** and **Reps to
+     failure**, and Coach shows *1RM about …* as you type; or tap **Lifted
+     once** and fill in **Weight lifted**. **Body weight (optional)** is
+     filled in from their latest measurements.
+   - Vertical jump: **How they jumped** (**Hands on hips** or **Arm swing**),
+     **Height jumped**, and if you like what it was **Measured with**:
+     **Wall reach**, **Jump mat**, **Phone app** or **Sensor**.
+   - Drop jump: **Height jumped**, **Time on the ground** (milliseconds), and
+     the **Box** height if you like.
+   - Hold: **Which hold**, and the **Time held**, such as 1:30 (or just the
+     seconds, such as 45).
+   - Velocity loss: the **Exercise**, **Weight, % of 1RM**, **Reps in the
+     set**, the **Velocity loss** the sensor showed (%), and the weight if
+     you like.
 6. Add a **Note** if it helps, such as how they felt.
 7. Tap **Save**. **Cancel** leaves without saving.
 
-Under the form is a reminder: feeling agitated or moody, sleeping badly, off
-their food, low or stressed can be signs of overtraining; back off for at
-least a week before testing again.
+Under the form is a reminder. For heart and lungs: feeling agitated or
+moody, sleeping badly, off their food, low or stressed can be signs of
+overtraining; back off for at least a week before testing again. For
+strength: only good form counts; if the technique breaks down, the test
+isn't measuring what they can do, and they could be hurt.
 
 Something missing or a number no person could have is caught, such as
 *Choose which table to use: women's or men's.*, *Fill in the time for the
 mile as minutes and seconds, such as 14:30.* or *A heart rate of 400 doesn't
-look right. Check it and try again.* A day still to come can't be chosen.
+look right. Check it and try again.* A 1RM from a set of more than 10 reps
+is refused: *Over 10 reps the estimate gets loose: test with a heavier
+weight, for 10 reps or fewer.* A day still to come can't be chosen.
 
 **Changing or deleting a result.** Only the trainer who recorded a result can
 change it (the pencil) or delete it (the bin). Deleting asks *Delete this
@@ -1678,7 +1723,9 @@ can write to them here.*
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
-| **Fitness test** | A test of how fit a client's heart and lungs are: the 3-minute step test, the Rockport 1-mile walk, or a VO2 max from a lab or watch (4.9). |
+| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.9). |
+| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.9). |
+| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.9). |
 | **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
 | **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |

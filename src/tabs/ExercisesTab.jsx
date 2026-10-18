@@ -12,8 +12,8 @@ const ByBilly = () => (
 const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
 
-/* Search Coach IQ's library and pick one. */
-function LibraryPicker({ onPick, onCancel, busy }) {
+/* Search Coach IQ's library and pick one (also a 1RM's exercise, FitnessTests). */
+export function LibraryPicker({ onPick, onCancel, busy }) {
   const [q, setQ] = useState("");
   const [found, setFound] = useState(null);
   useEffect(() => {

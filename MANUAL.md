@@ -983,9 +983,11 @@ To send a set to the client, attach it to a message (7.3).
 
 ### 4.9 A client's fitness tests
 
-Under **Measurements**, a client's details show their **Fitness tests**: how
-fit their heart and lungs are, from three tests. Every trainer of the client
+Under **Measurements**, a client's details show their **Fitness tests**, in
+two groups: **Heart and lungs** and **Strength**. Every trainer of the client
 sees the results, with who recorded each one.
+
+**Heart and lungs:**
 
 - **3-minute step test**: they step up and down a 12-inch step in time to a
   metronome for three minutes, then sit down while you count their heart rate
@@ -998,12 +1000,33 @@ sees the results, with who recorded each one.
 - **VO2 max from a lab or watch**: a VO2 max from a gym or lab treadmill test,
   or reported by a watch such as a Garmin.
 
-**Reading them.** The latest result of each test is shown: its name, the day
+**Strength:**
+
+- **1RM (one-repetition maximum)**: the heaviest weight lifted once in one
+  exercise, chosen from the library. Either the weight **Lifted once**, or
+  **From a lighter set**: the weight and the reps done to failure, 10 or
+  fewer, and Coach works out the 1RM with Brzycki's formula. With their body
+  weight, it also shows the 1RM against it, such as *1.38 × body weight*.
+- **Vertical jump**: the height jumped from standing, **Hands on hips** or
+  with an **Arm swing**.
+- **Drop jump (Reactive Strength Index)**: they step off a box and jump
+  straight back up. The height jumped divided by the time on the ground gives
+  the RSI, such as *RSI 1.27*.
+- **Hold: wall sit or plank**: how long they held a **Wall sit**, a
+  **Plank**, or a **Side plank, left** or **right**.
+- **Velocity loss in a set**: for trainers with a bar-speed sensor, how far
+  the bar's speed fell over one set at a fixed weight.
+
+None of the strength tests is rated: each is a number to follow over time.
+
+**Reading them.** The latest result of each test is shown (of a 1RM, for each
+exercise; of a jump or a hold, for each kind): its name, the day
 and who recorded it, the result (such as *97 bpm* or *VO2 max 32.7
 ml/kg/min*) and, for the step test, the rating, such as **Above average**,
 with *Rated for women aged 26–35*. Under it is how it changed since the same
 test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
-test a lower heart rate is fitter; for VO2 max a higher number is. Tap
+test a lower heart rate is fitter, as is less velocity loss; for the rest a
+higher number is. Tap
 **Earlier results** to see the older ones, and **Show only the latest** to
 fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
 rated: the tables start at 18.
@@ -1016,6 +1039,7 @@ rated: the tables start at 18.
 4. For the step test and the walk, **Age on the day** is filled in from their
    birthday, and **Table** (**Women** or **Men**) from their gender, where
    their details have them. Otherwise fill them in.
+   The strength tests don't ask for these.
 5. Fill in the result:
    - Step test: **Heart rate in the minute after** (bpm).
    - Rockport walk: **Time for the mile** (minutes and seconds, such as
@@ -1025,17 +1049,37 @@ rated: the tables start at 18.
    - VO2 max: the **VO2 max** (ml/kg/min), and **Where it came from**:
      **Lab or gym test**, **Garmin**, **Apple Watch**, **Fitbit** or **Other
      watch or app**.
+   - 1RM: under **Exercise**, search the library and tap the exercise (tap
+     **Change** to choose another). Under **How it was found**, tap **From a
+     lighter set** and fill in **Weight of the set** and **Reps to
+     failure**, and Coach shows *1RM about …* as you type; or tap **Lifted
+     once** and fill in **Weight lifted**. **Body weight (optional)** is
+     filled in from their latest measurements.
+   - Vertical jump: **How they jumped** (**Hands on hips** or **Arm swing**),
+     **Height jumped**, and if you like what it was **Measured with**:
+     **Wall reach**, **Jump mat**, **Phone app** or **Sensor**.
+   - Drop jump: **Height jumped**, **Time on the ground** (milliseconds), and
+     the **Box** height if you like.
+   - Hold: **Which hold**, and the **Time held**, such as 1:30 (or just the
+     seconds, such as 45).
+   - Velocity loss: the **Exercise**, **Weight, % of 1RM**, **Reps in the
+     set**, the **Velocity loss** the sensor showed (%), and the weight if
+     you like.
 6. Add a **Note** if it helps, such as how they felt.
 7. Tap **Save**. **Cancel** leaves without saving.
 
-Under the form is a reminder: feeling agitated or moody, sleeping badly, off
-their food, low or stressed can be signs of overtraining; back off for at
-least a week before testing again.
+Under the form is a reminder. For heart and lungs: feeling agitated or
+moody, sleeping badly, off their food, low or stressed can be signs of
+overtraining; back off for at least a week before testing again. For
+strength: only good form counts; if the technique breaks down, the test
+isn't measuring what they can do, and they could be hurt.
 
 Something missing or a number no person could have is caught, such as
 *Choose which table to use: women's or men's.*, *Fill in the time for the
 mile as minutes and seconds, such as 14:30.* or *A heart rate of 400 doesn't
-look right. Check it and try again.* A day still to come can't be chosen.
+look right. Check it and try again.* A 1RM from a set of more than 10 reps
+is refused: *Over 10 reps the estimate gets loose: test with a heavier
+weight, for 10 reps or fewer.* A day still to come can't be chosen.
 
 **Changing or deleting a result.** Only the trainer who recorded a result can
 change it (the pencil) or delete it (the bin). Deleting asks *Delete this
@@ -1448,7 +1492,9 @@ can write to them here.*
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
-| **Fitness test** | A test of how fit a client's heart and lungs are: the 3-minute step test, the Rockport 1-mile walk, or a VO2 max from a lab or watch (4.9). |
+| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.9). |
+| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.9). |
+| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.9). |
 | **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
 | **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |

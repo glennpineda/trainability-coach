@@ -1,14 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ChevronDown, HeartPulse, Pencil, Plus, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { TESTS, TEST_KINDS, VO2_SOURCES, ageOn, sexOf, clockOf, describe, changeOf } from "../lib/fitness-tests";
+import { TESTS, TEST_GROUPS, VO2_SOURCES, NEEDS_WHO, JUMP_STYLES, JUMP_TOOLS, HOLDS, LIFT, HEIGHT, BOX,
+  ageOn, sexOf, clockOf, describe, changeOf, seriesOf, titleOf, brzycki } from "../lib/fitness-tests";
+import { LibraryPicker } from "../tabs/ExercisesTab";
 import { MEASURES, toShown, unitOf } from "../lib/measures";
 
 /*
- * A client's cardiovascular fitness tests (Glenn, 18 Oct 2026, from Verywell
- * Fit's article; src/lib/fitness-tests.js): the 3-minute step test, rated
+ * A client's fitness tests (Glenn, 18 Oct 2026; src/lib/fitness-tests.js).
+ * Heart and lungs, from Verywell Fit's article: the 3-minute step test, rated
  * from the article's tables; the Rockport 1-mile walk, with VO2 max worked
- * out; and a VO2 max from a lab or a watch. Under Measurements on a client's
+ * out; and a VO2 max from a lab or a watch. Strength, from GymAware's: a 1RM
+ * (lifted, or worked out from a lighter set), the vertical jump, the drop
+ * jump's Reactive Strength Index, a wall sit or plank held, and velocity loss
+ * from a bar-speed sensor. Under Measurements on a client's
  * details and laid out as it is: the latest of each test with its change
  * since the one before, earlier ones to open, the trainer's own to change or
  * delete. Every trainer of the client sees them.
@@ -53,33 +58,96 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
   const [vo2, setVo2] = useState(initial?.data?.vo2 != null ? String(initial.data.vo2) : "");
   const [source, setSource] = useState(initial?.data?.source || "");
   const [note, setNote] = useState(initial?.note || "");
+  /* The strength tests'. */
+  const d0 = initial?.data || {};
+  const shownOf = (m, v) => (v != null ? String(toShown(m, v, units)) : "");
+  const [exercise, setExercise] = useState(d0.exerciseId ? { id: d0.exerciseId, name: d0.exercise } : null);
+  const [method, setMethod] = useState(d0.method || "estimated");
+  const [lift, setLift] = useState(shownOf(LIFT, d0.weightKg));
+  const [reps, setReps] = useState(d0.reps != null ? String(d0.reps) : "");
+  const [bodyWeight, setBodyWeight] = useState(shownOf(WEIGHT, d0.bodyWeightKg));
+  const [style, setStyle] = useState(d0.style || "hips");
+  const [tool, setTool] = useState(d0.tool || "");
+  const [height, setHeight] = useState(shownOf(HEIGHT, d0.heightCm));
+  const [contactMs, setContactMs] = useState(d0.contactMs != null ? String(d0.contactMs) : "");
+  const [box, setBox] = useState(shownOf(BOX, d0.boxCm));
+  const [hold, setHold] = useState(d0.hold || "");
+  const [held, setHeld] = useState(initial?.kind === "hold" ? clockOf(d0.seconds) : "");
+  const [percent, setPercent] = useState(d0.percent != null ? String(d0.percent) : "");
+  const [loss, setLoss] = useState(initial?.kind === "vloss" ? String(initial.result) : "");
   /* The age on the day from their birthday, until the trainer types one. */
   const [ageTyped, setAgeTyped] = useState(!!initial);
   const fromBirthday = ageOn(client?.dateOfBirth, takenOn);
   useEffect(() => { if (!ageTyped && fromBirthday != null) setAge(String(fromBirthday)); }, [fromBirthday, ageTyped]);
   /* Their weight from their latest measurements, for the walk. */
   useEffect(() => { if (kind === "rockport" && !weight && latestWeight != null) setWeight(String(toShown(WEIGHT, latestWeight, units))); }, [kind, latestWeight]);
+  /* And for a 1RM, to show it against their body weight. */
+  useEffect(() => { if (kind === "onerm" && !initial && !bodyWeight && latestWeight != null) setBodyWeight(String(toShown(WEIGHT, latestWeight, units))); }, [kind, latestWeight]);
 
   if (!kind) {
     return (
       <div className="mt-2 grid gap-2">
         <div className="text-sm font-medium">Which test?</div>
-        {TEST_KINDS.map(k => (
-          <button key={k} type="button" onClick={() => setKind(k)} className="text-left rounded-lg border px-3 py-2.5" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)" }}>
-            <span className="block text-sm font-medium" style={{ color: "var(--ink)" }}>{TESTS[k].label}</span>
-            <span className="block text-xs mt-0.5" style={{ color: "var(--iron)" }}>{TESTS[k].how}</span>
-          </button>
+        {TEST_GROUPS.map(g => (
+          <div key={g.label} className="grid gap-2">
+            <div className="text-xs font-medium mt-1" style={{ color: "var(--ink-soft)" }}>{g.label}</div>
+            {g.kinds.map(k => (
+              <button key={k} type="button" onClick={() => setKind(k)} className="text-left rounded-lg border px-3 py-2.5" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)" }}>
+                <span className="block text-sm font-medium" style={{ color: "var(--ink)" }}>{TESTS[k].label}</span>
+                <span className="block text-xs mt-0.5" style={{ color: "var(--iron)" }}>{TESTS[k].how}</span>
+              </button>
+            ))}
+          </div>
         ))}
         <div><button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button></div>
       </div>
     );
   }
   const t = TESTS[kind];
-  const needsWho = kind !== "vo2";
+  const needsWho = NEEDS_WHO.includes(kind);
+  const estimate = (() => {
+    const w = Number(String(lift).replace(",", ".")), r = Number(reps);
+    return method === "estimated" && w > 0 && Number.isInteger(r) && r >= 1 && r <= 10 ? Math.round(brzycki(w, r) * 10) / 10 : null;
+  })();
+  const chips = (label, options, value, onPick) => (
+    <div className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>{label}
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
+        {options.map(([k, text]) => (
+          <button key={k} type="button" aria-pressed={value === k} onClick={() => onPick(value === k && label.endsWith("(optional)") ? "" : k)}
+            className="cx-chip text-xs px-2.5 py-1 rounded-full border"
+            style={value === k ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" } : { background: "var(--chalk)", color: "var(--ink)", borderColor: "var(--iron-line)" }}>{text}</button>
+        ))}
+      </div>
+    </div>
+  );
+  const box2 = (label, unit, value, set, aria, mode = "decimal", pad = "2.4rem") => (
+    <Field label={label} unit={unit}>
+      <input type="text" inputMode={mode} className="cx-input" style={{ color: "var(--ink)", paddingRight: pad }} value={value} onChange={e => set(e.target.value)} aria-label={aria} />
+    </Field>
+  );
+  const pickExercise = (
+    exercise ? (
+      <div className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Exercise
+        <div className="flex items-center justify-between gap-2 rounded-lg border px-3 py-2" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)" }}>
+          <span className="text-sm font-medium" style={{ color: "var(--ink)" }}>{exercise.name}</span>
+          <button type="button" className="cx-link text-sm" onClick={() => setExercise(null)}>Change</button>
+        </div>
+      </div>
+    ) : (
+      <div className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Exercise
+        <LibraryPicker onPick={(x) => setExercise({ id: x.id, name: x.name })} onCancel={() => (initial ? setExercise({ id: d0.exerciseId, name: d0.exercise }) : setKind(null))} />
+      </div>
+    )
+  );
   return (
     <form className="mt-2 grid gap-3" onSubmit={(e) => {
       e.preventDefault();
-      onSave({ kind, takenOn, age, sex, heartRate, time, weight, vo2, source, note, units });
+      onSave(kind === "onerm" ? { kind, takenOn, note, units, exerciseId: exercise?.id, method, weight: lift, reps, bodyWeight }
+        : kind === "jump" ? { kind, takenOn, note, units, style, tool, height }
+        : kind === "rsi" ? { kind, takenOn, note, units, height, contactMs, box }
+        : kind === "hold" ? { kind, takenOn, note, units, hold, time: held }
+        : kind === "vloss" ? { kind, takenOn, note, units, exerciseId: exercise?.id, percent, reps, loss, weight: lift }
+        : { kind, takenOn, age, sex, heartRate, time, weight, vo2, source, note, units });
     }}>
       <div className="text-sm font-medium">{t.label}</div>
       {/* How it is done, in the article's words; Coach IQ's card. */}
@@ -144,13 +212,62 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
           </div>
         </>
       )}
+      {kind === "onerm" && (
+        <>
+          {pickExercise}
+          <div className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>How it was found
+            <Switch label="How it was found" options={[["estimated", "From a lighter set"], ["tested", "Lifted once"]]} value={method} onPick={setMethod} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {box2(method === "estimated" ? "Weight of the set" : "Weight lifted", unitOf(LIFT, units), lift, setLift, `Weight, ${unitOf(LIFT, units)}`)}
+            {method === "estimated" && box2("Reps to failure", "reps", reps, setReps, "Reps done to failure, 10 or fewer", "numeric", "3.2rem")}
+            {box2("Body weight (optional)", unitOf(WEIGHT, units), bodyWeight, setBodyWeight, `Body weight, ${unitOf(WEIGHT, units)}`)}
+          </div>
+          {estimate != null && <p className="text-sm -mt-1">1RM about <strong>{estimate} {unitOf(LIFT, units)}</strong></p>}
+        </>
+      )}
+      {kind === "jump" && (
+        <>
+          <div className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>How they jumped
+            <Switch label="How they jumped" options={JUMP_STYLES} value={style} onPick={setStyle} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">{box2("Height jumped", unitOf(HEIGHT, units), height, setHeight, `Height jumped, ${unitOf(HEIGHT, units)}`)}</div>
+          {chips("Measured with (optional)", JUMP_TOOLS.map(x => [x, x]), tool, setTool)}
+        </>
+      )}
+      {kind === "rsi" && (
+        <div className="grid grid-cols-2 gap-2">
+          {box2("Height jumped", unitOf(HEIGHT, units), height, setHeight, `Height jumped, ${unitOf(HEIGHT, units)}`)}
+          {box2("Time on the ground", "ms", contactMs, setContactMs, "Time on the ground, milliseconds", "numeric", "2.6rem")}
+          {box2("Box (optional)", unitOf(BOX, units), box, setBox, `Box height, ${unitOf(BOX, units)}`)}
+        </div>
+      )}
+      {kind === "hold" && (
+        <>
+          {chips("Which hold", HOLDS, hold, setHold)}
+          <div className="grid grid-cols-2 gap-2">{box2("Time held", "min:s", held, setHeld, "Time held, minutes and seconds", "numeric", "3.6rem")}</div>
+        </>
+      )}
+      {kind === "vloss" && (
+        <>
+          {pickExercise}
+          <div className="grid grid-cols-2 gap-2">
+            {box2("Weight, % of 1RM", "%", percent, setPercent, "Weight as a percentage of 1RM", "numeric", "2rem")}
+            {box2("Reps in the set", "reps", reps, setReps, "Reps in the set", "numeric", "3.2rem")}
+            {box2("Velocity loss", "%", loss, setLoss, "Velocity loss the sensor showed, percent", "decimal", "2rem")}
+            {box2("Weight (optional)", unitOf(LIFT, units), lift, setLift, `Weight, ${unitOf(LIFT, units)}`)}
+          </div>
+        </>
+      )}
       <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Note (optional)
         <textarea className="cx-input text-sm" rows={2} maxLength={1000} style={{ color: "var(--ink)" }} value={note} onChange={e => setNote(e.target.value)}
-          placeholder={kind === "rockport" ? "Such as: outdoor track, windy" : "Such as: how they felt"} />
+          placeholder={kind === "rockport" ? "Such as: outdoor track, windy" : kind === "onerm" || kind === "vloss" ? "Such as: belt, paused reps" : "Such as: how they felt"} />
       </label>
-      {/* The article's safety note. */}
+      {/* Verywell's safety note, and GymAware's for strength: form first. */}
       <p className="text-xs" style={{ color: "var(--iron)" }}>
-        Feeling agitated or moody, sleeping badly, off their food, low or stressed can be signs of overtraining: back off for at least a week before testing again.
+        {NEEDS_WHO.includes(kind) || kind === "vo2"
+          ? "Feeling agitated or moody, sleeping badly, off their food, low or stressed can be signs of overtraining: back off for at least a week before testing again."
+          : "Only good form counts: if the technique breaks down, the test isn't measuring what they can do, and they could be hurt."}
       </p>
       <div className="flex gap-2">
         <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy} aria-busy={busy}>{busy ? "Saving…" : "Save"}</button>
@@ -161,9 +278,9 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
 }
 
 /* One result, as on the client's details and a message's card. */
-export function TestResult({ t, previous }) {
-  const d = describe(t);
-  const c = changeOf(t, previous);
+export function TestResult({ t, previous, units }) {
+  const d = describe(t, units);
+  const c = changeOf(t, previous, units);
   return (
     <div className="text-sm">
       <div className="flex items-baseline flex-wrap gap-x-2">
@@ -171,7 +288,7 @@ export function TestResult({ t, previous }) {
         {d.rating && <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "var(--accent-soft)", color: "var(--accent)" }}>{d.rating}</span>}
       </div>
       <div className="text-xs" style={{ color: "var(--iron)" }}>
-        {d.detail}{c ? ` · ${c} since ${dateText(previous.takenOn)}` : ""}
+        {[d.detail, c && `${c} since ${dateText(previous.takenOn)}`].filter(Boolean).join(" · ")}
       </div>
     </div>
   );
@@ -208,8 +325,12 @@ export function FitnessTests({ client, onSignedOut }) {
 
   const list = data?.tests || [];
   const units = data?.units || "imperial";
-  const kinds = TEST_KINDS.filter(k => list.some(t => t.kind === k));
-  const before = (t) => list.find(x => x.kind === t.kind && x.takenOn < t.takenOn) || null;
+  /* Each test (and exercise, jump or hold) once, its latest first, in the
+     groups' order. */
+  const order = TEST_GROUPS.flatMap(g => g.kinds);
+  const series = [...new Set(list.map(seriesOf))].sort((a, b) => order.indexOf(a.split("|")[0]) - order.indexOf(b.split("|")[0]));
+  const groupOf = (key) => TEST_GROUPS.find(g => g.kinds.includes(key.split("|")[0])).label;
+  const before = (t) => list.find(x => seriesOf(x) === seriesOf(t) && x.takenOn < t.takenOn) || null;
 
   /* A function, not a component: as a component defined in here it would be
      a new one each render, and a result being changed would lose what was typed. */
@@ -217,7 +338,7 @@ export function FitnessTests({ client, onSignedOut }) {
     <div key={t.id} className="rounded-lg p-2.5 mt-2" style={{ background: "var(--ghost-fill)" }}>
       <div className="flex items-start justify-between gap-2">
         <span className="min-w-0">
-          {first && <span className="block text-sm font-semibold">{TESTS[t.kind].label}</span>}
+          {first && <span className="block text-sm font-semibold">{titleOf(t)}</span>}
           <span className="block text-xs mb-1" style={{ color: "var(--iron)" }}>{dateText(t.takenOn)} · by {t.mine ? "you" : t.takenBy}</span>
         </span>
         {t.mine && editing !== t.id && deleting !== t.id && (
@@ -232,7 +353,7 @@ export function FitnessTests({ client, onSignedOut }) {
           onSave={async (body) => { if (await send("PUT", `/tests/${t.id}`, body)) setEditing(null); }} />
       ) : (
         <>
-          <TestResult t={t} previous={before(t)} />
+          <TestResult t={t} previous={before(t)} units={units} />
           {t.note && <p className="text-xs mt-1.5" style={{ color: "var(--iron)" }}>{t.note}</p>}
         </>
       )}
@@ -259,11 +380,13 @@ export function FitnessTests({ client, onSignedOut }) {
       {!data ? (!error && <p className="text-sm" style={{ color: "var(--iron)" }}>Loading…</p>) : (
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None done yet.</p>}
-          {kinds.map(k => {
-            const ofKind = list.filter(t => t.kind === k);
+          {series.map((k, i) => {
+            const ofKind = list.filter(t => seriesOf(t) === k);
             const isOpen = open.includes(k);
+            const heading = (i === 0 || groupOf(series[i - 1]) !== groupOf(k)) && groupOf(k);
             return (
               <div key={k}>
+                {heading && <div className="text-xs font-medium mt-3" style={{ color: "var(--ink-soft)" }}>{heading}</div>}
                 {row(ofKind[0], true)}
                 {isOpen && ofKind.slice(1).map(t => row(t))}
                 {ofKind.length > 1 && (

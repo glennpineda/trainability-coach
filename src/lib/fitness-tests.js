@@ -10,7 +10,19 @@
  * 1-mile walk calculator"; the step test's tables read with their gaps filled
  * downwards and one misprint fixed; and VO2 max shown as a number, the
  * article giving no ratings for it.
+ *
+ * Then strength (Glenn, 18 Oct 2026, from GymAware's "Muscular strength
+ * tests to track fitness progress", by Loek Vossen, which he printed for us):
+ * of its fifteen, the ones a trainer can take without a bar-speed sensor, and
+ * velocity loss for one who has one ("1RM, Jumps, Muscular endurance"). The
+ * article gives no ratings for any of them, so each is a number to follow
+ * over time. The 1RM worked out from a lighter set uses Brzycki's formula, up
+ * to 10 reps ("Brzycki, up to 10 reps"); the article's own way needs a sensor.
+ * Both kinds sit in the one Fitness tests section, in two groups ("One
+ * section, two groups").
  */
+
+import { MEASURES, toShown, fromShown, unitOf } from "./measures.js";
 
 export const TESTS = {
   step: {
@@ -31,8 +43,77 @@ export const TESTS = {
     how: "A VO2 max from a lab or gym treadmill test (a graded exercise test, the Bruce protocol) or reported by a watch, such as a Garmin. Say where it came from.",
     tip: "",
   },
+  onerm: {
+    label: "1RM (one-repetition maximum)",
+    short: "1RM",
+    how: "The heaviest weight lifted once, with good form, in one exercise. Most coaches don't test it at full weight: a lighter set taken to failure, 10 reps or fewer, gives it closely and with less risk.",
+    tip: "From a lighter set, the 1RM is worked out with Brzycki's formula: weight × 36 ÷ (37 − reps).",
+  },
+  jump: {
+    label: "Vertical jump",
+    short: "Jump",
+    how: "From standing, dip quickly and jump as high as possible (a countermovement jump). Measure the height with a wall reach, a jump mat, a phone app or a sensor.",
+    tip: "Hands on hips measures the legs alone; an arm swing jumps higher. Compare like with like.",
+  },
+  rsi: {
+    label: "Drop jump (Reactive Strength Index)",
+    short: "Drop jump",
+    how: "Step off a box, land and jump straight back up, as high and as quickly as possible. The Reactive Strength Index is the jump height divided by the time on the ground; a jump mat or a phone app measures both.",
+    tip: "Higher is better: more height for less time on the ground. Use the same box each time.",
+  },
+  hold: {
+    label: "Hold: wall sit or plank",
+    short: "Hold",
+    how: "Hold a wall sit, a plank or a side plank for as long as possible, and stop the clock when the form breaks. It measures muscular endurance held still: the legs, or the trunk.",
+    tip: "",
+  },
+  vloss: {
+    label: "Velocity loss in a set",
+    short: "Velocity loss",
+    how: "With a bar-speed sensor: one set at a fixed weight, such as 80% of 1RM, every rep as fast as possible. The sensor's app shows how far the speed fell over the set; the less it falls, the better the muscular endurance.",
+    tip: "Keep the weight and the number of reps the same from test to test.",
+  },
 };
 export const TEST_KINDS = Object.keys(TESTS);
+/* How the Which test? list and the section are grouped. */
+export const TEST_GROUPS = [
+  { label: "Heart and lungs", kinds: ["step", "rockport", "vo2"] },
+  { label: "Strength", kinds: ["onerm", "jump", "rsi", "hold", "vloss"] },
+];
+/* The tests that need the client's age and table (women or men). */
+export const NEEDS_WHO = ["step", "rockport"];
+export const JUMP_STYLES = [["hips", "Hands on hips"], ["swing", "Arm swing"]];
+export const JUMP_TOOLS = ["Wall reach", "Jump mat", "Phone app", "Sensor"];
+export const HOLDS = [["wallsit", "Wall sit"], ["plank", "Plank"], ["sideL", "Side plank, left"], ["sideR", "Side plank, right"]];
+export const MAX_REPS = 10;
+
+/* Weights, heights and box heights in the trainer's units, as measurements
+   are, with the ranges a real one falls in (metric). */
+export const LIFT = { key: "lift", label: "Weight", kind: "mass", min: 1, max: 500 };
+export const HEIGHT = { key: "jumpHeight", label: "Height", kind: "length", min: 2, max: 150 };
+export const BOX = { key: "box", label: "Box", kind: "length", min: 10, max: 120 };
+const BODY = MEASURES.find(m => m.key === "weight");
+export { BODY as BODY_WEIGHT };
+
+/** Brzycki's 1RM from a set of `reps` (1–10) at `kg`, to two places. */
+export const brzycki = (kg, reps) => Math.round((kg * 36 / (37 - reps)) * 100) / 100;
+
+/** The Reactive Strength Index: jump height (cm) ÷ ground contact time (ms), as metres ÷ seconds. */
+export const rsiOf = (heightCm, contactMs) => Math.round(((heightCm / 100) / (contactMs / 1000)) * 100) / 100;
+
+/** Which results are compared with each other: the same test, and for
+    some, the same exercise, jump style or hold. */
+export function seriesOf(t) {
+  const d = t.data || {};
+  return `${t.kind}|${d.exerciseId || d.style || d.hold || ""}`;
+}
+/** A result's name, with what it was of: "1RM · Barbell back squat". */
+export function titleOf(t, { short = false } = {}) {
+  const d = t.data || {};
+  const what = d.exercise || JUMP_STYLES.find(([k]) => k === d.style)?.[1] || HOLDS.find(([k]) => k === d.hold)?.[1] || "";
+  if (!what) return short ? TESTS[t.kind]?.short : TESTS[t.kind]?.label;
+  return `${t.kind === "jump" && !short ? TESTS.jump.label : TESTS[t.kind].short} · ${what}`;
+}
 export const VO2_SOURCES = ["Lab or gym test", "Garmin", "Apple Watch", "Fitbit", "Other watch or app"];
 
 /* The article's step-test ratings, best first: one-minute heart rate after
@@ -113,26 +194,62 @@ export function sexOf(gender) {
 }
 
 /**
- * A result as it is shown: `{ title, value, rating, detail }`.
- * `value` is what is compared from one result to the next.
+ * A result as it is shown: `{ text, rating, detail }`, weights and heights in
+ * `units` (the trainer's).
  */
-export function describe(t) {
+export function describe(t, units = "imperial") {
+  const d = t.data || {};
   if (t.kind === "step") {
     return { title: TESTS.step.label, value: t.result, text: `${Math.round(t.result)} bpm`, rating: t.rating || null,
       detail: t.rating ? `Rated for ${t.sex === "female" ? "women" : "men"} aged ${t.ratingAges}` : "Not rated: the article's tables start at 18" };
   }
   if (t.kind === "rockport") {
     return { title: TESTS.rockport.label, value: t.result, text: `VO2 max ${t.result} ml/kg/min`, rating: null,
-      detail: `1 mile in ${clockOf(t.data?.seconds)}, heart rate ${t.data?.heartRate} bpm` };
+      detail: `1 mile in ${clockOf(d.seconds)}, heart rate ${d.heartRate} bpm` };
   }
-  return { title: TESTS.vo2.label, value: t.result, text: `VO2 max ${t.result} ml/kg/min`, rating: null, detail: t.data?.source || "" };
+  if (t.kind === "onerm") {
+    const w = (kg) => `${toShown(LIFT, kg, units)} ${unitOf(LIFT, units)}`;
+    const how = d.method === "estimated" ? `Worked out from ${w(d.weightKg)} × ${d.reps}` : "Lifted once";
+    const ratio = d.bodyWeightKg ? ` · ${(t.result / d.bodyWeightKg).toFixed(2)} × body weight` : "";
+    return { title: titleOf(t), value: t.result, text: `1RM ${w(t.result)}`, rating: null, detail: `${how}${ratio}` };
+  }
+  if (t.kind === "jump") {
+    return { title: titleOf(t), value: t.result, text: `${toShown(HEIGHT, t.result, units)} ${unitOf(HEIGHT, units)}`, rating: null,
+      detail: [JUMP_STYLES.find(([k]) => k === d.style)?.[1], d.tool].filter(Boolean).join(", ") };
+  }
+  if (t.kind === "rsi") {
+    return { title: titleOf(t), value: t.result, text: `RSI ${t.result.toFixed(2)}`, rating: null,
+      detail: `Jumped ${toShown(HEIGHT, d.heightCm, units)} ${unitOf(HEIGHT, units)}, ${d.contactMs} ms on the ground${d.boxCm ? `, from a ${toShown(BOX, d.boxCm, units)} ${unitOf(BOX, units)} box` : ""}` };
+  }
+  if (t.kind === "hold") {
+    return { title: titleOf(t), value: t.result, text: `${clockOf(t.result)} held`, rating: null, detail: "" };
+  }
+  if (t.kind === "vloss") {
+    return { title: titleOf(t), value: t.result, text: `Velocity loss ${t.result}%`, rating: null,
+      detail: `${d.reps} reps at ${d.percent}% of 1RM${d.weightKg ? ` (${toShown(LIFT, d.weightKg, units)} ${unitOf(LIFT, units)})` : ""}` };
+  }
+  return { title: TESTS.vo2.label, value: t.result, text: `VO2 max ${t.result} ml/kg/min`, rating: null, detail: d.source || "" };
 }
 
-/** How a result changed since the one before: a step test's heart rate falling is fitter. */
-export function changeOf(t, before) {
+/**
+ * How a result changed since the one before, as the trainer reads it: a step
+ * test's heart rate falling is fitter, as is less velocity loss; the rest,
+ * higher is better. Shown as it is, "−11 bpm", "+5 lb", "+0:20".
+ */
+export function changeOf(t, before, units = "imperial") {
   if (!before || before.result == null || t.result == null) return null;
-  const d = Math.round((t.result - before.result) * 10) / 10;
+  const sign = (d) => (d > 0 ? "+" : "−");
+  if (t.kind === "hold") {
+    const d = Math.round(t.result - before.result);
+    return d ? `${sign(d)}${clockOf(Math.abs(d))}` : "no change";
+  }
+  const measure = t.kind === "onerm" ? LIFT : t.kind === "jump" ? HEIGHT : null;
+  const a = measure ? toShown(measure, t.result, units) : t.result;
+  const b = measure ? toShown(measure, before.result, units) : before.result;
+  const d = Math.round((a - b) * 100) / 100;
   if (!d) return "no change";
-  const unit = t.kind === "step" ? " bpm" : "";
-  return `${d > 0 ? "+" : "−"}${Math.abs(d)}${unit}`;
+  const unit = t.kind === "step" ? " bpm" : t.kind === "vloss" ? " points" : measure ? ` ${unitOf(measure, units)}` : "";
+  return `${sign(d)}${Math.abs(d)}${unit}`;
 }
+
+export { fromShown };

@@ -1,6 +1,6 @@
 import React from "react";
 import { Printer } from "lucide-react";
-import { TESTS, describe, changeOf } from "../lib/fitness-tests";
+import { TESTS, describe, changeOf, titleOf } from "../lib/fitness-tests";
 
 /*
  * A fitness test result as it was sent in a message (MessagesTab), laid out
@@ -11,8 +11,9 @@ import { TESTS, describe, changeOf } from "../lib/fitness-tests";
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
 
 export function PrintTest({ data }) {
-  const d = describe(data);
-  const c = changeOf(data, data.previous);
+  const units = data.units || "imperial";
+  const d = describe(data, units);
+  const c = changeOf(data, data.previous, units);
   const t = TESTS[data.kind];
   const row = (label, value) => (
     <tr style={{ borderBottom: "1px solid #d5dde3" }}>
@@ -29,7 +30,7 @@ export function PrintTest({ data }) {
         </button>
       </div>
       <div className="text-xs cx-wordmark" style={{ color: "#007BA7" }}>TRAINABILITY® COACH</div>
-      <h1 className="text-3xl font-medium mt-1">{t.label}</h1>
+      <h1 className="text-3xl font-medium mt-1">{titleOf(data)}</h1>
       <div className="text-sm mt-1" style={{ color: "#5b6b78" }}>
         For {data.clientName} · {dateText(data.takenOn)}{data.takenBy ? ` · with ${data.takenBy}` : ""}
       </div>
@@ -37,7 +38,7 @@ export function PrintTest({ data }) {
         <tbody>
           {row("Result", <strong>{d.text}</strong>)}
           {d.rating && row("Rating", <strong>{d.rating}</strong>)}
-          {row(data.kind === "step" ? "Rated" : "Details", d.detail)}
+          {d.detail && row(data.kind === "step" ? "Rated" : "Details", d.detail)}
           {c && row(`Since ${dateText(data.previous.takenOn)}`, `${c}${data.previous.rating && data.previous.rating !== data.rating ? ` (was ${data.previous.rating})` : ""}`)}
         </tbody>
       </table>

@@ -106,6 +106,12 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   same test before. Every trainer of the client sees them; only the one who
   recorded a result can change or delete it. A result can be attached to a
   message, and opens as a page ready to print.
+- **Strength tests**, in Fitness tests under their own heading: a 1RM for
+  any exercise in the library, lifted or worked out from a lighter set of 10
+  reps or fewer, and against body weight; the vertical jump; the drop jump's
+  Reactive Strength Index; a wall sit or plank held; and velocity loss from a
+  bar-speed sensor. Each shows how it changed since the same test (and
+  exercise) before, and can be sent in a message and printed.
 - **Notifications.** Turn them on for a phone or computer from the account
   menu, as in Studio, and be told when a client writes to you in Messages:
   who, and the start of what they wrote. A tap opens the conversation. Send a

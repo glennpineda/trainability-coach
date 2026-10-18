@@ -171,8 +171,8 @@ export async function measurementsAttachment(owner, { set, previous, clientName,
 }
 
 /** A fitness test result kept as a copy, waiting to be sent, with the one before it of the same test. */
-export async function testAttachment(owner, { test, previous, clientName }) {
-  const data = { testId: test.id, clientName, kind: test.kind, takenOn: test.takenOn, takenBy: test.takenBy, age: test.age, sex: test.sex,
+export async function testAttachment(owner, { test, previous, clientName, units }) {
+  const data = { testId: test.id, clientName, units, kind: test.kind, takenOn: test.takenOn, takenBy: test.takenBy, age: test.age, sex: test.sex,
     data: test.data, result: test.result, rating: test.rating, ratingAges: test.ratingAges, note: test.note,
     previous: previous ? { takenOn: previous.takenOn, result: previous.result, rating: previous.rating } : null };
   const id = await insertWithNewId("attachment", (newId) => run(

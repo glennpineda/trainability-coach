@@ -23,6 +23,7 @@ import * as push from "./push.js";
 import * as measurements from "./measurements.js";
 import * as fitnessTests from "./fitness-tests.js";
 import { previousOf } from "../src/lib/measures.js";
+import { seriesOf } from "../src/lib/fitness-tests.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -607,15 +608,17 @@ app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurem
 }));
 
 /* A fitness test result kept as a copy to attach, with the one of the same
-   test from an earlier day for the change. */
+   test (and exercise, jump or hold) from an earlier day for the change. */
 app.post("/api/attachments/test", asSignedIn("POST /attachments/test", async (req, res, user) => {
   const row = await fitnessTests.testById(String(req.body?.testId || ""));
   const client = row && (await myClients(req, user)).find(c => c.id === row.client_id);
   if (!row || !client) return res.status(404).json({ error: "That test result is no longer there.", code: "not_found" });
-  const list = (await fitnessTests.testsOf(row.client_id, user.id)).filter(t => t.kind === row.kind);
-  const at = list.findIndex(t => t.id === row.id);
+  const all = await fitnessTests.testsOf(row.client_id, user.id);
+  const test = all.find(t => t.id === row.id);
+  const list = all.filter(t => seriesOf(t) === seriesOf(test));
   res.json(await messages.testAttachment(user.id, {
-    test: list[at], previous: list.find(t => t.takenOn < list[at].takenOn) || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
+    test, previous: list.find(t => t.takenOn < test.takenOn) || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
+    units: await trainerSettings.unitsOf(user.id),
   }));
 }));
 
