@@ -1,7 +1,7 @@
 {
   "name": "trainability-coach",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.66",
   "codename": "Caesious",
   "type": "module",
   "scripts": {
@@ -11,18 +11,26 @@
     "server": "node server/index.js",
     "start": "npm run build && node server/index.js",
     "manual": "node scripts/manual.mjs",
-    "check-docs": "node scripts/manual.mjs --check",
-    "screenshots": "node scripts/screenshots.mjs"
+    "check-docs": "node scripts/manual.mjs --check && node scripts/iq.mjs --check",
+    "screenshots": "node scripts/screenshots.mjs",
+    "iq": "node scripts/iq.mjs",
+    "check-iq": "node scripts/iq.mjs --check",
+    "check-ui": "node scripts/check-ui.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "^6.1.2",
     "express": "^5.2.1",
     "lucide-react": "^0.454.0",
+    "mysql2": "^3.24.6",
+    "nodemailer": "^10.0.0",
+    "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "web-push": "^3.6.7"
   },
   "engines": {
     "node": ">=22.12"

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { apiRequest } from "../lib/api";
+import { ROUTE, CHOICES } from "../lib/look";
 
 /**
- * Who is signed in, asked of Studio's API.
+ * Who is signed in: a Coach account, or a Studio account through Studio's
+ * API (Coach's server decides which).
  *
  * `undefined` while the first answer is on its way, `null` when nobody is.
  * Somebody who signed in to Coach before (and ticked "Keep me logged in")
@@ -28,7 +30,18 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(async (email, password, remember) => {
-    const { user } = await apiRequest("POST", "/auth/login", { email, password, remember });
+    const { user, linked } = await apiRequest("POST", "/auth/login", { email, password, remember });
+    /* A Coach account just joined to its Trainability account: Home says so once. */
+    if (linked) { try { sessionStorage.setItem("cx-linked", "1"); } catch { /* not kept */ } }
+    setOffline(false);
+    setUser(user);
+    return user;
+  }, []);
+
+  /* A new Coach account (Coach's own, for a trainer not on Trainability's
+     team), signed in at once. */
+  const signup = useCallback(async (name, email, password, remember) => {
+    const { user } = await apiRequest("POST", "/auth/signup", { name, email, password, remember });
     setOffline(false);
     setUser(user);
     return user;
@@ -39,5 +52,28 @@ export function useAuth() {
     try { await apiRequest("POST", "/auth/logout"); } finally { setUser(null); }
   }, []);
 
-  return { user, offline, login, logout };
+  /* Studio said the session has ended (a 401 from any later request): back
+     to sign-in, with nothing to tell Studio. */
+  const signedOut = useCallback(() => setUser(null), []);
+
+  /* Their own password chosen after a temporary one. */
+  const passwordChosen = useCallback(() => setUser(u => (u ? { ...u, mustChangePassword: false } : u)), []);
+
+  /* One Accessibility choice (src/lib/look.js): on the page at once, as
+     Studio's are, then saved on the account (Studio's, for a Trainability
+     trainer, through Coach's relay). Put back, and thrown, if it didn't save. */
+  const chooseLook = useCallback(async (key, value) => {
+    if (!ROUTE[key] || !CHOICES[key].includes(value)) return;
+    let before;
+    setUser(u => { before = u?.[key]; return u ? { ...u, [key]: value } : u; });
+    try {
+      const { user: saved } = await apiRequest("POST", ROUTE[key], { [key]: value });
+      if (saved && saved[key] !== undefined) setUser(u => (u ? { ...u, [key]: saved[key] } : u));
+    } catch (err) {
+      setUser(u => (u ? { ...u, [key]: before } : u));
+      throw err;
+    }
+  }, []);
+
+  return { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook };
 }

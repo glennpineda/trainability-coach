@@ -7,7 +7,46 @@
     <title>Trainability Coach</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- ?v=5 since the logo kit of build 1.0.57 (?v=4 was 1.0.43, ?v=3 1.0.42, ?v=2 the redraw of 1.0.19): a phone
+         keeps an icon by its address, so a new picture at the old address can
+         be passed over. Raise the number, here and in the manifest, whenever
+         the icon files change (as Studio does). -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=5" />
+    <!-- The name under the icon when Coach is added to a home screen (Glenn,
+         17 Oct 2026: "Coach" only): Safari reads the first, Android the
+         manifest's short_name. The tab keeps the full title. Opened from the
+         icon, Coach fills the screen, as Studio does. -->
+    <meta name="apple-mobile-web-app-title" content="Coach" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="application-name" content="Coach" />
+    <link rel="manifest" href="/manifest.webmanifest?v=5" />
+    <!-- The fonts are imported in src/index.css (Roboto and Quicksand, as
+         Studio); these only open the connections early. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Accessibility (src/lib/look.js): the look this browser was last
+         signed in with, on <html> before anything is drawn, so a dark or
+         large page doesn't open light and small for a moment. The same
+         answers as look.js's applyLook and resolveLook, kept short. -->
+    <script>
+      (function () {
+        var d = document.documentElement.dataset, l = {};
+        try { l = JSON.parse(localStorage.getItem("cx-look") || "{}") || {}; } catch (e) {}
+        var m = function (q) { return !!(window.matchMedia && window.matchMedia(q).matches); };
+        if (l.theme === "light" || l.theme === "dark") d.theme = l.theme;
+        if (["purple", "blue", "orange", "green"].indexOf(l.tone) >= 0) d.tone = l.tone;
+        if (l.contrast === "more" || l.contrast === "standard") d.contrast = l.contrast;
+        if (l.motion === "reduced" || l.motion === "full") d.motion = l.motion;
+        if (l.color === "reduced") d.color = "reduced";
+        var size = { small: "87.5%", large: "112.5%", xlarge: "125%" }[l.textSize];
+        if (size) document.documentElement.style.fontSize = size;
+        d.scheme = d.theme || (m("(prefers-color-scheme: dark)") ? "dark" : "light");
+        if (d.contrast === "more" || (d.contrast !== "standard" && m("(prefers-contrast: more)"))) d.hc = "on";
+        if (d.motion === "reduced" || (d.motion !== "full" && m("(prefers-reduced-motion: reduce)"))) d.still = "on";
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

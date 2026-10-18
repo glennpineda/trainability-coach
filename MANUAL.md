@@ -8,8 +8,8 @@ is written out step by step. Where a step says **tap**, you can also click with 
 mouse — they mean the same thing here.
 
 Coach is new, and so is this manual. It covers what the app does today:
-signing in and the home screen. Each new part of the app gets its own chapter
-here as it arrives.
+signing in, finding your way around, your list of clients, and Billy. Each new part
+of the app gets its own chapter here as it arrives.
 
 ---
 
@@ -22,15 +22,49 @@ here as it arrives.
    - [2.3 If you have forgotten your password](#23-if-you-have-forgotten-your-password)
    - [2.4 Signed in with a temporary password](#24-signed-in-with-a-temporary-password)
    - [2.5 Signing out](#25-signing-out)
+   - [2.6 Putting Coach on your Home Screen](#26-putting-coach-on-your-home-screen)
 3. [Finding your way around](#3-finding-your-way-around)
    - [3.1 The bar at the top](#31-the-bar-at-the-top)
    - [3.2 Switching between Coach and Studio](#32-switching-between-coach-and-studio)
    - [3.3 The bar at the bottom](#33-the-bar-at-the-bottom)
    - [3.4 The home screen](#34-the-home-screen)
    - [3.5 Your account menu](#35-your-account-menu)
-   - [3.6 Light or dark](#36-light-or-dark)
-4. [Words this app uses](#4-words-this-app-uses)
-5. [When something goes wrong](#5-when-something-goes-wrong)
+   - [3.6 Accessibility — light or dark, theme, contrast, color, motion and text size](#36-accessibility--light-or-dark-theme-contrast-color-motion-and-text-size)
+   - [3.7 My equipment](#37-my-equipment)
+   - [3.8 My exercises](#38-my-exercises)
+   - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
+   - [3.10 Installation (Primary Master only)](#310-installation-primary-master-only)
+   - [3.11 Reading a book into Coach IQ (Primary Master only)](#311-reading-a-book-into-coach-iq-primary-master-only)
+4. [Your clients](#4-your-clients)
+   - [4.1 Opening your clients](#41-opening-your-clients)
+   - [4.2 Reading the list](#42-reading-the-list)
+   - [4.3 Seeing a client's details](#43-seeing-a-clients-details)
+   - [4.4 Finding a client](#44-finding-a-client)
+   - [4.5 Archived clients](#45-archived-clients)
+   - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
+   - [4.7 A client's limitations](#47-a-clients-limitations)
+   - [4.8 A client's measurements](#48-a-clients-measurements)
+   - [4.9 A client's fitness tests](#49-a-clients-fitness-tests)
+5. [Designing programs](#5-designing-programs)
+   - [5.1 Starting a program](#51-starting-a-program)
+   - [5.2 Adding exercises](#52-adding-exercises)
+   - [5.3 Sets, reps and the rest](#53-sets-reps-and-the-rest)
+   - [5.4 What Coach IQ says](#54-what-coach-iq-says)
+   - [5.5 Days, order and supersets](#55-days-order-and-supersets)
+   - [5.6 Printing it for the client](#56-printing-it-for-the-client)
+6. [Asking Billy](#6-asking-billy)
+   - [6.1 Opening Billy](#61-opening-billy)
+   - [6.2 Asking a question](#62-asking-a-question)
+   - [6.3 Giving Billy a photo or a PDF](#63-giving-billy-a-photo-or-a-pdf)
+   - [6.4 Starting again](#64-starting-again)
+   - [6.5 What Billy can't do](#65-what-billy-cant-do)
+7. [Messages](#7-messages)
+   - [7.1 Your messages](#71-your-messages)
+   - [7.2 Writing to a client](#72-writing-to-a-client)
+   - [7.3 Attaching a picture, a video or a program](#73-attaching-a-picture-a-video-or-a-program)
+   - [7.4 How your client reads it](#74-how-your-client-reads-it)
+8. [Words this app uses](#8-words-this-app-uses)
+9. [When something goes wrong](#9-when-something-goes-wrong)
 
 <div style="page-break-after: always;"></div>
 
@@ -43,8 +77,9 @@ here as it arrives.
 Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
-programs you build for them, and your messages with them. Those parts are
-still being built — the app shows them as **Coming soon** (3.3).
+programs you build for them, and your messages with them. Your day (3.4), your
+list of clients (chapter 4), your programs (chapter 5) and your messages
+with clients (chapter 7) are all here.
 
 ### One account for every Trainability app
 
@@ -83,19 +118,67 @@ by Studio, so:
 1. Open **trainabilitycoach.com** in your web browser.
 2. You will see a white box in the middle of a blue screen, with the Coach
    logo at the top: a hexagon with a **C** in it, and **TRAINABILITY®** and
-   **COACH** underneath. Under the logo is the version the app is on — for
-   example *Version 1.0.0 · Caesious* — and then *Use the same email and
-   password as Trainability Studio.*
-3. Tap the **Email** box and type your email address. With a
-   @trainabilitystudio.com address you can type just the part before the @ —
-   the app adds the rest when you log in.
-4. Tap the **Password** box and type your password.
-5. If this is your own phone or computer, tick **Keep me logged in**. Leave it
+   **COACH** underneath. Under the logo, *You belong here.* changes language
+   every few seconds, as on Studio's sign-in screen; then, in blue, *Please
+   use the email you used when you signed up with Trainability.* The version
+   the app is on is in your account menu once you are signed in (3.5).
+3. Tap the **Your email address** box and type your email address, the same
+   one you use for Studio. With a @trainabilitystudio.com address you can type
+   just the part before the @: the app adds the rest.
+4. Tap **Continue**. It says **One moment…** while the app checks which way
+   in your email takes.
+5. The box now shows your **Email** (greyed; tap **Use a different email** to
+   change it) and an empty **Password** box. Type your password, the same as
+   in Studio.
+6. If this is your own phone or computer, tick **Keep me logged in**. Leave it
    unticked on a shared machine — see 2.2.
-6. Tap the blue **Log in** button. It says **Signing in…** for a moment while
+7. Tap the blue **Log in** button. It says **Signing in…** for a moment while
    the app checks.
 
 You are now signed in, and you land on the home screen (3.4).
+
+**A Coach account.** A trainer who isn't on Trainability's team can make a
+Coach account of their own. If the email has no trainer account, the box
+says *There's no trainer account for … yet.* and *If you're a trainer, make
+your Coach account now. It's free.*
+
+1. Tap **Create a Coach account**. The box shows *Create your Coach account*.
+2. Type **Your name**. Your **Email** is there already (tap **Use a different
+   email** to change it).
+3. Type a password in **Choose a password**: at least 8 characters.
+4. Tick **Keep me logged in** if this is your own phone or computer.
+5. Tap **Create account**. It says **One moment…**, then you are signed in
+   and on the home screen.
+
+Next time, type your email, tap **Continue**, and the password step opens as
+in steps 5–7 above. If the email already has a Coach account, it says
+*There's already a Coach account for that email. Log in instead.*; if it is a
+Trainability team account, *That email already has a Trainability account.
+Log in with it instead.*
+
+With a Coach account, everything works the same: clients (chapter 4),
+programs, equipment, exercises and Billy. A Coach account's clients are its
+own; no one else sees them.
+
+**If you also have a Trainability account.** Your Coach account can be
+connected to it, so you have one sign-in:
+
+- If your Trainability account has the same email, the password step says
+  *This email now has a Trainability account. Log in with its password, and
+  your Coach account will be connected to it: everything you made in Coach
+  stays yours.* Log in with your **Trainability** password (your old Coach
+  password no longer works).
+- If it has a different email, sign in to Coach, open your account menu
+  (3.5), tap **Link your Trainability account**, type that account's email
+  and password, and tap **Link accounts**.
+
+Either way, Home then says *Your Coach account is now connected to your
+Trainability account.* Your programs, equipment, exercises and settings are
+all still there. Your clients stay private until you move them (4.6).
+
+**A client.** Coach has no sign-in for clients yet. Under the Coach account
+button the box says *Training with us as a client? Your own page is in
+Studio.*, with **Go to my page**, which opens it.
 
 If the email and password do not match, the box says *That email and password
 don't match.* in red under **Keep me logged in**, and nothing else happens.
@@ -119,7 +202,8 @@ When you are still signed in, opening Coach goes straight to the home screen.
 
 ### 2.3 If you have forgotten your password
 
-1. On the sign-in screen, tap **Forgot password?** underneath the Log in button.
+1. On the sign-in screen, type your email and tap **Continue**, then tap
+   **Forgot password?** underneath the Log in button.
 2. Type your email address into the **Email** box. If you had already typed it
    on the sign-in screen, it is there already.
 3. Tap **Send temporary password**. The screen says the same thing whether or
@@ -132,20 +216,30 @@ When you are still signed in, opening Coach goes straight to the home screen.
 The temporary password works in Coach and in Studio. See 2.4 for what to do
 next.
 
+It works the same for a Coach account (2.1): the temporary password comes
+from Coach, by email, and works in Coach only. The screen says *If that email
+belongs to an account, a temporary password is on its way to it.* Asking more
+than three times in a quarter of an hour says *Too many attempts. Try again in
+a few minutes.*
+
 ### 2.4 Signed in with a temporary password
 
 A temporary password is meant to be used once and then replaced with your own.
-When you sign in to Coach with one, the home screen shows a box at the top:
-*You're signed in with a temporary password.*
+When you sign in with one, before anything else Coach shows **Set a new
+password**: *Hi …, you logged in with a temporary password. Choose your own
+to continue.*
 
-1. Tap **Studio** in that box. Studio opens.
-2. Sign in to Studio with the same temporary password.
-3. Studio asks you to choose your own password. Type it into **New password**
-   and again into **Confirm new password** — at least 8 characters — and tap
-   **Set password & continue**.
+1. Type your own password into **New password**: at least 8 characters.
+2. Type it again into **Confirm new password**.
+3. Tap **Set password & continue**. You are on the home screen.
 
-Your new password now works in both apps. The box in Coach goes away the next
-time you sign in to Coach.
+If the two don't match, it says *Passwords don't match.*; if it is too short,
+*New password must be at least 8 characters.*; and it can't be the temporary
+one again (*Choose a password different from the one you have now.*).
+**Log out instead** leaves without choosing.
+
+For a Trainability account, your new password works in Studio too, as it is
+the same account. For a Coach account, it is Coach's.
 
 > **An account that came over from the old app.** If your account was moved
 > across from the old Trainability app and has not been given a password yet,
@@ -160,6 +254,26 @@ time you sign in to Coach.
 
 You are back on the sign-in screen. Signing out of Coach does not sign you out
 of Studio.
+
+### 2.6 Putting Coach on your Home Screen
+
+On a phone or tablet, the sign-in screen has a strip along the bottom. Coach
+then has its own icon, named **Coach**, and opens full screen from it.
+
+**On an iPhone or iPad** the strip says **Add Coach to your Home Screen**.
+
+1. Tap it. A box shows three steps.
+2. Tap **OK**, then tap the **Share** button: at the bottom of Safari on an
+   iPhone, at the top on an iPad.
+3. Scroll down and tap **Add to Home Screen**.
+4. Tap **Add**.
+
+**On an Android phone** the strip says **Install the app**. Tap it, then
+**Install** in the box your phone shows.
+
+Not now? Tap the **×** at the end of the strip. It stays away on that phone
+for a month. The strip does not show once Coach is on your Home Screen, or on
+a computer.
 
 <div style="page-break-after: always;"></div>
 
@@ -177,6 +291,8 @@ Across the top of every screen:
 
 - **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
   **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
+- **Billy's face**, in a lilac square, when Billy is set up for your
+  business — tap it to ask him something (chapter 6).
 - **In the corner**, your photo (or your initials) with a small arrow
   pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
@@ -214,39 +330,79 @@ parts of Coach. It has four buttons, as pictures with no words:
 | Button | Picture | Goes to |
 |---|---|---|
 | **Home** | A house | The home screen (3.4). |
-| **Clients** | Two people | Clients — coming soon. |
-| **Programs** | A clipboard with a list | Programs — coming soon. |
-| **Messages** | A speech bubble | Messages — coming soon. |
+| **Clients** | Two people | Your clients (chapter 4). |
+| **Programs** | A clipboard with a list | Your programs (chapter 5). |
+| **Messages** | A speech bubble | Your messages with clients (chapter 7). |
 
 The one you are on sits in a filled blue circle, which slides across when you
 tap another. On a computer, pointing at a button shows its name.
 
-**Clients**, **Programs** and **Messages** are not built yet. Each opens a page
-with its name at the top, a card saying what it will be for, and *This part of
-Coach is being built. It will appear here when it's ready.*
+When a client has written to you and you haven't read it yet, a small red
+number on the corner of **Messages** says how many messages are waiting.
 
 ### 3.4 The home screen
 
 Coach opens on Home. From the top:
 
-- **The blue band.** Today's date, and a greeting with your first name:
+- **The blue band**, shading from deep blue on the left to sky blue on the
+  right (in your theme's colors if you chose one, 3.6) and fading into the
+  page behind the first card. On it, today's date,
+  and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.
-- **Four cards**, one for each part of Coach being built:
+- **Today**: your sessions, read from Trainability's schedule (see *Today*,
+  below).
+- **Three cards**, one for each of the other parts of Coach:
 
-| Card | What it will be for |
+| Card | What it is for |
 |---|---|
-| **Today** | Your sessions for the day, at a glance. |
-| **Clients** | Everyone you coach, with their goals and progress. |
-| **Programs** | Workouts and plans you build and assign. |
-| **Messages** | Check-ins and notes between you and your clients. |
+| **Clients** | Everyone you coach, with their contact details and sessions. |
+| **Programs** | Programs you design for your clients, with Coach IQ beside you. |
+| **Messages** | Messages with your clients: words, pictures, videos and programs. |
 
-Each is marked **Coming soon**. Tapping **Clients**, **Programs** or
-**Messages** opens its page, the same as its button on the bottom bar;
-**Today** will live on Home itself.
+Next to **Clients** it says how many clients you have, such as **5 active
+clients**; next to **Messages**, how many messages from clients are waiting,
+such as **2 new**. Tapping a card opens its page, the same as its button on
+the bottom bar.
 
-If you are signed in with a temporary password, a box at the top of Home says
-so — see 2.4.
+#### Today
+
+Today shows your own sessions, the ones booked for you in Trainability. Coach
+only shows them: it does not book, move or cancel anything. It has two tabs
+at its top:
+
+- **Today**: today's sessions, in time order.
+- **→ 7 days**: today and the next six days, one line per day with something
+  booked, such as **Tuesday, Oct 20 · 1 appointment**. The first day with
+  something booked is open; tap a day's line to open or close it.
+
+Each session shows, from the left:
+
+1. The time it starts, with its length under it, such as **60 min**.
+2. The client's name (**· Assessment** after it for an assessment), and where
+   it is: the place and the room. A session with nobody's name on it says
+   **Private**.
+3. What to know before they walk in, when it applies:
+   - **First session**: their first session with you.
+   - **New client**: one of their first three sessions with you.
+   - **Nothing booked after this** (in amber): they have nothing booked with
+     you after this one. It goes once the session is over.
+4. Their program in blue, or **No program yet**, and how many limitations
+   are written for them, such as **2 limitations** (4.7).
+
+A green tick on the right means the session was trained. A cancelled one is
+greyed out and crossed through, with **Cancelled** on the right.
+
+**Tap a session** to open the client's program. If they have no program yet,
+their details open on the Clients page instead.
+
+When nothing is booked today, Today says **Nothing booked today.** and when
+the next one is, such as *Next: Tue, Oct 20 at 10:00 AM with Sam.* With
+nothing in the next week it says **Nothing booked in the next 7 days.**
+
+Signed in with a Coach account (2.1), you have no schedule in Trainability,
+so Today says *Your sessions show here once your Coach account is linked to
+your Trainability account.* (3.5).
 
 ### 3.5 Your account menu
 
@@ -257,30 +413,1069 @@ so — see 2.4.
 1. Tap your photo or initials in the top right corner. The button stays
    shaded, and its arrow turns to point up, while the menu is open.
 2. The menu shows:
-   - **Your name**, your email address, and what kind of account you have,
-     the same as in Studio: **Trainer** or **Front desk** in words, and for
-     an Admin or a Master a small shield naming it — blue for an **Admin**,
-     pale gold for a **Master**, gold with a sparkle for the **Primary
-     Master**.
+   - **Your name**, your email address, and what kind of account you have:
+     **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
+     the same as in Studio. An Admin, Master or Primary Master account says
+     so on a small shield badge: gold with a sparkle for the Primary Master,
+     paler gold for a Master, blue for an Admin.
+   - **My equipment** — what you have to train with (3.7).
+   - **My exercises** — what you call your exercises, and exercises of your
+     own (3.8).
+   - **Review Coach IQ** — only for the Primary Master: passing and editing
+     the library (3.9).
+   - **Installation** — only for the Primary Master: settings for this copy of
+     Coach on its server (3.10).
+   - **Units** — **Imperial** (pounds, inches, feet, yards, miles) or
+     **Metric** (kilograms, centimetres, metres, kilometres). Tap one to
+     choose it; it is shaded blue when chosen. It starts on **Imperial**.
+     Weights and distances in Coach IQ, and in Billy's answers, are then
+     shown in your units only, rounded to what a gym has: loads to 5 lb or
+     2.5 kg. It is your own choice; other trainers keep theirs.
+   - **Link your Trainability account** — only with a Coach account (2.1):
+     connects it to a Trainability account with another email.
+   - **Accessibility** — light or dark, the app's colors, contrast, motion and
+     text size (3.6). The line under it says what you have chosen, such as
+     *Matches this device* or *Dark · High contrast*.
+   - **Notifications** — news from Coach on this phone or computer (see
+     *Notifications*, below). The line under it says *On for this device* or
+     *Off on this device*. It isn't there with a Coach account, which has
+     nothing to be told yet, or while Coach's server isn't set up for them.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
-     *Version 1.0.0 · Caesious*. If you ever report a problem, say which
+     *Version 1.0.1 · Caesious*. If you ever report a problem, say which
      version it was.
 
 To close it without choosing anything, tap the photo again, tap anywhere else,
 or press Esc on a keyboard.
 
-### 3.6 Light or dark
+#### Notifications
 
-Coach follows your phone or computer. If your device is set to dark mode,
-Coach is dark too — a navy background with white and light blue words —
-and light otherwise. There is nothing to set in the app.
+Coach can tell you when a client writes to you in Messages (chapter 7), with
+a notification on your phone or computer, even when Coach isn't open. It is
+turned on for one device at a time: do it on each one you want told.
+
+1. Open your account menu and tap **Notifications**.
+2. Tap **On**. Your phone or computer asks whether Coach may show
+   notifications; tap **Allow**. (If you tap **Don't Allow** there, it can only
+   be changed in the browser's own settings, so the box says so.)
+3. It says what you will be told about: *Messages from clients. When a client
+   writes to you in Messages: who, and the start of what they wrote.*
+4. Tap **Send a test** to see one arrive: *Sent. It should arrive in a few
+   seconds.*
+
+Tapping a notification opens Coach on that client's conversation.
+
+To stop them on this device, open **Notifications** again and tap **Off**.
+
+**On an iPhone or iPad**, notifications only work once Coach is on your Home
+Screen (2.6). In Safari the box says *On an iPhone or iPad, notifications
+work once Coach is on your Home Screen*, with the steps. Add it, open Coach
+from its icon, and turn them on there.
+
+### 3.6 Accessibility — light or dark, theme, contrast, color, motion and text size
+
+Open your account menu (3.5) and tap **Accessibility**. It holds six
+settings, each a row of choices. The screen changes as soon as you tap, so
+there is nothing to save. Tap **X**, or anywhere outside the box, to close it.
+
+**Appearance** — light or dark.
+
+| | What you get |
+|---|---|
+| **Same as device** | Light or dark to match your phone or computer, changing when it does. This is where everybody starts. |
+| **Light** | Light, whatever the device is set to. |
+| **Dark** | Dark, whatever the device is set to: a navy background with white and light blue words. |
+
+**Theme** — the app's color. Each one comes in light and in dark, and follows
+whatever **Appearance** says.
+
+| | What you get |
+|---|---|
+| **Default** | Coach's usual cerulean and sky. This is where everybody starts. |
+| **Purple** | Violet and periwinkle, an homage to Trainability. |
+| **Blue** | A deep navy, a shade darker and calmer than Coach's usual blue. |
+| **Orange** | International Orange, the Golden Gate's own. Errors show in rose, so they aren't mistaken for the orange. |
+| **Green** | Olive, moss and sage. Something done, like a trained session's tick, shows in teal, so it stands apart from the green. |
+
+The Coach logo keeps its own blue in every theme. High contrast and reduced
+color still apply over any of them.
+
+**Contrast** — for when the usual colors are hard to make out.
+
+| | What you get |
+|---|---|
+| **Same as device** | High contrast only when your phone or computer is set to increase contrast in its own accessibility settings. This is where everybody starts. |
+| **Standard** | The usual colors, even on a device set to increase contrast. |
+| **High** | Black and white with strong outlines, and a bold ring around whatever you are on with the keyboard. It works with light or dark: high contrast in the dark is light text on black. The drifting hexagons in the background are left out. |
+
+**Color** — for when a screen full of color is too much.
+
+| | What you get |
+|---|---|
+| **Full** | The app's usual colors. This is where everybody starts. |
+| **Reduced** | Greys throughout, with one color kept for buttons, links and whatever is selected: Coach's blue, or your theme's own. Buttons and boxes you can type in get a darker outline. Photos keep their colors. The drifting hexagons are left out. |
+
+Nothing in Coach depends on color alone, so reduced color loses no
+information: a trained session has its tick, a cancelled one is crossed out,
+and what to know about a client is in words.
+
+**Motion** — for when things moving on the screen are distracting or make you
+feel unwell. Coach's quiet movement is mostly its background: blue hexagons
+drifting slowly behind every screen.
+
+| | What you get |
+|---|---|
+| **Same as device** | Less movement only when your phone or computer is set to reduce motion in its own accessibility settings. This is where everybody starts. |
+| **Reduced** | Nothing slides, sways or drifts. Panels open at once, Billy's face holds still, the hexagons hold still, and "You belong here." on the sign-in screen stays in one language. |
+| **Full** | All the app's movement, even on a device set to reduce motion. |
+
+**Text size** — **Small**, **Medium**, **Large** or **X Large**. Medium is the
+app's usual size and where everybody starts; **Small** is a step down, for
+fitting more on the screen, **Large** a step up and **X Large** one more.
+Everything grows with the words, buttons and spacing included, so nothing
+gets cramped.
+
+**It follows you.** All six are kept with your account rather than on the
+device, so picking **Dark** or **Large** on your phone changes your computer
+too the next time you sign in there. With a Trainability account they are the
+same settings as in Studio: change them in either app and both change. With a
+Coach account (2.1) they are Coach's own. Signed out, the sign-in screen goes
+back to the device's own size and colors.
+
+The pictures in this manual were all taken with these settings left where
+everybody starts, so a screen in a color theme, in dark or at a larger text
+size will not look like its picture. A program printed for a client (5.6)
+stays black on white whatever you choose.
+
+### 3.7 My equipment
+
+Coach keeps a list of the equipment you have, place by place, so Billy suggests
+exercises you can actually do where you are training. It is yours alone:
+nobody else sees it.
+
+1. Tap your photo or initials in the top right corner, then **My equipment**.
+2. Across the top are your places. Every place in Studio is one of them,
+   under the name Studio gives it: your own place in Studio (your default
+   place there) first, saying *Your place in Studio. Its name comes from
+   Studio, so it's changed there.*, then Studio's others (*One of Studio's
+   places.*), then places of your own, such as **Where I usually train**.
+   Studio's places can't be renamed or removed here; they follow Studio, and
+   one Studio closes goes away, its answers kept. Tap a place to see its
+   equipment.
+   - To add one, such as a client's home or the park, tap **+ Add a place**,
+     type its name and tap the tick.
+   - To change a place's name, choose it and tap **Rename**.
+   - To put a place away, choose it and tap **Remove this place**. You always
+     keep at least one.
+3. Under **The basics**, answer each line for the place you chose —
+   **Dumbbells**, **Barbells and a rack**, **A flat bench**, **An adjustable
+   bench (incline and decline)**, **Room to move** and so on — by tapping
+   **Yes** or **No**. Your answer is saved as you tap. To take an answer back,
+   tap it again. An adjustable bench counts as a flat bench too.
+4. Under **Particular pieces** are machines and other pieces a program has
+   asked about, such as a low row machine. Each says what kind it is, and your
+   note if you wrote one. Tap **Yes** or **No** to change whether you have it,
+   or the bin to remove it.
+5. To add a piece yourself, fill in **Add a piece** at the bottom: its name,
+   **What kind is it?**, a note if you like, and **Do you have it?** Then tap
+   **Add**. Coach knows many pieces by name, whatever you call them — a
+   "gravitron" is the assisted pull-up machine — and fills in the kind for you.
+
+At your place in Studio, answers marked **Set for everyone** were given by
+the Primary Master for every trainer there. They can't be changed here, by
+you or by Billy; ask the Primary Master. Anything they left unanswered you
+can answer yourself.
+
+**The Primary Master** also sees **Places in Studio, set for every trainer**
+under their own places: every place in Studio. Tap one and answer **The
+basics** and **Particular pieces** as above (*At Trainability Downtown, for
+every trainer, is there…*). Each answer is set at once for every trainer
+whose place in Studio it is.
+
+A piece Billy wrote down from something you told him says **Noted by Billy**.
+Change or remove it here like any other. If Billy is told something different
+from an answer you gave yourself, he asks you before changing it.
+
+### 3.8 My exercises
+
+Coach has its own library of exercises, each with a full name that says
+exactly what it is, such as *Squat — Dumbbell, Goblet*. You can keep your own
+names for them, and add exercises the library doesn't have. Billy uses your
+names when he talks to you. Like your equipment, it is yours alone.
+
+1. Tap your photo or initials in the top right corner, then **My exercises**.
+2. **My names** lists what you call an exercise, with the library's full name
+   under it. To add one, type what you call it under **Add a name**, such as
+   *Bulgarians*, and tap **Find what it is**. Search the library, such as
+   *rear foot elevated split squat*, and tap the right one.
+   - To change what one of your names means, tap the **link** beside it and
+     choose again.
+   - To remove a name, tap the **bin**.
+3. **Names to sort out** appears only when Coach has a name of yours it didn't
+   recognise. For each, tap **Find it in the library** and choose it, or
+   **Keep it as my own** to make it an exercise of your own.
+4. **My own exercises** are exercises the library doesn't have. Tap **+ Add
+   an exercise of my own**, then give it a name, the movement it is closest to
+   if there is one, what it needs, what it mainly works and how it's done.
+   Tap **Save**. To change one, tap its name; to remove it, tap the **bin**.
+5. If one of your own exercises belongs in everybody's library, tap **Suggest
+   for the library**, say why if you like, and tap **Suggest it**. It then says
+   **Suggested for the library on** the day. To change your mind, tap **Take
+   back**.
+
+A name Billy wrote down from something you told him says **Noted by Billy**.
+If you had tied that name to a different exercise yourself, he asks you
+before changing it.
+
+### 3.9 Reviewing and editing Coach IQ (Primary Master only)
+
+Coach IQ's library of exercises, its conditions table and its principles (how
+Trainability designs a program) live in Coach itself. Every exercise, condition
+and principle starts as a draft. The Primary Master passes each one here, and
+keeps Coach IQ right: changing, adding and retiring exercises, adding trainers'
+suggestions, and reading books into the principles. Nobody else sees this
+page.
+
+1. Tap your photo or initials in the top right corner, then **Review Coach
+   IQ**.
+2. At the top are three counts with bars: how many exercises, conditions and
+   principles are approved so far, and how many are flagged.
+3. Under **Exercises**, tap **Start with the first not done**, or choose a
+   family from the list. Each family's line in the list says how many of its
+   exercises are approved, such as *Squat — 3 of 12*.
+4. Each exercise is a card: its everyday name, its full name, what else it is
+   called, its level, what it works, what it needs, how it is counted, what it
+   involves, the joints it loads, and its easier and harder steps.
+   - If it is right, tap **Approve**. A comment is optional.
+   - If something is wrong, write what in the comment box, then tap **Flag**.
+     A flag needs a comment, so it can be fixed.
+   - The card then says **Approved** or **Flagged**, with the day. To change
+     your mind, tap **Take back**.
+5. When the family is done, tap **Next family**. It goes to the next family
+   with anything still to pass.
+
+**Changing an exercise.** Tap **Edit** on its card. Change what needs
+changing: its everyday name, other names, family, its details (equipment,
+position and so on; **Usual** leaves one out of its full name), level, what it
+works, what it involves, the joints it loads, a particular piece it needs, how
+it is counted, and its easier and harder steps (search to add one, tap **×**
+to take one off). Tap **Save**. A renamed exercise keeps its old name as
+something it is also called, so programs that use the old name are still
+understood.
+
+If the change would break the library (two exercises with the same name, a
+harder step that is easier, an exercise above beginner with no easier step
+leading to it), nothing is saved and a pale red box says why. Change it and
+tap **Save** again, or tap **Cancel**.
+
+**Other things you can do:**
+
+| To do this | Tap this |
+|---|---|
+| Add an exercise to a family | **+ Add a version of** the family, at the foot of its cards |
+| Add a family | **+ Add a family** beside the family list. Fill in the family, tap **Next: its first version**, then fill in that and tap **Add the family**. A family can't be empty |
+| Change a family | **Edit the family**, under its name |
+| Stop offering an exercise | **Retire** on its card. It stays in the library, so programs that use it are still understood, but nobody is offered it. **Bring back** undoes it |
+| See what has changed on one card | **History** on the card |
+
+6. **Conditions** works the same way, one card for each condition: what to
+   avoid, what to make easier or supported, whether a doctor's go-ahead comes
+   first, and when to send them on. Tap **Edit** to change one, or **+ Add a
+   condition** at the foot of the list.
+7. **Principles** lists the topics down the side (Terms, Reps, Rest …). Tap
+   one to read it. Weights and distances are shown in your units (3.5),
+   whatever unit was written; **Edit** shows the text as written. Under its
+   title it says when it was reviewed and which books it comes from; a topic not yet approved is marked **Draft**, and
+   Billy doesn't use it until you approve it. **Approve** and **Flag** work
+   as for an exercise. Tap **Edit** to change its title, the line saying what
+   it covers, or its text, then **Save**. In the text, "## " starts a
+   heading, "- " a point and "1. " a numbered step, and words between two
+   stars on each side are bold. **+ Add a topic**, at the foot of the list,
+   starts a new one.
+8. **Suggestions** shows exercises trainers have suggested for everybody's
+   library, who suggested each, and why. Tap **Add to the library**, choose
+   its family and fill in its details, then tap **Add to the library** again.
+   The trainer's names for it now mean the library's exercise.
+9. **Changes** lists every change to the library, newest first, with who made
+   it and when. **Undo** puts back what a change touched. If something it
+   touched has changed since, undo the later change first.
+10. **Books** is where a book is read into the principles (3.11).
+
+Every change and every approval counts straight away: Billy uses the library
+as it now stands. **Export the library**, at the top, downloads all of it as
+one file, a snapshot to keep; Claude can write it into Coach's own copy of the
+library when you ask.
+
+### 3.10 Installation (Primary Master only)
+
+Settings for this copy of Coach on its server, as in Studio's Installation.
+Nobody else sees this page.
+
+**Where files are saved.** Files Coach keeps are written to one folder on the
+server. The app chooses one by itself: on the host, its Private Storage,
+`/private`, which is kept when the app is deployed again. Coach keeps its
+files in a `trainability-coach` folder inside it. **Saved in now** shows the
+folder in use.
+
+1. Tap your photo or initials in the top right corner, then **Installation**.
+2. To name another folder, type its full path under **Folder on the
+   server**, starting with a slash, and tap **Save folder**.
+3. The app tries the folder first: it makes it, writes a file there and takes
+   the file away. If it cannot, it says why and changes nothing. A folder
+   inside the app's own folder is refused, because that folder is rebuilt on
+   every deploy and part of it is public.
+4. **Let the app choose** goes back to the app's own choice.
+
+**Files already saved are not moved.** If a folder you named can no longer be
+written to, the app goes back to its own choice and says so in red. If the
+host's own settings name the folder, the page says so and it can't be changed
+from here.
+
+### 3.11 Reading a book into Coach IQ (Primary Master only)
+
+Coach can read a book about training and suggest what it adds to the
+principles. It reads the book in your own words, not the book's, and asks you
+about anything it shouldn't decide alone. Nothing changes until you accept it.
+
+1. Open **Review Coach IQ** (3.9) and tap **Books**.
+2. Under **Read a book**, tap the file button and choose the book's PDF (up to
+   100 MB). Its name and size appear under the button.
+3. Tap **Read the book**. A bar shows the PDF going up.
+4. The book appears below as a card, saying **Waiting to be read**, then
+   **Reading**, with a bar and the part it is on, such as *Reading part 2 of
+   5 (pages 41–80)*. A long book takes a while. You can leave the page; the
+   reading carries on.
+5. When it says **Ready for you**, tap **Go through it**. At the top is what
+   the book is and what it adds. Below, one card for each topic it adds to,
+   marked **Changes** or **New topic**, with a list of what changed.
+6. Where the book is out of date, is one coach's view, or disagrees with what
+   is there, the card asks you, one point at a time: the question, what the
+   book and the text say, and two to four answers. The one Coach recommends is
+   chosen already and marked **(recommended)**, with why. Choose another, or
+   write your own answer in **Or in your own words**. Tap **Next point**, and
+   after the last one, **Write it up**.
+7. The card says **Writing your answers in. This takes a minute or two.**
+   Then it shows the text as it would go in, with each answer written in
+   with your name and the day.
+8. Read it. To change something first, tap **Change the text first**, change
+   it, and tap **Keep these changes**.
+9. Tap **Accept** to put it into the principles, approved, with the book named
+   as a source. Tap **Reject** to leave the topic as it is. A topic with
+   nothing to ask you goes straight to step 8.
+10. When every topic is accepted or rejected, the book says **Done**.
+
+Under each card, **Read the proposed text** shows the whole topic as the book
+would have it, and **Read the topic as it was** shows it as it stands now.
+An accepted topic can be undone under **Changes**, like any other change.
+
+If the topic was changed after the book was read, **Accept** says so and
+saves nothing: copy what you want into the topic under **Principles**, and
+reject the book's version.
+
+If reading stops, the card says **Stopped** and why; tap **Try again** to
+carry on from where it stopped. **Put away** stops using a book: its PDF is
+thrown away and nothing more is read or accepted from it. The PDF is thrown
+away anyway once the book has been read. Reading a book uses Billy's key and
+costs Claude's time, a few dollars for a long book; the card shows how much it
+read and wrote.
 
 <div style="page-break-after: always;"></div>
 
 ---
 
-## 4. Words this app uses
+## 4. Your clients
+
+Coach shows everyone on your own client list. You add, change and archive
+them here; if you also use Studio, it's the same list, and a change made in
+either shows in the other the next time you open it.
+
+### 4.1 Opening your clients
+
+1. Tap **Clients** on the bar at the bottom (the two people), or the
+   **Clients** card on the home screen.
+2. The **CLIENTS** page opens. Under its name it says how many active clients
+   you have.
+
+To leave it, tap another button on the bottom bar.
+
+### 4.2 Reading the list
+
+![Your clients](docs/images/05-clients.png)
+
+*Your clients*
+
+Each client has one line, in order of first name:
+
+- **A circle with their initials.**
+- **Their name.** If they have told Studio their pronouns, those are next to
+  the name in brackets, such as *(they/them)*.
+- **One line about their sessions:**
+
+| It says | What it means |
+|---|---|
+| **Last session October 14** | The last session they had, with you or another trainer. |
+| **First session booked for October 18** | They have not had a session yet, but one is booked. |
+| **No sessions yet** | Nothing has happened and nothing is booked. |
+
+If you have no clients yet, the list says *You have no clients yet. Tap Add
+a client, or add them in Studio.*
+
+### 4.3 Seeing a client's details
+
+![A client's details](docs/images/06-client-details.png)
+
+*A client's details, opened*
+
+1. Tap the client's line. It opens underneath to show:
+
+| Detail | What it shows |
+|---|---|
+| **Email** | Their email address. Tap it to write to them. |
+| **Phone** | Their phone number. Tap it to call them from a phone. |
+| **Birthday** | The day, and how old they are now, such as *March 12 (age 36)*. |
+| **Your client since** | The day they joined your list. |
+| **Last session** | The last session they had. |
+| **Next booked** | The next session booked for them. |
+| **Shared** | Only for a client who also trains with somebody else: *Also trains with 1 other trainer*. |
+
+   Anything Studio does not have says **Not given**, **Not known**,
+   **None yet** or **Nothing booked**.
+2. Tap the line again to close it. Opening another client closes the first.
+
+### 4.4 Finding a client
+
+1. Tap the box that says **Search by name, email or phone**.
+2. Type part of their name, their email, or at least three digits of their
+   phone number. The list shrinks to the people who match as you type.
+3. To see everybody again, empty the box.
+
+If nobody matches, the list says *No one matches* and what you typed.
+
+### 4.5 Archived clients
+
+Clients you have archived — people you no longer train — are kept apart from
+the rest. To archive one, open them (4.3) and tap **Archive** at the bottom;
+it says *Jamie Ortiz archived. They're under Archived.*
+
+1. Tap **Archived** next to the search box. The number in brackets is how
+   many there are.
+2. The list now shows only your archived clients, with grey circles. Tapping
+   one shows the same details as in 4.3.
+3. To bring one back, open them and tap **Put back on my list**. It says
+   *Jamie Ortiz is back on your list.*
+4. Tap **Active** to go back to the people you are training.
+
+### 4.6 Adding or changing a client
+
+1. On the Clients page, tap **Add a client** (top right).
+2. Fill in **First name**, **Last name**, **Email** and **Phone**; all four
+   are needed. **Birthday (optional)**, **Gender (optional)** and **Pronouns
+   (optional)** can be left empty. For gender and pronouns, type what the
+   client uses, or tap the small arrow in the box and pick from the list
+   (such as **Woman**, **Non-binary**, **she/her**, **they/them**). Pronouns
+   are kept in small letters.
+3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
+   open in the list. **Cancel** closes the form without adding anyone.
+
+If someone with that email is already a client of ours:
+
+- someone on another trainer's list is added to yours too: *Riley Hart was
+  already a client of ours, so they're on your list now.*
+- someone you had archived comes back: *Morgan Hart is back on your list.*
+- someone already on your list is left as they are: *Casey Moss is already
+  on your list.*
+
+If only the phone number matches another client, nobody is added, since
+families and twins often share a phone. It says, for example, *Riley Hart
+already has that phone number. If this is them, use the email they gave us;
+if it's someone else, use a different phone number.*
+
+If something is missing, it says what, such as *Last name and Email are
+required*.
+
+**To change a client's details**, open them (4.3) and tap **Edit details**
+at the bottom. The same form opens, headed *Edit Jamie's details*, with what
+is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
+details saved.*
+
+**Clients from a Coach account.** If you have just connected a Coach account
+to your Trainability account (2.1), the Clients page shows its clients with
+the rest, and above them: *2 clients from your Coach account aren't in
+Trainability yet. Move them there? Trainability (the business) will be able
+to see them, as it sees all its clients. Until then, only you can.*
+
+1. Tap **Move them to Trainability** to move them. It says, for example,
+   *2 clients moved to Trainability.* Their programs and limitations go with
+   them. Anyone Trainability already has, by the same email, is put on your
+   list instead of being added twice.
+2. Or tap **Not now**: they stay as they are, private to you, and you're
+   asked again next time you open Clients.
+
+If one can't be moved (for example, their phone number is another client's),
+it stays as it is and is named, with why. Tap **OK**.
+
+### 4.7 A client's limitations
+
+A limitation is something a client should not do, or should do with care: a
+new knee, a sore shoulder, a pregnancy. Billy reads them before he suggests
+anything for that client.
+
+1. Open the client's details (4.3). At the bottom is **Limitations**.
+2. Tap **+ Add a limitation**.
+3. Write it in plain words, such as *No kneeling, new knee in March*.
+4. If you like, tap what it means under **What it means**, such as **A knee
+   replacement**, and anything to stay away from under **Keep away from**,
+   such as **arms overhead**. Tap a choice again to take it off.
+5. Tap **Save**.
+
+Every trainer who trains this client sees their limitations, with who wrote
+each one. Write what it means for training, not a diagnosis. Only the
+trainer who wrote a limitation can delete it: tap the bin beside it. A pale
+red box asks *Delete this limitation?*; tap **Delete**, or **Keep it** to
+leave it.
+
+### 4.8 A client's measurements
+
+Under **Limitations**, a client's details show their **Measurements**: one set
+for each day they were taken. Every trainer of the client sees them, with who
+took each set.
+
+**Reading them.** The newest set comes first, headed **Latest:** and its date.
+Each measurement shows its value and, under it, how it has changed since the
+set before, such as *−3.1 lb* or *+0.25 in*. **Waist to hip** is worked out
+for you, from the waist divided by the hips, whenever both were taken.
+**Blood pressure** shows as one line, such as *121/79 mmHg*. The set before
+is the latest one taken on an earlier day, so two sets on one day aren't
+compared with each other. Up or down is shown as it is,
+neither good nor bad. Tap **Earlier measurements** to see the older sets, and
+**Show only the latest** to fold them away. With none yet, it says *None
+taken yet.*
+
+They are shown in your own units (3.5, **Units**): pounds and inches on
+**Imperial**, kilograms and centimetres on **Metric**. Inches are shown to the
+nearest quarter, as a tape reads them.
+
+**Adding a set:**
+
+1. Open the client (4.3) and tap **Add measurements**.
+2. **Taken on** starts on today; change it if they were taken on another day.
+3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
+   (%), **Neck**, **Shoulders**, **Chest**, **Waist**, **Hips**; **Arm**,
+   **Thigh** and **Calf**, each **Left** and **Right**; **Resting heart rate**
+   (bpm); and **Blood pressure**, its **Top (systolic)** and **Bottom
+   (diastolic)** numbers (mmHg). Each box shows its unit.
+4. Add a **Note** if it helps, such as where the tape went.
+5. Tap **Save**. **Cancel** leaves without saving.
+
+If nothing is filled in it says *Fill in at least one measurement.* Blood
+pressure needs both its numbers (*Fill in both blood pressure numbers, or
+neither.*), the top the higher. A number no
+person could have, which is usually a slip of the finger, is caught, such as
+*Weight of 1800 doesn't look right. Check it and try again.* A day still to
+come can't be chosen.
+
+**Changing or deleting a set.** Only the trainer who took a set can change it
+(the pencil) or delete it (the bin). Deleting asks *Delete these measurements?
+Its trainers will no longer see them.*; tap **Delete**, or **Keep it** to leave
+them.
+
+To send a set to the client, attach it to a message (7.3).
+
+### 4.9 A client's fitness tests
+
+Under **Measurements**, a client's details show their **Fitness tests**, in
+two groups: **Heart and lungs** and **Strength**. Every trainer of the client
+sees the results, with who recorded each one.
+
+**Heart and lungs:**
+
+- **3-minute step test**: they step up and down a 12-inch step in time to a
+  metronome for three minutes, then sit down while you count their heart rate
+  for one full minute. Coach rates it, from **Excellent** to **Very poor**,
+  against the tables for their age and for women or men.
+- **Rockport 1-mile walk**: they walk one mile as fast as they can. From the
+  time, the heart rate at the end, their age, weight and the table for women
+  or men, Coach works out their **VO2 max** (ml/kg/min), with the formula from
+  the original Rockport study.
+- **VO2 max from a lab or watch**: a VO2 max from a gym or lab treadmill test,
+  or reported by a watch such as a Garmin.
+
+**Strength:**
+
+- **1RM (one-repetition maximum)**: the heaviest weight lifted once in one
+  exercise, chosen from the library. Either the weight **Lifted once**, or
+  **From a lighter set**: the weight and the reps done to failure, 10 or
+  fewer, and Coach works out the 1RM with Brzycki's formula. With their body
+  weight, it also shows the 1RM against it, such as *1.38 × body weight*.
+- **Vertical jump**: the height jumped from standing, **Hands on hips** or
+  with an **Arm swing**.
+- **Drop jump (Reactive Strength Index)**: they step off a box and jump
+  straight back up. The height jumped divided by the time on the ground gives
+  the RSI, such as *RSI 1.27*.
+- **Hold: wall sit or plank**: how long they held a **Wall sit**, a
+  **Plank**, or a **Side plank, left** or **right**.
+- **Velocity loss in a set**: for trainers with a bar-speed sensor, how far
+  the bar's speed fell over one set at a fixed weight.
+
+None of the strength tests is rated: each is a number to follow over time.
+
+**Reading them.** The latest result of each test is shown (of a 1RM, for each
+exercise; of a jump or a hold, for each kind): its name, the day
+and who recorded it, the result (such as *97 bpm* or *VO2 max 32.7
+ml/kg/min*) and, for the step test, the rating, such as **Above average**,
+with *Rated for women aged 26–35*. Under it is how it changed since the same
+test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
+test a lower heart rate is fitter, as is less velocity loss; for the rest a
+higher number is. Tap
+**Earlier results** to see the older ones, and **Show only the latest** to
+fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
+rated: the tables start at 18.
+
+**Adding a result:**
+
+1. Open the client (4.3) and tap **Add a test result**.
+2. Under **Which test?**, tap the test. Each says how it is done.
+3. The form shows again how it is done. **Day of the test** starts on today.
+4. For the step test and the walk, **Age on the day** is filled in from their
+   birthday, and **Table** (**Women** or **Men**) from their gender, where
+   their details have them. Otherwise fill them in.
+   The strength tests don't ask for these.
+5. Fill in the result:
+   - Step test: **Heart rate in the minute after** (bpm).
+   - Rockport walk: **Time for the mile** (minutes and seconds, such as
+     14:30), **Heart rate at the end** (bpm) and **Weight**. The weight is
+     filled in from their latest measurements (4.8); change it if it is
+     different today.
+   - VO2 max: the **VO2 max** (ml/kg/min), and **Where it came from**:
+     **Lab or gym test**, **Garmin**, **Apple Watch**, **Fitbit** or **Other
+     watch or app**.
+   - 1RM: under **Exercise**, search the library and tap the exercise (tap
+     **Change** to choose another). Under **How it was found**, tap **From a
+     lighter set** and fill in **Weight of the set** and **Reps to
+     failure**, and Coach shows *1RM about …* as you type; or tap **Lifted
+     once** and fill in **Weight lifted**. **Body weight (optional)** is
+     filled in from their latest measurements.
+   - Vertical jump: **How they jumped** (**Hands on hips** or **Arm swing**),
+     **Height jumped**, and if you like what it was **Measured with**:
+     **Wall reach**, **Jump mat**, **Phone app** or **Sensor**.
+   - Drop jump: **Height jumped**, **Time on the ground** (milliseconds), and
+     the **Box** height if you like.
+   - Hold: **Which hold**, and the **Time held**, such as 1:30 (or just the
+     seconds, such as 45).
+   - Velocity loss: the **Exercise**, **Weight, % of 1RM**, **Reps in the
+     set**, the **Velocity loss** the sensor showed (%), and the weight if
+     you like.
+6. Add a **Note** if it helps, such as how they felt.
+7. Tap **Save**. **Cancel** leaves without saving.
+
+Under the form is a reminder. For heart and lungs: feeling agitated or
+moody, sleeping badly, off their food, low or stressed can be signs of
+overtraining; back off for at least a week before testing again. For
+strength: only good form counts; if the technique breaks down, the test
+isn't measuring what they can do, and they could be hurt.
+
+Something missing or a number no person could have is caught, such as
+*Choose which table to use: women's or men's.*, *Fill in the time for the
+mile as minutes and seconds, such as 14:30.* or *A heart rate of 400 doesn't
+look right. Check it and try again.* A 1RM from a set of more than 10 reps
+is refused: *Over 10 reps the estimate gets loose: test with a heavier
+weight, for 10 reps or fewer.* A day still to come can't be chosen.
+
+**Changing or deleting a result.** Only the trainer who recorded a result can
+change it (the pencil) or delete it (the bin). Deleting asks *Delete this
+result? Its trainers will no longer see it.*; tap **Delete**, or **Keep it**
+to leave it.
+
+To send a result to the client, attach it to a message (7.3).
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## 5. Designing programs
+
+A program is a plan of training days for one of your clients: on each day,
+the exercises, and for each exercise as much or as little as you want to say
+about it. As you build it, Coach IQ checks it and suggests what could come
+next, and Billy can talk it over with you. Only you see your programs.
+
+### 5.1 Starting a program
+
+1. Tap **Programs** on the bar at the bottom (the clipboard).
+2. Tap **New program**. It asks first: *What kind of program are you
+   thinking of?* Coach IQ uses your answers to suggest exercises for each
+   day.
+3. Tap one:
+   - **Full body**: every day works the whole body.
+   - **Upper and lower**: days take turns, upper body, then lower body.
+   - **Push, pull, legs**: days take turns, pushing, pulling, then legs.
+   - **A circuit**: exercises one after another with little rest, for
+     conditioning.
+   - **Mobility and flexibility**: moving better, with mobility, balance and
+     breathing.
+4. Under **Days a week**, the usual number for that kind is chosen; tap
+   another if you like.
+5. Under **Anything to focus on?**, tap any of **Legs and glutes**, **Upper
+   body**, **Core**, **Balance and stability**, **Posture** and
+   **Conditioning**, or none. Tap one again to take it off.
+6. Under **How long is a session?**, tap **30 min**, **45 min**, **60 min**,
+   **75 min** or **90 min**. Then tap **Next**.
+7. Choose the **Client**. The **Name** fills in as *Avery's program*; change
+   it if you like.
+8. **What it's for** is chosen to suit the kind (**Muscle size** for upper and
+   lower, say); change it if you like (**Strength**, **Power**, **Muscle
+   size**, **Strength endurance**, **Fat loss and conditioning**, **General
+   fitness** or **Mobility**). **The client's level** (**Beginner**,
+   **Intermediate** or **Advanced**) is filled in from the programs you have
+   made for them before, with Coach IQ's reason underneath: the level of the
+   last one, or the next level up once they have been on programs at one
+   level for 12 weeks without stepping back (*Coach IQ: 1 program with you,
+   on beginner programs for 15 weeks without stepping back: time for
+   intermediate.*). Change it if you know better. For a client with no
+   programs yet it says *No programs for Jordan yet. What's their fitness
+   level?*: choose one, as the program can't start without it. Then choose
+   **Where they train**: one of your places from My equipment (3.7),
+   starting on your place in Studio if you have one. If the client has a gym
+   in Studio (their home gym, or a membership), it starts there instead and
+   says *Jordan's gym in Studio.*, with anything the Primary Master set
+   there. It is read from Studio each time, so a change there shows at once.
+   Add
+   **Notes** if you want. **Back to the kind of program** goes back a step.
+9. Tap **Start designing**. The program opens with its days already made, as
+   many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for
+   upper and lower; **Push**, **Pull**, **Legs** for push, pull, legs;
+   **Day A**, **Day B** … for full body and mobility; **Circuit A** … for a
+   circuit.
+
+Your programs are listed on the Programs page, newest change first, with who
+each is for. Tap one to open it; **All programs** takes you back. To change
+the client, name, goal, level, place, focus, session length or notes later,
+tap **Edit the details**.
+The box button beside a program in the list (**Put away**) takes it off the
+list; it is kept, not deleted.
+
+### 5.2 Adding exercises
+
+1. Under a day, tap **Add an exercise**. A box opens: *Add an exercise to
+   Day A*.
+2. At the top is a yellow card headed **Coach IQ**, with two questions you
+   can answer or leave. **What are we working on?** Tap the kind of training:
+   **Strength** (lifts and resistance work), **Power** (jumps, throws,
+   swings), **Cardio** (running, rowing, intervals), **Balance** or
+   **Mobility** (stretches and breathing); tap it again to clear it. Under **Muscle groups**, tap any of **Chest**,
+   **Shoulders**, **Back**, **Arms**, **Core** and **Legs**: that means the
+   whole group, and its own muscles open underneath (*Legs: all of them, or
+   tap to narrow*); tap some of them to narrow further, such as **glutes**.
+   Tap the group again to close it. Coach IQ's suggestions below narrow to
+   match (*Coach IQ suggests: Strength · hamstrings*, or *legs*), different movements
+   first, each saying what it works, such as *Works the biceps.* The next
+   step of something the client did in an earlier program comes first, and
+   says so (*A step on from Goblet squat, from an earlier program.*); the
+   easier ones they have moved past come last. Stretches
+   only come up when you choose **Mobility**. If
+   nothing fits the place, the client's level and limitations, it says so:
+   choose fewer muscles, or another kind of movement. **Ask Billy for
+   ideas** closes the box and asks Billy, with what you chose. The next
+   time you add an exercise to the same program, the card opens with the
+   same answers (on this phone or computer), so you only change what's
+   different.
+3. **Which exercise?** Type any name you use for it: your own name, one of
+   your own exercises, or the library's name, and tap it in the list. Before
+   you type, the box lists what **Coach IQ suggests** for that day, with why;
+   tap one of those instead if you like.
+4. The box now shows the exercise: its name, its full name in the library,
+   its **Level**, what it **Works** and what it **Needs**, and anything Coach
+   IQ has to say about it for this client and place, with the same marks as
+   in 5.4 (a red octagon to stop, an orange triangle to take care). To pick a
+   different one, tap **Change exercise**.
+5. Under **How it's done (all optional)**, Coach IQ's starting point is
+   filled in, such as **1–3** sets of **8–12** with **3 min** rest. Change
+   anything, or fill in more (5.3). **Coach IQ's starting point** puts its
+   numbers back.
+6. Tap **Add to Day A**. The exercise appears on the day with what you filled
+   in. If something can't be saved (a rest written oddly, say), the box stays
+   open and says why in red.
+
+**From a suggestion.** Under each day, **Could come next** lists exercises
+Coach IQ suggests for what that day trains (*Could come next on an upper body
+day*), one for each kind of movement the day doesn't have yet (a squat, a
+hinge, a push, a row …), taking turns with what you chose to focus on (*A
+focus of this program: core.*). Every one already fits the place's
+equipment, the client's level and their limitations, and says where to
+start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in orange says
+what to make easier for the client. Tap **Add**: the same box opens at step
+4, with that exercise and its starting point. When the day holds about as
+much as your session length allows, it says so. To change what a day trains,
+tap its pencil and choose under **What this day trains**.
+
+### 5.3 Sets, reps and the rest
+
+Only the exercise is needed. In the box, under **How it's done**, fill in
+what you want:
+
+| Box | For example | |
+|---|---|---|
+| **Sets** | 3 | Or a range, such as 1–3. |
+| **Reps** | 8–12 | Or a time (30 s), or each side. |
+| **Load** | 45 lb | In your units (3.5). |
+| **Effort** | 2 in reserve | Or RPE 7. |
+| **Tempo** | 3-1-1-0 | Down, pause, up, pause. |
+| **Rest** | 90 s, or 2 min | Between sets. |
+| **Note** | A cue to remember | |
+
+What you filled in shows under the exercise on the day, such as *3 × 10 · 45
+lb · tempo 3-1-1-0 · rest 2 min*; an exercise with nothing filled in says *No
+sets or reps yet.*
+
+**To change an exercise already on a day**, tap its name or **Details** under
+it. The same box opens with what it has; change anything, or tap **Change
+exercise** to put another in its place, then tap **Save**.
+
+### 5.4 What Coach IQ says
+
+Coach IQ checks the whole program every time you change it. At the top,
+**Coach IQ's check** counts what it found; each point then shows where it
+applies, under the exercise or the day, with where it comes from in
+brackets.
+
+| Mark | Means | For example |
+|---|---|---|
+| Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
+| Orange triangle | Take care | Something to make easier for the client, or above their level |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly, a step back from something the client did in an earlier program |
+
+They are guidance: your word wins. If one is wrong, it shows where Coach IQ
+needs fixing; tell the Primary Master.
+
+**Swap**, under an exercise, lists exercises that could stand in for it,
+already fitting the place, the level and the limitations. Tap **Use it**.
+
+**Ask Billy about it**, at the top, and **Ask Billy about** a day, open
+Billy's panel with the question asked.
+
+If a client's gym in Studio has changed since their program was made for
+one of Studio's places, opening the program says so (*Jordan's gym in Studio
+is Trainability Eastgate; this program is for Trainability Northside.*). Tap
+**Use Trainability Eastgate** to move it there, or leave it as it is. A place
+of your own, such as a client's home, is never questioned. He reads the program, its check and
+the suggestions, and talks it through; he changes nothing himself.
+
+### 5.5 Days, order and supersets
+
+- **Add a day**, at the bottom, adds the next day in the program's turn:
+  Upper C after Lower B, Day D after Day C.
+- Beside a day's name: the arrows move it up or down, the pencil renames it
+  (and gives it a note), and the bin takes it out with its exercises.
+- Beside each exercise: the arrows move it up or down the day, and the bin
+  takes it out.
+- **A superset**: in its box (**Details**), tick **Done together with the
+  exercise above (a superset)**. The two then share a number, such as **2a** and
+  **2b**.
+
+### 5.6 Printing it for the client
+
+1. Tap **Print for the client**, at the top of the program. It opens in a
+   new tab.
+2. The page shows the program's name, who it is for and the date, then each
+   day's exercises in your names for them, with whatever you filled in, in
+   your units. Coach IQ's check is not on it.
+3. Tap **Print**, and print it or save it as a PDF to send.
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## 6. Asking Billy
+
+Billy is the assistant you may know from Studio. In Coach he can tell you
+about the clients on your list, and he can read a photo or a PDF you give him
+— a client's food log, a form they filled in, a program — and answer
+questions about it.
+
+If you do not see his face in the bar at the top, Billy has not been set up
+for your business yet.
+
+### 6.1 Opening Billy
+
+1. Tap **Billy's face** in the bar at the top, next to your photo.
+2. His panel opens under the bar, joined to his button, with a box at the
+   bottom that says **Ask Billy…** Everything else on the screen goes grey
+   and blurred behind him.
+
+To close the panel, tap the arrow where his face was, tap anywhere on the
+grey screen behind him, or press Esc on a keyboard. Tapping your photo
+closes him too and opens your menu; opening Billy closes your menu. Only one
+is open at a time. Closing it keeps the conversation: open it again and it is all
+still there. While it is closed, a small blue dot on his face means he has
+answered and the answer is waiting.
+
+### 6.2 Asking a question
+
+1. Tap the **Ask Billy…** box and type your question, such as *When did
+   Avery last train?* or *Which of my clients have nothing booked?*
+2. Tap the blue arrow button, or press Enter on a keyboard.
+3. While he works it out, the panel says **Billy is looking…** His answer
+   then appears under your question.
+
+You can carry on asking: he remembers what was said earlier in the same
+conversation, so *What about Jordan?* works after a question about Avery.
+
+### 6.3 Giving Billy a photo or a PDF
+
+1. Tap the **paper clip** to the left of the **Ask Billy…** box.
+2. Choose a photo or a PDF. On a phone you can take a photo there and then.
+3. It appears above the box with its name. To take it off again, tap the
+   **×** beside it.
+4. Type what you want to know about it, such as *How much protein is in this
+   day?*, and tap the blue arrow. If you type nothing, Billy is asked to have a
+   look at it.
+
+Billy reads JPEG, PNG, GIF and WebP photos, and PDFs up to 15 MB. A large
+photo is made smaller before it is sent, which does not stop him reading it.
+
+### 6.4 Starting again
+
+Tap the **round arrow** at the top right of the panel (**New conversation**).
+The conversation is cleared and Billy starts fresh. Leaving or reloading the
+page clears it too: Coach does not keep your conversations with Billy.
+
+### 6.5 What Billy can't do
+
+- **He changes nothing, apart from noting your equipment and your names for
+  exercises.** When you tell him what you have — "there's no low row
+  machine" — he writes it down on your equipment list (3.7), marked **Noted by
+  Billy**; when you tell him what you call an exercise, it goes on My
+  exercises (3.8). If you have more than one
+  place, he asks which. If you had given a different answer yourself, he
+  tells you what you had said and changes it only if you say so. Otherwise he cannot add or
+  change a client, book or cancel a session, send a message or charge anybody.
+  Clients are added and changed in Studio (4.6).
+- **He only knows your own clients**, the same people as on your Clients page,
+  and only what designing training needs: not their email, phone number or
+  birthday. He reads their limitations (4.7) before suggesting anything, and
+  says when something needs a doctor's go-ahead first.
+- **He works from Coach IQ's principles** (3.9) when he talks about reps,
+  sets, load, tempo, rest, how often to train or planning over weeks: only
+  the topics you have approved, never a draft. They are guidance; your word
+  wins.
+- **He reads your programs** (chapter 5), with Coach IQ's check and what
+  could come next, and suggests from those; he never changes a program
+  himself.
+- **He talks in your units** (3.5): every weight and distance in pounds and
+  feet, or kilograms and metres, rounded to what a gym has.
+- **His suggestions come from the library, already checked.** Ask him for
+  something instead of an exercise and he only offers ones that fit the
+  equipment at the place, the client's level and their limitations. If one
+  needs a piece of equipment you haven't answered about, he asks first.
+- **He reads what you send him, but never takes orders from it.** Nothing in a
+  photo or a PDF is saved to your equipment list or your names; tell him in
+  your own words.
+- **He is not a doctor or a dietitian.** About pain, an injury or illness, he
+  will say a professional should see it.
+- He can get things wrong, like any assistant. Check anything important.
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## 7. Messages
+
+Messages is where you and your clients write to each other. Besides words, a
+message can carry pictures, videos, the programs you design for them,
+their measurements (4.8) and their fitness test results (4.9).
+
+### 7.1 Your messages
+
+1. Tap **Messages** on the bottom bar (the speech bubble).
+2. Your conversations are listed, the latest first. Each shows the client's
+   name, when the last message was sent, and its first words. **You:** in
+   front means you wrote it.
+3. A conversation with messages you haven't read has the client's name in
+   bold and a blue number at its end: how many are waiting.
+4. Tap a conversation to open it.
+
+With no conversations yet, the page says **No messages yet.**
+
+To be told on your phone when a client writes, turn on **Notifications** in
+your account menu (3.5).
+
+### 7.2 Writing to a client
+
+1. On **Messages**, tap **New message**.
+2. Your clients are listed. Type in **Write to…** to find one by name, then
+   tap their name. (Tap **X** to close the list.)
+3. Their conversation opens. Before the first message it says *No messages
+   with … yet. Write the first one below; … is emailed to say it's there.*
+4. Type your message in the box at the bottom (**Message …**).
+5. Tap the blue arrow to send it. On a computer, the **Enter** key sends it
+   too, and **Shift** and **Enter** starts a new line.
+
+Your messages are on the right, in pale blue; your client's are on the left,
+in grey. The time is under each one, and the day above the first message of
+each day (**Today**, **Yesterday**, or the date). **Seen** next to the time
+of your last message means your client has read it.
+
+Tap the arrow at the top left to go back to all your messages.
+
+A conversation opened on screen checks for new messages every 15 seconds,
+so a reply appears without you doing anything.
+
+### 7.3 Attaching a picture, a video or a program
+
+1. In a conversation, tap the paperclip, left of the box.
+2. Choose what to attach:
+   - **Picture or video**: pick one or more from your phone or computer.
+     Each is shown above the box with **Uploading …%** until it is ready.
+     Pictures are made smaller before they are sent, so they send quickly.
+     A video can be up to 100 MB.
+   - **Program**: your programs for this client are listed (**…'s
+     programs**). Tap one. If there are none it says *No programs for … yet.*
+   - **Measurements**: this client's sets are listed by date (**…'s
+     measurements**), with who took each. Tap one. If there are none it says
+     *No measurements for … yet. Add them on the Clients page.*
+   - **Fitness test**: this client's results are listed (**…'s fitness
+     tests**), newest first. Tap one. If there are none it says *No fitness
+     tests for … yet. Add them on the Clients page.*
+3. Add words if you like, then tap the blue arrow. You can send attachments
+   with no words.
+
+To take one off before sending, tap the **X** beside it.
+
+A program, a set of measurements or a test result is sent as it is at that moment. If you change it afterwards, the
+copy in the message stays as it was, so your client always has what you
+sent. Tap a program in a conversation to open it laid out like the printed
+program (5.6), in its own tab, ready to print.
+
+Tap a set of measurements to open it as a page of its own, ready to print:
+each measurement, and how it changed since the set before. A fitness test
+result opens the same way: the result, its rating, how it changed since the
+same test before, and how the test is done.
+
+Tap a picture to open it full size in its own tab. A video plays where it is.
+
+If something can't be sent, it says why beside it, for example *That video
+is too large. Keep it under 100 MB.* or *That file is not a video Coach can
+send. Send an MP4 or a video from your phone's camera.*
+
+### 7.4 How your client reads it
+
+Your client reads your messages, and answers them, on their own page in
+Trainability: the same page where they see their sessions. When you send a
+message, they are emailed **… sent you a message**, with a button to open
+their messages. The email doesn't contain the message itself. However many
+messages you send in a few minutes, they get one email.
+
+Messages can only be sent to clients kept in Trainability. With a Coach
+account (2.1), your clients are kept in Coach, so Messages says *Your clients
+read messages on Trainability's client page. Once your Coach account is
+linked to your Trainability account and your clients are moved there, you
+can write to them here.*
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## 8. Words this app uses
 
 | Word | What it means |
 |---|---|
@@ -288,16 +1483,36 @@ and light otherwise. There is nothing to set in the app.
 | **Studio** | Trainability Studio, the business's scheduling and billing app, at trainabilitystudio.com. Your account lives there. |
 | **Temporary password** | A password emailed to you when yours is reset or forgotten. Use it once, then choose your own in Studio (2.4). |
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
+| **Accessibility** | Light or dark, the app's colors, contrast, motion and text size, chosen in the account menu (3.6). The same as in Studio for a Trainability account. |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
+| **Active client** | A client on your list who you are still training. |
+| **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
+| **Conversation** | All the messages between you and one client, in Messages (chapter 7). |
+| **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
+| **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
+| **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
+| **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
+| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.9). |
+| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.9). |
+| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.9). |
+| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
+| **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
+| **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
+| **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, Log out and the version (3.5). Studio is opened from the logo (3.2). |
-| **Version** | Which release of Coach you are using: a number such as 1.0.0, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Accessibility, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
+| **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>
 
 ---
 
-## 5. When something goes wrong
+## 9. When something goes wrong
+
+**"Type your email address first."**
+**Continue** was tapped with no email, or one missing its @ or its ending.
+Type the whole address, or just the part before the @ of a
+@trainabilitystudio.com one.
 
 **"That email and password don't match."**
 One of them is wrong. Check the email for a typing mistake, and that Caps Lock
@@ -322,8 +1537,63 @@ where accounts are kept. It is not something you did. Wait a minute and reload
 the page.
 
 **"Couldn't reach Trainability. Check your connection and try again."**
-The sign-in did not get through. Check that your phone or computer is
-connected to the internet, then tap **Log in** again.
+The sign-in, or your list of clients, did not get through. Check that your
+phone or computer is connected to the internet, then tap **Log in** again —
+or, on the Clients page, **Try again**.
+
+**"Your clients couldn't be loaded. Try again in a minute."**
+Studio answered, but not with your list. Wait a minute and tap **Try again**.
+If it keeps happening, tell whoever looks after the app.
+
+**"Your messages couldn't be loaded. Try again in a minute."**
+Messages couldn't read your conversations. Wait a minute and tap **Try
+again**. If it keeps happening, tell whoever looks after the app.
+
+**My client says they didn't get the email about my message.**
+The email goes to the address on their client record, at most once every
+few minutes for one conversation. Ask them to look in their junk mail, and
+check their email on the Clients page (4.3). Their messages are on their
+page in Trainability whether or not the email arrives.
+
+**A client is missing from your list.**
+Coach shows the clients on your own list in Studio. Check that they are under
+your name in Studio, and not archived — an archived client is under
+**Archived** (4.5).
+
+**"Billy reads JPEG, PNG, GIF and WebP photos. On an iPhone, a photo shared from Photos is sent as a JPEG."**
+The photo is in a format Billy cannot read, such as an iPhone's HEIC. Choose
+it again from Photos, or take a screenshot of it and send that.
+
+**"That PDF is too big for Billy. Try one under 15 MB."**
+Send fewer pages: save just the pages you need as a new PDF, or take photos
+of them instead.
+
+**"Billy couldn't answer just now. Try again in a minute."**
+Your question is still in the box. Wait a minute and tap the blue arrow again.
+
+**"Billy isn't working right now: this server's key for him was refused. Tell whoever runs the app."**
+Billy's setup on the server needs fixing. It is not something you did; pass
+the message on.
+
+**"Reading a book needs Billy's key on this server (ANTHROPIC_API_KEY). Ask whoever runs the app."**
+Books (3.11) uses Billy's key, and it isn't set up on this server. Pass the
+message on.
+
+**"That file couldn't be opened as a PDF. Check it opens on your computer, then try again."**
+The file isn't a PDF, or it is damaged. Open it on your computer; if it opens,
+save it again as a PDF and upload that.
+
+**"That PDF is over 100 MB. Split it into two and upload the parts as two books."**
+Save the first half and the second half of the book as two PDFs, and upload
+each as its own book.
+
+**"… has changed since this book was read. Copy what you want from this text into it on Principles, and reject this one."**
+Somebody changed the topic after the book was read, so accepting would undo
+their change. Open the topic under **Principles**, add what you want from the
+book's text, then reject the book's version.
+
+**You are back on the sign-in screen.**
+Your sign-in ran out while the app was open. Sign in again (2.1).
 
 **The temporary password email never came.**
 Look in the junk or spam folder first. Each request replaces the last password

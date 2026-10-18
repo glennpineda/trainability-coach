@@ -1,0 +1,205 @@
+/*
+ * Accessibility's colors and shapes (src/lib/look.js, Studio's theme.jsx):
+ * the four themes, reduced color, high contrast and reduced motion, laid over
+ * index.css's light and dark. Not in a layer, so each wins over the tokens
+ * and the app's own pieces without having to outweigh them; within this file
+ * the later rule wins, in Studio's order: theme, then reduced color, then
+ * high contrast, then both.
+ *
+ * The attributes on <html> are look.js's: data-scheme (light or dark as it
+ * is now), data-tone, data-color, data-hc (high contrast on) and data-still
+ * (keep things still).
+ */
+
+/* ------------------------------------------------------------ themes
+   Coach's own versions of Studio's four (Glenn, 18 Oct 2026: "Coach versions
+   of each"): the accent, its fills, the big grounds and the drifting
+   hexagons in the theme's colors, and the greys warmed or cooled toward it,
+   in light and in dark. Default is Coach's cerulean (index.css), so Blue is a
+   deep navy rather than Default again. As in Studio, Orange moves errors to
+   rose and Green moves "done" to teal, so they aren't taken for the theme. */
+
+:root[data-tone="purple"] {
+  --cerulean: #5B4BC4; --cerulean-deep: #43358F; --sky: #8E7CE8;
+  --accent: #5B4BC4; --accent-soft: #ECE8FA; --sky-soft: #F2EFFC;
+  --fill-cerulean: #5B4BC4; --fill-deep: #43358F;
+  --ink: #241D45; --ink-soft: #433B66; --iron: #645E86; --iron-line: #DCD6EF;
+  --paper: #F5F3FC; --ghost-fill: #ECE8F7;
+  --band-from: #43358F; --band-via: #5B4BC4; --band-to: #8E7CE8;
+  --ground: linear-gradient(150deg, #5B4BC4 0%, #3A2D80 45%, #1E1740 100%);
+  --accent-glow: rgba(91, 75, 196, 0.32); --accent-ring: rgba(91, 75, 196, 0.2);
+  --hex-1: #5B4BC4; --hex-2: #8E7CE8; --hex-3: #43358F; --hex-4: #7A6BD8;
+}
+:root[data-scheme="dark"][data-tone="purple"] {
+  --ink: #F1EFFB; --ink-soft: #D4CFEE; --iron: #ADA7D0; --iron-line: #3A3466;
+  --paper: #13112A; --chalk: #1E1A3D; --ghost-fill: #2A2552; --badge-open: #2A2552;
+  --accent: #ADA0F5; --accent-soft: #2C2659; --sky: #ADA0F5; --sky-soft: #241F4A; --cerulean: #7B6AE0;
+  --hex-1: #8E7CE8; --hex-2: #B3A6F5; --hex-3: #6F5FD8; --hex-4: #9C8EF0;
+}
+
+:root[data-tone="blue"] {
+  --cerulean: #1F4E8C; --cerulean-deep: #13325E; --sky: #4D7CC4;
+  --accent: #1F4E8C; --accent-soft: #E4EBF6; --sky-soft: #EBF0F8;
+  --fill-cerulean: #1F4E8C; --fill-deep: #13325E;
+  --ink: #14223A; --ink-soft: #33435E; --iron: #586577; --iron-line: #D3DCE8;
+  --paper: #F2F5FA; --ghost-fill: #E6ECF4;
+  --band-from: #13325E; --band-via: #1F4E8C; --band-to: #4D7CC4;
+  --ground: linear-gradient(150deg, #1F4E8C 0%, #13325E 45%, #0A1A33 100%);
+  --accent-glow: rgba(31, 78, 140, 0.32); --accent-ring: rgba(31, 78, 140, 0.2);
+  --hex-1: #1F4E8C; --hex-2: #4D7CC4; --hex-3: #13325E; --hex-4: #3866AA;
+}
+:root[data-scheme="dark"][data-tone="blue"] {
+  --ink: #EDF2FA; --ink-soft: #CDD7E8; --iron: #9DADC6; --iron-line: #273A5A;
+  --paper: #0A1424; --chalk: #122036; --ghost-fill: #1C2C47; --badge-open: #1C2C47;
+  --accent: #8FB0EA; --accent-soft: #1B2D4D; --sky: #8FB0EA; --sky-soft: #16263F; --cerulean: #3A6BB5;
+  --hex-1: #4D7CC4; --hex-2: #8FB0EA; --hex-3: #2E5FA6; --hex-4: #6E93D6;
+}
+
+:root[data-tone="orange"] {
+  --cerulean: #C93A00; --cerulean-deep: #8A2800; --sky: #EE7B3A;
+  --accent: #B03300; --accent-soft: #FBE7DA; --sky-soft: #FDF0E7;
+  --fill-cerulean: #B83500; --fill-deep: #8A2800;
+  --ink: #2B1D14; --ink-soft: #4A382D; --iron: #78665A; --iron-line: #EADCD0;
+  --paper: #FCF6F1; --ghost-fill: #F5EBE3;
+  --ember: #B3264E; --ember-soft: #F8DCE3; --fill-ember: #B3264E;
+  --band-from: #8A2800; --band-via: #C93A00; --band-to: #EE7B3A;
+  --ground: linear-gradient(150deg, #C93A00 0%, #8A2800 45%, #3A1608 100%);
+  --accent-glow: rgba(201, 58, 0, 0.3); --accent-ring: rgba(201, 58, 0, 0.2);
+  --hex-1: #C93A00; --hex-2: #EE7B3A; --hex-3: #8A2800; --hex-4: #E05A1A;
+}
+:root[data-scheme="dark"][data-tone="orange"] {
+  --ink: #FBF1EA; --ink-soft: #E4D3C6; --iron: #BCA898; --iron-line: #45352A;
+  --paper: #17110D; --chalk: #231A14; --ghost-fill: #31251D; --badge-open: #31251D;
+  --accent: #FF8A4C; --accent-soft: #3D2414; --sky: #FF8A4C; --sky-soft: #2E1D12; --cerulean: #E04600;
+  --ember: #FF8FB0; --ember-soft: #3D1A24;
+  --hex-1: #E04600; --hex-2: #FF8A4C; --hex-3: #B83500; --hex-4: #FF6A26;
+}
+
+:root[data-tone="green"] {
+  --cerulean: #6B7230; --cerulean-deep: #4F5522; --sky: #97A04F;
+  --accent: #555C22; --accent-soft: #E9ECD6; --sky-soft: #F0F2E4;
+  --fill-cerulean: #5F6A2A; --fill-deep: #454C1C;
+  --ink: #2A2E14; --ink-soft: #474C2E; --iron: #66694F; --iron-line: #DCDFC9;
+  --paper: #F5F6EE; --ghost-fill: #ECEEE0;
+  --moss: #2F6F62; --moss-soft: #D5E8E2;
+  --band-from: #454C1C; --band-via: #6B7230; --band-to: #97A04F;
+  --ground: linear-gradient(150deg, #6B7230 0%, #454C1C 45%, #22260E 100%);
+  --accent-glow: rgba(107, 114, 48, 0.32); --accent-ring: rgba(107, 114, 48, 0.2);
+  --hex-1: #6B7230; --hex-2: #97A04F; --hex-3: #4F5522; --hex-4: #828B3E;
+}
+:root[data-scheme="dark"][data-tone="green"] {
+  --ink: #F2F4E8; --ink-soft: #D6D9C4; --iron: #ABAF93; --iron-line: #383D29;
+  --paper: #12140C; --chalk: #1C1F14; --ghost-fill: #282C1D; --badge-open: #282C1D;
+  --accent: #C2C98A; --accent-soft: #2C3120; --sky: #C2C98A; --sky-soft: #23271A; --cerulean: #7E8738;
+  --moss: #7FD1C0; --moss-soft: #173A33;
+  --hex-1: #828B3E; --hex-2: #B3BC6E; --hex-3: #6B7230; --hex-4: #9AA352;
+}
+
+/* ------------------------------------------------------------ reduced color
+   Studio's: greys throughout, with one color kept for what can be pressed or
+   is picked (the primary button, links, the selected switch, the lit tab):
+   Coach's cerulean, or the theme's own, since the accent is left as the
+   theme set it. Its greys, its lightness steps, and a darker edge on what
+   can be pressed or typed in. The backdrop goes, and so do the gradients. */
+:root[data-color="reduced"][data-scheme="light"] {
+  --ink: #141414; --ink-soft: #383838; --paper: #EBEBEB; --chalk: #FAFAFA;
+  --iron: #5E5E5E; --iron-line: #C7C7C7; --ghost-fill: #E0E0E0; --badge-open: #FFFFFF;
+  --ember: #262626; --ember-soft: #FFFFFF; --fill-ember: #333333;
+  --moss: #333333; --moss-soft: #D1D1D1; --amber: #4D4D4D;
+  --iq-card: #F2F2F2; --iq-card-line: #C7C7C7; --iq-ink: #262626;
+  --gold-light: #E6E6E6; --gold: #9E9E9E; --gold-deep: #262626; --gold-pale-light: #FAFAFA; --gold-pale: #D9D9D9;
+  --control-line: #7A7A7A;
+  --band-from: #474747; --band-via: #474747; --band-to: #474747; --ground: #3D3D3D;
+  --sky: var(--cerulean); --sky-soft: var(--accent-soft);
+  color-scheme: light;
+}
+/* Coach's own cerulean read 4.0:1 on the light grey: a shade darker, 5:1.
+   The themes' accents clear it as they are. */
+:root[data-color="reduced"][data-scheme="light"]:not([data-tone]) { --accent: #00668C; }
+:root[data-color="reduced"][data-scheme="dark"] {
+  --ink: #DEDEDE; --ink-soft: #BDBDBD; --paper: #121212; --chalk: #1C1C1C;
+  --iron: #9C9C9C; --iron-line: #3B3B3B; --ghost-fill: #2B2B2B; --badge-open: #262626;
+  --ember: #D6D6D6; --ember-soft: #121212; --fill-ember: #4A4A4A;
+  --moss: #B8B8B8; --moss-soft: #383838; --amber: #C7C7C7;
+  --iq-card: #262626; --iq-card-line: #3B3B3B; --iq-ink: #E6E6E6;
+  --gold-light: #3B3B3B; --gold: #7A7A7A; --gold-deep: #E6E6E6; --gold-pale-light: #262626; --gold-pale: #3B3B3B;
+  --control-line: #7A7A7A;
+  --band-from: #2B2B2B; --band-via: #2B2B2B; --band-to: #2B2B2B; --ground: #1C1C1C;
+  --sky: var(--cerulean); --sky-soft: var(--accent-soft);
+  color-scheme: dark;
+}
+:root[data-color="reduced"] .cx-drifthex, :root[data-color="reduced"] .cx-hexbackdrop { display: none; }
+:root[data-color="reduced"] .cx-btn-primary { background: var(--fill-cerulean); }
+:root[data-color="reduced"] .cx-btn-quiet, :root[data-color="reduced"] .cx-btn-row { background: var(--chalk); }
+:root[data-color="reduced"] .cx-input, :root[data-color="reduced"] .cx-icon-btn { border-color: var(--control-line); }
+:root[data-color="reduced"] .cx-billy-button { background: var(--ghost-fill); }
+:root[data-color="reduced"] :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* ------------------------------------------------------------ high contrast
+   Studio's: every text color at 7:1 or more on its ground, every line the ink
+   color itself, no shadows, tints or gradients, and a focus ring nobody can
+   miss. Its own palette whichever theme is chosen, with Coach's blue, made
+   dark enough (or light enough, in dark), as the one accent. (html:root:root
+   so it outweighs reduced color's darker accent, above.) Two of them:
+   off-white on near-black is its own need, not a copy. */
+html:root:root[data-hc][data-scheme="light"] {
+  --ink: #000000; --ink-soft: #000000; --paper: #FFFFFF; --chalk: #FFFFFF;
+  --iron: #333333; --iron-line: #000000; --ghost-fill: #EDEDED; --badge-open: #FFFFFF;
+  --accent: #00507A; --accent-soft: #E3EEF5; --sky-soft: #FFFFFF;
+  --cerulean: #00507A; --sky: #00507A; --fill-cerulean: #00507A; --fill-deep: #00334F;
+  --ember: #9B0000; --ember-soft: #FFE3E3; --fill-ember: #A80000;
+  --moss: #1D5620; --moss-soft: #E0F0E0; --amber: #5E4500;
+  --iq-card: #FFFFFF; --iq-card-line: #000000; --iq-ink: #000000;
+  --band-from: #00334F; --band-via: #00334F; --band-to: #00334F; --ground: #00334F;
+  --soft-shadow: none; --accent-glow: transparent; --accent-ring: transparent;
+  color-scheme: light;
+}
+html:root:root[data-hc][data-scheme="dark"] {
+  --ink: #F5F5F5; --ink-soft: #F5F5F5; --paper: #0A0A0A; --chalk: #121212;
+  --iron: #D4D4D4; --iron-line: #F5F5F5; --ghost-fill: #262626; --badge-open: #121212;
+  --accent: #8FD3FF; --accent-soft: #0A2433; --sky-soft: #121212;
+  --cerulean: #00507A; --sky: #00507A; --fill-cerulean: #00507A; --fill-deep: #00334F;
+  --ember: #FF9A90; --ember-soft: #3D0A06; --fill-ember: #A80000;
+  --moss: #A6E3A1; --moss-soft: #0F2B12; --amber: #FFD966;
+  --iq-card: #121212; --iq-card-line: #F5F5F5; --iq-ink: #F5F5F5;
+  --band-from: #00334F; --band-via: #00334F; --band-to: #00334F; --ground: #00334F;
+  --soft-shadow: none; --accent-glow: transparent; --accent-ring: transparent;
+  color-scheme: dark;
+}
+/* Both at once: high contrast's, with its reds, greens and ambers taken out
+   and the blue kept as the one color (Studio's HC_REDUCED). */
+html:root:root[data-hc][data-color="reduced"][data-scheme="light"] {
+  --ember: #000000; --ember-soft: #FFFFFF; --fill-ember: #000000; --moss: #000000; --moss-soft: #D9D9D9; --amber: #000000;
+}
+html:root:root[data-hc][data-color="reduced"][data-scheme="dark"] {
+  --ember: #F5F5F5; --ember-soft: #0A0A0A; --fill-ember: #000000; --moss: #F5F5F5; --moss-soft: #333333; --amber: #F5F5F5;
+}
+/* The shapes, not the colors: outlines where there were shadows and tints,
+   a thicker edge on every surface, solid bars, and nothing that only moves
+   for show. */
+:root[data-hc] .cx-drifthex, :root[data-hc] .cx-hexbackdrop { display: none; }
+:root[data-hc] .cx-card { border-width: 2px; border-color: var(--ink); }
+:root[data-hc] .cx-headbar { background: var(--chalk); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: 2px solid var(--ink); }
+:root[data-hc] .cx-navslot::before { display: none; }
+:root[data-hc] .cx-navwrap { background: var(--chalk); -webkit-backdrop-filter: none; backdrop-filter: none; border: 2px solid var(--ink); box-shadow: none; }
+:root[data-hc] .cx-btn-primary, :root[data-hc] .cx-btn-primary:hover, :root[data-hc] .cx-btn-primary:active {
+  background: var(--fill-cerulean); box-shadow: inset 0 0 0 2px var(--ink); transform: none;
+}
+:root[data-hc] .cx-btn-ember { box-shadow: inset 0 0 0 2px var(--ink); }
+:root[data-hc] .cx-btn-quiet, :root[data-hc] .cx-btn-row { background: var(--chalk); border-width: 2px; }
+:root[data-hc] .cx-input { border-width: 2px; border-color: var(--ink); }
+:root[data-hc] .cx-icon-btn { border: 2px solid var(--iron-line); }
+:root[data-hc] .cx-billy-button { background: var(--chalk); box-shadow: inset 0 0 0 2px var(--iron-line); }
+:root[data-hc] .cx-chip[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink) !important; }
+:root[data-hc] .cx-nav-lit { box-shadow: none; }
+:root[data-hc] :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* ------------------------------------------------------------ reduced motion
+   Studio's still(): nothing slides, sways or drifts where Motion is Reduced,
+   or left to a device that asks for less (data-still). */
+:root[data-still] .cx-appdrawer, :root[data-still] .cx-nav-lit, :root[data-still] .cx-navbtn,
+:root[data-still] .cx-card-press, :root[data-still] .cx-billy-button { transition: none; }
+:root[data-still] .cx-navbtn:hover, :root[data-still] .cx-card-press:hover { transform: none; }
+:root[data-still] .cx-billy * { animation: none !important; }
+:root[data-still] .cx-cycle { animation: none; }
+:root[data-still] { scroll-behavior: auto; }

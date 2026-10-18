@@ -24,6 +24,14 @@ const appVersion = {
    (`npm run server`), which relays to Studio's API. */
 export default defineConfig({
   plugins: [react(), tailwindcss(), appVersion],
+  /* PostCSS set here, empty, so Vite never looks for a postcss.config.js.
+     Tailwind 4 runs as the Vite plugin above and needs none. The host
+     unpacks each deploy over the last without emptying /app
+     (cleanAppDirBeforeExtract: false), so the postcss.config.js that 0.1.0
+     shipped, deleted when Coach moved to Tailwind 4, is still there and
+     broke the build of 1.0.12 ("trying to use tailwindcss directly as a
+     PostCSS plugin"; 17 Oct 2026). */
+  css: { postcss: { plugins: [] } },
   server: {
     port: 5174,
     proxy: { "/api": { target: process.env.API_URL || "http://localhost:4800", changeOrigin: true } },

@@ -43,13 +43,22 @@ export function BottomNav({ tabs, activeTab, onChange }) {
           <span aria-hidden="true" className="cx-nav-lit"
             style={{ width: lit.w, height: lit.h, transform: `translate(${lit.x}px, ${lit.y}px)` }} />
         )}
-        {tabs.map(({ id, label, icon: Icon }) => {
+        {tabs.map(({ id, label, icon: Icon, count = 0, countWord = "new" }) => {
           const on = id === activeTab;
           return (
             <button key={id} type="button" data-tab={id} onClick={() => onChange(id)}
-              aria-label={label} title={label} aria-current={on ? "page" : undefined}
+              aria-label={count ? `${label}, ${count} ${countWord}` : label} title={label} aria-current={on ? "page" : undefined}
               className={`cx-navbtn${on ? " cx-navbtn-on" : ""}`}>
               <Icon size={24} strokeWidth={2} aria-hidden="true" />
+              {/* How many are waiting, on the corner of the tab, as Studio's
+                  bar shows them, with a ring of the bar's ground. */}
+              {count > 0 && (
+                <span aria-hidden="true" className="absolute flex items-center justify-center font-semibold"
+                  style={{ top: 2, right: "18%", minWidth: 16, height: 16, padding: "0 4px", borderRadius: 999,
+                           fontSize: 10, lineHeight: 1, background: "var(--fill-ember)", color: "#fff", boxShadow: "0 0 0 2px var(--chalk)" }}>
+                  {count > 9 ? "9+" : count}
+                </span>
+              )}
             </button>
           );
         })}

@@ -1,0 +1,270 @@
+/**
+ * Coach IQ's exercise library: its words, its names, and what each exercise
+ * needs (coach-iq/README.md, "Exercise names").
+ *
+ * Every exercise belongs to a family: a movement, such as Squat, Lunge or
+ * Romanian Deadlift. A version is that movement with attributes, and its
+ * master name is made from them, never typed: the movement first, then the
+ * attributes in a fixed order (Glenn, 16 Oct 2026: "I'd go with C"; the
+ * direction first and the attachment after the equipment, his answers in the
+ * ideas audit):
+ *
+ *   Movement — direction, position, support, limbs, equipment, attachment,
+ *              load, grip, velocity, plane
+ *
+ *   Lunge — Reverse, Dumbbell
+ *   Pull-Up — Bodyweight, Supinated-Grip        (common name: Chin-up)
+ *   Triceps Pushdown — Cable, Rope
+ *
+ * An attribute at its usual setting is left out: standing, both sides, a
+ * straight bar, controlled. Velocity is named only where it differs from the
+ * movement's usual ("name the velocity only when it differs from the
+ * exercise's usual"), and the plane only where the movement does not already
+ * say it. Equipment is always named, except Bodyweight in a family that is
+ * only ever bodyweight, and where the movement's own name already says it
+ * (Leg Press, Box Jump).
+ *
+ * How a set is done (a tempo, a pause, slow lowering, a partial range, the
+ * weight) is the program's to say, not the exercise's name.
+ *
+ * Every id is permanent (ids.js): exr… for a version, exf… for a family.
+ * Names may change; ids never do.
+ */
+
+export const ORDER = ["direction", "position", "support", "limbs", "implement", "attachment", "load", "grip", "velocity", "plane"];
+
+/* The words each attribute may use. Adding one is fine; renaming one renames
+   every exercise that uses it (the ids stay). */
+export const WORDS = {
+  direction: ["Forward", "Reverse", "Walking", "Lateral", "Curtsy", "Diagonal"],
+  position: ["Seated", "Half-Kneeling", "Tall-Kneeling", "Kneeling", "Supine", "Prone", "Side-Lying", "Quadruped",
+    "Hanging", "Bent-Over", "Split Stance", "Staggered Stance", "Narrow Stance", "Wide Stance", "Sumo Stance"],
+  support: ["Bench", "Incline Bench", "Decline Bench", "Preacher Bench", "Box", "Wall", "Incline", "Feet-Elevated",
+    "Rear-Foot-Elevated", "Deficit", "Parallel Bars", "Stability Ball", "Chair"],
+  limbs: ["Single-Arm", "Single-Leg", "Alternating"],
+  implement: ["Bodyweight", "Dumbbell", "Kettlebell", "Barbell", "Trap Bar", "Landmine", "Smith Machine", "Machine",
+    "Cable", "Band", "Suspension Trainer", "Medicine Ball", "Stability Ball", "Ab Wheel", "Sled", "Foam Roller",
+    "Treadmill", "Stationary Bike", "Air Bike", "Elliptical", "Rowing Machine", "Stair Climber", "Ski Erg", "Plyo Box",
+    "Jump Rope", "Battle Ropes"],
+  attachment: ["Rope", "V-Handle", "Single Handle", "Straight Bar", "EZ Bar", "Wide Bar", "Ankle Strap"],
+  load: ["Goblet", "Front-Rack", "Overhead", "At Sides", "Farmer", "Suitcase", "Contralateral", "Assisted"],
+  grip: ["Neutral-Grip", "Pronated-Grip", "Supinated-Grip", "Wide-Grip", "Close-Grip"],
+  velocity: ["Explosive", "Ballistic", "Isometric", "Jumping"],
+  plane: ["Sagittal", "Frontal", "Transverse"],
+};
+
+/* The movement patterns families belong to, in the order the review page lists
+   them. Alternatives look in the family first, then in the pattern. */
+export const PATTERNS = {
+  "squat": "Squat", "hinge": "Hinge", "lunge": "Lunge and single leg",
+  "push-horizontal": "Push, horizontal", "push-vertical": "Push, overhead",
+  "pull-horizontal": "Pull, horizontal", "pull-vertical": "Pull, vertical",
+  "carry": "Carry", "core-anti-extension": "Core: resisting arching", "core-anti-rotation": "Core: resisting twisting",
+  "core-lateral": "Core: resisting bending sideways", "core-flexion": "Core: bending", "rotation": "Rotation",
+  "isolation": "Single muscle", "plyometric": "Jumping and throwing", "conditioning": "Conditioning",
+  "balance": "Balance", "breathing": "Breathing and pelvic floor", "mobility": "Mobility",
+};
+
+/* What a family is for, and where it usually sits in a session (ideas audit,
+   8), so variety can mean "the same purpose by another exercise" and a
+   scanned warm-up is understood. Proposed words; the first book may refine
+   them. */
+export const PURPOSES = {
+  "strength": "strength", "power": "power", "muscle": "muscle building", "endurance": "endurance",
+  "mobility": "mobility", "balance": "balance and fall prevention", "conditioning": "conditioning", "control": "control",
+};
+export const ROLES = {
+  "warm-up": "warm-up", "main": "main lift", "accessory": "accessory", "finisher": "finisher", "cool-down": "cool-down",
+};
+
+/* Muscles, finer than before (ideas audit, 17): no "shoulders" (it is a
+   joint); the delts by head; obliques, traps, abductors, rotator cuff,
+   tibialis and pelvic floor of their own. */
+export const MUSCLES = ["quads", "hamstrings", "glutes", "adductors", "abductors", "hip flexors", "calves", "tibialis",
+  "chest", "front delts", "side delts", "rear delts", "rotator cuff", "lats", "upper back", "traps", "lower back",
+  "biceps", "triceps", "forearms", "core", "obliques", "pelvic floor"];
+export const JOINTS = ["neck", "shoulders", "elbows", "wrists", "upper-back", "lower-back", "hips", "knees", "ankles", "feet"];
+
+/* Plain facts about an exercise. Which conditions call for care with which
+   is Coach IQ's principles' to say, not this list's. */
+export const FLAGS = {
+  "high-impact": "jumping or running",
+  "spinal-load": "a heavy load on the spine",
+  "spinal-flexion": "rounding the spine",
+  "spinal-rotation": "twisting the spine",
+  "overhead": "arms overhead",
+  "lying-on-back": "lying on the back",
+  "lying-face-down": "lying face down",
+  "inverted": "head below the heart",
+  "balance": "a balance challenge",
+  "breath-hold": "heavy bracing that tempts holding the breath",
+  "floor-transfer": "getting down to the floor and up",
+  "grip": "a hard grip",
+  /* Added by the ideas audit (21), for common precautions. */
+  "kneeling": "weight on a knee",
+  "deep-hip-flexion": "the hip bent past 90 degrees or the legs crossed",
+  "head-movement": "quick changes of head position",
+  "maximal-effort": "all-out effort",
+  "abdominal-pressure": "strong pressure in the belly",
+};
+
+/* Facts that follow from the attributes, worked out rather than typed so they
+   can never drift: a kneeling position means weight on a knee, supine means
+   lying on the back, and so on. */
+const POSITION_FACTS = {
+  "Kneeling": ["kneeling"], "Half-Kneeling": ["kneeling"], "Tall-Kneeling": ["kneeling"], "Quadruped": ["kneeling"],
+  "Supine": ["lying-on-back"], "Prone": ["lying-face-down"],
+};
+
+/** All the facts about a version: those written on it and those its attributes imply. */
+export function factsOf(x) {
+  const facts = new Set(x.cautions?.flags || []);
+  for (const f of POSITION_FACTS[x.attributes?.position] || []) facts.add(f);
+  if (x.attributes?.load === "Overhead") facts.add("overhead");
+  if (x.attributes?.support === "Decline Bench") facts.add("inverted");
+  return [...facts];
+}
+
+/* Level is the skill and strength an exercise needs, whatever the weight
+   (Glenn: "Skill and strength"). How hard it is on the body is told by its
+   facts (high-impact and so on), not by its level. */
+export const LEVELS = ["beginner", "intermediate", "advanced"];
+
+/* How an exercise is counted; a version may take several, the first being
+   the usual. A weight is in pounds unless written otherwise (Glenn: "Pounds
+   (lb)"), and dumbbells and kettlebells are counted per hand. */
+export const MEASURES = ["reps", "time", "distance", "calories"];
+
+export const ORIGINS = ["starter", "book", "trainer"];
+export const STATUSES = ["draft", "reviewed", "retired"];
+
+/**
+ * The particular pieces of equipment Coach knows by name (ideas audit, 6),
+ * shared by the library (an exercise's `piece`) and a trainer's equipment, so
+ * "gravitron" and "Assisted pull-up machine" are the same piece. Each belongs
+ * to one checklist kind. Keys are kept forever; labels and other names may
+ * grow.
+ */
+export const PIECES = {
+  "low-row-machine": { label: "Low row machine", kind: "machines", aliases: ["seated row machine", "seated row"] },
+  "leg-press-machine": { label: "Leg press machine", kind: "machines", aliases: ["leg press", "leg sled"] },
+  "hack-squat-machine": { label: "Hack squat machine", kind: "machines", aliases: ["hack squat"] },
+  "smith-machine": { label: "Smith machine", kind: "machines", aliases: ["smith rack"] },
+  "chest-press-machine": { label: "Chest press machine", kind: "machines", aliases: ["chest press"] },
+  "pec-deck": { label: "Pec deck", kind: "machines", aliases: ["pec deck machine", "pec fly machine", "fly machine", "rear delt machine"] },
+  "shoulder-press-machine": { label: "Shoulder press machine", kind: "machines", aliases: ["shoulder press"] },
+  "lat-pulldown": { label: "Lat pulldown", kind: "machines", aliases: ["lat pulldown machine", "pulldown machine", "lat machine"] },
+  "assisted-pull-up-machine": { label: "Assisted pull-up machine", kind: "machines", aliases: ["gravitron", "assisted pull-up", "assisted dip machine"] },
+  "lateral-raise-machine": { label: "Lateral raise machine", kind: "machines", aliases: ["side raise machine"] },
+  "leg-extension-machine": { label: "Leg extension machine", kind: "machines", aliases: ["leg extension"] },
+  "lying-leg-curl-machine": { label: "Lying leg curl machine", kind: "machines", aliases: ["lying leg curl", "prone leg curl"] },
+  "seated-leg-curl-machine": { label: "Seated leg curl machine", kind: "machines", aliases: ["seated leg curl"] },
+  "seated-calf-machine": { label: "Seated calf machine", kind: "machines", aliases: ["seated calf raise", "calf machine"] },
+  "hip-abduction-machine": { label: "Hip abduction machine", kind: "machines", aliases: ["abductor machine", "outer thigh machine"] },
+  "hip-adduction-machine": { label: "Hip adduction machine", kind: "machines", aliases: ["adductor machine", "inner thigh machine"] },
+  "cable-station": { label: "Cable station", kind: "cables", aliases: ["cable machine", "cable crossover", "functional trainer", "cable row station", "cable tower"] },
+  "preacher-bench": { label: "Preacher curl bench", kind: "stations", aliases: ["preacher bench", "preacher curl"] },
+  "back-extension-bench": { label: "Back extension bench", kind: "stations", aliases: ["hyperextension bench", "45 degree back extension", "roman chair", "back extension"] },
+  "dip-station": { label: "Dip station", kind: "stations", aliases: ["dip bars", "parallel bars", "dip stand"] },
+  "landmine": { label: "Landmine", kind: "barbells", aliases: ["landmine attachment"] },
+  "trap-bar": { label: "Trap bar", kind: "barbells", aliases: ["hex bar"] },
+  "ab-wheel": { label: "Ab wheel", kind: "smalltools", aliases: ["ab roller"] },
+  "sliders": { label: "Sliders", kind: "smalltools", aliases: ["gliders", "slider discs"] },
+  "jump-rope": { label: "Jump rope", kind: "smalltools", aliases: ["skipping rope"] },
+  "foam-roller": { label: "Foam roller", kind: "smalltools", aliases: [] },
+  "treadmill": { label: "Treadmill", kind: "cardio", aliases: [] },
+  "stationary-bike": { label: "Stationary bike", kind: "cardio", aliases: ["exercise bike", "spin bike", "upright bike", "recumbent bike"] },
+  "air-bike": { label: "Air bike", kind: "cardio", aliases: ["assault bike", "fan bike", "echo bike"] },
+  "elliptical": { label: "Elliptical", kind: "cardio", aliases: ["cross trainer"] },
+  "rowing-machine": { label: "Rowing machine", kind: "cardio", aliases: ["rower", "erg", "rowing ergometer", "concept2"] },
+  "stair-climber": { label: "Stair climber", kind: "cardio", aliases: ["stairmaster", "stepmill"] },
+  "ski-erg": { label: "Ski erg", kind: "cardio", aliases: ["skierg"] },
+};
+
+/** The piece a name means, by its label or any of its other names; or null. */
+export function pieceFor(name) {
+  const key = nameKey(name);
+  for (const [k, p] of Object.entries(PIECES)) {
+    if ([p.label, ...p.aliases].some(n => nameKey(n) === key)) return k;
+  }
+  return null;
+}
+
+/* The equipment checklist kind (server/equipment.js) each piece of equipment
+   and each support needs. Worked out, never typed (ideas audit, 5). */
+const IMPLEMENT_KIND = {
+  "Dumbbell": "dumbbells", "Kettlebell": "kettlebells", "Barbell": "barbells", "Trap Bar": "barbells", "Landmine": "barbells",
+  "Smith Machine": "machines", "Machine": "machines", "Cable": "cables", "Band": "bands", "Suspension Trainer": "suspension",
+  "Medicine Ball": "medball", "Stability Ball": "stabilityball", "Ab Wheel": "smalltools", "Sled": "sled", "Foam Roller": "smalltools",
+  "Treadmill": "cardio", "Stationary Bike": "cardio", "Air Bike": "cardio", "Elliptical": "cardio", "Rowing Machine": "cardio",
+  "Stair Climber": "cardio", "Ski Erg": "cardio", "Plyo Box": "box", "Jump Rope": "smalltools", "Battle Ropes": "ropes",
+};
+/* An incline or decline needs an adjustable bench; benches and bars that are
+   stations, not machines, are stations (ideas audit, 19). */
+const SUPPORT_NEEDS = {
+  "Bench": ["bench"], "Incline Bench": ["benchadjustable"], "Decline Bench": ["benchadjustable"], "Preacher Bench": ["stations"],
+  "Box": ["box"], "Deficit": ["box"], "Parallel Bars": ["stations"], "Stability Ball": ["stabilityball"],
+};
+const SUPPORT_ONE_OF = { "Incline": ["bench", "box"], "Feet-Elevated": ["bench", "box"], "Rear-Foot-Elevated": ["bench", "box"] };
+const FREE = new Set(["Dumbbell", "Kettlebell", "Barbell", "Band", "Medicine Ball"]);
+
+/**
+ * What a version needs, from its attributes and its family: `needs` all of
+ * these checklist kinds, and any one of `oneOf`.
+ */
+export function equipmentFor(x, family) {
+  const a = x.attributes || {};
+  const needs = new Set();
+  const kind = IMPLEMENT_KIND[a.implement];
+  if (kind) needs.add(kind);
+  for (const k of SUPPORT_NEEDS[a.support] || []) needs.add(k);
+  if (a.position === "Hanging") needs.add("pullup");
+  /* Walking lunges and the like need room to move. */
+  if (a.direction === "Walking") needs.add("space");
+  /* Seated with a free weight wants something to sit on. */
+  if (a.position === "Seated" && FREE.has(a.implement) && !a.support) needs.add("bench");
+  /* What the family itself always needs, such as a pull-up bar, unless a
+     machine does the job instead. */
+  if (a.implement !== "Machine") for (const k of family.needs || []) needs.add(k);
+  return { needs: [...needs], oneOf: SUPPORT_ONE_OF[a.support] || [] };
+}
+
+/** How a version is counted: its own list, or its family's, or reps. */
+export const measureOf = (x, family) => x.measure || family.measure || ["reps"];
+
+/** Whether its numbers are per side: one arm or leg, alternating, or a family that always is. */
+export const perSideOf = (x, family) =>
+  x.perSide ?? (["Single-Arm", "Single-Leg", "Alternating"].includes(x.attributes?.limbs) || !!family.perSide);
+
+/** The families whose every version is bodyweight. */
+export function bodyweightFamilies(exercises) {
+  const seen = new Map();
+  for (const x of exercises) {
+    const all = seen.get(x.movement) ?? true;
+    seen.set(x.movement, all && x.attributes?.implement === "Bodyweight");
+  }
+  return new Set([...seen].filter(([, only]) => only).map(([key]) => key));
+}
+
+/** The master name of one version. */
+export function masterName(x, movements, bodyweightOnly) {
+  const family = movements[x.movement];
+  const a = x.attributes || {};
+  const details = ORDER.filter(key => {
+    if (!a[key]) return false;
+    if (key === "implement") {
+      if (family.implementInName) return false;
+      if (a.implement === "Bodyweight" && bodyweightOnly.has(x.movement)) return false;
+    }
+    return true;
+  }).map(key => a[key]);
+  return details.length ? `${family.label} — ${details.join(", ")}` : family.label;
+}
+
+/**
+ * A name as it is compared: lowercase, no hyphens or punctuation, plurals
+ * made singular, so "Band-assisted pull-ups" and "band assisted pull up"
+ * are the same name (ideas audit, 13).
+ */
+export const nameKey = (name) => String(name).toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, " ").trim()
+  .split(" ").map(w => (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w)).join(" ");

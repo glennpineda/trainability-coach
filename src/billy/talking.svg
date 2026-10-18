@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -16 128 128" width="512" height="512"><defs>
+ <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="10" y1="92" x2="88" y2="10">
+   <stop offset="0" stop-color="#7B3FC4"/><stop offset="0.55" stop-color="#A646B0"/><stop offset="1" stop-color="#D24E9A"/></linearGradient>
+ <radialGradient id="topglow" cx="34%" cy="20%" r="62%"><stop offset="0" stop-color="#fff" stop-opacity=".20"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+ <linearGradient id="bottomshade" x1="0" y1="0.42" x2="0" y2="1"><stop offset="0" stop-color="#2B0E3A" stop-opacity="0"/><stop offset="1" stop-color="#2B0E3A" stop-opacity=".28"/></linearGradient>
+ <linearGradient id="rim" x1="0" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <linearGradient id="ir" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#FFF3E2"/><stop offset="1" stop-color="#E9CDB4"/></linearGradient>
+ <clipPath id="headclip"><path d="M62.19 10.89 L80.81 21.41 Q93.00 28.30 93.00 42.30 L93.00 57.70 Q93.00 71.70 80.81 78.59 L62.19 89.11 Q50.00 96.00 37.81 89.11 L19.19 78.59 Q7.00 71.70 7.00 57.70 L7.00 42.30 Q7.00 28.30 19.19 21.41 L37.81 10.89 Q50.00 4.00 62.19 10.89 Z"/></clipPath>
+ <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.1"/></filter>
+ <filter id="drop" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="2.4" stdDeviation="2.6" flood-color="#3A1150" flood-opacity=".30"/></filter>
+</defs>
+<style>.head,.eyes,.mouth-wrap{transform-box:view-box}
+
+.head{transform-origin:50px 92px;animation:sway 1.8s infinite}
+.eyes-l,.eyes-r{transform-box:fill-box;transform-origin:center;animation:blink 1.8s infinite}
+.talk{transform-box:fill-box;transform-origin:center top;animation:talk 1.8s infinite}
+.w1,.w2,.w3{transform-box:fill-box;transform-origin:center}
+.w1{animation:ow1 .9s infinite} .w2{animation:ow2 .9s infinite .1s} .w3{animation:ow3 .9s infinite .2s}
+@keyframes sway{0%,100%{transform:rotate(2deg);animation-timing-function:ease-in-out} 50%{transform:rotate(-2deg) translateY(-1px)}}
+@keyframes blink{0%,62%{transform:scaleY(1)} 65%{transform:scaleY(.08)} 68%,100%{transform:scaleY(1)}}
+@keyframes talk{0%{transform:scaleY(.85)} 8%{transform:scaleY(1.45)} 16%{transform:scaleY(.5)} 26%{transform:scaleY(1.2)} 34%{transform:scaleY(.65)}
+ 44%{transform:scaleY(1.4)} 52%{transform:scaleY(.55)} 62%{transform:scaleY(1.15)} 70%{transform:scaleY(.7)} 80%{transform:scaleY(1.3)} 90%{transform:scaleY(.55)} 100%{transform:scaleY(.85)}}
+@keyframes ow1{0%{opacity:0;transform:translateX(-2.5px) scale(.88)} 22%{opacity:1;transform:translateX(-1.6px) scale(.93)} 55%{opacity:.55;transform:translateX(-.6px) scale(.98)} 80%,100%{opacity:0;transform:translateX(.3px) scale(1.01)}}
+@keyframes ow2{0%{opacity:0;transform:translateX(-2.5px) scale(.88)} 22%{opacity:.62;transform:translateX(-1.6px) scale(.93)} 55%{opacity:.34;transform:translateX(-.6px) scale(.98)} 80%,100%{opacity:0;transform:translateX(.3px) scale(1.01)}}
+@keyframes ow3{0%{opacity:0;transform:translateX(-2.5px) scale(.88)} 22%{opacity:.34;transform:translateX(-1.6px) scale(.93)} 55%{opacity:.19;transform:translateX(-.6px) scale(.98)} 80%,100%{opacity:0;transform:translateX(.3px) scale(1.01)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+
+<g class="head"><g filter="url(#drop)"><path d="M14 69 L30 83 L10 90 Z" fill="url(#g)" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/><path d="M62.19 10.89 L80.81 21.41 Q93.00 28.30 93.00 42.30 L93.00 57.70 Q93.00 71.70 80.81 78.59 L62.19 89.11 Q50.00 96.00 37.81 89.11 L19.19 78.59 Q7.00 71.70 7.00 57.70 L7.00 42.30 Q7.00 28.30 19.19 21.41 L37.81 10.89 Q50.00 4.00 62.19 10.89 Z" fill="url(#g)"/></g><g clip-path="url(#headclip)"><rect width="100" height="100" fill="url(#topglow)"/><rect width="100" height="100" fill="url(#bottomshade)"/><path d="M62.19 10.89 L80.81 21.41 Q93.00 28.30 93.00 42.30 L93.00 57.70 Q93.00 71.70 80.81 78.59 L62.19 89.11 Q50.00 96.00 37.81 89.11 L19.19 78.59 Q7.00 71.70 7.00 57.70 L7.00 42.30 Q7.00 28.30 19.19 21.41 L37.81 10.89 Q50.00 4.00 62.19 10.89 Z" fill="none" stroke="url(#rim)" stroke-width="2.6"/></g>
+ <g class="eyes"><g class="eyes-l"><ellipse cx="36.6" cy="43.9" rx="8.7" ry="9.8" fill="#2B0E3A" opacity=".18" filter="url(#soft2)"/><ellipse cx="36.6" cy="42.5" rx="8.7" ry="9.8" fill="url(#ir)"/><g class="pup"><ellipse cx="36.6" cy="43.1" rx="4.05" ry="4.53" fill="#2B1731"/><circle cx="38.9" cy="39.5" r="3.0" fill="#fff"/><circle cx="33.9" cy="47.300000000000004" r="1.5" fill="#fff" opacity=".9"/></g></g><g class="eyes-r"><ellipse cx="63.4" cy="43.9" rx="8.7" ry="9.8" fill="#2B0E3A" opacity=".18" filter="url(#soft2)"/><ellipse cx="63.4" cy="42.5" rx="8.7" ry="9.8" fill="url(#ir)"/><g class="pup"><ellipse cx="63.4" cy="43.1" rx="4.05" ry="4.53" fill="#2B1731"/><circle cx="65.7" cy="39.5" r="3.0" fill="#fff"/><circle cx="60.699999999999996" cy="47.300000000000004" r="1.5" fill="#fff" opacity=".9"/></g></g></g>
+ <g class="mouth-wrap"><path d="M40.5 59.5 Q50 75 59.5 59.5 Z" fill="#2B0E3A" opacity=".18" filter="url(#soft2)" transform="translate(0 1.6)"/><path class="talk" d="M40.5 59.5 Q50 75 59.5 59.5 Z" fill="#fff"/></g>
+</g>
+<g fill="none" stroke="#D24E9A" stroke-width="3.6" stroke-linecap="round"><path class="w1" d="M97.86 45.40 A6 6 0 0 1 97.86 54.60"/><path class="w2" d="M100.30 42.49 A9.8 9.8 0 0 1 100.30 57.51"/><path class="w3" d="M102.03 40.42 A12.5 12.5 0 0 1 102.03 59.58"/></g></svg>

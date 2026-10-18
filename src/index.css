@@ -1,4 +1,12 @@
+/* The Trainability family's type, as Studio loads it (its theme.jsx), in one
+   import (Glenn, 18 Oct 2026): Roboto for everything, Quicksand for the
+   "Trainability" wordmark, the free stand-in for the logo's Katahdin Round
+   (licensed, not in the repo). No other faces. First, as an @import must be. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700&display=swap');
 @import "tailwindcss";
+/* Accessibility's themes, reduced color, high contrast and motion, laid over
+   the tokens below (src/lib/look.js). */
+@import "./look.css";
 
 /* Coach's colors, from the logo kit (brand/README.txt). Studio's screens are
    built on the same token names (--ink, --paper, --chalk, --iron …) so a
@@ -24,16 +32,40 @@
     --ember-soft: #FBEAE7;
     --moss: #2E7D4F;
     --moss-soft: #E5F3EA;
+    --amber: #5E4500;           /* something to see to, Studio's light amber */
+    /* The drifting hexagons' four blues (DriftingHexes), where Studio has its
+       purples: Cerulean, Sky, a deep cerulean and a bluer blue. */
+    --hex-1: #007BA7; --hex-2: #4FA8DC; --hex-3: #0B5C8A; --hex-4: #3D7BC4;
     --soft-shadow: 0 10px 24px -12px rgba(23, 42, 58, 0.28), 0 1px 3px rgba(23, 42, 58, 0.10);
     --wordmark: #007BA7;        /* COACH in the header, as the lockup sets it */
     --badge-open: #FFFFFF;      /* a badge opened out, and the apps panel */
     --gold-light: #F6DD8A; --gold: #D9AE3B; --gold-deep: #4F3B00;
     --gold-pale-light: #F5EBCB; --gold-pale: #E6D49C;
+    /* Coach IQ's own card (the add-an-exercise dialog's questions; Glenn,
+       18 Oct 2026: "put these optional questions inside a yellow card, with
+       Coach IQ as title"): pale gold with the gold's deep ink. */
+    --iq-card: #FBF3D6; --iq-card-line: #E6D49C; --iq-ink: #4F3B00; --iq-chip: rgba(255, 255, 255, 0.75);
+    /* The secondary button's wash: the primary's two blues, made pale. */
+    --sky-soft: #E8F2FB;
+    /* Fills with white words on them, the same in light and dark, as Studio's
+       --fill-* (white on a lighter blue stops being readable). */
+    --fill-cerulean: #007BA7;   /* white 4.9:1 */
+    --fill-deep: #0B5C8A;       /* white 7.0:1 */
+    --fill-ember: #B23A27;      /* white 5.6:1 */
+    /* The brand's big blue grounds, as tokens so a theme can recolor them:
+       Home's band (deep, middle and light, left to right), the sign-in screen's field, and the glow under a primary
+       button and the lit tab. */
+    --band-from: #00668C; --band-via: #007BA7; --band-to: #4FA8DC;
+    --ground: linear-gradient(150deg, #007BA7 0%, #0B4F6E 45%, #172A3A 100%);
+    --accent-glow: rgba(0, 123, 167, 0.32);
+    --accent-ring: rgba(0, 123, 167, 0.18);
     color-scheme: light;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
+  /* Dark: chosen under Accessibility, or the device's own (src/lib/look.js
+     writes the answer as data-scheme, so "Same as device" and a choice are
+     one rule here). */
+  :root[data-scheme="dark"] {
       --ink: #EEF4F8;
       --ink-soft: #CFDCE6;
       --iron: #9DB0BF;
@@ -47,11 +79,14 @@
       --ember-soft: #3D2526;
       --moss: #8FCB8A;
       --moss-soft: #1E3A2C;
+      --amber: #FFD966;
+      --hex-1: #4FA8DC; --hex-2: #7EC3EA; --hex-3: #2E8BC0; --hex-4: #6E9EE0;
       --soft-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       --wordmark: #4FA8DC;      /* sky, as the dark lockup sets COACH */
       --badge-open: #213749;
+      --sky-soft: #1D3346;
+      --iq-card: #33290E; --iq-card-line: #6B5A22; --iq-ink: #F6DD8A; --iq-chip: rgba(0, 0, 0, 0.28);
       color-scheme: dark;
-    }
   }
 
   /* Two things Tailwind 3 did by default and 4 no longer does. A border with
@@ -69,9 +104,23 @@
     margin: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* UI and body text: Roboto, as Studio; the device's own face only until
+       it arrives. */
+    font-family: 'Roboto', -apple-system, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* Headings and display text: Roboto medium, a little open (Studio's
+     .iw-display; cx-display below for headings styled as such). */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', -apple-system, system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  /* Emphasis is medium, not semibold, as in Studio: Roboto's 600 is nearly
+     its bold. Headings (cx-display) keep their own weight. */
+  .font-semibold:not(.cx-display) { font-weight: 500; }
 }
 
 /* The app's own pieces. Utilities rather than plain classes, so Tailwind's
@@ -93,19 +142,99 @@
   font-size: 1rem;
   outline: none;
   transition: border-color .15s, box-shadow .15s;
-  &:focus { border-color: var(--cerulean); box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.18); }
+  &:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
   &[readonly] { color: var(--iron); background: var(--ghost-fill); }
 }
 
-@utility cx-btn-primary {
-  background: var(--cerulean);
-  color: #fff;
+/* Headings, Studio's .iw-display: Roboto medium, each about a fifth smaller
+   than its Tailwind size, because Roboto is wide (Studio's theme.jsx). A
+   figure keeps 600. */
+@utility cx-display {
+  font-family: 'Roboto', -apple-system, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  &.text-lg { font-size: 0.875rem; }
+  &.text-xl { font-size: 1rem; }
+  &.text-2xl { font-size: 1.25rem; }
+  &.text-3xl { font-size: 1.5rem; }
+  &.text-4xl { font-size: 1.75rem; }
+  &.tabular-nums { font-weight: 600; }
+}
+
+/* The "Trainability" wordmark written as text (Studio's .iw-wordmark):
+   Quicksand semibold, standing in for the logo's Katahdin Round. The logo
+   itself is drawn from the kit's SVGs. */
+@utility cx-wordmark {
+  font-family: 'Quicksand', sans-serif;
   font-weight: 600;
-  border-radius: 10px;
-  transition: background .15s, transform .05s;
-  &:hover { background: var(--cerulean-deep); }
-  &:active { transform: translateY(1px); }
-  &:disabled { opacity: .45; cursor: default; }
+  letter-spacing: 0.01em;
+}
+
+/* ------------------------------------------------------------ buttons
+   Studio's levels (its CONTRIBUTING.md, "Buttons and links": weight follows
+   commitment, not importance), in Coach's blues where Studio has magenta and
+   lilac. `npm run check-ui` keeps them honest.
+
+     cx-btn-primary  the one thing a screen or dialog is for: a filled pill
+                     with a glow. Only one showing at a time.
+     cx-btn-ember    agreeing to something that can't be undone, inside a
+                     confirmation.
+     cx-btn-quiet    any other action that commits: an outline over a pale
+                     wash of the primary's colours, 12px corners, not a pill.
+                     Adding to a list is one, full width, inside its card.
+     cx-btn-row      the same, small and as wide as its words, for one row or
+                     card.
+     cx-link         goes somewhere or shows something, changes nothing:
+                     accent words after an icon, never underlined.
+     cx-quiet        backing out (Cancel, Keep it): plain grey words.
+     cx-icon-btn     an icon with no words that does something: a 2rem grey
+                     square. */
+@utility cx-btn-primary {
+  background: linear-gradient(135deg, var(--fill-cerulean), var(--fill-deep));
+  color: #fff;
+  font-weight: 500;
+  border-radius: 999px;
+  box-shadow: 0 3px 12px var(--accent-glow);
+  transition: box-shadow .15s ease, transform .1s ease;
+  &:hover { box-shadow: 0 4px 16px var(--accent-glow); }
+  &:active { transform: translateY(1px); box-shadow: 0 2px 8px var(--accent-glow); }
+  &:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; transform: none; }
+}
+
+@utility cx-btn-ember {
+  background: var(--fill-ember);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 999px;
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+@utility cx-btn-quiet {
+  background: linear-gradient(135deg, var(--accent-soft), var(--sky-soft));
+  color: var(--ink);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+@utility cx-btn-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--accent-soft), var(--sky-soft));
+  color: var(--ink);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  &:disabled { opacity: .45; cursor: not-allowed; }
 }
 
 @utility cx-link {
@@ -113,7 +242,35 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  &:hover { text-decoration: underline; }
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+@utility cx-quiet {
+  color: var(--iron);
+  &:hover { color: var(--ink); }
+  &:disabled { opacity: .45; }
+}
+
+@utility cx-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--iron);
+  border: 1px solid transparent;
+  transition: border-color .15s ease, color .15s ease;
+  &:hover { border-color: var(--iron-line); color: var(--ink); }
+  &:disabled { opacity: .4; }
+}
+
+/* Busy is not disabled (Studio): a button whose own request is on its way
+   stays at full strength, says what it is doing and spins. */
+@layer base {
+  button[aria-busy="true"]:disabled { opacity: 1; cursor: progress; }
 }
 
 /* ------------------------------------------------------------ the header
@@ -155,7 +312,7 @@
     color: var(--ink); transition: background-color .15s ease; }
   .cx-app-row:hover { background: var(--ghost-fill); }
 
-  /* The row on the right: your account menu. */
+  /* The row on the right: Billy and the account menu. */
   .cx-badge-row { display: flex; align-items: center; gap: 6px; }
 
   /* ---------------------------------------------------------- the tab bar
@@ -179,13 +336,86 @@
   /* The lit circle, one piece that slides to the tab tapped. */
   .cx-nav-lit { position: absolute; z-index: 0; left: 0; top: 0; pointer-events: none; border-radius: 999px;
     background: linear-gradient(135deg, var(--cerulean), var(--sky));
-    box-shadow: 0 3px 10px rgba(0, 123, 167, 0.35);
+    box-shadow: 0 3px 10px var(--accent-glow);
     transition: transform .3s cubic-bezier(.3, .7, .2, 1), width .3s cubic-bezier(.3, .7, .2, 1); }
+
+  /* Home's band fading out at its foot, behind the first card, into the
+     page and the hexagons under it: no edge where it stops. */
+  .cx-band { -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%); }
 
   .cx-card-press { transition: transform .15s ease, box-shadow .15s ease; }
   .cx-card-press:hover { transform: translateY(-1px); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .cx-appdrawer, .cx-badge, .cx-nav-lit, .cx-navbtn, .cx-card-press { transition: none; }
-  }
+  /* ---------------------------------------------------------------- Billy
+     His button beside the badges, Studio's: a square the badges' size in a
+     wash of his own lilac, his face in it. His panel hangs from the header's
+     right-hand corner, the width of a phone at most. */
+  .cx-billy-button { position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;
+    border-radius: 10px; flex-shrink: 0; background: rgba(201, 162, 220, 0.16); color: var(--ink); transition: background-color .15s ease; }
+  .cx-billy-button:hover { background: rgba(201, 162, 220, 0.32); }
+  /* Open, the button and the panel are one shape (Glenn, 18 Oct 2026: "Make
+     sure Billy's button connect with the panel"): the panel's fill and
+     outline, squared off at the bottom, and a neck of the same fill down to
+     the panel, covering its outline where they meet, as the logo badge and
+     the apps panel do. The neck is the header's bottom padding plus the
+     panel's 6px gap. */
+  .cx-billy-button-open, .cx-billy-button-open:hover { z-index: 41; background: var(--chalk); color: var(--accent);
+    border: 1px solid var(--iron-line); border-bottom: 0; border-radius: 10px 10px 0 0; }
+  .cx-billy-button-open::after { content: ""; position: absolute; left: -1px; right: -1px; top: 100%;
+    height: calc(0.75rem + 7px); background: var(--chalk);
+    border-left: 1px solid var(--iron-line); border-right: 1px solid var(--iron-line); }
+  /* Everything behind him greyed and blurred: the page under a veil, and the
+     rest of the header (which sits over the veil, so he stays sharp) filtered
+     itself. */
+  .cx-billy-veil { position: fixed; inset: 0; z-index: 35;
+    background: color-mix(in srgb, var(--paper) 30%, transparent);
+    -webkit-backdrop-filter: grayscale(1) blur(4px); backdrop-filter: grayscale(1) blur(4px); }
+  .cx-headbar-billy { z-index: 40; background: color-mix(in srgb, var(--paper) 70%, transparent);
+    -webkit-backdrop-filter: grayscale(1) blur(4px); backdrop-filter: grayscale(1) blur(4px); }
+  .cx-headbar-billy > div > *:not(.cx-badge-row):not(.cx-billy-panel),
+  .cx-headbar-billy .cx-badge-row > *:not(.cx-billy-button) {
+    filter: grayscale(1) blur(2px); opacity: .7; pointer-events: none; }
+  /* Except the account menu, which stays tappable: opening it closes Billy. */
+  .cx-headbar-billy .cx-badge-row > .cx-account { pointer-events: auto; }
+  .cx-billy-dot { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 999px;
+    background: var(--cerulean); box-shadow: 0 0 0 2px var(--paper); }
+  .cx-billy-panel { position: absolute; right: 0; top: calc(100% + 0.75rem + 6px); z-index: 40; width: min(26rem, calc(100vw - 2rem));
+    display: flex; flex-direction: column; max-height: calc(100vh - 12rem); max-height: calc(100dvh - 12rem);
+    background: var(--chalk); color: var(--ink); border: 1px solid var(--iron-line); border-radius: 16px;
+    box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.4); }
+  .cx-billy-thread { flex: 1; min-height: 4rem; overflow-y: auto; padding: 0 1rem; overscroll-behavior: contain; }
+  .cx-billy-you { max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 14px 14px 4px 14px; font-size: 0.875rem;
+    background: var(--accent-soft); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cx-billy-says { overflow-wrap: anywhere; }
+  /* Messages (MessagesTab): the trainer's own on the right in Billy's pale
+     accent, the client's on the left in the ghost fill. */
+  .cx-msg-mine, .cx-msg-theirs { max-width: 85%; padding: 0.5rem 0.75rem; font-size: 0.9375rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cx-msg-mine { border-radius: 16px 16px 4px 16px; background: var(--accent-soft); }
+  .cx-msg-theirs { border-radius: 16px 16px 16px 4px; background: var(--ghost-fill); }
+  /* The box to write in stays just over the bottom bar, so it and its
+     attach menu are never under the bar, however long the conversation. */
+  .cx-msg-composer { position: sticky; z-index: 31; bottom: calc(76px + max(10px, calc(env(safe-area-inset-bottom, 0px) - 14px))); }
+  .cx-billy-file { display: inline-flex; align-items: center; gap: 8px; max-width: 85%; padding: 4px 6px 4px 4px;
+    border: 1px solid var(--iron-line); border-radius: 10px; font-size: 0.8125rem; background: var(--chalk); }
+  .cx-billy-icon { width: 40px; height: 40px; flex: none; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; color: var(--iron); transition: background-color .15s ease, color .15s ease; }
+  .cx-billy-icon:hover { background: var(--ghost-fill); color: var(--accent); }
+  .cx-billy-icon:disabled { opacity: .45; }
+
+  /* "You belong here." under the logo on the sign-in screen, one language at
+     a time (auth/PhraseCycle.jsx): Studio's iw-cycle. */
+  @keyframes cx-cycle-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  .cx-cycle { animation: cx-cycle-in .55s ease-out both; }
+
+  /* Reduced motion is in look.css, with Accessibility's Motion. */
+}
+
+/* A program printed for the client (programs/PrintProgram.jsx): its own
+   buttons stay on the screen, and the page is white on paper whatever the
+   device's theme. */
+@media print {
+  .cx-noprint { display: none !important; }
+  html, body { background: #fff !important; }
+  .cx-print { padding: 0 !important; min-height: 0 !important; }
 }

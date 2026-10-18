@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Check } from "lucide-react";
 import badgeMark from "../assets/coach-badge-light.svg";
 import badgeMarkDark from "../assets/coach-badge-dark.svg";
@@ -6,7 +7,9 @@ import coachIcon from "../assets/coach-app-icon.png";
 import studioIcon from "../assets/studio-app-icon.png";
 import { CoachWordmark } from "./CoachWordmark";
 import { AccountMenu } from "./AccountMenu";
+import { BillyButton, BillyPanel } from "../billy/Billy";
 import { STUDIO_URL } from "../lib/api";
+import { useScheme } from "../hooks/useScheme";
 
 /* A badge's square, as in Studio's header: the logo is drawn at it so
    everything in the row stands the same height. */
@@ -24,7 +27,8 @@ const SLIDE_MS = 220;
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
  */
-export function Header({ user, onLogout }) {
+export function Header({ user, onLogout, billy, onOpen, chooseLook }) {
+  const scheme = useScheme();
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
@@ -88,7 +92,12 @@ export function Header({ user, onLogout }) {
   }, [open, close]);
 
   return (
-    <header className="cx-headbar">
+    <header className={`cx-headbar${billy?.open ? " cx-headbar-billy" : ""}`}
+      onMouseDown={billy?.open ? (e) => { if (!e.target.closest(".cx-billy-panel, .cx-billy-button")) billy.setOpen(false); } : undefined}>
+      {/* With Billy open, everything behind him greyed and blurred (Glenn, 18
+          Oct 2026); tapping it folds him back up. Put on the page itself,
+          since the header's own blur would hold a fixed layer inside it. */}
+      {billy?.open && createPortal(<div className="cx-billy-veil" aria-hidden="true" onMouseDown={() => billy.setOpen(false)} />, document.body)}
       <div className="relative flex items-center max-w-5xl mx-auto" style={{ minHeight: BADGE }}>
         {/* The logo and its panel are one place to the pointer: entering
             either keeps it open, leaving both starts it closing. */}
@@ -104,10 +113,9 @@ export function Header({ user, onLogout }) {
           title={open ? "Hide" : "Switch apps"}
         >
           {/* The logo kit's two badges: cerulean on light, white on dark. */}
-          <picture className="flex-none">
-            <source srcSet={badgeMarkDark} media="(prefers-color-scheme: dark)" />
-            <img src={badgeMark} alt="" style={{ width: BADGE, height: BADGE, display: "block" }} />
-          </picture>
+          {/* Light or dark as the page is (useScheme), which may be chosen
+              rather than the device's. */}
+          <img src={scheme === "dark" ? badgeMarkDark : badgeMark} alt="" className="flex-none" style={{ width: BADGE, height: BADGE, display: "block" }} />
           <span className="cx-logo-label">
             <CoachWordmark label="" className="h-[15px] sm:h-[17px] w-auto" style={{ color: "var(--wordmark)" }} />
           </span>
@@ -121,12 +129,14 @@ export function Header({ user, onLogout }) {
 
         <div className="flex-1" />
 
-        {/* You, with your account menu, in the corner. The shield that said
-            Admin or Master is in the menu now, beside your name (Glenn, 16 Oct
-            2026). */}
+        {/* Billy, then you with your account menu, in the corner. The role
+            badge is in the account menu now, as on Studio's (build 1.0.44). */}
         <div className="cx-badge-row">
-          <AccountMenu user={user} onLogout={onLogout} />
+          {/* Billy, when this server has him (useBilly). */}
+          {billy?.available && <BillyButton billy={billy} />}
+          <AccountMenu user={user} onLogout={onLogout} onOpen={onOpen} billy={billy} chooseLook={chooseLook} />
         </div>
+        {billy?.available && <BillyPanel billy={billy} />}
 
         {drawn && (
           <div id="cx-apps" className={`cx-appdrawer${slid && open ? " cx-appdrawer-open" : ""}`} aria-hidden={!open}

@@ -10,15 +10,48 @@ described in `README.md`.
 - The coaching app in the Trainability family, alongside Trainability Studio
   (`glennpineda/trainability-studio`). Live at trainabilitycoach.com on GoDaddy
   Airo. The start command is `npm start`, which builds and then serves.
-- **Coach keeps no accounts.** `server/index.js` relays four routes
-  (`/api/auth/login`, `me`, `logout`, `forgot-password`) to Studio's API at
-  `STUDIO_ORIGIN`. A user signs in with the same password as Studio but gets a
-  separate session. Most Coach work should need no change to Studio. If one
-  seems needed, say so and ask first.
+- **Two kinds of account.** Trainability's own trainers sign in with their
+  Studio account: `server/index.js` relays the sign-in routes (`/api/auth/door`,
+  `login`, `me`, `logout`, `forgot-password`, `password`) and Accessibility's
+  six (`theme`, `tone`, `contrast`, `motion`, `color`, `text-size`, shared
+  with Studio; Glenn, 18 Oct 2026) to Studio's API at
+  `STUDIO_ORIGIN`, the same password as Studio but a separate session, and
+  their clients are kept in Studio, through its API, with nothing on screen
+  saying so. Any other trainer can make a **Coach account**
+  (`server/accounts.js`, `coach_accounts`, ids `usr…`, Glenn's tag; Glenn, 18
+  Oct 2026), kept in Coach's database, answered before the relay (`cx_session`
+  cookie), with its clients kept in Coach too (`server/coach-clients.js`,
+  `coach_clients`, ids `cli…`, Glenn's tag), in the same shape as Studio's so
+  every screen works alike. A Coach account is linked to a Studio account
+  (`accounts.link`: same email at sign-in, or the account menu's Link your
+  Trainability account) and becomes it, its data re-keyed to the Studio user;
+  its clients stay in Coach until the trainer moves them
+  (`/api/clients/move`), since the business can see Studio's clients. A
+  Coach account's forgotten password is reset Studio's way: a temporary one
+  emailed (`server/email.js`, Studio's mailer and settings), and their own
+  chosen before anything else. Most Coach work should need no change to
+  Studio. If one seems needed, say so and ask first.
 - The stack matches Studio's: React 18, Vite 8, Tailwind 4 (CSS-first: no tailwind.config.js), lucide icons and
-  Express. The color tokens use Studio's names in `src/index.css`: Cerulean
+  Express. So does the look: Roboto for text and headings (500, 0.01em),
+  Quicksand 600 for "Trainability" written as text (`cx-wordmark`, standing
+  in for the logo's licensed Katahdin Round; no other fonts), all imported
+  once at the top of `src/index.css`; Studio's heading sizes, and its button
+  levels in Coach's colors (`src/index.css`, "buttons"; Studio's
+  CONTRIBUTING.md, "Buttons and links"). `npm run check-ui` checks them. The color tokens use Studio's names in `src/index.css`: Cerulean
   `#007BA7` (main), Sky `#4FA8DC`, Navy `#172A3A`. The wordmark is
   TRAINABILITY® (not ™).
+
+## Studio is the template
+
+- **Before building anything new, look in Studio first** (Glenn, 18 Oct
+  2026: "Whenever we create new functionalities, let's use Studio as a
+  template and check if that exists already that we can replicate"). If
+  Studio already does it (a screen, a form, a rule, a message, a server
+  check), copy its way: the same steps, fields, wording, limits and look, in
+  Coach's colours. Read its code, not only its manual: main, and any branch
+  with newer work (its `account-menu` branch held the account menu's role
+  badge). Say what was copied and from where. Only where Studio has nothing,
+  or Glenn asks for something different, design it fresh.
 
 ## BRAINSTORM.md is the working queue
 
@@ -70,6 +103,13 @@ described in `README.md`.
   it before changing anything, and never invent one.** A minor bump changes
   `version`, `codename` and a new `## 1.1 <Name>` heading in CHANGELOG.md.
   Build numbers get no name.
+- **Every commit bumps the build number** (Glenn: "We bump the build number
+  whenever we commit"). The build is the last part of `version` (1.0.1 →
+  1.0.2): run `npm version patch --no-git-tag-version` and commit
+  `package.json` and `package-lock.json` with the change. So a piece of work
+  is one commit, with its NEURALBRAIN entry in it naming the build ("build
+  1.0.2") rather than a hash. The manual's version examples are examples and
+  are not changed each time.
 
 ## Testing and safety
 
@@ -80,6 +120,12 @@ described in `README.md`.
 - A cloud session has only this repository, so it cannot run Studio's fixture
   and cannot test sign-in end to end. Build, run `npm run check-docs`, and check
   the pages that don't need a session. Say plainly what went untested.
+- **In a cloud session, show Glenn screenshots** of anything on screen that
+  was built or changed (Glenn, 18 Oct 2026: "Make sure you show me
+  screenshots when I'm asking on cloud environment"): take them in the
+  session's Chromium (phone width, and desktop where it matters) and send them
+  to him with the report, not only look at them. He can't open the cloud's
+  copy of the app himself.
 - Local settings live in `server/.env` (as in Studio). It is never committed. A
   cloud session won't have it; it gets what it needs from the environment's
   variables.
