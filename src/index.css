@@ -315,7 +315,29 @@
      right-hand corner, the width of a phone at most. */
   .cx-billy-button { position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;
     border-radius: 10px; flex-shrink: 0; background: rgba(201, 162, 220, 0.16); color: var(--ink); transition: background-color .15s ease; }
-  .cx-billy-button:hover, .cx-billy-button-open { background: rgba(201, 162, 220, 0.32); }
+  .cx-billy-button:hover { background: rgba(201, 162, 220, 0.32); }
+  /* Open, the button and the panel are one shape (Glenn, 18 Oct 2026: "Make
+     sure Billy's button connect with the panel"): the panel's fill and
+     outline, squared off at the bottom, and a neck of the same fill down to
+     the panel, covering its outline where they meet, as the logo badge and
+     the apps panel do. The neck is the header's bottom padding plus the
+     panel's 6px gap. */
+  .cx-billy-button-open, .cx-billy-button-open:hover { z-index: 41; background: var(--chalk); color: var(--accent);
+    border: 1px solid var(--iron-line); border-bottom: 0; border-radius: 10px 10px 0 0; }
+  .cx-billy-button-open::after { content: ""; position: absolute; left: -1px; right: -1px; top: 100%;
+    height: calc(0.75rem + 7px); background: var(--chalk);
+    border-left: 1px solid var(--iron-line); border-right: 1px solid var(--iron-line); }
+  /* Everything behind him greyed and blurred: the page under a veil, and the
+     rest of the header (which sits over the veil, so he stays sharp) filtered
+     itself. */
+  .cx-billy-veil { position: fixed; inset: 0; z-index: 35;
+    background: color-mix(in srgb, var(--paper) 30%, transparent);
+    -webkit-backdrop-filter: grayscale(1) blur(4px); backdrop-filter: grayscale(1) blur(4px); }
+  .cx-headbar-billy { z-index: 40; background: color-mix(in srgb, var(--paper) 70%, transparent);
+    -webkit-backdrop-filter: grayscale(1) blur(4px); backdrop-filter: grayscale(1) blur(4px); }
+  .cx-headbar-billy > div > *:not(.cx-badge-row):not(.cx-billy-panel),
+  .cx-headbar-billy .cx-badge-row > *:not(.cx-billy-button) {
+    filter: grayscale(1) blur(2px); opacity: .7; pointer-events: none; }
   .cx-billy-dot { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 999px;
     background: var(--cerulean); box-shadow: 0 0 0 2px var(--paper); }
   .cx-billy-panel { position: absolute; right: 0; top: calc(100% + 0.75rem + 6px); z-index: 40; width: min(26rem, calc(100vw - 2rem));

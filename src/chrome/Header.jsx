@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Check, ShieldCheck, Sparkles } from "lucide-react";
 import badgeMark from "../assets/coach-badge-light.svg";
 import badgeMarkDark from "../assets/coach-badge-dark.svg";
@@ -91,7 +92,12 @@ export function Header({ user, onLogout, billy, onOpen }) {
   }, [open, close]);
 
   return (
-    <header className="cx-headbar">
+    <header className={`cx-headbar${billy?.open ? " cx-headbar-billy" : ""}`}
+      onMouseDown={billy?.open ? (e) => { if (!e.target.closest(".cx-billy-panel, .cx-billy-button")) billy.setOpen(false); } : undefined}>
+      {/* With Billy open, everything behind him greyed and blurred (Glenn, 18
+          Oct 2026); tapping it folds him back up. Put on the page itself,
+          since the header's own blur would hold a fixed layer inside it. */}
+      {billy?.open && createPortal(<div className="cx-billy-veil" aria-hidden="true" onMouseDown={() => billy.setOpen(false)} />, document.body)}
       <div className="relative flex items-center max-w-5xl mx-auto" style={{ minHeight: BADGE }}>
         {/* The logo and its panel are one place to the pointer: entering
             either keeps it open, leaving both starts it closing. */}

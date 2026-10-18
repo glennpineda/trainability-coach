@@ -54,6 +54,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **Billy's panel joined to his button.** Open, his button and panel are
+  one shape, and everything behind them goes grey and blurred; tapping it
+  closes him.
 - **Studio's places are your places.** Every place in Studio shows in My
   equipment under Studio's name, yours (your default place) first, each
   with its own checklist; they follow renames and closures in Studio. A new
