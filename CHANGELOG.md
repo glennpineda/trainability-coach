@@ -56,7 +56,7 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   program opens with the same answers.
 - **Billy's panel joined to his button.** Open, his button and panel are
   one shape, and everything behind them goes grey and blurred; tapping it
-  closes him.
+  closes him. He and your account menu are never open together.
 - **Studio's places are your places.** Every place in Studio shows in My
   equipment under Studio's name, yours (your default place) first, each
   with its own checklist; they follow renames and closures in Studio. A new

@@ -917,7 +917,9 @@ for your business yet.
    and blurred behind him.
 
 To close the panel, tap the arrow where his face was, tap anywhere on the
-grey screen behind him, or press Esc on a keyboard. Closing it keeps the conversation: open it again and it is all
+grey screen behind him, or press Esc on a keyboard. Tapping your photo
+closes him too and opens your menu; opening Billy closes your menu. Only one
+is open at a time. Closing it keeps the conversation: open it again and it is all
 still there. While it is closed, a small blue dot on his face means he has
 answered and the answer is waiting.
 

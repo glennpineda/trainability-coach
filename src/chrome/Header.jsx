@@ -156,7 +156,7 @@ export function Header({ user, onLogout, billy, onOpen }) {
           )}
           {/* Billy, when this server has him (useBilly). */}
           {billy?.available && <BillyButton billy={billy} />}
-          <AccountMenu user={user} onLogout={onLogout} onOpen={onOpen} />
+          <AccountMenu user={user} onLogout={onLogout} onOpen={onOpen} billy={billy} />
         </div>
         {billy?.available && <BillyPanel billy={billy} />}
 

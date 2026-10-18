@@ -338,6 +338,8 @@
   .cx-headbar-billy > div > *:not(.cx-badge-row):not(.cx-billy-panel),
   .cx-headbar-billy .cx-badge-row > *:not(.cx-billy-button) {
     filter: grayscale(1) blur(2px); opacity: .7; pointer-events: none; }
+  /* Except the account menu, which stays tappable: opening it closes Billy. */
+  .cx-headbar-billy .cx-badge-row > .cx-account { pointer-events: auto; }
   .cx-billy-dot { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 999px;
     background: var(--cerulean); box-shadow: 0 0 0 2px var(--paper); }
   .cx-billy-panel { position: absolute; right: 0; top: calc(100% + 0.75rem + 6px); z-index: 40; width: min(26rem, calc(100vw - 2rem));

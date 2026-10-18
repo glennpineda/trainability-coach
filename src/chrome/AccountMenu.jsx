@@ -14,10 +14,16 @@ const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "
  * after the role badge, and is the one place for these — the tab bar has no
  * Profile. Your name shows beside the photo where there is room.
  */
-export function AccountMenu({ user, onLogout, onOpen }) {
+export function AccountMenu({ user, onLogout, onOpen, billy }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const btnRef = useRef(null);
+
+  /* One or the other, never both (Glenn, 18 Oct 2026: "When the profile menu
+     opens, Billy's panel should close, and vice versa"): opening this folds
+     Billy up, and Billy opening, however he is opened, closes this. */
+  useEffect(() => { if (open) billy?.setOpen(false); }, [open]);
+  useEffect(() => { if (billy?.open) setOpen(false); }, [billy?.open]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -31,7 +37,7 @@ export function AccountMenu({ user, onLogout, onOpen }) {
   const role = user.isPrimary ? "Primary Master" : ROLE[user.role];
   const [units, setUnits] = useUnits();
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative cx-account" ref={ref}>
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
         aria-label={`${user.name}: account menu`}
         className="flex items-center gap-1.5 rounded-full pl-0.5 pr-1.5 h-9 transition-colors hover:bg-(--ghost-fill)"
