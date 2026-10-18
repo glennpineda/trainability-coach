@@ -191,6 +191,14 @@ by `server/email.js`, Studio's own mailer cut down, with Studio's settings:
 With none set, as with Studio, the temporary password is written to the
 server's log instead, since only its hash is kept.
 
+The email is drawn in Studio's own template (`server/email-template.js`, a
+copy of Studio's `emailShell` and its pieces): the same band, card, panel,
+pill and Trainability signature, with Coach's logo (`public/coach-mark.png`)
+in the band and Coach where Studio names itself. Its pictures, the logo and
+the signature's hexagon and wordmark (`public/trainability-logo.png`,
+`public/trainability-wordmark.png`, Studio's own files), are fetched from
+`APP_ORIGIN`, so they show only once that is a real address.
+
 ## Deploying (GoDaddy Airo)
 
 Like Studio: push the repository to GitHub, point an Airo app at it, set the

@@ -4,6 +4,7 @@ import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import { tempPassword } from "./temp-password.js";
 import { sendEmail, EMAIL_CONFIGURED } from "./email.js";
+import { emailShell, panel, rows, mono, para, cta, esc, MAIL, SIGNER, signedBy } from "./email-template.js";
 
 /**
  * Coach's own accounts, for trainers who aren't on Trainability's team
@@ -143,28 +144,37 @@ export function resetAllowed(ip, email) {
   return 0;
 }
 
-/** The email, built apart from the sending (Studio's credentialsEmail, for an asked-for reset). */
+/**
+ * The email, built apart from the sending: Studio's credentialsEmail for a
+ * reset asked for on the sign-in page (its account-emails.js), its words with
+ * Coach for Studio's "scheduling app", in Studio's shell (email-template.js).
+ * Studio's "tell whoever runs {business}" has no one to tell for a Coach
+ * account, so it says what happened instead.
+ */
 export function resetEmail({ name, email, temp, origin }) {
+  const app = "Trainability Coach";
   const first = String(name || "").trim().split(" ")[0] || "there";
   const link = String(origin || "").replace(/\/$/, "");
-  const text = [
-    `Hi ${first},`, "",
-    "A new password was asked for on Coach's sign-in page, so your old one no longer works.", "",
+  const title = "Your password was reset";
+  const lead = `A new password was asked for on ${app}'s sign-in page, so your old one no longer works.`;
+  const next = "Sign in with this temporary one and choose your own.";
+  const unexpected = "If you did not ask for this, someone typed your email on the sign-in page. Sign in with this one and choose your own all the same.";
+  const text = signedBy(SIGNER, [
+    `Hi ${first},`, "", lead, "",
     `Sign in with:  ${email}`, `Temporary password:  ${temp}`, link ? `\n${link}` : "", "",
-    "Sign in with this temporary one and choose your own.",
-    "If you did not ask for this, someone typed your email on Coach's sign-in page. Sign in with this one and choose your own all the same.",
-    "", "Trainability Coach",
-  ].join("\n");
-  const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const html = `<div style="font-family:Roboto,Arial,sans-serif;color:#172A3A;font-size:15px;line-height:1.5">
-<p>Hi ${esc(first)},</p>
-<p>A new password was asked for on Coach's sign-in page, so your old one no longer works.</p>
-<p style="background:#E8F4FA;border-radius:10px;padding:12px 14px">Sign in with: <strong>${esc(email)}</strong><br>Temporary password: <strong style="font-family:Menlo,monospace">${esc(temp)}</strong></p>
-${link ? `<p><a href="${esc(link)}" style="color:#007BA7">${esc(link)}</a></p>` : ""}
-<p>Sign in with this temporary one and choose your own.</p>
-<p style="color:#5B6B78">If you did not ask for this, someone typed your email on Coach's sign-in page. Sign in with this one and choose your own all the same.</p>
-<p>Trainability Coach</p></div>`;
-  return { subject: "Your password was reset", text, html };
+    next, unexpected,
+  ].join("\n"));
+  const details = panel(rows([["Sign in with", `<strong>${esc(email)}</strong>`], ["Temporary password", mono(temp)]]));
+  const html = emailShell({
+    name: app, title, origin,
+    body: para(`Hi ${esc(first)},`)
+      + para("A new password was asked for on the sign-in page, so your old one no longer works.", { bottom: 4 })
+      + details
+      + (link ? cta(link, "Sign in") : "")
+      + para(esc(next), { size: 13, color: MAIL.inkSoft, bottom: 0 }),
+    footer: [`Sent because the password on your ${app} account was reset.`, unexpected],
+  });
+  return { subject: title, text, html };
 }
 
 /** A temporary password for this account, emailed (or logged if it can't be). */
