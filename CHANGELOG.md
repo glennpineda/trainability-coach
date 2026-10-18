@@ -89,6 +89,10 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   the header, the sign-in screen, the browser tab and the emails; a slightly
   bigger mark in the icon. Remove Coach from your home screen and add it
   again to see the new icon.
+- **Studio's drifting hexagons, in blues.** The logo's hexagon, a dozen
+  times over and in four of Coach's blues, drifts slowly behind every page and
+  over the sign-in screen, as Studio's purple ones do. Still on a device set to
+  reduce motion.
 - **Studio's type.** Roboto throughout, headings at medium weight, and
   "Trainability" as a word in Quicksand, as in Studio.
 - **Billy's panel joined to his button.** Open, his button and panel are

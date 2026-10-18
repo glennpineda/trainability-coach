@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { House, Users, ClipboardList, MessageCircle } from "lucide-react";
 import { Header } from "./chrome/Header";
+import { DriftingHexes } from "./chrome/DriftingHexes";
 import { BottomNav } from "./chrome/BottomNav";
 import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
@@ -62,9 +63,16 @@ export function Shell({ user, onLogout, onSignedOut }) {
 
   return (
     <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
+      {/* Studio's drifting hexagons, in Coach's blues, behind every page
+          (Glenn, 18 Oct 2026), held to the window as Studio's sign-in screen
+          holds them; at full strength behind the header and the tab bar, a
+          share of that behind the page, as Studio's are (bodyShare 0.75). */}
+      <div aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+        <DriftingHexes bodyShare={0.75} />
+      </div>
       <Header user={user} onLogout={onLogout} billy={billy} onOpen={open} />
-      {/* Room at the end for the bar floating over it. */}
-      <main className="pb-32">
+      {/* Room at the end for the bar floating over it; over the hexagons. */}
+      <main className="pb-32 relative z-[1]">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} unread={unread} onOpenProgram={openProgram} onOpenClient={openClient} onSignedOut={onSignedOut} />}
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
         {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} />}

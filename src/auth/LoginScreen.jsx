@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { KeyRound, Loader2, UserPlus, UserRound } from "lucide-react";
 import { HexBackdrop } from "./HexBackdrop";
+import { DriftingHexes } from "../chrome/DriftingHexes";
 import { CoachLockup } from "./CoachLockup";
 import { apiRequest, STUDIO_URL } from "../lib/api";
 import { PhraseCycle, BELONGING } from "./PhraseCycle";
@@ -126,6 +127,11 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
       className="min-h-dvh flex justify-center items-center p-4 relative overflow-hidden"
       style={{ background: "linear-gradient(150deg, #007BA7 0%, #0B4F6E 45%, #172A3A 100%)" }}
     >
+      {/* Studio's drifting hexagons over the gradient, as on its sign-in
+          screen (bodyShare 1.3), with the backdrop's own three under them. */}
+      <div aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+        <DriftingHexes bodyShare={1.3} />
+      </div>
       <HexBackdrop />
       <div className="w-full max-w-sm relative z-10">
         <div className="cx-card p-7" style={{ borderRadius: 20, boxShadow: "0 18px 50px rgba(0,0,0,0.35)" }}>
