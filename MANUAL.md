@@ -343,7 +343,8 @@ number on the corner of **Messages** says how many messages are waiting.
 Coach opens on Home. From the top:
 
 - **The blue band**, shading from deep blue on the left to sky blue on the
-  right (in your theme's colors if you chose one, 3.6). On it, today's date,
+  right (in your theme's colors if you chose one, 3.6) and fading into the
+  page behind the first card. On it, today's date,
   and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.

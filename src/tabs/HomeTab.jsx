@@ -29,15 +29,21 @@ export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOp
           the page does not open on a blank grey. A gradient you can see
           (Glenn, 18 Oct 2026: "make the top colored header on the home tab
           gradient"): deep cerulean under the words, cerulean, then sky at
-          the far corner where nothing is written (the theme's three, look.css). */}
-      <section style={{ background: "linear-gradient(115deg, var(--band-from) 0%, var(--band-via) 45%, var(--band-to) 100%)" }}>
-        <div className="max-w-5xl mx-auto px-4 pt-7 pb-16">
+          the far corner where nothing is written (the theme's three, look.css).
+          And no edge at its foot (Glenn: "That is not a gradient.. that's a
+          sharp border"): it runs on down behind the first card, fading out
+          into the page (.cx-band, index.css). */}
+      <section className="cx-band" style={{ background: "linear-gradient(115deg, var(--band-from) 0%, var(--band-via) 45%, var(--band-to) 100%)" }}>
+        <div className="max-w-5xl mx-auto px-4 pt-7 pb-32">
           <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.8)" }}>{today}</p>
           <h1 className="cx-display text-3xl sm:text-4xl text-white mt-1">{greeting()}, {firstName(user.name)}</h1>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 -mt-10">
+      {/* Over the band: its fade (a mask) makes it a layer of its own, which
+          would otherwise be drawn on top of the cards (Glenn: "put the today
+          contents on top of that gradient band"). */}
+      <div className="relative max-w-5xl mx-auto px-4 -mt-[6.5rem]">
         {linked && (
           /* Once, just after a Coach account was joined to its Trainability
              account (stage three). */

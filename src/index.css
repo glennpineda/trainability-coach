@@ -339,6 +339,11 @@
     box-shadow: 0 3px 10px var(--accent-glow);
     transition: transform .3s cubic-bezier(.3, .7, .2, 1), width .3s cubic-bezier(.3, .7, .2, 1); }
 
+  /* Home's band fading out at its foot, behind the first card, into the
+     page and the hexagons under it: no edge where it stops. */
+  .cx-band { -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 100%); }
+
   .cx-card-press { transition: transform .15s ease, box-shadow .15s ease; }
   .cx-card-press:hover { transform: translateY(-1px); }
 
