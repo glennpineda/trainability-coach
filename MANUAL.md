@@ -722,10 +722,17 @@ next, and Billy can talk it over with you. Only you see your programs.
 8. **What it's for** is chosen to suit the kind (**Muscle size** for upper and
    lower, say); change it if you like (**Strength**, **Power**, **Muscle
    size**, **Strength endurance**, **Fat loss and conditioning**, **General
-   fitness** or **Mobility**). Choose **The client's level** (**Beginner**,
-   **Intermediate** or **Advanced**) and **Where they train**: one of your
-   places from My equipment (3.7). Add **Notes** if you want. **Back to the
-   kind of program** goes back a step.
+   fitness** or **Mobility**). **The client's level** (**Beginner**,
+   **Intermediate** or **Advanced**) is filled in from the programs you have
+   made for them before, with Coach IQ's reason underneath: the level of the
+   last one, or the next level up once they have been on programs at one
+   level for 12 weeks without stepping back (*Coach IQ: 1 program with you,
+   on beginner programs for 15 weeks without stepping back: time for
+   intermediate.*). Change it if you know better. For a client with no
+   programs yet it says *No programs for Jordan yet. What's their fitness
+   level?*: choose one, as the program can't start without it. Then choose
+   **Where they train**: one of your places from My equipment (3.7). Add
+   **Notes** if you want. **Back to the kind of program** goes back a step.
 9. Tap **Start designing**. The program opens with its days already made, as
    many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for
    upper and lower; **Push**, **Pull**, **Legs** for push, pull, legs;
@@ -753,7 +760,10 @@ list; it is kept, not deleted.
    tap to narrow*); tap some of them to narrow further, such as **glutes**.
    Tap the group again to close it. Coach IQ's suggestions below narrow to
    match (*Coach IQ suggests: Strength · hamstrings*, or *legs*), different movements
-   first, each saying what it works, such as *Works the biceps.* Stretches
+   first, each saying what it works, such as *Works the biceps.* The next
+   step of something the client did in an earlier program comes first, and
+   says so (*A step on from Goblet squat, from an earlier program.*); the
+   easier ones they have moved past come last. Stretches
    only come up when you choose **Mobility**. If
    nothing fits the place, the client's level and limitations, it says so:
    choose fewer muscles, or another kind of movement. **Ask Billy for
@@ -824,7 +834,7 @@ brackets.
 |---|---|---|
 | Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
 | Orange triangle | Take care | Something to make easier for the client, or above their level |
-| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly, a step back from something the client did in an earlier program |
 
 They are guidance: your word wins. If one is wrong, it shows where Coach IQ
 needs fixing; tell the Primary Master.

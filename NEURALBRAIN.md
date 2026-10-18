@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **The client's level from their programs, and progression in the suggestions** (18 Oct 2026; Glenn: "The workout level “beginner, intermediate,.. etc” should start with what we can extract from the client. So if the client is intermediate, we don't need to recommended an intermediate exercise (unless it fit with the current pattern for the program)"). Build 1.0.33. Not from Next up. **Asked first**, with recommendations: where the level comes from (Coach knows only name, birthday, join date and session dates from Studio; Studio's enquiry form does ask a fitness level, but reading it would need a Studio change), and what the second sentence meant. Glenn: "Coach only, also try to determine what level they are based on the client's workout programs. We should also ask the trainer their fitness level when creating a new program (If we don't have this information already)", and "Based on what we know about program design, recommended harder exercises. See how many program they have and how the progression is there, or even the regression." So no Studio change. **The level** (`historyOf` in `server/programs.js`): the trainer's own programs for the client, archived ones too (they are history), oldest first, each with the average library level of its exercises. The level is the latest program's; one level up when the client has been on programs at that level for `WEEKS_TO_MOVE_UP` (12) weeks, counted from the first of the unbroken run at that level, without stepping back, and the latest program's exercises reach about its level (average within half a level). 12 weeks is my choice, not a principle from a book: Glenn can change it. Trend: "down" when the last program's level was lowered or its exercises averaged a quarter-level easier than the one before; "up" the other way. The reason is a sentence ("1 program with you, on beginner programs for 15 weeks without stepping back: time for intermediate."; "2 programs with you, getting harder from one to the next. The last, “Next block”, was intermediate."; "… Their last program stepped back to easier exercises, so beginner for now."). New route `GET /api/clients/:client/level` (own clients only, like limitations). **The form** (`DetailsForm` in `src/programs/Designer.jsx`): a new program's level now starts empty ("Choose…", required) and is filled from the route when a client is chosen, with "Coach IQ: {reason}" under it; with no programs, "No programs for {first name} yet. What's their fitness level?" and the program can't start until one is chosen (the browser's own "Please select an item in the list."). Editing a program is unchanged. Found on the way: the made-up name stayed "Avery's program" after switching to another client; it now follows the client while it is still the made-up one. **Progression** (`context()` now carries the client's history from programs made before this one): every exercise done, the next harder step of each (the library's `harder` links; 159 of 301 versions have them) and every easier step down the chain (new `library.easierOf`, walked transitively, so past a goblet squat is past a box squat and a sit to stand). `rank()` gives a next step +3 and an outgrown one −3; the level ceiling stays (nothing above the client's level). A next step's reason gains "A step on from Goblet squat, from an earlier program." The check adds a grey note, from "The client's earlier programs": "Sit to stand is a step back from Goblet squat, which Avery Stone did in an earlier program. Fine if that's the plan." Billy's tools are unchanged. Manual 5.1 step 8, 5.2 step 2 and the marks table; CHANGELOG. **Tested** against the stand-ins (a second stand-in client, Jordan Lee, added for it): Foundations (beginner: goblet squat, cable pull-through, incline push-up, split squat) dated 15 weeks back gave intermediate with the move-up reason, dated 5 weeks back gave beginner; a new intermediate program then suggested Smith machine squat, Romanian deadlift and Push-up as steps on from those, and Inverted row; Strength · quads, hamstrings, glutes put four steps on first (Smith machine squat, Romanian deadlift, Rear-foot-elevated split squat, Reverse lunge); adding Sit to stand gave the step-back note. In Chromium at 400px dark and 1200px light: the level and reason for Avery, the question for Jordan, blocked without a level; no page errors, no sideways scroll; three screenshots sent to Glenn. Commit: build 1.0.33.
+
 - **Coach IQ remembers its answers for the next exercise** (18 Oct 2026; Glenn: "Next exercise they add, remember this setting so it opens to the next add exercise with it"). Build 1.0.32. Not from Next up. The Coach IQ card's answers (what we're working on, the muscle groups and any muscles picked under them) are kept per program on the device, in localStorage under `cx-iq-ask:<programId>`, in `src/programs/Designer.jsx` (`lastAsk`, `rememberAsk`), and passed to `ExerciseDialog` as `remembered` / `onRemember`. Its `Pick` step starts from them (dropping any kind or group the vocabulary no longer has) and reports every change back, so un-choosing something is remembered too. Kept per program rather than for everything, since a lower-body program and an upper-body one want different answers; kept on the device rather than in the database, since it's a convenience and not part of the program. Manual 5.2 step 2; CHANGELOG. **Tested** in Chromium at 400px dark against the stand-ins: the first open had nothing chosen; after choosing Strength · Legs › hamstrings and adding Dumbbell Romanian deadlift, the next open had the same three chosen and suggested Kettlebell Romanian deadlift, Cable pull-through and Banded good morning; after un-choosing Strength, closing and reloading the page, it opened with Legs › hamstrings only. No page errors; the screenshot was sent to Glenn. Commit: build 1.0.32.
 
 - **Coach IQ's questions in a yellow card** (18 Oct 2026; Glenn: "Can you put these optional questions inside a yellow card, with Coach IQ as title. Remove the optional texts in it"). Build 1.0.31. Not from Next up. In the add-an-exercise dialog's first step, "What are we working on?" and "Muscle groups" (and a chosen group's muscles) now sit in a card titled **Coach IQ** with a light-bulb, and the "(optional)" after each question is gone. Coach's gold tokens (`--gold…`, used by the header's badge) were set for light mode only, so the card has tokens of its own in `src/index.css` for both: `--iq-card` (#FBF3D6 light, #33290E dark), `--iq-card-line` (#E6D49C, #6B5A22), `--iq-ink` (#4F3B00, #F6DD8A) and `--iq-chip` (white at 75% light, black at 28% dark) for an unchosen chip; a chosen chip stays cerulean with white words, as everywhere else. The search and Coach IQ's suggestions stay below the card. Manual 5.2 step 2. **Tested** in Chromium at 400px, light and dark, with Strength · Legs › hamstrings chosen: readable in both, no page errors, no sideways scroll; both screenshots sent to Glenn. Commit: build 1.0.31.
@@ -887,10 +889,17 @@ next, and Billy can talk it over with you. Only you see your programs.
 8. **What it's for** is chosen to suit the kind (**Muscle size** for upper and
    lower, say); change it if you like (**Strength**, **Power**, **Muscle
    size**, **Strength endurance**, **Fat loss and conditioning**, **General
-   fitness** or **Mobility**). Choose **The client's level** (**Beginner**,
-   **Intermediate** or **Advanced**) and **Where they train**: one of your
-   places from My equipment (3.7). Add **Notes** if you want. **Back to the
-   kind of program** goes back a step.
+   fitness** or **Mobility**). **The client's level** (**Beginner**,
+   **Intermediate** or **Advanced**) is filled in from the programs you have
+   made for them before, with Coach IQ's reason underneath: the level of the
+   last one, or the next level up once they have been on programs at one
+   level for 12 weeks without stepping back (*Coach IQ: 1 program with you,
+   on beginner programs for 15 weeks without stepping back: time for
+   intermediate.*). Change it if you know better. For a client with no
+   programs yet it says *No programs for Jordan yet. What's their fitness
+   level?*: choose one, as the program can't start without it. Then choose
+   **Where they train**: one of your places from My equipment (3.7). Add
+   **Notes** if you want. **Back to the kind of program** goes back a step.
 9. Tap **Start designing**. The program opens with its days already made, as
    many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for
    upper and lower; **Push**, **Pull**, **Legs** for push, pull, legs;
@@ -918,7 +927,10 @@ list; it is kept, not deleted.
    tap to narrow*); tap some of them to narrow further, such as **glutes**.
    Tap the group again to close it. Coach IQ's suggestions below narrow to
    match (*Coach IQ suggests: Strength · hamstrings*, or *legs*), different movements
-   first, each saying what it works, such as *Works the biceps.* Stretches
+   first, each saying what it works, such as *Works the biceps.* The next
+   step of something the client did in an earlier program comes first, and
+   says so (*A step on from Goblet squat, from an earlier program.*); the
+   easier ones they have moved past come last. Stretches
    only come up when you choose **Mobility**. If
    nothing fits the place, the client's level and limitations, it says so:
    choose fewer muscles, or another kind of movement. **Ask Billy for
@@ -989,7 +1001,7 @@ brackets.
 |---|---|---|
 | Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
 | Orange triangle | Take care | Something to make easier for the client, or above their level |
-| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly, a step back from something the client did in an earlier program |
 
 They are guidance: your word wins. If one is wrong, it shows where Coach IQ
 needs fixing; tell the Primary Master.

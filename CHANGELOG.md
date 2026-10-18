@@ -54,6 +54,11 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **The client's level comes from their programs.** A new program's level
+  is filled in from the ones you made for them before (the next level up
+  after 12 weeks at one without stepping back), with the reason shown; with
+  none, you're asked. Suggestions put the next step of what they did before
+  first, and the check notes a step back.
 - **Adding an exercise opens a box of its own.** Pick the exercise (or one
   Coach IQ suggests), see what it works and needs and anything Coach IQ says
   about it for the client, then the sets, reps, load, effort, tempo, rest and

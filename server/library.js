@@ -290,6 +290,8 @@ const overlap = (a = [], b = []) => a.filter(v => b.includes(v)).length;
 export const placeCheck = (x, place) => fitsPlace(x, placeKinds(place));
 export const limitsCheck = (x, rules) => fitsLimits(x, rules);
 export const liveExercises = () => LIVE;
+/** The versions that list this one as their harder step. */
+export const easierOf = (id) => EASIER.get(id) || [];
 export const familyOf = (x) => FAMILIES[x.movement];
 export const masterOf = (x) => master(x);
 /** One of a trainer's private exercises, shaped, or null. */

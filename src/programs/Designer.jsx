@@ -26,6 +26,7 @@ const FROM = {
   equipment: "The place's equipment", limitations: "The client's limitations", library: "Coach IQ's library",
   reps: "Principles: Reps", sets: "Principles: Sets", rest: "Principles: Rest", tempo: "Principles: Tempo",
   "starting-out": "Principles: Starting out", "frequency-and-variety": "Principles: How often",
+  progression: "The client's earlier programs",
 };
 
 /* "3 × 8–12 · 45 lb · RPE 7 · 3-1-1-0 · rest 75 s": what is filled in, in the reader's units. */
@@ -398,7 +399,7 @@ export function KindForm({ vocab, initial, onNext, onCancel }) {
 /** A program's details: its name, what it is for, the client's level, where, and notes; editing, its focus and session length too. */
 export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy, onSave, onCancel, onBack, word = "Save" }) {
   const [f, setF] = useState({
-    name: initial.name || "", goal: initial.goal || "general", level: initial.level || "beginner",
+    name: initial.name || "", goal: initial.goal || "general", level: initial.level || (clients ? "" : "beginner"),
     placeId: initial.placeId ?? places?.[0]?.id ?? "", notes: initial.notes || "", clientId: initial.clientId || "",
     focus: initial.focus || [], minutes: initial.minutes ?? null,
   });
@@ -407,6 +408,20 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
   useEffect(() => {
     if (initial.placeId === undefined && places?.length) setF(d => (d.placeId ? d : { ...d, placeId: places[0].id }));
   }, [places, initial.placeId]);
+  /* A new program's level starts from what the trainer's earlier programs
+     for the client say; with none, the trainer is asked. */
+  const [known, setKnown] = useState(null);
+  useEffect(() => {
+    if (!clients || !f.clientId) { setKnown(null); return; }
+    let live = true;
+    apiRequest("GET", `/clients/${f.clientId}/level`).then(o => {
+      if (!live) return;
+      setKnown(o);
+      setF(d => ({ ...d, level: o.level || "" }));
+    }).catch(() => { if (live) setKnown(null); });
+    return () => { live = false; };
+  }, [clients, f.clientId]);
+  const firstName = clients?.find(c => c.id === f.clientId)?.firstName;
   const lab = (name, el) => <label className="grid gap-1 text-xs" style={muted}>{name}{el}</label>;
   return (
     <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave(clients ? { name: f.name, goal: f.goal, level: f.level, placeId: f.placeId, notes: f.notes, clientId: f.clientId }
@@ -415,7 +430,9 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
       {clients && lab("Client", (
         <select className="cx-input" value={f.clientId} required onChange={e => {
           const c = clients.find(x => x.id === e.target.value);
-          setF(d => ({ ...d, clientId: e.target.value, name: d.name || (c ? `${c.firstName}'s program` : "") }));
+          /* The name follows the client while it is still the one made up for the last. */
+          const was = clients.find(x => x.id === f.clientId);
+          setF(d => ({ ...d, clientId: e.target.value, name: (!d.name || (was && d.name === `${was.firstName}'s program`)) && c ? `${c.firstName}'s program` : d.name }));
         }} style={{ color: "var(--ink)" }}>
           <option value="">Choose a client…</option>
           {clients.map(c => <option key={c.id} value={c.id}>{`${c.firstName} ${c.lastName}`.trim()}</option>)}
@@ -424,7 +441,15 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
       {lab("Name", <input className="cx-input" value={f.name} maxLength={120} required onChange={set("name")} style={{ color: "var(--ink)" }} />)}
       <div className="grid sm:grid-cols-3 gap-3">
         {lab("What it's for", <select className="cx-input" value={f.goal} onChange={set("goal")} style={{ color: "var(--ink)" }}>{goals.map(g => <option key={g.key} value={g.key}>{g.label}</option>)}</select>)}
-        {lab("The client's level", <select className="cx-input" value={f.level} onChange={set("level")} style={{ color: "var(--ink)" }}>{["beginner", "intermediate", "advanced"].map(l => <option key={l} value={l}>{l[0].toUpperCase() + l.slice(1)}</option>)}</select>)}
+        {lab("The client's level", <select className="cx-input" value={f.level} required onChange={set("level")} style={{ color: "var(--ink)" }}>
+          {!f.level && <option value="">Choose…</option>}
+          {["beginner", "intermediate", "advanced"].map(l => <option key={l} value={l}>{l[0].toUpperCase() + l.slice(1)}</option>)}
+        </select>)}
+        {clients && f.clientId && known && (
+          <p className="text-xs sm:col-span-3 sm:order-last" style={muted}>
+            {known.level ? <>Coach IQ: {known.why}</> : <>No programs for {firstName || "them"} yet. What's their fitness level?</>}
+          </p>
+        )}
         {lab("Where they train", (
           <select className="cx-input" value={f.placeId} onChange={set("placeId")} style={{ color: "var(--ink)" }}>
             <option value="">Not chosen</option>

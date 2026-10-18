@@ -210,6 +210,15 @@ app.get("/api/coach-iq/conditions", asSignedIn("GET /coach-iq/conditions", async
   res.json({ conditions: limitations.conditionsList(), facts: FLAGS, joints: JOINTS });
 }));
 
+/* What the trainer's programs for a client say about their level, for a new
+   program's form (programs.historyOf). */
+app.get("/api/clients/:client/level", asSignedIn("GET /clients/level", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  res.set("Cache-Control", "private, no-store");
+  const { level, why, programs: count, trend } = await programs.historyOf(user.id, req.params.client);
+  res.json({ level, why: why || null, programs: count, trend });
+}));
+
 app.get("/api/clients/:client/limitations", asSignedIn("GET /clients/limitations", async (req, res, user) => {
   if (!await ownClient(req, res, user, req.params.client)) return;
   res.set("Cache-Control", "private, no-store");

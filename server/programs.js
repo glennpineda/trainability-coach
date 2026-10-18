@@ -390,12 +390,84 @@ async function theirNames(trainerId) {
   return out;
 }
 
-/* What the program's checks and suggestions need to know about its world. */
+/* What the program's checks and suggestions need to know about its world,
+   and what the client has done in this trainer's earlier programs. */
 async function context(trainerId, program) {
   const { places } = await equipment.equipmentOf(trainerId);
   const place = places.find(p => p.id === program.place_id) || null;
   const lims = await limitations.limitationsOf(program.client_id, trainerId);
-  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0 };
+  const history = await historyOf(trainerId, program.client_id, { before: program });
+  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps };
+}
+
+/* ---------------------------------------------- what the client has done */
+
+const WEEK = 7 * 24 * 3600 * 1000;
+/* Weeks on programs at one level, without stepping back, before Coach IQ
+   puts the next level forward. The principles' beginner is in the first
+   months; a guess the trainer can always overrule. */
+const WEEKS_TO_MOVE_UP = 12;
+
+/**
+ * What this trainer's programs for a client say about them (Glenn, 18 Oct
+ * 2026: "see how many program they have and how the progression is there, or
+ * even the regression"). Coach keeps no fitness level of a client's own, and
+ * Studio sends none, so it comes from the programs: the level of the latest,
+ * a level up after WEEKS_TO_MOVE_UP weeks at it without stepping back, and
+ * whether the exercises got harder or easier from one program to the next
+ * (their library levels on average). With no programs, level is null and the
+ * trainer is asked. `before` leaves out that program and any made after it.
+ *
+ * steps: the exercises done (done), the next harder step of each (next, to
+ * the name of the one it follows) and the easier ones they have moved past
+ * (outgrown, likewise).
+ */
+export async function historyOf(trainerId, clientId, { before = null } = {}) {
+  const rows = await all(`SELECT id, name, level, created_at FROM coach_programs WHERE trainer_id = ? AND client_id = ? ORDER BY created_at, id`, [trainerId, clientId]);
+  const list = [];
+  for (const p of rows) {
+    if (before && (p.id === before.id || p.created_at > before.created_at)) continue;
+    const xs = (await all(`SELECT exercise_id FROM coach_program_exercises WHERE program_id = ?`, [p.id]))
+      .map(r => library.exerciseById(r.exercise_id)).filter(Boolean);
+    list.push({ ...p, xs, reach: xs.length ? xs.reduce((n, x) => n + LEVELS.indexOf(x.level), 0) / xs.length : null });
+  }
+  const done = new Set(), next = new Map(), outgrown = new Map();
+  for (const p of list) for (const x of p.xs) done.add(x.id);
+  for (const p of list) for (const x of p.xs) {
+    for (const h of x.harder || []) if (!done.has(h) && !next.has(h)) next.set(h, x.name);
+    /* Every easier step down the chain: past a goblet squat is past a box
+       squat and a sit to stand. */
+    const down = [...library.easierOf(x.id)];
+    while (down.length) {
+      const e = down.shift();
+      if (done.has(e) || outgrown.has(e)) continue;
+      outgrown.set(e, x.name);
+      down.push(...library.easierOf(e));
+    }
+  }
+  const steps = { steps: { done, next, outgrown } };
+  if (!list.length) return { level: null, programs: 0, trend: null, ...steps };
+
+  const last = list[list.length - 1];
+  const at = LEVELS.indexOf(last.level);
+  const filled = list.filter(p => p.reach !== null);
+  const [a, b] = filled.slice(-2);
+  const prevLevel = list.length > 1 ? LEVELS.indexOf(list[list.length - 2].level) : at;
+  const trend = prevLevel > at || (b && a.reach - b.reach >= 0.25) ? "down"
+    : prevLevel < at || (b && b.reach - a.reach >= 0.25) ? "up" : list.length > 1 ? "steady" : null;
+  let first = list.length - 1;
+  while (first > 0 && list[first - 1].level === last.level) first--;
+  const weeks = Math.floor((Date.now() - Date.parse(list[first].created_at)) / WEEK);
+  const count = `${list.length} program${list.length === 1 ? "" : "s"} with you`;
+  const reached = (b || a) && (b || a).reach >= at - 0.5;
+  if (trend !== "down" && at < LEVELS.length - 1 && weeks >= WEEKS_TO_MOVE_UP && reached) {
+    return { level: LEVELS[at + 1], programs: list.length, trend, ...steps,
+      why: `${count}, on ${last.level} programs for ${weeks} weeks without stepping back: time for ${LEVELS[at + 1]}.` };
+  }
+  return { level: last.level, programs: list.length, trend, ...steps,
+    why: trend === "down" ? `${count}. Their last program stepped back to easier exercises, so ${last.level} for now.`
+      : trend === "up" ? `${count}, getting harder from one to the next. The last, “${last.name}”, was ${last.level}.`
+      : `${count}. The last, “${last.name}”, was ${last.level}.` };
 }
 
 /** A program as the designer, the print page and Billy are shown it. */
@@ -477,6 +549,7 @@ function check(program, rows, ctx, own) {
         if (lim === "no") add({ ...at, level: "stop", from: "limitations", text: `${e.name} is something ${program.clientName}'s limitations say to avoid. Swap it.` });
         else if (lim.length) add({ ...at, level: "warn", from: "limitations", text: `${e.name}: make it easier or supported for ${program.clientName} (${lim.join(", ")}).` });
         if (LEVELS.indexOf(x.level) > level) add({ ...at, level: "warn", from: "starting-out", text: `${e.name} is ${x.level}, above ${program.clientName}'s level (${program.level}).` });
+        else if (ctx.outgrown?.has(x.id)) add({ ...at, level: "note", from: "progression", text: `${e.name} is a step back from ${ctx.outgrown.get(x.id)}, which ${program.clientName} did in an earlier program. Fine if that's the plan.` });
         /* The usual order: main lifts before accessories and finishers. */
         const roles = library.familyOf(x)?.roles || [];
         if (roles.includes("main") && !roles.includes("accessory") && sawLater) {
@@ -564,6 +637,10 @@ function rank(list, ctx, { level, purpose, role }) {
     const lim = library.limitsCheck(x, ctx.rules);
     if (Array.isArray(lim) && lim.length) s -= 2;
     s -= Math.abs(LEVELS.indexOf(x.level) - want);
+    /* Progression: the next step of what they did before, ahead of the
+       easier ones they have moved past. */
+    if (ctx.next?.has(x.id)) s += 3;
+    else if (ctx.outgrown?.has(x.id)) s -= 3;
     return s;
   };
   return [...list].sort((a, b) => score(b) - score(a));
@@ -572,8 +649,9 @@ function rank(list, ctx, { level, purpose, role }) {
 function suggestion(x, ctx, why, dose) {
   const fit = ctx.place ? library.placeCheck(x, ctx.place) : "yes";
   const lim = library.limitsCheck(x, ctx.rules);
+  const step = ctx.next?.get(x.id);
   return {
-    ...library.brief(x), why,
+    ...library.brief(x), why: step ? `${why} A step on from ${step}, from an earlier program.` : why,
     ...(Array.isArray(fit) ? { askFirst: fit } : {}),
     ...(Array.isArray(lim) && lim.length ? { modifyFor: lim } : {}),
     dose: { ...dose, restText: restWords(dose.rest) },
