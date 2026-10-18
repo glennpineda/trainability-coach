@@ -92,8 +92,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   bigger mark in the icon. Remove Coach from your home screen and add it
   again to see the new icon.
 - **Measurements.** On a client's details, under Limitations: weight, body
-  fat, and neck, chest, waist, hips, and arm, thigh and calf left and right,
-  one set per day, in your own units, with how each changed since the set
+  fat, and neck, shoulders, chest, waist, hips, and arm, thigh and calf left
+  and right, with the waist-to-hip ratio worked out, and resting heart rate
+  and blood pressure if taken, one set per day, in your own units, with how each changed since the set
   before. Every trainer of the client sees them; only the one who took a set
   can change or delete it. A set can be attached to a message, and opens as a
   page ready to print.

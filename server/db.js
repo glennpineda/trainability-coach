@@ -477,6 +477,13 @@ const COLUMNS = [
   ["coach_accounts", "motion", "VARCHAR(8) NOT NULL DEFAULT 'system'"],
   ["coach_accounts", "color", "VARCHAR(8) NOT NULL DEFAULT 'full'"],
   ["coach_accounts", "text_size", "VARCHAR(8) NOT NULL DEFAULT 'medium'"],
+  /* Measurements' later four (Glenn, 18 Oct 2026: "shoulder to the
+     measurements too, … heart rate (optional), blood pressure (optional)"):
+     cm, bpm and mmHg. */
+  ["coach_measurements", "shoulders", "REAL NULL"],
+  ["coach_measurements", "heart_rate", "REAL NULL"],
+  ["coach_measurements", "bp_sys", "REAL NULL"],
+  ["coach_measurements", "bp_dia", "REAL NULL"],
 ];
 
 async function hasColumn(table, column) {

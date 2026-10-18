@@ -941,7 +941,11 @@ took each set.
 
 **Reading them.** The newest set comes first, headed **Latest:** and its date.
 Each measurement shows its value and, under it, how it has changed since the
-set before, such as *−3.1 lb* or *+0.25 in*. Up or down is shown as it is,
+set before, such as *−3.1 lb* or *+0.25 in*. **Waist to hip** is worked out
+for you, from the waist divided by the hips, whenever both were taken.
+**Blood pressure** shows as one line, such as *121/79 mmHg*. The set before
+is the latest one taken on an earlier day, so two sets on one day aren't
+compared with each other. Up or down is shown as it is,
 neither good nor bad. Tap **Earlier measurements** to see the older sets, and
 **Show only the latest** to fold them away. With none yet, it says *None
 taken yet.*
@@ -955,12 +959,16 @@ nearest quarter, as a tape reads them.
 1. Open the client (4.3) and tap **Add measurements**.
 2. **Taken on** starts on today; change it if they were taken on another day.
 3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
-   (%), **Neck**, **Chest**, **Waist**, **Hips**, and **Arm**, **Thigh** and
-   **Calf**, each **Left** and **Right**. Each box shows its unit.
+   (%), **Neck**, **Shoulders**, **Chest**, **Waist**, **Hips**; **Arm**,
+   **Thigh** and **Calf**, each **Left** and **Right**; **Resting heart rate**
+   (bpm); and **Blood pressure**, its **Top (systolic)** and **Bottom
+   (diastolic)** numbers (mmHg). Each box shows its unit.
 4. Add a **Note** if it helps, such as where the tape went.
 5. Tap **Save**. **Cancel** leaves without saving.
 
-If nothing is filled in it says *Fill in at least one measurement.* A number no
+If nothing is filled in it says *Fill in at least one measurement.* Blood
+pressure needs both its numbers (*Fill in both blood pressure numbers, or
+neither.*), the top the higher. A number no
 person could have, which is usually a slip of the finger, is caught, such as
 *Weight of 1800 doesn't look right. Check it and try again.* A day still to
 come can't be chosen.
@@ -1370,7 +1378,8 @@ can write to them here.*
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
-| **Measurements** | A client's weight, body fat and tape measurements, one set for each day taken (4.8). |
+| **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
+| **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |

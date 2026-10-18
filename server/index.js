@@ -21,6 +21,7 @@ import * as today from "./today.js";
 import * as messages from "./messages.js";
 import * as push from "./push.js";
 import * as measurements from "./measurements.js";
+import { previousOf } from "../src/lib/measures.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -589,8 +590,8 @@ app.post("/api/attachments/program", asSignedIn("POST /attachments/program", asy
   res.json(await messages.programAttachment(user.id, full, await trainerSettings.unitsOf(user.id)));
 }));
 
-/* A set of a client's measurements, kept as a copy to attach, with the set
-   before it for the changes. */
+/* A set of a client's measurements, kept as a copy to attach, with the one
+   from the day before it was taken for the changes. */
 app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurements", async (req, res, user) => {
   const row = await measurements.measurementById(String(req.body?.measurementId || ""));
   if (!row) return res.status(404).json({ error: "Those measurements are no longer there.", code: "not_found" });
@@ -599,7 +600,7 @@ app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurem
   const list = await measurements.measurementsOf(row.client_id, user.id);
   const at = list.findIndex(m => m.id === row.id);
   res.json(await messages.measurementsAttachment(user.id, {
-    set: list[at], previous: list[at + 1] || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
+    set: list[at], previous: previousOf(list, list[at]), clientName: `${client.firstName} ${client.lastName}`.trim(),
     units: await trainerSettings.unitsOf(user.id),
   }));
 }));

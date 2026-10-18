@@ -5,7 +5,7 @@ import { MEASURES, MEASURE_KEYS, fromShown } from "../src/lib/measures.js";
 /**
  * A client's body measurements (Glenn, 18 Oct 2026): weight, body fat, and
  * girths with arm, thigh and calf left and right ("Usual set, left and
- * right"), one set per day they were taken, ids `msr` (Glenn's tag). Studio
+ * right"), then shoulders, resting heart rate and blood pressure, one set per day they were taken, ids `msr` (Glenn's tag). Studio
  * has none to copy, so this follows Coach's limitations (limitations.js):
  * every trainer of the client sees them, with who took each set ("All the
  * client's trainers"), and only that trainer may change or delete one.
@@ -58,6 +58,9 @@ export function check(body = {}) {
     any = true;
   }
   if (!any) return { error: "Fill in at least one measurement." };
+  /* Blood pressure is its two numbers together, the top the higher. */
+  if ((values.bpSys == null) !== (values.bpDia == null)) return { error: "Fill in both blood pressure numbers, or neither." };
+  if (values.bpSys != null && values.bpSys <= values.bpDia) return { error: "Blood pressure's top number is the higher one. Check them and try again." };
   const note = typeof body.note === "string" ? body.note.trim().slice(0, 1000) : "";
   return { values, takenOn, note };
 }

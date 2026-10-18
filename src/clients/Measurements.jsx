@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { MEASURES, toShown, unitOf, shownText } from "../lib/measures";
+import { MEASURES, toShown, unitOf, rowsOf, previousOf } from "../lib/measures";
 
 /*
  * A client's body measurements (Glenn, 18 Oct 2026): weight, body fat, and
@@ -14,35 +14,23 @@ import { MEASURES, toShown, unitOf, shownText } from "../lib/measures";
 
 const today = () => new Date().toISOString().slice(0, 10);
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
-const PAIRS = ["Arm", "Thigh", "Calf"];
 
-/* How one changed since the set before: "−1.2 kg", in grey, as a fact; up
-   or down is not good or bad in itself. */
-function change(m, now, before, units) {
-  if (now == null || before == null) return null;
-  const d = Math.round((toShown(m, now, units) - toShown(m, before, units)) * 100) / 100;
-  if (!d) return "no change";
-  const u = unitOf(m, units);
-  return `${d > 0 ? "+" : "−"}${Math.abs(d)}${u === "%" ? "%" : ` ${u}`}`;
-}
-
-/* One set's values, two to a row, with the change since the one before. */
+/* One set's values, two to a row from sm, each with how it changed since
+   the set before in grey: up or down is a fact, not good or bad
+   (measures.js, rowsOf, which adds the waist-to-hip ratio and puts blood
+   pressure on one row). */
 function Values({ set, previous, units }) {
-  const shown = MEASURES.filter(m => set.values[m.key] != null);
   return (
     <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
-      {shown.map(m => {
-        const c = previous ? change(m, set.values[m.key], previous.values[m.key], units) : null;
-        return (
-          <div key={m.key} className="flex items-baseline justify-between gap-2 min-w-0">
-            <dt className="truncate" style={{ color: "var(--iron)" }}>{m.label}</dt>
-            <dd className="text-right whitespace-nowrap tabular-nums">
-              {shownText(m, set.values[m.key], units)}
-              {c && <span className="block text-xs" style={{ color: "var(--iron)" }}>{c}</span>}
-            </dd>
-          </div>
-        );
-      })}
+      {rowsOf(set.values, previous?.values, units).map(r => (
+        <div key={r.key} className="flex items-baseline justify-between gap-2 min-w-0">
+          <dt className="truncate" style={{ color: "var(--iron)" }}>{r.label}</dt>
+          <dd className="text-right whitespace-nowrap tabular-nums">
+            {r.text}
+            {previous && r.change && <span className="block text-xs" style={{ color: "var(--iron)" }}>{r.change}</span>}
+          </dd>
+        </div>
+      ))}
     </dl>
   );
 }
@@ -53,7 +41,7 @@ function Form({ units, initial, busy, onSave, onCancel }) {
   const [values, setValues] = useState(() => Object.fromEntries(MEASURES.map(m => [m.key, initial ? String(toShown(m, initial.values[m.key], units) ?? "") : ""])));
   const box = (m) => (
     <label key={m.key} className="grid gap-1 text-xs min-w-0" style={{ color: "var(--iron)" }}>
-      {m.pair ? (m.key.endsWith("L") ? "Left" : "Right") : m.label}
+      {m.pair ? m.side : m.label}
       <span className="relative">
         <input type="text" inputMode="decimal" className="cx-input" style={{ color: "var(--ink)", paddingRight: "2.4rem" }}
           value={values[m.key]} onChange={e => setValues(v => ({ ...v, [m.key]: e.target.value }))} aria-label={`${m.label}, ${unitOf(m, units)}`} />
@@ -61,20 +49,27 @@ function Form({ units, initial, busy, onSave, onCancel }) {
       </span>
     </label>
   );
+  const groups = [];
+  for (const m of MEASURES) {
+    const last = groups[groups.length - 1];
+    if (last && (last.pair || null) === (m.pair || null)) last.items.push(m);
+    else groups.push({ pair: m.pair || null, items: [m] });
+  }
   return (
     <form className="mt-2 grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave({ takenOn, note, values, units }); }}>
       <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Taken on
         <input type="date" className="cx-input" style={{ color: "var(--ink)" }} max={today()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
       </label>
-      <div className="grid grid-cols-2 gap-2">
-        {MEASURES.filter(m => !m.pair).map(box)}
-      </div>
-      {PAIRS.map(p => (
-        <fieldset key={p} className="grid gap-1">
-          <legend className="text-xs font-medium mb-1" style={{ color: "var(--ink-soft)" }}>{p}</legend>
-          <div className="grid grid-cols-2 gap-2">{MEASURES.filter(m => m.pair === p).map(box)}</div>
+      {/* In MEASURES' order: runs of single ones two to a row, and each pair
+          (left and right, or blood pressure's two numbers) under its name. */}
+      {groups.map(g => (g.pair ? (
+        <fieldset key={g.pair} className="grid gap-1">
+          <legend className="text-xs font-medium mb-1" style={{ color: "var(--ink-soft)" }}>{g.pair}</legend>
+          <div className="grid grid-cols-2 gap-2">{g.items.map(box)}</div>
         </fieldset>
-      ))}
+      ) : (
+        <div key={g.items[0].key} className="grid grid-cols-2 gap-2">{g.items.map(box)}</div>
+      )))}
       <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Note (optional)
         <textarea className="cx-input text-sm" rows={2} maxLength={1000} style={{ color: "var(--ink)" }} value={note}
           placeholder="Such as: taken before breakfast, tape at the navel" onChange={e => setNote(e.target.value)} />
@@ -129,7 +124,7 @@ export function Measurements({ clientId, onSignedOut }) {
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None taken yet.</p>}
           {[latest, ...(showAll ? rest : [])].filter(Boolean).map((set, i) => {
-            const previous = list[list.indexOf(set) + 1] || null;
+            const previous = previousOf(list, set);
             return (
               <div key={set.id} className="text-sm rounded-lg p-2.5 mt-2" style={{ background: "var(--ghost-fill)" }}>
                 <div className="flex items-start justify-between gap-2 mb-1.5">

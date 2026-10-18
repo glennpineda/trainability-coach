@@ -1,6 +1,6 @@
 import React from "react";
 import { Printer } from "lucide-react";
-import { MEASURES, shownText, toShown, unitOf } from "../lib/measures";
+import { rowsOf } from "../lib/measures";
 
 /*
  * Measurements as they were sent in a message (MessagesTab), laid out like a
@@ -12,15 +12,7 @@ const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefin
 
 export function PrintMeasurements({ data }) {
   const units = data.units || "imperial";
-  const shown = MEASURES.filter(m => data.values?.[m.key] != null);
-  const change = (m) => {
-    const before = data.previous?.values?.[m.key];
-    if (before == null) return "";
-    const d = Math.round((toShown(m, data.values[m.key], units) - toShown(m, before, units)) * 100) / 100;
-    if (!d) return "no change";
-    const u = unitOf(m, units);
-    return `${d > 0 ? "+" : "−"}${Math.abs(d)}${u === "%" ? "%" : ` ${u}`}`;
-  };
+  const rows = rowsOf(data.values, data.previous?.values, units);
   return (
     <div className="cx-print mx-auto max-w-3xl p-6 sm:p-10" style={{ background: "#fff", color: "#172A3A", minHeight: "100dvh" }}>
       <div className="cx-noprint flex items-center justify-between gap-3 mb-6">
@@ -43,11 +35,11 @@ export function PrintMeasurements({ data }) {
           </tr>
         </thead>
         <tbody>
-          {shown.map(m => (
-            <tr key={m.key} style={{ borderBottom: "1px solid #d5dde3" }}>
-              <td className="py-2 pr-3">{m.label}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{shownText(m, data.values[m.key], units)}</td>
-              {data.previous && <td className="py-2 text-right tabular-nums" style={{ color: "#5b6b78" }}>{change(m)}</td>}
+          {rows.map(r => (
+            <tr key={r.key} style={{ borderBottom: "1px solid #d5dde3" }}>
+              <td className="py-2 pr-3">{r.label}</td>
+              <td className="py-2 pr-3 text-right tabular-nums">{r.text}</td>
+              {data.previous && <td className="py-2 text-right tabular-nums" style={{ color: "#5b6b78" }}>{r.change || ""}</td>}
             </tr>
           ))}
         </tbody>
