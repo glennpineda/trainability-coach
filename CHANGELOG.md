@@ -56,7 +56,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   program opens with the same answers.
 - **Coach accounts.** A trainer who isn't on Trainability's team can make a
   Coach account from the sign-in screen (name, email, password) and use
-  Coach with it. Their clients come next.
+  Coach with it, with clients, programs and everything else, their clients
+  their own.
 - **Add, change and archive clients in Coach.** The Clients page has Add a
   client: first and last name, email and phone (birthday, gender and
   pronouns if you like, picked from Studio's lists or typed); someone already a client with that email is put on your list instead

@@ -33,6 +33,13 @@ and fall through to Studio when there is none; `/api/auth/signup` makes one
 (not for an email Studio says is a team account). Tries are limited: ten per
 email and fifty per address in fifteen minutes.
 
+A Coach account's clients are kept in Coach too (`server/coach-clients.js`,
+`coach_clients`, ids `cli…`), with Studio's rules (the four required fields,
+a complete email, a phone that can take texts) and in the same shape as the
+Studio clients `myClients` returns, so `/api/clients`, its edit and archive
+routes, limitations, programs and Billy work the same for both kinds of
+account. One account's clients are never another's.
+
 Clients work the same way. Coach keeps no copy: `GET /api/clients` on
 Coach's server asks Studio's own `/api/clients` and `/api/auth/me` with the
 same session, keeps only the clients on the signed-in account's own list (a

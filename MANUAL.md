@@ -149,9 +149,9 @@ in steps 5–7 above. If the email already has a Coach account, it says
 Trainability team account, *That email already has a Trainability account.
 Log in with it instead.*
 
-A Coach account can't add clients yet: the Clients page says *Adding clients
-to your Coach account is coming next.* Equipment, exercises and Billy work
-already.
+With a Coach account, everything works the same: clients (chapter 4),
+programs, equipment, exercises and Billy. A Coach account's clients are its
+own; no one else sees them.
 
 **A client.** Coach has no sign-in for clients yet. Under the Coach account
 button the box says *Training with us as a client? Your own page is in

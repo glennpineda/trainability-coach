@@ -331,6 +331,24 @@ const SCHEMA = [
     last_login_at VARCHAR(32) NULL,
     UNIQUE (email)
   )`,
+  /* A Coach account's clients (coach-clients.js; stage two, Glenn, 18 Oct
+     2026), kept here because they aren't Trainability's. Ids are cli…, Glenn's
+     tag, the same as Studio's clients. Studio's four (names, email, phone)
+     must be there; email kept as typed, matched lowercase. */
+  `CREATE TABLE IF NOT EXISTS coach_clients (
+    id VARCHAR(40) PRIMARY KEY,
+    trainer_id VARCHAR(40) NOT NULL,
+    first_name VARCHAR(90) NOT NULL,
+    last_name VARCHAR(90) NOT NULL,
+    email VARCHAR(190) NOT NULL,
+    phone VARCHAR(40) NOT NULL,
+    date_of_birth VARCHAR(10) NOT NULL DEFAULT '',
+    gender VARCHAR(40) NOT NULL DEFAULT '',
+    pronouns VARCHAR(30) NOT NULL DEFAULT '',
+    archived INTEGER NOT NULL DEFAULT 0,
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
   /* A Coach account signed in on one device: a random token in the browser's
      cx_session cookie, only its SHA-256 kept here, so a copy of this table
      signs nobody in. */

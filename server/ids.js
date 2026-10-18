@@ -24,6 +24,7 @@ export const PREFIX = {
   programExercise: "pre", // one exercise on a day, with whatever the trainer set for it
   /* Glenn's tag, 18 Oct 2026: the same as Studio's users. */
   account: "usr",        // a Coach account, for a trainer who isn't on Trainability's team
+  client: "cli",         // a Coach account's client (the same as Studio's clients)
 };
 
 const DIGITS = "0123456789";

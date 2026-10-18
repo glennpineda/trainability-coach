@@ -151,7 +151,7 @@ const ADDED = {
 /* The Clients tab: everyone on this trainer's own list, kept in Studio and
    read from there (useClients): added, changed, archived and put back here,
    with nothing on the page saying where they are kept. */
-export function ClientsTab({ clients, error, retry, add, edit, archive, soon, onSignedOut }) {
+export function ClientsTab({ clients, error, retry, add, edit, archive, onSignedOut }) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
   const [openId, setOpenId] = useState(null);
@@ -243,7 +243,6 @@ export function ClientsTab({ clients, error, retry, add, edit, archive, soon, on
           <p className="p-6 text-center text-sm" style={{ color: "var(--iron)" }}>
             {query.trim() ? `No one matches “${query.trim()}”.`
               : showArchived ? "You have no archived clients."
-              : soon ? "Adding clients to your Coach account is coming next. For now you can set up your equipment and your exercises, and ask Billy."
               : "You have no clients yet. Tap Add a client to add your first."}
           </p>
         ) : (

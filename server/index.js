@@ -15,6 +15,7 @@ import * as books from "./books.js";
 import * as trainerSettings from "./trainer-settings.js";
 import * as programs from "./programs.js";
 import * as accounts from "./accounts.js";
+import * as coachClients from "./coach-clients.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -146,8 +147,9 @@ async function signedIn(req) {
  * no card, notes, address or message settings, to the browser or to Billy.
  */
 async function myClients(req, user) {
-  /* A Coach account's clients are the next stage; none yet. */
-  if (user?.coachAccount) return [];
+  /* A Coach account's clients are kept in Coach (coach-clients.js), in the
+     same shape. */
+  if (user?.coachAccount) return coachClients.clientsOf(user.id);
   const r = await studio(req, "/clients");
   if (!r.ok) throw new StudioRefused(r.status, await r.text());
   const { clients = [] } = await r.json();
@@ -204,8 +206,14 @@ app.get("/api/clients", async (req, res) => {
 app.post("/api/clients", async (req, res) => {
   try {
     const user = await signedIn(req);
-    if (user.coachAccount) return res.status(400).json({ error: "Adding clients to a Coach account is coming next.", code: "not_yet" });
     const b = req.body || {};
+    /* A Coach account's client is kept in Coach (coach-clients.js). */
+    if (user.coachAccount) {
+      const out = await coachClients.addClient(user.id, clientFields(b));
+      if (out.error) return res.status(out.code === "phone_taken" ? 409 : 400).json(out);
+      res.set("Cache-Control", "private, no-store");
+      return res.json({ ...out, clients: await myClients(req, user) });
+    }
     const f = {
       firstName: String(b.firstName || "").trim().slice(0, 90), lastName: String(b.lastName || "").trim().slice(0, 90),
       email: String(b.email || "").trim().slice(0, 190), phone: String(b.phone || "").trim().slice(0, 40),
@@ -274,12 +282,18 @@ const clientFields = (b = {}) => {
   if (b.dateOfBirth !== undefined) f.dateOfBirth = b.dateOfBirth ? String(b.dateOfBirth).slice(0, 10) : null;
   return f;
 };
-async function onClient(req, res, what, send) {
+async function onClient(req, res, what, send, own) {
   try {
     const user = await signedIn(req);
     if (!(await myClients(req, user)).some(c => c.id === req.params.id)) return res.status(404).json({ error: "Not found", code: "not_found" });
-    const r = await send(user);
-    if (!r.ok) throw new StudioRefused(r.status, await r.text());
+    /* A Coach account's client is changed in Coach (coach-clients.js). */
+    if (user.coachAccount) {
+      const wrong = await own(user);
+      if (wrong) return res.status(wrong.code === "duplicate_client" ? 409 : 400).json(wrong);
+    } else {
+      const r = await send(user);
+      if (!r.ok) throw new StudioRefused(r.status, await r.text());
+    }
     res.set("Cache-Control", "private, no-store");
     res.json({ clientId: req.params.id, clients: await myClients(req, user) });
   } catch (err) {
@@ -287,10 +301,12 @@ async function onClient(req, res, what, send) {
     unreachable(res, what, err);
   }
 }
-app.patch("/api/clients/:id", (req, res) => onClient(req, res, "PATCH /clients", () =>
-  studio(req, `/clients/${encodeURIComponent(req.params.id)}`, { method: "PATCH", body: clientFields(req.body) })));
-app.post("/api/clients/:id/archive", (req, res) => onClient(req, res, "POST /clients/archive", (user) =>
-  studio(req, `/clients/${encodeURIComponent(req.params.id)}/archive`, { method: "POST", body: { trainerId: user.id, archived: req.body?.archived !== false } })));
+app.patch("/api/clients/:id", (req, res) => onClient(req, res, "PATCH /clients",
+  () => studio(req, `/clients/${encodeURIComponent(req.params.id)}`, { method: "PATCH", body: clientFields(req.body) }),
+  (user) => coachClients.editClient(user.id, req.params.id, clientFields(req.body))));
+app.post("/api/clients/:id/archive", (req, res) => onClient(req, res, "POST /clients/archive",
+  (user) => studio(req, `/clients/${encodeURIComponent(req.params.id)}/archive`, { method: "POST", body: { trainerId: user.id, archived: req.body?.archived !== false } }),
+  (user) => coachClients.archiveClient(user.id, req.params.id, req.body?.archived !== false).then(() => null)));
 
 /* The trainer's equipment, the first part of their personal memory
    (server/equipment.js). Each person's own: the trainer is whoever Studio
