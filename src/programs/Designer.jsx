@@ -301,7 +301,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
         <Plus size={15} className="inline" aria-hidden="true" /> Add a day
       </button>
       {dialog && (
-        <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested}
+        <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} vocab={vocab}
+          onAskBilly={billy?.available ? (words) => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}): ${words}`) : null}
           busy={busy} error={dialogError} onSave={saveDialog} onClose={() => setDialog(null)} />
       )}
     </div>

@@ -743,20 +743,30 @@ list; it is kept, not deleted.
 
 1. Under a day, tap **Add an exercise**. A box opens: *Add an exercise to
    Day A*.
-2. **Which exercise?** Type any name you use for it: your own name, one of
+2. **What are we working on?** (optional). Tap a kind of movement, such as
+   **Squat**, **Hinge**, **Single leg**, **Push**, **Pull**, **Core**,
+   **Carry**, **Jumping**, **Conditioning**, **Mobility** or **Balance**; tap
+   it again to clear it. For more, tap **Muscle groups** and tap any muscles,
+   grouped as legs and hips, chest and shoulders, back, arms and core. Coach
+   IQ's suggestions below narrow to match (*Coach IQ suggests: Pull ·
+   biceps*), each saying what it works, such as *Works the biceps.* If
+   nothing fits the place, the client's level and limitations, it says so:
+   choose fewer muscles, or another kind of movement. **Ask Billy for
+   ideas** closes the box and asks Billy, with what you chose.
+3. **Which exercise?** Type any name you use for it: your own name, one of
    your own exercises, or the library's name, and tap it in the list. Before
    you type, the box lists what **Coach IQ suggests** for that day, with why;
    tap one of those instead if you like.
-3. The box now shows the exercise: its name, its full name in the library,
+4. The box now shows the exercise: its name, its full name in the library,
    its **Level**, what it **Works** and what it **Needs**, and anything Coach
    IQ has to say about it for this client and place, with the same marks as
    in 5.4 (a red octagon to stop, an orange triangle to take care). To pick a
    different one, tap **Change exercise**.
-4. Under **How it's done (all optional)**, Coach IQ's starting point is
+5. Under **How it's done (all optional)**, Coach IQ's starting point is
    filled in, such as **1–3** sets of **8–12** with **3 min** rest. Change
    anything, or fill in more (5.3). **Coach IQ's starting point** puts its
    numbers back.
-5. Tap **Add to Day A**. The exercise appears on the day with what you filled
+6. Tap **Add to Day A**. The exercise appears on the day with what you filled
    in. If something can't be saved (a rest written oddly, say), the box stays
    open and says why in red.
 
@@ -768,7 +778,7 @@ focus of this program: core.*). Every one already fits the place's
 equipment, the client's level and their limitations, and says where to
 start, such as *Start with 1–3 × 8–12 · rest 90 s*. A line in orange says
 what to make easier for the client. Tap **Add**: the same box opens at step
-3, with that exercise and its starting point. When the day holds about as
+4, with that exercise and its starting point. When the day holds about as
 much as your session length allows, it says so. To change what a day trains,
 tap its pencil and choose under **What this day trains**.
 

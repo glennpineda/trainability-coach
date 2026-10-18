@@ -748,6 +748,11 @@ app.get("/api/program-days/:id/suggestions", asSignedIn("GET /program-days/sugge
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
   res.set("Cache-Control", "private, no-store");
+  /* Narrowed to what they are working on, when the dialog says (workOn, a
+     kind of movement; muscles, comma-separated); otherwise what comes next. */
+  const workOn = String(req.query.workOn || "") || null;
+  const muscles = String(req.query.muscles || "").split(",").map(m => m.trim()).filter(Boolean).slice(0, 12);
+  if (workOn || muscles.length) return res.json(await programs.suggestFor(user.id, program, req.params.id, { workOn, muscles }));
   res.json(await programs.suggestNext(user.id, program, req.params.id));
 }));
 
@@ -891,6 +896,20 @@ app.post("/api/assistant", async (req, res) => {
         const hit = list.find(p => p.id === want) || list.filter(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want))[0];
         if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };
         return programs.forBilly(user.id, await programs.programOf(user.id, hit.id));
+      },
+      /* Narrowed suggestions for one day of one of their programs, by kind of
+         movement and muscles, already passing the place, level and limitations. */
+      suggest_exercises: async (input) => {
+        const list = await programs.list(user.id);
+        const want = String(input?.program || "").trim().toLowerCase();
+        const hit = list.find(p => p.id === want) || list.find(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want));
+        if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };
+        const program = await programs.programOf(user.id, hit.id);
+        const full = await programs.full(user.id, program, { withCheck: false });
+        const day = full.days.find(d => d.name.toLowerCase() === String(input?.day || "").trim().toLowerCase()) || (full.days.length === 1 ? full.days[0] : null);
+        if (!day) return { error: "Say which day.", days: full.days.map(d => d.name) };
+        const out = await programs.suggestFor(user.id, program, day.id, { workOn: input?.workOn || null, muscles: Array.isArray(input?.muscles) ? input.muscles : [] }, 8);
+        return { day: day.name, ...out, suggestions: out.suggestions.map(s => ({ name: s.name, id: s.id, level: s.level, why: s.why, dose: s.dose, ...(s.askFirst ? { askFirst: s.askFirst } : {}), ...(s.modifyFor ? { modifyFor: s.modifyFor } : {}) })) };
       },
       coach_principles: async (input) => principles.principlesFor(String(input?.topic || "").slice(0, 80), units),
       /* Only options that pass come back: the place's equipment, the level

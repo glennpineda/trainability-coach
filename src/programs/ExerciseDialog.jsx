@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, TriangleAlert, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
 
 /**
@@ -17,6 +17,10 @@ import { apiRequest } from "../lib/api";
  *
  * `editing` is an exercise already on the day: the dialog opens at step 2
  * with what it has, and "Change exercise" swaps it.
+ *
+ * Step 1 asks, optionally, "What are we working on?": a kind of movement,
+ * and muscles if wanted (Glenn, 18 Oct 2026), which narrow Coach IQ's
+ * suggestions, and go with the question when Billy is asked.
  */
 
 const muted = { color: "var(--iron)" };
@@ -26,7 +30,7 @@ const COLOR = { stop: "var(--ember)", warn: "#B7791F", note: "var(--iron)" };
 
 const blank = { sets: "", reps: "", load: "", effort: "", tempo: "", rest: "", note: "", superset: false };
 
-export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSave, onClose, busy, error }) {
+export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSave, onClose, busy, error, vocab, onAskBilly }) {
   const [step, setStep] = useState(editing || suggested ? "details" : "pick");
   const [pick, setPick] = useState(editing ? { id: editing.exerciseId } : suggested ? { id: suggested.id } : null);
   const [info, setInfo] = useState(null);
@@ -82,7 +86,8 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
         </div>
 
         {step === "pick" ? (
-          <Pick dayId={dayId} onPick={choose} onBack={pick ? () => setStep("details") : null} />
+          <Pick dayId={dayId} dayName={dayName} vocab={vocab} onPick={choose} onBack={pick ? () => setStep("details") : null}
+            onAskBilly={onAskBilly ? (words) => { onClose(); onAskBilly(words); } : null} />
         ) : (
           <form onSubmit={save} className="flex flex-col min-h-0">
             <div className="overflow-y-auto px-4 pb-3 grid gap-4" style={{ overscrollBehavior: "contain" }}>
@@ -162,16 +167,41 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
   );
 }
 
-/* Step 1: by name, or from what Coach IQ suggests for the day. */
-function Pick({ dayId, onPick, onBack }) {
+/* A row of chips: one (tap again to clear) or several. */
+function Chips({ options, value, onChange, many = false, label }) {
+  const on = (k) => (many ? value.includes(k) : value === k);
+  return (
+    <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
+      {options.map(([k, words]) => (
+        <button key={k} type="button" aria-pressed={on(k)}
+          onClick={() => onChange(many ? (on(k) ? value.filter(v => v !== k) : [...value, k]) : (on(k) ? null : k))}
+          className="px-2.5 py-1 rounded-full text-sm"
+          style={on(k) ? { background: "var(--cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
+          {words}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* Step 1: what we are working on (optional), then by name, or from what
+   Coach IQ suggests, narrowed to it. */
+function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly }) {
   const [q, setQ] = useState("");
   const [found, setFound] = useState(null);
   const [next, setNext] = useState(null);
+  const [workOn, setWorkOn] = useState(null);
+  const [muscles, setMuscles] = useState([]);
+  const [showMuscles, setShowMuscles] = useState(false);
   useEffect(() => {
     let alive = true;
-    apiRequest("GET", `/program-days/${dayId}/suggestions`).then(o => alive && setNext(o)).catch(() => alive && setNext({ suggestions: [] }));
+    setNext(null);
+    const query = [workOn && `workOn=${workOn}`, muscles.length && `muscles=${encodeURIComponent(muscles.join(","))}`].filter(Boolean).join("&");
+    apiRequest("GET", `/program-days/${dayId}/suggestions${query ? `?${query}` : ""}`).then(o => alive && setNext(o)).catch(() => alive && setNext({ suggestions: [] }));
     return () => { alive = false; };
-  }, [dayId]);
+  }, [dayId, workOn, muscles]);
+  const narrowed = !!(workOn || muscles.length);
+  const workOnLabel = vocab?.workOn?.find(w => w.key === workOn)?.label;
   useEffect(() => {
     if (q.trim().length < 2) { setFound(null); return undefined; }
     let alive = true;
@@ -192,6 +222,26 @@ function Pick({ dayId, onPick, onBack }) {
   );
   return (
     <div className="overflow-y-auto px-4 pb-4 grid gap-3" style={{ overscrollBehavior: "contain" }}>
+      {vocab?.workOn && (
+        <div className="grid gap-1.5">
+          <div className="text-sm font-medium">What are we working on? <span className="font-normal" style={muted}>(optional)</span></div>
+          <Chips label="What are we working on" options={vocab.workOn.map(w => [w.key, w.label])} value={workOn} onChange={setWorkOn} />
+          <button type="button" className="text-sm cx-link justify-self-start" aria-expanded={showMuscles} onClick={() => setShowMuscles(v => !v)}>
+            <ChevronDown size={15} aria-hidden="true" style={{ transform: showMuscles ? "rotate(180deg)" : undefined }} />
+            Muscle groups{muscles.length ? ` (${muscles.length})` : ""} <span style={muted}>(optional)</span>
+          </button>
+          {showMuscles && (
+            <div className="grid gap-2 pl-1">
+              {vocab.muscleGroups.map(g => (
+                <div key={g.label} className="grid gap-1">
+                  <div className="text-xs" style={muted}>{g.label}</div>
+                  <Chips many label={g.label} options={g.muscles.map(m => [m, m])} value={muscles} onChange={setMuscles} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       {onBack && <button type="button" className="text-sm cx-quiet justify-self-start inline-flex items-center gap-1" onClick={onBack}><ChevronLeft size={15} aria-hidden="true" /> Back</button>}
       <label className="grid gap-1 text-sm">
         <span className="font-medium">Which exercise?</span>
@@ -204,15 +254,25 @@ function Pick({ dayId, onPick, onBack }) {
         <ul className="rounded-lg overflow-hidden border" style={line}>
           {found.map(x => row(x, x.theirOwnExercise ? "Your own exercise" : `${x.master}${x.level ? ` · ${x.level}` : ""}`))}
         </ul>
-      )) : next?.suggestions?.length > 0 && (
+      )) : !next ? <p className="text-xs" style={muted}>Coach IQ is looking…</p> : (
         <div className="grid gap-1.5">
           <div className="text-xs font-medium inline-flex items-center gap-1" style={{ color: "var(--accent)" }}>
-            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{next.day ? ` for a ${next.day.toLowerCase()} day` : ""}
+            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{narrowed ? `: ${next.narrowed}` : next.day ? ` for a ${next.day.toLowerCase()} day` : ""}
           </div>
-          <ul className="rounded-lg overflow-hidden border" style={line}>
-            {next.suggestions.map(s => row(s, `${s.level} · ${s.why}`))}
-          </ul>
+          {next.suggestions.length > 0 ? (
+            <ul className="rounded-lg overflow-hidden border" style={line}>
+              {next.suggestions.map(s => row(s, `${s.level} · ${s.why}${s.modifyFor ? ` Make easier for: ${s.modifyFor.join(", ")}.` : ""}`))}
+            </ul>
+          ) : <p className="text-sm" style={muted}>{next.none || "Nothing more to suggest for this day."}</p>}
         </div>
+      )}
+      {onAskBilly && (
+        <button type="button" className="text-sm cx-link justify-self-start"
+          onClick={() => onAskBilly(narrowed
+            ? `For ${dayName}, I'm working on ${[workOnLabel?.toLowerCase(), muscles.length ? muscles.join(", ") : null].filter(Boolean).join(", for the ")}. What would you add?`
+            : `What should I add next on ${dayName}?`)}>
+          <Sparkles size={15} aria-hidden="true" /> Ask Billy for ideas
+        </button>
       )}
     </div>
   );

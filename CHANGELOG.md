@@ -49,6 +49,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   with the blue C and chevron, for the home screen of your phone and the apps
   panel, named just **Coach** under it. Add Coach to your home screen again to
   pick them up.
+- **"What are we working on?"** when adding an exercise: a kind of movement
+  and, if you like, muscles, which narrow Coach IQ's suggestions and go with
+  the question when you ask Billy.
 - **Adding an exercise opens a box of its own.** Pick the exercise (or one
   Coach IQ suggests), see what it works and needs and anything Coach IQ says
   about it for the client, then the sets, reps, load, effort, tempo, rest and

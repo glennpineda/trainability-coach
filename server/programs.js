@@ -91,7 +91,36 @@ export const FOCUS = {
    most sessions take about 45–75 minutes; the set count is what matters). */
 export const MINUTES = { 30: 4, 45: 5, 60: 6, 75: 7, 90: 8 };
 
+/* "What are we working on?" in the add-an-exercise dialog (Glenn, 18 Oct
+   2026: "have an optional “what are we working on?” question with an optional
+   option about muscle groups, this will help Billy narrow the exercise
+   recommendations to a more precise way"): kinds of movement, each the
+   patterns it covers, and the muscles in groups. */
+export const WORK_ON = {
+  squat: { label: "Squat", patterns: ["squat"] },
+  hinge: { label: "Hinge", patterns: ["hinge"] },
+  lunge: { label: "Single leg", patterns: ["lunge"] },
+  push: { label: "Push", patterns: ["push-horizontal", "push-vertical", "isolation-push"] },
+  pull: { label: "Pull", patterns: ["pull-horizontal", "pull-vertical", "isolation-pull"] },
+  core: { label: "Core", patterns: ["core-anti-extension", "core-anti-rotation", "core-lateral", "core-flexion", "rotation"] },
+  carry: { label: "Carry", patterns: ["carry"] },
+  jump: { label: "Jumping", patterns: ["plyometric"] },
+  conditioning: { label: "Conditioning", patterns: ["conditioning"] },
+  mobility: { label: "Mobility", patterns: ["mobility", "breathing"] },
+  balance: { label: "Balance", patterns: ["balance"] },
+};
+export const MUSCLE_GROUPS = [
+  { label: "Legs and hips", muscles: ["quads", "hamstrings", "glutes", "adductors", "abductors", "hip flexors", "calves", "tibialis"] },
+  { label: "Chest and shoulders", muscles: ["chest", "front delts", "side delts", "rear delts", "rotator cuff"] },
+  { label: "Back", muscles: ["lats", "upper back", "traps", "lower back"] },
+  { label: "Arms", muscles: ["biceps", "triceps", "forearms"] },
+  { label: "Core", muscles: ["core", "obliques", "pelvic floor"] },
+];
+const ALL_MUSCLES = new Set(MUSCLE_GROUPS.flatMap(g => g.muscles));
+
 export const kindsFor = () => ({
+  workOn: Object.entries(WORK_ON).map(([key, w]) => ({ key, label: w.label })),
+  muscleGroups: MUSCLE_GROUPS,
   kinds: Object.entries(KINDS).map(([key, k]) => ({ key, label: k.label, about: k.about, days: k.days, goal: k.goal })),
   focus: Object.entries(FOCUS).map(([key, f]) => ({ key, label: f.label })),
   minutes: Object.keys(MINUTES).map(Number),
@@ -548,6 +577,46 @@ function suggestion(x, ctx, why, dose) {
 }
 
 /**
+ * What fits what the trainer is working on, narrowed by kind of movement,
+ * muscles, or both: versions that pass the place, the level and the
+ * limitations, that are of that kind and work those muscles (a main muscle
+ * counting three times an other one), not already on the day; the closest
+ * first, then by the goal's purpose and the client's level as suggestNext
+ * ranks. Each says why, and comes with a starting dose.
+ */
+export async function suggestFor(trainerId, program, dayId, { workOn = null, muscles = [] } = {}, limit = 6) {
+  const ctx = await context(trainerId, program);
+  const want = muscles.filter(m => ALL_MUSCLES.has(m));
+  const kind = WORK_ON[workOn] || null;
+  const onDay = new Set((await all(`SELECT exercise_id FROM coach_program_exercises WHERE day_id = ?`, [dayId])).map(r => r.exercise_id));
+  const goal = GOALS[program.goal] || GOALS.general;
+  const hits = (x) => {
+    const main = (x.primary || []).filter(m => want.includes(m));
+    const other = (x.secondary || []).filter(m => want.includes(m));
+    return { main, other, score: main.length * 3 + other.length };
+  };
+  const pool = candidates(ctx, program.level).filter(x => !onDay.has(x.id)
+    && (!kind || kind.patterns.some(p => ofPattern(x, p)))
+    && (!want.length || hits(x).score > 0));
+  const base = rank(pool, ctx, { level: program.level, purpose: goal.purpose, role: null });
+  const order = want.length ? [...base].sort((a, b) => hits(b).score - hits(a).score) : base;
+  const out = order.slice(0, limit).map(x => {
+    const h = hits(x);
+    const and = (list) => (list.length > 1 ? `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}` : list[0]);
+    const works = h.main.length ? `Works the ${and(h.main)}${h.other.length ? `, and some ${and(h.other)}` : ""}.`
+      : h.other.length ? `Works some ${and(h.other)}.` : `Works the ${and(x.primary || [])}.`;
+    const accessory = !(library.familyOf(x).roles || []).includes("main");
+    return suggestion(x, ctx, works, doseFor(program.goal, program.level, { accessory }));
+  });
+  return {
+    suggestions: out,
+    narrowed: [kind?.label, want.length ? want.join(", ") : null].filter(Boolean).join(" · "),
+    ...(ctx.place ? { place: ctx.place.name } : {}),
+    ...(out.length ? {} : { none: "Nothing in the library passes the place, the level and the limitations for that. Try fewer muscles, or another kind of movement." }),
+  };
+}
+
+/**
  * What could come next on a day: for each movement pattern the program
  * hasn't covered yet (then the ones this day hasn't), the most suitable
  * version, already passing the place, the level and the limitations, with a
@@ -689,6 +758,7 @@ export async function forBilly(trainerId, program) {
     })),
     check: p.check.map(c => ({ level: c.level, text: c.text, from: c.from })),
     couldComeNext: next,
+    dayIds: Object.fromEntries(p.days.map(d => [d.name, d.id])),
   };
 }
 
