@@ -55,8 +55,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
 - **Add, change and archive clients in Coach.** The Clients page has Add a
-  client: first and last name, email and phone (birthday and pronouns if you
-  like); someone already a client with that email is put on your list instead
+  client: first and last name, email and phone (birthday, gender and
+  pronouns if you like, picked from Studio's lists or typed); someone already a client with that email is put on your list instead
   of being added twice. An open client has Edit details and Archive (or Put
   back on my list). Your clients are the same list as in Studio.
 - **Your role badge is in your account menu.** The shield for an Admin,

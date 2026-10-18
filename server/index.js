@@ -142,6 +142,7 @@ async function myClients(req, user) {
       email: c.email || "",
       phone: c.phone || "",
       pronouns: c.pronouns || "",
+      gender: c.gender || "",
       dateOfBirth: c.dateOfBirth || "",
       /* The day they joined this trainer's list, not the day the record
          was made: somebody handed on from a colleague is new here. */
@@ -190,7 +191,8 @@ app.post("/api/clients", async (req, res) => {
       firstName: String(b.firstName || "").trim().slice(0, 90), lastName: String(b.lastName || "").trim().slice(0, 90),
       email: String(b.email || "").trim().slice(0, 190), phone: String(b.phone || "").trim().slice(0, 40),
       ...(b.dateOfBirth ? { dateOfBirth: String(b.dateOfBirth).slice(0, 10) } : {}),
-      ...(b.pronouns ? { pronouns: String(b.pronouns).trim().slice(0, 30) } : {}),
+      ...(b.gender ? { gender: String(b.gender).trim().slice(0, 40) } : {}),
+      ...(b.pronouns ? { pronouns: String(b.pronouns).trim().toLowerCase().slice(0, 30) } : {}),
     };
     const ask = async (route, body) => {
       const r = await studio(req, route, { method: "POST", body });
@@ -246,9 +248,10 @@ app.post("/api/clients", async (req, res) => {
    again. */
 const clientFields = (b = {}) => {
   const f = {};
-  for (const [k, max] of [["firstName", 90], ["lastName", 90], ["email", 190], ["phone", 40], ["pronouns", 30]]) {
+  for (const [k, max] of [["firstName", 90], ["lastName", 90], ["email", 190], ["phone", 40], ["gender", 40], ["pronouns", 30]]) {
     if (b[k] !== undefined) f[k] = String(b[k] ?? "").trim().slice(0, max);
   }
+  if (f.pronouns) f.pronouns = f.pronouns.toLowerCase();
   if (b.dateOfBirth !== undefined) f.dateOfBirth = b.dateOfBirth ? String(b.dateOfBirth).slice(0, 10) : null;
   return f;
 };

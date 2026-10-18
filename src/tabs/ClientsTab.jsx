@@ -3,6 +3,7 @@ import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, U
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
+import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
    one. */
@@ -87,15 +88,15 @@ function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, 
 }
 
 /* Adding a client, or changing one's details: Studio's four things a client
-   must have (first and last name, email, phone), and a birthday and pronouns
-   if known. Kept in Studio without the trainer having to know it (Glenn, 18
+   must have (first and last name, email, phone), and a birthday, gender and
+   pronouns if known. Kept in Studio without the trainer having to know it (Glenn, 18
    Oct 2026: "this is seemless and they don't need to know where it's
    stored"); somebody already there by the same email goes on this trainer's
    list instead of being made twice (server/index.js, POST /api/clients). */
 function ClientForm({ initial, onAdd, onDone, onCancel }) {
   const editing = !!initial;
-  const [f, setF] = useState(() => ({ firstName: "", lastName: "", email: "", phone: "", dateOfBirth: "", pronouns: "",
-    ...(initial ? { firstName: initial.firstName || "", lastName: initial.lastName || "", email: initial.email || "", phone: initial.phone || "", dateOfBirth: initial.dateOfBirth || "", pronouns: initial.pronouns || "" } : {}) }));
+  const [f, setF] = useState(() => ({ firstName: "", lastName: "", email: "", phone: "", dateOfBirth: "", gender: "", pronouns: "",
+    ...(initial ? { firstName: initial.firstName || "", lastName: initial.lastName || "", email: initial.email || "", phone: initial.phone || "", dateOfBirth: initial.dateOfBirth || "", gender: initial.gender || "", pronouns: initial.pronouns || "" } : {}) }));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const set = (k) => (e) => setF(d => ({ ...d, [k]: e.target.value }));
@@ -119,7 +120,11 @@ function ClientForm({ initial, onAdd, onDone, onCancel }) {
         {lab("Email", input("email", { required: true, type: "email", maxLength: 190, autoComplete: "off" }))}
         {lab("Phone", input("phone", { required: true, type: "tel", maxLength: 40, autoComplete: "off" }))}
         {lab("Birthday (optional)", input("dateOfBirth", { type: "date" }))}
-        {lab("Pronouns (optional)", input("pronouns", { maxLength: 30, placeholder: "Such as she/her" }))}
+        <div className="hidden sm:block" />
+        {/* Gender and pronouns side by side, as Studio's form has them: a box
+            to type in with common choices behind the arrow. */}
+        {lab("Gender (optional)", <SuggestInput value={f.gender} onChange={(v) => setF(d => ({ ...d, gender: v }))} suggestions={GENDER_SUGGESTIONS} maxLength={GENDER_MAX} />)}
+        {lab("Pronouns (optional)", <SuggestInput value={f.pronouns} onChange={(v) => setF(d => ({ ...d, pronouns: v }))} suggestions={PRONOUN_SUGGESTIONS} maxLength={PRONOUNS_MAX} transform={lowercase} />)}
       </div>
       {!editing && (
         <p className="text-xs" style={{ color: "var(--iron)" }}>

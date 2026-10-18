@@ -676,8 +676,11 @@ it says *Jamie Ortiz archived. They're under Archived.*
 
 1. On the Clients page, tap **Add a client** (top right).
 2. Fill in **First name**, **Last name**, **Email** and **Phone**; all four
-   are needed. **Birthday (optional)** and **Pronouns (optional)** can be
-   left empty.
+   are needed. **Birthday (optional)**, **Gender (optional)** and **Pronouns
+   (optional)** can be left empty. For gender and pronouns, type what the
+   client uses, or tap the small arrow in the box and pick from the list
+   (such as **Woman**, **Non-binary**, **she/her**, **they/them**). Pronouns
+   are kept in small letters.
 3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
    open in the list. **Cancel** closes the form without adding anyone.
 
