@@ -219,10 +219,29 @@ async function syncStudioPlace(req, user) {
   }
 }
 
+const isPrimaryMaster = (user) => !!(user?.isPrimary && user?.role === "master");
+
+/* A trainer's equipment and, for the Primary Master, every place in Studio
+   with what is set there for everybody (`everyone`; null if Studio's places
+   couldn't be read). */
+async function equipmentFor(req, user) {
+  const out = await equipment.equipmentOf(user.id);
+  if (!isPrimaryMaster(user)) return out;
+  try {
+    const r = await studio(req, "/locations");
+    if (!r.ok) return { ...out, everyone: null };
+    const { places = [] } = await r.json();
+    return { ...out, everyone: await equipment.everyonesPlaces(places) };
+  } catch (err) {
+    console.warn("Studio's places couldn't be read:", err.message);
+    return { ...out, everyone: null };
+  }
+}
+
 app.get("/api/equipment", asSignedIn("GET /equipment", async (req, res, user) => {
   await syncStudioPlace(req, user);
   res.set("Cache-Control", "private, no-store");
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
 }));
 
 /* A client's limitations (server/limitations.js): only for a client on the
@@ -281,7 +300,7 @@ app.post("/api/places", asSignedIn("POST /places", async (req, res, user) => {
   const wrong = equipment.checkPlaceName(req.body?.name);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
   await equipment.addPlace(user.id, req.body.name);
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
 }));
 
 app.patch("/api/places/:place", asSignedIn("PATCH /places", async (req, res, user) => {
@@ -291,7 +310,7 @@ app.patch("/api/places/:place", asSignedIn("PATCH /places", async (req, res, use
   const wrong = equipment.checkPlaceName(req.body?.name);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
   await equipment.renamePlace(user.id, req.params.place, req.body.name);
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
 }));
 
 app.delete("/api/places/:place", asSignedIn("DELETE /places", async (req, res, user) => {
@@ -299,7 +318,7 @@ app.delete("/api/places/:place", asSignedIn("DELETE /places", async (req, res, u
   const refused = await equipment.archivePlace(user.id, req.params.place);
   if (refused === "last") return res.status(400).json({ error: "Keep at least one place.", code: "last_place" });
   if (refused === "studio") return res.status(400).json({ error: "This is your place in Studio, so it stays.", code: "from_studio" });
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
 }));
 
 app.put("/api/places/:place/categories/:key", asSignedIn("PUT /places/categories", async (req, res, user) => {
@@ -307,21 +326,59 @@ app.put("/api/places/:place/categories/:key", asSignedIn("PUT /places/categories
   const has = req.body?.has;
   if (!equipment.isCategory(req.params.key)) return res.status(404).json({ error: "Not found", code: "not_found" });
   if (has !== true && has !== false && has !== null) return res.status(400).json({ error: "Say yes, no, or not answered.", code: "invalid" });
+  if (await equipment.lockedAnswer(user.id, req.params.place, "category", req.params.key)) return res.status(400).json({ error: SET_FOR_EVERYONE, code: "set_for_everyone" });
   await equipment.setCategory(user.id, req.params.place, req.params.key, has);
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
 }));
 
 app.post("/api/places/:place/items", asSignedIn("POST /places/items", async (req, res, user) => {
   if (!await ownPlace(req, res, user)) return;
   const wrong = equipment.checkItem(req.body);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  if (await equipment.lockedAnswer(user.id, req.params.place, "item", req.body.name)) return res.status(400).json({ error: SET_FOR_EVERYONE, code: "set_for_everyone" });
   await equipment.setItem(user.id, req.params.place, req.body);
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
 }));
 
 app.delete("/api/equipment/items/:id", asSignedIn("DELETE /equipment/items", async (req, res, user) => {
   await equipment.removeItem(user.id, req.params.id);
-  res.json(await equipment.equipmentOf(user.id));
+  res.json(await equipmentFor(req, user));
+}));
+
+const SET_FOR_EVERYONE = "The Primary Master has set this for everyone at this place. Ask them to change it.";
+
+/* The equipment at a place in Studio, set by the Primary Master for every
+   trainer whose place it is; anyone else is told there is no such thing. */
+const asSetter = (what, fn) => asSignedIn(what, async (req, res, user) => {
+  if (!isPrimaryMaster(user)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  return fn(req, res, user);
+});
+const everyonesPlace = async (req, res) => {
+  const place = await equipment.everyonesPlace(req.params.place);
+  if (!place) res.status(404).json({ error: "Not found", code: "not_found" });
+  return place;
+};
+
+app.put("/api/everyone/places/:place/categories/:key", asSetter("PUT /everyone/places/categories", async (req, res, user) => {
+  if (!await everyonesPlace(req, res)) return;
+  const has = req.body?.has;
+  if (!equipment.isCategory(req.params.key)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  if (has !== true && has !== false && has !== null) return res.status(400).json({ error: "Say yes, no, or not answered.", code: "invalid" });
+  await equipment.setCategory(equipment.EVERYONE, req.params.place, req.params.key, has, "primary");
+  res.json(await equipmentFor(req, user));
+}));
+
+app.post("/api/everyone/places/:place/items", asSetter("POST /everyone/places/items", async (req, res, user) => {
+  if (!await everyonesPlace(req, res)) return;
+  const wrong = equipment.checkItem(req.body);
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  await equipment.setItem(equipment.EVERYONE, req.params.place, req.body, "primary");
+  res.json(await equipmentFor(req, user));
+}));
+
+app.delete("/api/everyone/items/:id", asSetter("DELETE /everyone/items", async (req, res, user) => {
+  await equipment.removeItem(equipment.EVERYONE, req.params.id, "primary");
+  res.json(await equipmentFor(req, user));
 }));
 
 /* Coach IQ's library, searched by name, and the exercises part of the
@@ -1013,6 +1070,9 @@ app.post("/api/assistant", async (req, res) => {
         if (!isKind) {
           const wrong = equipment.checkItem(piece);
           if (wrong) return { error: wrong };
+        }
+        if (await equipment.lockedAnswer(user.id, place.id, isKind ? "category" : "item", isKind ? input.category : input.name)) {
+          return { error: "The Primary Master has set this for everyone at this place, so it isn't changed here. Tell them to ask the Primary Master." };
         }
         const before = await equipment.answerFor(place.id, isKind ? "category" : "item", isKind ? input.category : input.name);
         if (before && before.source === "trainer" && before.has !== !!input.has && input.confirmed !== true) {

@@ -57,6 +57,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Your place in Studio is one of your places.** The trainer's default
   place in Studio shows first in My equipment, with its own checklist and
   Studio's name, and a new program starts there.
+- **The Primary Master sets the equipment at Studio's places.** Their
+  answers show, locked, for every trainer whose place in Studio it is;
+  trainers answer only what is left.
 - **The client's level comes from their programs.** A new program's level
   is filled in from the ones you made for them before (the next level up
   after 12 weeks at one without stepping back), with the reason shown; with

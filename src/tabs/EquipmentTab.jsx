@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Plus, Trash2, Sparkles, Pencil, MapPin, Check, X } from "lucide-react";
+import { Plus, Trash2, Sparkles, Pencil, MapPin, Check, X, Lock, Building2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 
@@ -28,6 +28,13 @@ function YesNo({ value, onChange, disabled, label }) {
 const ByBilly = () => (
   <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full" style={{ background: "rgba(201,162,220,0.22)", color: "var(--ink)" }}>
     <Sparkles size={11} aria-hidden="true" /> Noted by Billy
+  </span>
+);
+
+/* An answer the Primary Master set for everyone at a place in Studio. */
+const ForEveryone = () => (
+  <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full" style={{ background: "var(--ghost-fill)", color: "var(--iron)" }}>
+    <Lock size={11} aria-hidden="true" /> Set for everyone
   </span>
 );
 
@@ -81,13 +88,18 @@ export function EquipmentTab({ onSignedOut }) {
 
   useEffect(() => { call("GET", "/equipment"); }, [call]);
 
-  const place = data?.places.find(p => p.id === placeId) || data?.places[0];
+  /* The Primary Master also sets the places in Studio for every trainer
+     (`everyone`), through their own routes. */
+  const shared = data?.everyone?.find(p => p.id === placeId);
+  const place = shared || data?.places.find(p => p.id === placeId) || data?.places[0];
+  const base = shared ? `/everyone/places/${place.id}` : `/places/${place?.id}`;
+  const itemPath = (id) => (shared ? `/everyone/items/${id}` : `/equipment/items/${id}`);
   const known = data ? data.pieces.find(p => p.label.toLowerCase() === draft.name.trim().toLowerCase()) : null;
 
   const add = async (e) => {
     e.preventDefault();
     const body = { name: draft.name.trim(), has: draft.has, note: draft.note.trim(), ...(known ? {} : { category: draft.category }) };
-    if (await call("POST", `/places/${place.id}/items`, body)) setDraft({ name: "", category: "", has: true, note: "" });
+    if (await call("POST", `${base}/items`, body)) setDraft({ name: "", category: "", has: true, note: "" });
   };
   const labelOf = (key) => place?.categories.find(c => c.key === key)?.label || key;
 
@@ -134,9 +146,30 @@ export function EquipmentTab({ onSignedOut }) {
                 </button>
               )}
             </div>
-            {place.fromStudio ? (
+            {data.everyone?.length > 0 && (
+              <>
+                <h2 className="text-xs font-medium mt-4 mb-2" style={{ color: "var(--iron)" }}>Places in Studio, set for every trainer</h2>
+                <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Places in Studio">
+                  {data.everyone.map(p => (
+                    <button key={p.id} type="button" role="tab" aria-selected={p.id === place.id} onClick={() => setPlaceId(p.id)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
+                      style={p.id === place.id
+                        ? { background: "var(--cerulean)", color: "#fff" }
+                        : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
+                      <Building2 size={14} aria-hidden="true" /> {p.name}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {shared ? (
+              <p className="text-xs mt-3" style={{ color: "var(--iron)" }}>
+                What you answer here is set for every trainer whose place in Studio this is. They see it, and can't change it.
+              </p>
+            ) : place.fromStudio ? (
               <p className="text-xs mt-3" style={{ color: "var(--iron)" }}>
                 Your place in Studio. Its name comes from Studio, so it's changed there.
+                {(place.categories.some(c => c.locked) || place.items.some(i => i.locked)) && " Answers marked Set for everyone come from the Primary Master; ask them to change one."}
               </p>
             ) : naming !== place.id && (
               <div className="flex flex-wrap items-center gap-4 mt-3">
@@ -156,16 +189,17 @@ export function EquipmentTab({ onSignedOut }) {
           <div className="grid gap-4 lg:grid-cols-2 items-start">
             <section className="cx-card p-4">
               <h2 className="font-semibold">The basics</h2>
-              <p className="text-xs mt-0.5 mb-2" style={{ color: "var(--iron)" }}>At {place.name}, do you have…</p>
+              <p className="text-xs mt-0.5 mb-2" style={{ color: "var(--iron)" }}>{shared ? `At ${place.name}, for every trainer, is there…` : `At ${place.name}, do you have…`}</p>
               <ul>
                 {place.categories.map(c => (
                   <li key={c.key} className="flex items-center justify-between gap-3 py-2 border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
                     <span className="min-w-0">
                       <span className="text-sm">{c.label}</span>
                       {c.source === "billy" && <span className="ml-2"><ByBilly /></span>}
+                      {c.locked && <span className="ml-2"><ForEveryone /></span>}
                     </span>
-                    <YesNo value={c.has} disabled={busy} label={c.label}
-                      onChange={(has) => call("PUT", `/places/${place.id}/categories/${c.key}`, { has })} />
+                    <YesNo value={c.has} disabled={busy || c.locked} label={c.label}
+                      onChange={(has) => call("PUT", `${base}/categories/${c.key}`, { has })} />
                   </li>
                 ))}
               </ul>
@@ -190,17 +224,20 @@ export function EquipmentTab({ onSignedOut }) {
                           </span>
                         </span>
                         <span className="flex items-center gap-1.5 flex-none">
-                          <YesNo value={it.has} disabled={busy} label={it.name}
+                          <YesNo value={it.has} disabled={busy || it.locked} label={it.name}
                             onChange={(has) => has === null
-                              ? call("DELETE", `/equipment/items/${it.id}`)
-                              : call("POST", `/places/${place.id}/items`, { name: it.name, category: it.category, has, note: it.note })} />
-                          <button type="button" disabled={busy} onClick={() => call("DELETE", `/equipment/items/${it.id}`)}
-                            className="cx-icon-btn" aria-label={`Remove ${it.name}`} title="Remove">
-                            <Trash2 size={16} aria-hidden="true" />
-                          </button>
+                              ? call("DELETE", itemPath(it.id))
+                              : call("POST", `${base}/items`, { name: it.name, category: it.category, has, note: it.note })} />
+                          {!it.locked && (
+                            <button type="button" disabled={busy} onClick={() => call("DELETE", itemPath(it.id))}
+                              className="cx-icon-btn" aria-label={`Remove ${it.name}`} title="Remove">
+                              <Trash2 size={16} aria-hidden="true" />
+                            </button>
+                          )}
                         </span>
                       </div>
                       {it.source === "billy" && <div className="mt-1"><ByBilly /></div>}
+                      {it.locked && <div className="mt-1"><ForEveryone /></div>}
                     </li>
                   ))}
                 </ul>
@@ -224,7 +261,7 @@ export function EquipmentTab({ onSignedOut }) {
                 <input className="cx-input" placeholder="A note (optional), such as only goes to 50 lb" value={draft.note} maxLength={200}
                   onChange={e => setDraft(d => ({ ...d, note: e.target.value }))} aria-label="Note" />
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm">Do you have it?</span>
+                  <span className="text-sm">{shared ? "Is it there?" : "Do you have it?"}</span>
                   <YesNo value={draft.has} label="Do you have it?" onChange={(has) => setDraft(d => ({ ...d, has: has ?? d.has }))} />
                 </div>
                 {/* Adding to a list: a secondary button inside its card (Studio). */}

@@ -389,6 +389,17 @@ nobody else sees it.
    **Add**. Coach knows many pieces by name, whatever you call them — a
    "gravitron" is the assisted pull-up machine — and fills in the kind for you.
 
+At your place in Studio, answers marked **Set for everyone** were given by
+the Primary Master for every trainer there. They can't be changed here, by
+you or by Billy; ask the Primary Master. Anything they left unanswered you
+can answer yourself.
+
+**The Primary Master** also sees **Places in Studio, set for every trainer**
+under their own places: every place in Studio. Tap one and answer **The
+basics** and **Particular pieces** as above (*At Trainability Downtown, for
+every trainer, is there…*). Each answer is set at once for every trainer
+whose place in Studio it is.
+
 A piece Billy wrote down from something you told him says **Noted by Billy**.
 Change or remove it here like any other. If Billy is told something different
 from an answer you gave yourself, he asks you before changing it.
