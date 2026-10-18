@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus } from "lucide-react";
+import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
@@ -27,7 +27,7 @@ function Detail({ icon: Icon, label, children }) {
   );
 }
 
-function ClientRow({ client: c, open, onToggle, onSignedOut }) {
+function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, busy }) {
   const next = nextBooked(c);
   return (
     <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
@@ -72,18 +72,30 @@ function ClientRow({ client: c, open, onToggle, onSignedOut }) {
             </Detail>
           )}
           <Limitations clientId={c.id} onSignedOut={onSignedOut} />
+          {(onEdit || onArchive) && (
+            <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
+              {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}
+              {onArchive && (c.archived
+                ? <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>
+                : <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, true)} disabled={busy}><Archive size={15} aria-hidden="true" /> Archive</button>)}
+            </div>
+          )}
         </div>
       )}
     </li>
   );
 }
 
-/* Adding a client: Studio's four things a client must have (first and last
-   name, email, phone), and a birthday and pronouns if known. Kept in Studio;
-   somebody Studio already has, by the same email, goes on this trainer's
+/* Adding a client, or changing one's details: Studio's four things a client
+   must have (first and last name, email, phone), and a birthday and pronouns
+   if known. Kept in Studio without the trainer having to know it (Glenn, 18
+   Oct 2026: "this is seemless and they don't need to know where it's
+   stored"); somebody already there by the same email goes on this trainer's
    list instead of being made twice (server/index.js, POST /api/clients). */
-function AddClient({ onAdd, onDone, onCancel }) {
-  const [f, setF] = useState({ firstName: "", lastName: "", email: "", phone: "", dateOfBirth: "", pronouns: "" });
+function ClientForm({ initial, onAdd, onDone, onCancel }) {
+  const editing = !!initial;
+  const [f, setF] = useState(() => ({ firstName: "", lastName: "", email: "", phone: "", dateOfBirth: "", pronouns: "",
+    ...(initial ? { firstName: initial.firstName || "", lastName: initial.lastName || "", email: initial.email || "", phone: initial.phone || "", dateOfBirth: initial.dateOfBirth || "", pronouns: initial.pronouns || "" } : {}) }));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const set = (k) => (e) => setF(d => ({ ...d, [k]: e.target.value }));
@@ -95,12 +107,12 @@ function AddClient({ onAdd, onDone, onCancel }) {
     try {
       onDone(await onAdd(f), `${f.firstName.trim()} ${f.lastName.trim()}`.trim());
     } catch (err) {
-      setError(err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "That client couldn't be added. Try again.");
+      setError(err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message || (editing ? "Those changes couldn't be saved. Try again." : "That client couldn't be added. Try again."));
     } finally { setBusy(false); }
   };
   return (
     <form className="cx-card p-4 mb-4 grid gap-3" onSubmit={save}>
-      <h2 className="cx-display text-xl">Add a client</h2>
+      <h2 className="cx-display text-xl">{editing ? `Edit ${initial.firstName || "client"}'s details` : "Add a client"}</h2>
       <div className="grid sm:grid-cols-2 gap-3">
         {lab("First name", input("firstName", { required: true, maxLength: 90, autoComplete: "off" }))}
         {lab("Last name", input("lastName", { required: true, maxLength: 90, autoComplete: "off" }))}
@@ -109,12 +121,14 @@ function AddClient({ onAdd, onDone, onCancel }) {
         {lab("Birthday (optional)", input("dateOfBirth", { type: "date" }))}
         {lab("Pronouns (optional)", input("pronouns", { maxLength: 30, placeholder: "Such as she/her" }))}
       </div>
-      <p className="text-xs" style={{ color: "var(--iron)" }}>
-        Kept in Studio, with your other clients. If Studio already has someone with this email, they're added to your list instead.
-      </p>
+      {!editing && (
+        <p className="text-xs" style={{ color: "var(--iron)" }}>
+          If they're already a client of ours, with this email, they're added to your list instead.
+        </p>
+      )}
       {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
       <div className="flex items-center gap-2">
-        <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy}>{busy ? "Adding…" : "Add client"}</button>
+        <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy}>{busy ? (editing ? "Saving…" : "Adding…") : (editing ? "Save" : "Add client")}</button>
         <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
       </div>
     </form>
@@ -124,19 +138,31 @@ function AddClient({ onAdd, onDone, onCancel }) {
 /* What the trainer is told once a client is added, by what Studio did. */
 const ADDED = {
   added: (n) => `${n} added.`,
-  linked: (n) => `${n} was already in Studio, so they're on your list now.`,
+  linked: (n) => `${n} was already a client of ours, so they're on your list now.`,
   back: (n) => `${n} is back on your list.`,
   already: (n) => `${n} is already on your list.`,
 };
 
-/* The Clients tab: everyone on this trainer's own list in Studio, read from
-   Studio (useClients), and new clients added to it (kept in Studio too). */
-export function ClientsTab({ clients, error, retry, add, onSignedOut }) {
+/* The Clients tab: everyone on this trainer's own list, kept in Studio and
+   read from there (useClients): added, changed, archived and put back here,
+   with nothing on the page saying where they are kept. */
+export function ClientsTab({ clients, error, retry, add, edit, archive, onSignedOut }) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
   const [openId, setOpenId] = useState(null);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(false);   // true, or the client whose details are being changed
   const [said, setSaid] = useState("");
+  const [busy, setBusy] = useState(false);
+  const archiveOne = async (c, on) => {
+    setBusy(true); setSaid("");
+    try {
+      await archive(c.id, on);
+      setSaid(on ? `${fullName(c)} archived. They're under Archived.` : `${fullName(c)} is back on your list.`);
+      setShowArchived(!on); setOpenId(c.id);
+    } catch (err) {
+      setSaid(err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message);
+    } finally { setBusy(false); }
+  };
 
   const active = useMemo(() => (clients || []).filter(c => !c.archived), [clients]);
   const archived = useMemo(() => (clients || []).filter(c => c.archived), [clients]);
@@ -166,11 +192,12 @@ export function ClientsTab({ clients, error, retry, add, onSignedOut }) {
       </div>
       {said && <p className="text-sm mb-3" role="status" style={{ color: "var(--accent)" }}>{said}</p>}
       {adding && (
-        <AddClient onAdd={add} onCancel={() => setAdding(false)}
+        <ClientForm key={adding === true ? "new" : adding.id} initial={adding === true ? null : adding}
+          onAdd={adding === true ? add : (fields) => edit(adding.id, fields)} onCancel={() => setAdding(false)}
           onDone={(out, typed) => {
             const c = (out.clients || []).find(x => x.id === out.clientId);
-            setSaid((ADDED[out.done] || ADDED.added)(c ? fullName(c) : typed));
-            setAdding(false); setQuery(""); setShowArchived(false); setOpenId(out.clientId);
+            setSaid(adding === true ? (ADDED[out.done] || ADDED.added)(c ? fullName(c) : typed) : `${c ? fullName(c) : typed}'s details saved.`);
+            setAdding(false); setQuery(""); setShowArchived(!!c?.archived); setOpenId(out.clientId);
           }} />
       )}
 
@@ -211,20 +238,18 @@ export function ClientsTab({ clients, error, retry, add, onSignedOut }) {
           <p className="p-6 text-center text-sm" style={{ color: "var(--iron)" }}>
             {query.trim() ? `No one matches “${query.trim()}”.`
               : showArchived ? "You have no archived clients."
-              : "You have no clients yet. Tap Add a client, or add them in Studio."}
+              : "You have no clients yet. Tap Add a client to add your first."}
           </p>
         ) : (
           <ul>
             {shown.map(c => (
-              <ClientRow key={c.id} client={c} open={openId === c.id} onSignedOut={onSignedOut} onToggle={() => setOpenId(id => (id === c.id ? null : c.id))} />
+              <ClientRow key={c.id} client={c} open={openId === c.id} onSignedOut={onSignedOut} onToggle={() => setOpenId(id => (id === c.id ? null : c.id))}
+                busy={busy} onEdit={edit ? (x) => { setAdding(x); setSaid(""); window.scrollTo({ top: 0, behavior: "smooth" }); } : null} onArchive={archive ? archiveOne : null} />
             ))}
           </ul>
         )}
       </div>
 
-      <p className="text-xs mt-4 text-center" style={{ color: "var(--iron)" }}>
-        Your clients are kept in Studio. To change a client's details, use Studio.
-      </p>
     </div>
   );
 }

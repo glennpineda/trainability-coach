@@ -212,7 +212,7 @@ app.post("/api/clients", async (req, res) => {
     const sameEmail = !!match?.email && match.email.toLowerCase() === f.email.toLowerCase();
     if (match?.id && !sameEmail) {
       return res.status(409).json({ code: "phone_taken", name: `${match.firstName || ""} ${match.lastName || ""}`.trim(),
-        error: `${`${match.firstName || ""} ${match.lastName || ""}`.trim() || "Another client"} already has that phone number in Studio. If this is them, use the email they have there; if it's someone else, use a different phone number.` });
+        error: `${`${match.firstName || ""} ${match.lastName || ""}`.trim() || "Another client"} already has that phone number. If this is them, use the email they gave us; if it's someone else, use a different phone number.` });
     }
     if (match?.id) {
       const mine = (match.trainerIds || []).includes(user.id);
@@ -237,6 +237,38 @@ app.post("/api/clients", async (req, res) => {
     unreachable(res, "POST /clients", err);
   }
 });
+
+/* A client's details changed, or the client archived or put back, from
+   Coach: Studio's own PATCH /clients/:id and POST /clients/:id/archive with
+   the trainer's session, so Studio's rules hold (Glenn, 18 Oct 2026: "for the
+   Coach user, this is seemless and they don't need to know where it's
+   stored"). Only a client on this trainer's own list; the answer is the list
+   again. */
+const clientFields = (b = {}) => {
+  const f = {};
+  for (const [k, max] of [["firstName", 90], ["lastName", 90], ["email", 190], ["phone", 40], ["pronouns", 30]]) {
+    if (b[k] !== undefined) f[k] = String(b[k] ?? "").trim().slice(0, max);
+  }
+  if (b.dateOfBirth !== undefined) f.dateOfBirth = b.dateOfBirth ? String(b.dateOfBirth).slice(0, 10) : null;
+  return f;
+};
+async function onClient(req, res, what, send) {
+  try {
+    const user = await signedIn(req);
+    if (!(await myClients(req, user)).some(c => c.id === req.params.id)) return res.status(404).json({ error: "Not found", code: "not_found" });
+    const r = await send(user);
+    if (!r.ok) throw new StudioRefused(r.status, await r.text());
+    res.set("Cache-Control", "private, no-store");
+    res.json({ clientId: req.params.id, clients: await myClients(req, user) });
+  } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
+    unreachable(res, what, err);
+  }
+}
+app.patch("/api/clients/:id", (req, res) => onClient(req, res, "PATCH /clients", () =>
+  studio(req, `/clients/${encodeURIComponent(req.params.id)}`, { method: "PATCH", body: clientFields(req.body) })));
+app.post("/api/clients/:id/archive", (req, res) => onClient(req, res, "POST /clients/archive", (user) =>
+  studio(req, `/clients/${encodeURIComponent(req.params.id)}/archive`, { method: "POST", body: { trainerId: user.id, archived: req.body?.archived !== false } })));
 
 /* The trainer's equipment, the first part of their personal memory
    (server/equipment.js). Each person's own: the trainer is whoever Studio

@@ -36,7 +36,11 @@ Studio's own Add client does it, with the trainer's session: Studio's
 `/api/clients/match` first; somebody it already has by the same email is put
 on the trainer's list with `/api/clients/:id/link`; a phone-only match is
 refused with the name, for the trainer to sort out; anybody else is made with
-`POST /api/clients` on the trainer's list. Coach still keeps no copy.
+`POST /api/clients` on the trainer's list. A client's details are changed
+with Studio's `PATCH /api/clients/:id`, and archived or put back with its
+`POST /api/clients/:id/archive`, both only for a client on the trainer's own
+list. Coach still keeps no copy, and its screens never say where clients are
+kept (Glenn: "seemless").
 
 Known limit: Studio counts failed sign-ins per IP address as well as per
 email. Relayed requests all come from Coach's server, so that per-IP budget is

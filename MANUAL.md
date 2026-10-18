@@ -592,10 +592,9 @@ read and wrote.
 
 ## 4. Your clients
 
-Coach shows the clients on your own list in Studio — the same people you see
-under your name there. It reads them from Studio every time, so anything
-changed in Studio shows in Coach the next time you open the list. Coach keeps
-no copy of its own.
+Coach shows everyone on your own client list. You add, change and archive
+them here; if you also use Studio, it's the same list, and a change made in
+either shows in the other the next time you open it.
 
 ### 4.1 Opening your clients
 
@@ -661,47 +660,47 @@ If nobody matches, the list says *No one matches* and what you typed.
 
 ### 4.5 Archived clients
 
-Clients you have archived in Studio — people you no longer train — are kept
-apart from the rest.
+Clients you have archived — people you no longer train — are kept apart from
+the rest. To archive one, open them (4.3) and tap **Archive** at the bottom;
+it says *Jamie Ortiz archived. They're under Archived.*
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.
 2. The list now shows only your archived clients, with grey circles. Tapping
    one shows the same details as in 4.3.
-3. Tap **Active** to go back to the people you are training.
+3. To bring one back, open them and tap **Put back on my list**. It says
+   *Jamie Ortiz is back on your list.*
+4. Tap **Active** to go back to the people you are training.
 
 ### 4.6 Adding or changing a client
 
-A client you add in Coach is kept in **Studio**, with your other clients:
-they show in Studio under your name straight away.
-
 1. On the Clients page, tap **Add a client** (top right).
 2. Fill in **First name**, **Last name**, **Email** and **Phone**; all four
-   are needed, as in Studio. **Birthday (optional)** and **Pronouns
-   (optional)** can be left empty.
+   are needed. **Birthday (optional)** and **Pronouns (optional)** can be
+   left empty.
 3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
    open in the list. **Cancel** closes the form without adding anyone.
 
-If Studio already has someone with that email:
+If someone with that email is already a client of ours:
 
 - someone on another trainer's list is added to yours too: *Riley Hart was
-  already in Studio, so they're on your list now.*
+  already a client of ours, so they're on your list now.*
 - someone you had archived comes back: *Morgan Hart is back on your list.*
 - someone already on your list is left as they are: *Casey Moss is already
   on your list.*
 
-If only the phone number matches someone in Studio, nobody is added, since
+If only the phone number matches another client, nobody is added, since
 families and twins often share a phone. It says, for example, *Riley Hart
-already has that phone number in Studio. If this is them, use the email they
-have there; if it's someone else, use a different phone number.*
+already has that phone number. If this is them, use the email they gave us;
+if it's someone else, use a different phone number.*
 
 If something is missing, it says what, such as *Last name and Email are
 required*.
 
-To **change** a client's details, or to archive one, use Studio. At the foot
-of the Clients page it says *Your clients are kept in Studio. To change a
-client's details, use Studio.* The change shows in Coach the next time you
-open Clients.
+**To change a client's details**, open them (4.3) and tap **Edit details**
+at the bottom. The same form opens, headed *Edit Jamie's details*, with what
+is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
+details saved.*
 
 ### 4.7 A client's limitations
 

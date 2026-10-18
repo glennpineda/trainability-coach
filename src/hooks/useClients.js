@@ -3,8 +3,9 @@ import { apiRequest } from "../lib/api";
 
 /**
  * The signed-in trainer's clients, read from Studio through Coach's server
- * (/api/clients). Coach keeps no copy: `refresh` asks again, and the list
- * already on screen stays there while it does.
+ * (/api/clients), and added, changed and archived there the same way. Coach
+ * keeps no copy: `refresh` asks again, and the list already on screen stays
+ * there while it does.
  *
  * `clients` is `undefined` while loading; `error` holds a message when the
  * answer did not come. A 401 means the session ended, and `onSignedOut` takes
@@ -45,5 +46,20 @@ export function useClients(onSignedOut) {
     }
   }, [onSignedOut]);
 
-  return { clients, error, retry, refresh: load, add };
+  /* A client's details changed, or archived / put back (PATCH and POST
+     /api/clients/:id…), the same way. */
+  const send = useCallback(async (method, path, body) => {
+    try {
+      const out = await apiRequest(method, path, body);
+      setClients(out.clients || []);
+      return out;
+    } catch (err) {
+      if (err.status === 401) onSignedOut?.();
+      throw err;
+    }
+  }, [onSignedOut]);
+  const edit = useCallback((id, fields) => send("PATCH", `/clients/${id}`, fields), [send]);
+  const archive = useCallback((id, archived) => send("POST", `/clients/${id}/archive`, { archived }), [send]);
+
+  return { clients, error, retry, refresh: load, add, edit, archive };
 }

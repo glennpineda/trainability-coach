@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Clients changed and archived from Coach too, and nothing saying where they're kept** (18 Oct 2026; Glenn, after I recommended a separate Coach database for trainers outside Trainability: "Clients should be stored on Studio, so let's just do an api call to Studio to do that. But for the Coach user, this is seemless and they don't need to know where it's stored."). Build 1.0.46. Not from Next up. Read as: clients always live in Studio's database through its API, and Coach's screens make no mention of it; and since a trainer sent to Studio to change a client isn't seamless, changing and archiving belong in Coach too. **Server** (`server/index.js`): `PATCH /api/clients/:id` passes first and last name, email, phone, pronouns and birthday (`clientFields`, trimmed to Studio's widths, an empty birthday as null) to Studio's `PATCH /api/clients/:id`, whose rules hold (an edit can't empty one of the four, a complete email, a phone it can text); `POST /api/clients/:id/archive` passes `{ trainerId, archived }` to Studio's own (archiving needs only that the list is theirs; putting back needs the client reachable, Studio checks). Both go through `onClient`, which first checks the client is on this trainer's own list (`myClients`; anyone else is a 404) and answers with the list again. The phone-only refusal no longer says Studio: "Riley Hart already has that phone number. If this is them, use the email they gave us; if it's someone else, use a different phone number." **Page** (`src/tabs/ClientsTab.jsx`): the form is now `ClientForm`, for adding or, given a client, editing ("Edit Jamie's details", Save / Saving…; the line about an existing email shows only when adding); an open client ends with **Edit details** (a row button) and **Archive**, or **Put back on my list** when archived; messages "Jamie Ortiz's details saved.", "Jamie Ortiz archived. They're under Archived." (the list stays on Active) and "Jamie Ortiz is back on your list."; "linked" now says "… was already a client of ours, so they're on your list now."; the empty list says "You have no clients yet. Tap Add a client to add your first."; the foot line about Studio is gone. `useClients` gains `edit` and `archive`. Checked: no visible "Studio" anywhere on the Clients page. Not changed: the program form's "{Name}'s gym in Studio." about places, and the sign-in screen's Studio account wording. Manual chapter 4's opening, 4.5 and 4.6 rewritten without Studio; README; CHANGELOG. **Still open, put to Glenn**: accounts for trainers outside Trainability, kept in Studio as he wants, need changes in Studio (an account that isn't on the business's team, and its clients kept out of the business's lists, billing, messages and the CRM sync), which CLAUDE.md says to ask about before touching Studio; not started. **Tested** against the stand-in Studio, taught edit and archive: details changed (phone and pronouns), an emptied last name refused ("Last name is required"), archived and put back, another trainer's client a 404, the phone-only wording; in Chromium at 400px dark and 1200px light: Edit details from an open client, Save, Archive, the Archived tab, Put back on my list, the page text checked for "Studio" (none); no page errors, no sideways scroll; screenshots sent to Glenn. Commit: build 1.0.46.
+
 - **Add a client from Coach, kept in Studio** (18 Oct 2026; Glenn: "The Coach trainer should be able to add new clients from Coach, what would be the best way to do it, store it here then sync to Studio? Or just create at Studio and sync it back here?"; I recommended creating them in Studio through Coach with no copy in Coach; Glenn: "Yes let's do this. But Coach should be able to work without Studio. I'm ok saving the clients on Studios db though"). Build 1.0.45. Not from Next up. **Asked** what "work without Studio" meant, with options; Glenn: "I mean, anyone (a trainer) can create an account at Coach to use its functionality. But if you have a Studio account, it just syncs it better. It's still ok to store login and clients on Studio that we just pull out for Coach." That is a larger piece needing Studio changes (accounts for trainers outside the business, kept apart from its clients and billing), so it was put to Glenn as a plan and not built; this entry is the Add a client part, which needs nothing from Studio. Asked too what to do when a client already exists: Glenn, "Link automatically". **Read in Studio** (`src/tabs/ClientsTab.jsx` `ClientFormDialog`, `src/hooks/useClients.js`, `server/index.js`): Studio's Add client asks `POST /api/clients/match` (email or phone; `matchAsSeenBy` cuts the answer for someone the asker can't reach), then either `POST /api/clients/:id/link` (put an existing client on a trainer's list; it also brings back one the trainer had archived, and for someone the asker can't already reach it checks the typed email or phone matches) or `POST /api/clients` (owner the signed-in trainer when no `trainerId`; `CLIENT_REQUIRED` first name, last name, email, phone; a complete email; a phone it can text; its own duplicate refusal). **In Coach**: `POST /api/clients` (`server/index.js`) takes first and last name, email, phone, and optionally birthday and pronouns (trimmed to Studio's field widths); checks Studio's four itself first, in Studio's words ("Last name and Email are required"), so a half-filled form isn't matched on what little it has; asks `/clients/match`; with the same email, links (done "linked", or "back" for one this trainer had archived) or, already on the list, does nothing ("already"); with only the phone the same, refuses (409 `phone_taken`: "Riley Hart already has that phone number in Studio. If this is them, use the email they have there; if it's someone else, use a different phone number."), because a phone is often a family's or twins' and linking the wrong person would show this trainer someone else's record (my reading of "Link automatically", which Glenn gave for duplicates); otherwise creates ("added"). Studio's refusals pass through as they are. The answer is the trainer's list again (`myClients`), the client's id and what happened; the new client's id is found as the one not on the list before. `useClients` gains `add`. **The page** (`src/tabs/ClientsTab.jsx`): **Add a client** beside the count opens a card: First name, Last name, Email, Phone (required), Birthday (optional), Pronouns (optional), "Kept in Studio, with your other clients. If Studio already has someone with this email, they're added to your list instead.", **Add client** ("Adding…") and **Cancel**; then a line in blue ("Jamie Ortiz added.", "… was already in Studio, so they're on your list now.", "… is back on your list.", "… is already on your list.") and that client opened on the Active list. The empty list now says "You have no clients yet. Tap Add a client, or add them in Studio."; the foot "Your clients are kept in Studio. To change a client's details, use Studio." (the open-Studio link went with the menu's, build 1.0.40). Manual 4.2 and 4.6; README; CHANGELOG. **Tested** against the stand-in Studio, taught match, link and create with Studio's checks and a few clients of other trainers: a new client added and on the list; missing fields named; a short phone refused in Studio's words; another trainer's client by email linked; a phone-only match refused with the name; adding someone already on the list said so; a trainer's archived client brought back. In Chromium at 400px dark and 1200px light: the form, adding Jamie Ortiz (opened on the list with he/him), linking Riley Hart, and the phone-only refusal; no page errors, no sideways scroll; screenshots sent to Glenn. **Not tested**: against Studio's real routes (its fixture is on Glenn's Mac); whether Studio sends a new client a welcome message when made this way is Studio's own behaviour, the same as its own Add client. Commit: build 1.0.45.
 
 - **The role badge moved into the account menu, as Studio has it** (18 Oct 2026; Glenn: "Can you put the badge on the header inside the profile menu? See Studio how it's doing it"). Build 1.0.44. Not from Next up. **Where Studio does it**: not in Studio's main (still `e7854f5`, the shield in the header's badge row), but on its `account-menu` branch (commit `5c99c28`, 16 Oct 2026, "The account menu, the logo as the app switcher, Profile and the business's tabs off the bar"), read by fetching that branch: its `AccountMenu.jsx` has a `RoleBadge` under the name and email (an admin's or master's role on a small rounded pill, 2px 8px 2px 6px, radius 8, a 14px ShieldCheck and the role in 12px medium; Primary Master in the rich gold gradient with a 12px gold Sparkles at its top right, Master in the paler gold, Admin in lilac; anyone else the role as a word). **In Coach**: the shield and its hover-to-open label are gone from `src/chrome/Header.jsx` (with its `ROLE` map and the `ShieldCheck` and `Sparkles` imports), and the `.cx-badge` styles from `src/index.css` (the row, `.cx-badge-row`, stays for Billy and the account menu, and its Billy rules still apply). `src/chrome/AccountMenu.jsx` gains `RoleBadge` with Studio's look in Coach's colours: the same two golds, and Coach's blue (`--accent-soft` on `--accent`, as the header's admin shield was) where Studio has lilac; a trainer or front desk keeps the role as a blue word. Manual 3.1 loses the shield on the right, 3.5 says what the badge looks like; CHANGELOG. **Tested** in Chromium against the stand-ins: Glenn (Primary Master) at 400px dark and 1200px light, the header row now Billy and the account menu only, the menu showing the gold Primary Master badge with its sparkle; Tess (trainer) at 400px, "Trainer" as a word; no page errors; screenshots sent to Glenn. Commit: build 1.0.44.
@@ -783,10 +785,9 @@ read and wrote.
 
 ### 4. Your clients
 
-Coach shows the clients on your own list in Studio — the same people you see
-under your name there. It reads them from Studio every time, so anything
-changed in Studio shows in Coach the next time you open the list. Coach keeps
-no copy of its own.
+Coach shows everyone on your own client list. You add, change and archive
+them here; if you also use Studio, it's the same list, and a change made in
+either shows in the other the next time you open it.
 
 #### 4.1 Opening your clients
 
@@ -852,47 +853,47 @@ If nobody matches, the list says *No one matches* and what you typed.
 
 #### 4.5 Archived clients
 
-Clients you have archived in Studio — people you no longer train — are kept
-apart from the rest.
+Clients you have archived — people you no longer train — are kept apart from
+the rest. To archive one, open them (4.3) and tap **Archive** at the bottom;
+it says *Jamie Ortiz archived. They're under Archived.*
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.
 2. The list now shows only your archived clients, with grey circles. Tapping
    one shows the same details as in 4.3.
-3. Tap **Active** to go back to the people you are training.
+3. To bring one back, open them and tap **Put back on my list**. It says
+   *Jamie Ortiz is back on your list.*
+4. Tap **Active** to go back to the people you are training.
 
 #### 4.6 Adding or changing a client
 
-A client you add in Coach is kept in **Studio**, with your other clients:
-they show in Studio under your name straight away.
-
 1. On the Clients page, tap **Add a client** (top right).
 2. Fill in **First name**, **Last name**, **Email** and **Phone**; all four
-   are needed, as in Studio. **Birthday (optional)** and **Pronouns
-   (optional)** can be left empty.
+   are needed. **Birthday (optional)** and **Pronouns (optional)** can be
+   left empty.
 3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
    open in the list. **Cancel** closes the form without adding anyone.
 
-If Studio already has someone with that email:
+If someone with that email is already a client of ours:
 
 - someone on another trainer's list is added to yours too: *Riley Hart was
-  already in Studio, so they're on your list now.*
+  already a client of ours, so they're on your list now.*
 - someone you had archived comes back: *Morgan Hart is back on your list.*
 - someone already on your list is left as they are: *Casey Moss is already
   on your list.*
 
-If only the phone number matches someone in Studio, nobody is added, since
+If only the phone number matches another client, nobody is added, since
 families and twins often share a phone. It says, for example, *Riley Hart
-already has that phone number in Studio. If this is them, use the email they
-have there; if it's someone else, use a different phone number.*
+already has that phone number. If this is them, use the email they gave us;
+if it's someone else, use a different phone number.*
 
 If something is missing, it says what, such as *Last name and Email are
 required*.
 
-To **change** a client's details, or to archive one, use Studio. At the foot
-of the Clients page it says *Your clients are kept in Studio. To change a
-client's details, use Studio.* The change shows in Coach the next time you
-open Clients.
+**To change a client's details**, open them (4.3) and tap **Edit details**
+at the bottom. The same form opens, headed *Edit Jamie's details*, with what
+is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
+details saved.*
 
 #### 4.7 A client's limitations
 
