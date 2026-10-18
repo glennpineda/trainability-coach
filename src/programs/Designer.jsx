@@ -139,6 +139,11 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
   const [dialog, setDialog] = useState(null);
   const [dialogError, setDialogError] = useState("");
   const openDialog = (d) => { setDialogError(""); setDialog(d); };
+  /* Coach IQ's answers in the add dialog, kept for this program on this
+     device so the next exercise opens with them. */
+  const askKey = `cx-iq-ask:${id}`;
+  const [lastAsk, setLastAsk] = useState(() => { try { return JSON.parse(localStorage.getItem(askKey) || "null"); } catch { return null; } });
+  const rememberAsk = (v) => { setLastAsk(v); try { localStorage.setItem(askKey, JSON.stringify(v)); } catch { /* not kept: asked afresh */ } };
   const [version, setVersion] = useState(0);
   const [units] = useUnits();
 
@@ -302,6 +307,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
       </button>
       {dialog && (
         <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} vocab={vocab}
+          remembered={lastAsk} onRemember={rememberAsk}
           onAskBilly={billy?.available ? (words) => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}): ${words}`) : null}
           busy={busy} error={dialogError} onSave={saveDialog} onClose={() => setDialog(null)} />
       )}

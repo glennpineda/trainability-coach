@@ -52,7 +52,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **"What are we working on?"** when adding an exercise: strength, power,
   cardio, balance or mobility and, if you like, muscle groups (chest,
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
-  the question when you ask Billy.
+  the question when you ask Billy. The next exercise you add to the same
+  program opens with the same answers.
 - **Adding an exercise opens a box of its own.** Pick the exercise (or one
   Coach IQ suggests), see what it works and needs and anything Coach IQ says
   about it for the client, then the sets, reps, load, effort, tempo, rest and

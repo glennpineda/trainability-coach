@@ -757,7 +757,10 @@ list; it is kept, not deleted.
    only come up when you choose **Mobility**. If
    nothing fits the place, the client's level and limitations, it says so:
    choose fewer muscles, or another kind of movement. **Ask Billy for
-   ideas** closes the box and asks Billy, with what you chose.
+   ideas** closes the box and asks Billy, with what you chose. The next
+   time you add an exercise to the same program, the card opens with the
+   same answers (on this phone or computer), so you only change what's
+   different.
 3. **Which exercise?** Type any name you use for it: your own name, one of
    your own exercises, or the library's name, and tap it in the list. Before
    you type, the box lists what **Coach IQ suggests** for that day, with why;
