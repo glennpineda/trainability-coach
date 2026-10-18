@@ -20,6 +20,7 @@ import * as coachClients from "./coach-clients.js";
 import * as today from "./today.js";
 import * as messages from "./messages.js";
 import * as push from "./push.js";
+import * as measurements from "./measurements.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -588,6 +589,21 @@ app.post("/api/attachments/program", asSignedIn("POST /attachments/program", asy
   res.json(await messages.programAttachment(user.id, full, await trainerSettings.unitsOf(user.id)));
 }));
 
+/* A set of a client's measurements, kept as a copy to attach, with the set
+   before it for the changes. */
+app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurements", async (req, res, user) => {
+  const row = await measurements.measurementById(String(req.body?.measurementId || ""));
+  if (!row) return res.status(404).json({ error: "Those measurements are no longer there.", code: "not_found" });
+  const client = (await myClients(req, user)).find(c => c.id === row.client_id);
+  if (!client) return res.status(404).json({ error: "Those measurements are no longer there.", code: "not_found" });
+  const list = await measurements.measurementsOf(row.client_id, user.id);
+  const at = list.findIndex(m => m.id === row.id);
+  res.json(await messages.measurementsAttachment(user.id, {
+    set: list[at], previous: list[at + 1] || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
+    units: await trainerSettings.unitsOf(user.id),
+  }));
+}));
+
 /* An attachment for the trainer: its details (a program's copy in full), or its file. */
 app.get("/api/attachments/:id", asSignedIn("GET /attachments", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
@@ -750,6 +766,47 @@ app.delete("/api/limitations/:id", asSignedIn("DELETE /limitations", async (req,
   const done = await limitations.deleteLimitation(req.params.id, user.id);
   if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who wrote it can delete it.", code: "not_yours" });
   res.json({ limitations: await limitations.limitationsOf(row.client_id, user.id) });
+}));
+
+/* A client's measurements (server/measurements.js): as limitations, only
+   for a client on the trainer's own list; seen by all their trainers,
+   changed and deleted only by the one who took them. With the trainer's
+   units, for the page to show and type them in. */
+const measurementsAnswer = async (clientId, user) => ({
+  measurements: await measurements.measurementsOf(clientId, user.id), units: await trainerSettings.unitsOf(user.id),
+});
+app.get("/api/clients/:client/measurements", asSignedIn("GET /clients/measurements", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  res.set("Cache-Control", "private, no-store");
+  res.json(await measurementsAnswer(req.params.client, user));
+}));
+app.post("/api/clients/:client/measurements", asSignedIn("POST /clients/measurements", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  const checked = measurements.check(req.body);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  await measurements.add(req.params.client, user, checked);
+  res.json(await measurementsAnswer(req.params.client, user));
+}));
+const ownMeasurement = async (req, res, user) => {
+  const row = await measurements.measurementById(req.params.id);
+  if (!row) { res.status(404).json({ error: "Not found", code: "not_found" }); return null; }
+  return await ownClient(req, res, user, row.client_id) ? row : null;
+};
+app.put("/api/measurements/:id", asSignedIn("PUT /measurements", async (req, res, user) => {
+  const row = await ownMeasurement(req, res, user);
+  if (!row) return;
+  const checked = measurements.check(req.body);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  const done = await measurements.update(row.id, user.id, checked);
+  if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who took them can change them.", code: "not_yours" });
+  res.json(await measurementsAnswer(row.client_id, user));
+}));
+app.delete("/api/measurements/:id", asSignedIn("DELETE /measurements", async (req, res, user) => {
+  const row = await ownMeasurement(req, res, user);
+  if (!row) return;
+  const done = await measurements.remove(row.id, user.id);
+  if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who took them can delete them.", code: "not_yours" });
+  res.json(await measurementsAnswer(row.client_id, user));
 }));
 
 /* A place of the trainer's own, or a 404: never another trainer's. */

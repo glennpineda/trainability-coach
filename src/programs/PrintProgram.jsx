@@ -4,6 +4,7 @@ import { apiRequest } from "../lib/api";
 import { convertText } from "../lib/units";
 import { useUnits } from "../hooks/useUnits";
 import { labelsFor } from "./Designer";
+import { PrintMeasurements } from "../clients/PrintMeasurements";
 
 /**
  * A program printed for the client (Glenn, 17 Oct 2026: "Printable for the
@@ -22,16 +23,18 @@ export function PrintProgram({ id, sent }) {
   useEffect(() => {
     if (sent) {
       apiRequest("GET", `/attachments/${sent}`)
-        .then(a => setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) }))
-        .catch(err => setError(err.status === 404 ? "That program isn't one you sent." : err.message));
+        /* Measurements sent in a message print as their own sheet. */
+        .then(a => (a.kind === "measurements" ? setP({ measurements: a.measurements }) : setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) })))
+        .catch(err => setError(err.status === 404 ? "That isn't something you sent." : err.message));
       return;
     }
     apiRequest("GET", `/programs/${id}`).then(setP).catch(err => setError(err.status === 404 ? "That program isn't one of yours." : err.message));
   }, [id, sent]);
   const units = (sent && p?.units) || ownUnits;
-  useEffect(() => { if (p) document.title = `${p.name} · ${p.clientName}`; }, [p]);
+  useEffect(() => { if (p) document.title = p.measurements ? `Measurements · ${p.measurements.clientName}` : `${p.name} · ${p.clientName}`; }, [p]);
 
   if (!p) return <div className="cx-print p-8 text-sm">{error || "Loading…"}</div>;
+  if (p.measurements) return <PrintMeasurements data={p.measurements} />;
   const cols = [
     ["sets", "Sets"], ["reps", "Reps"], ["load", "Load"], ["effort", "Effort"], ["tempo", "Tempo"], ["restText", "Rest"],
   ];

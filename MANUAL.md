@@ -43,6 +43,7 @@ of the app gets its own chapter here as it arrives.
    - [4.5 Archived clients](#45-archived-clients)
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
+   - [4.8 A client's measurements](#48-a-clients-measurements)
 5. [Designing programs](#5-designing-programs)
    - [5.1 Starting a program](#51-starting-a-program)
    - [5.2 Adding exercises](#52-adding-exercises)
@@ -932,6 +933,45 @@ trainer who wrote a limitation can delete it: tap the bin beside it. A pale
 red box asks *Delete this limitation?*; tap **Delete**, or **Keep it** to
 leave it.
 
+### 4.8 A client's measurements
+
+Under **Limitations**, a client's details show their **Measurements**: one set
+for each day they were taken. Every trainer of the client sees them, with who
+took each set.
+
+**Reading them.** The newest set comes first, headed **Latest:** and its date.
+Each measurement shows its value and, under it, how it has changed since the
+set before, such as *−3.1 lb* or *+0.25 in*. Up or down is shown as it is,
+neither good nor bad. Tap **Earlier measurements** to see the older sets, and
+**Show only the latest** to fold them away. With none yet, it says *None
+taken yet.*
+
+They are shown in your own units (3.5, **Units**): pounds and inches on
+**Imperial**, kilograms and centimetres on **Metric**. Inches are shown to the
+nearest quarter, as a tape reads them.
+
+**Adding a set:**
+
+1. Open the client (4.3) and tap **Add measurements**.
+2. **Taken on** starts on today; change it if they were taken on another day.
+3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
+   (%), **Neck**, **Chest**, **Waist**, **Hips**, and **Arm**, **Thigh** and
+   **Calf**, each **Left** and **Right**. Each box shows its unit.
+4. Add a **Note** if it helps, such as where the tape went.
+5. Tap **Save**. **Cancel** leaves without saving.
+
+If nothing is filled in it says *Fill in at least one measurement.* A number no
+person could have, which is usually a slip of the finger, is caught, such as
+*Weight of 1800 doesn't look right. Check it and try again.* A day still to
+come can't be chosen.
+
+**Changing or deleting a set.** Only the trainer who took a set can change it
+(the pencil) or delete it (the bin). Deleting asks *Delete these measurements?
+Its trainers will no longer see them.*; tap **Delete**, or **Keep it** to leave
+them.
+
+To send a set to the client, attach it to a message (7.3).
+
 <div style="page-break-after: always;"></div>
 
 ---
@@ -1225,8 +1265,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 ## 7. Messages
 
 Messages is where you and your clients write to each other. Besides words, a
-message can carry pictures, videos and the programs you design for them.
-Measurements will come later.
+message can carry pictures, videos, the programs you design for them, and
+their measurements (4.8).
 
 ### 7.1 Your messages
 
@@ -1274,16 +1314,21 @@ so a reply appears without you doing anything.
      A video can be up to 100 MB.
    - **Program**: your programs for this client are listed (**…'s
      programs**). Tap one. If there are none it says *No programs for … yet.*
-   - **Measurements** says **Coming soon**: it can't be chosen yet.
+   - **Measurements**: this client's sets are listed by date (**…'s
+     measurements**), with who took each. Tap one. If there are none it says
+     *No measurements for … yet. Add them on the Clients page.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
 To take one off before sending, tap the **X** beside it.
 
-A program is sent as it is at that moment. If you change it afterwards, the
+A program, or a set of measurements, is sent as it is at that moment. If you change it afterwards, the
 copy in the message stays as it was, so your client always has what you
 sent. Tap a program in a conversation to open it laid out like the printed
 program (5.6), in its own tab, ready to print.
+
+Tap a set of measurements to open it as a page of its own, ready to print:
+each measurement, and how it changed since the set before.
 
 Tap a picture to open it full size in its own tab. A video plays where it is.
 
@@ -1325,6 +1370,7 @@ can write to them here.*
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
+| **Measurements** | A client's weight, body fat and tape measurements, one set for each day taken (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |

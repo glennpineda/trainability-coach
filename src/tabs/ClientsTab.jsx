@@ -3,6 +3,7 @@ import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, U
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
+import { Measurements } from "../clients/Measurements";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
@@ -73,6 +74,7 @@ function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, 
             </Detail>
           )}
           <Limitations clientId={c.id} onSignedOut={onSignedOut} />
+          <Measurements clientId={c.id} onSignedOut={onSignedOut} />
           {(onEdit || onArchive) && (
             <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
               {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}

@@ -375,6 +375,21 @@ const SCHEMA = [
     last_error VARCHAR(255) NULL,
     PRIMARY KEY (endpoint_hash, user_id)
   )`,
+  /* A client's body measurements (server/measurements.js; Glenn, 18 Oct
+     2026), one row per day taken, in kg, % and cm, each optional; seen by
+     all the client's trainers, changed only by the one who took them. */
+  `CREATE TABLE IF NOT EXISTS coach_measurements (
+    id VARCHAR(40) PRIMARY KEY,
+    client_id VARCHAR(64) NOT NULL,
+    trainer_id VARCHAR(64) NOT NULL,
+    trainer_name VARCHAR(120) NOT NULL DEFAULT '',
+    taken_on VARCHAR(10) NOT NULL,
+    weight REAL NULL, body_fat REAL NULL, neck REAL NULL, chest REAL NULL, waist REAL NULL, hips REAL NULL,
+    arm_l REAL NULL, arm_r REAL NULL, thigh_l REAL NULL, thigh_r REAL NULL, calf_l REAL NULL, calf_r REAL NULL,
+    note VARCHAR(1000) NOT NULL DEFAULT '',
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS coach_conversations (
     id VARCHAR(40) PRIMARY KEY,
     trainer_id VARCHAR(64) NOT NULL,

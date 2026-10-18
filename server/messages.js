@@ -154,6 +154,22 @@ export async function programAttachment(owner, program, units) {
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
+/**
+ * A set of measurements kept as a copy, waiting to be sent (measurements.js):
+ * the day, each value in metric with the trainer's units to show it in, and
+ * the set before it for how each has changed, so what the client reads stays
+ * as it was sent.
+ */
+export async function measurementsAttachment(owner, { set, previous, clientName, units }) {
+  const data = { measurementId: set.id, clientName, takenOn: set.takenOn, takenBy: set.takenBy, note: set.note, values: set.values,
+    previous: previous ? { takenOn: previous.takenOn, values: previous.values } : null, units };
+  const id = await insertWithNewId("attachment", (newId) => run(
+    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, 'measurements', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, `Measurements, ${set.takenOn}`, JSON.stringify(data), now()]));
+  return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
+}
+
 function shapeAttachment(r, { full = false } = {}) {
   const out = { id: r.id, kind: r.kind, name: r.name, mime: r.mime, bytes: Number(r.bytes) || 0,
     width: r.width == null ? null : Number(r.width), height: r.height == null ? null : Number(r.height) };
@@ -162,6 +178,8 @@ function shapeAttachment(r, { full = false } = {}) {
     const d = parse(r.data);
     out.program = full ? d : { name: d.name, goalLabel: d.goalLabel, kindLabel: d.kindLabel, days: d.days?.length || 0, programId: d.programId };
   }
+  /* Small enough to come whole every time. */
+  if (r.kind === "measurements") out.measurements = parse(r.data);
   return out;
 }
 const parse = (s) => { try { return JSON.parse(s || "{}"); } catch { return {}; } };

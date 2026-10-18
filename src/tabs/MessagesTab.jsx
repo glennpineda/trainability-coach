@@ -3,6 +3,7 @@ import { ArrowUp, ChevronLeft, ClipboardList, Loader2, MessageCircle, Paperclip,
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
+import { MEASURES, shownText } from "../lib/measures";
 
 /*
  * Messages (Glenn, 18 Oct 2026: "Let's do messages now, apart from basic
@@ -10,7 +11,7 @@ import { uploadAttachment, fileUrl } from "../messages/upload";
  * and even measurements (we are adding in the future)"). The trainer's
  * side: their conversations, newest first, and one client's opened, with a
  * box to write in and a paperclip for a picture or video, a program, and
- * measurements (Coming soon). The client reads and answers on Studio's
+ * measurements (a set from the client's details). The client reads and answers on Studio's
  * client page; Coach keeps the messages (server/messages.js).
  *
  * Studio has no messaging to copy. The bubbles are Billy's panel's (the
@@ -189,8 +190,28 @@ function Attachment({ a }) {
       </a>
     );
   }
+  if (a.kind === "measurements") {
+    const d = a.measurements || {};
+    /* Weight, body fat and waist first, the ones a client looks for. */
+    const shown = MEASURES.filter(m => d.values?.[m.key] != null).slice(0, 3).map(m => `${m.label} ${shownText(m, d.values[m.key], d.units)}`);
+    return (
+      <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
+        className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
+        <span className="flex-none w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--accent-soft)" }}>
+          <Ruler size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
+        </span>
+        <span className="min-w-0">
+          <span className="block font-medium truncate" style={{ color: "var(--ink)" }}>Measurements{d.takenOn ? ` · ${shortDate(d.takenOn)}` : ""}</span>
+          <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>{shown.join(" · ")}</span>
+        </span>
+      </a>
+    );
+  }
   return null;
 }
+
+const shortDate = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+const setDate = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 
 function Bubble({ m, mine, seen }) {
   return (
@@ -290,6 +311,19 @@ function Composer({ clientId, first, onSent }) {
     try { update(key, { att: await apiRequest("POST", "/attachments/program", { programId: p.id }), progress: 1 }); }
     catch (err) { update(key, { error: err.message }); }
   }
+  /* The client's measurements, newest first, to attach one set. */
+  const [sets, setSets] = useState(null);
+  function openMeasurements() {
+    setMenu("measurements");
+    apiRequest("GET", `/clients/${encodeURIComponent(clientId)}/measurements`).then(d => setSets(d.measurements || [])).catch(() => setSets([]));
+  }
+  async function attachMeasurements(set) {
+    setMenu(null);
+    const key = `${Date.now()}-${set.id}`;
+    setItems(xs => [...xs, { key, kind: "measurements", name: `Measurements, ${setDate(set.takenOn)}`, progress: 0 }]);
+    try { update(key, { att: await apiRequest("POST", "/attachments/measurements", { measurementId: set.id }), progress: 1 }); }
+    catch (err) { update(key, { error: err.message }); }
+  }
   const remove = (key) => setItems(xs => { const x = xs.find(y => y.key === key); if (x?.preview) URL.revokeObjectURL(x.preview); return xs.filter(y => y.key !== key); });
 
   async function send(e) {
@@ -318,12 +352,14 @@ function Composer({ clientId, first, onSent }) {
             <span key={x.key} className="cx-billy-file">
               {x.preview ? <img src={x.preview} alt="" className="w-8 h-8 rounded-md object-cover flex-none" />
                 : <span className="w-8 h-8 rounded-md flex items-center justify-center flex-none" style={{ background: "var(--accent-soft)" }}>
-                    {x.kind === "program" ? <ClipboardList size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> : <ImageIcon size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />}
+                    {x.kind === "program" ? <ClipboardList size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
+                      : x.kind === "measurements" ? <Ruler size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
+                      : <ImageIcon size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />}
                   </span>}
               <span className="min-w-0">
                 <span className="block truncate max-w-[10rem]">{x.name || (x.kind === "video" ? "Video" : "Picture")}</span>
                 <span className="block text-[11px]" style={{ color: x.error ? "var(--ember)" : "var(--iron)" }}>
-                  {x.error || (x.att ? (x.kind === "program" ? "Program" : x.kind === "video" ? "Video" : "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
+                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
                 </span>
               </span>
               <button type="button" className="cx-icon-btn" aria-label={`Remove ${x.name}`} onClick={() => remove(x.key)}><X size={14} aria-hidden="true" /></button>
@@ -351,7 +387,14 @@ function Composer({ clientId, first, onSent }) {
             <>
               <MenuItem icon={ImageIcon} label="Picture or video" onClick={() => pick.current?.click()} />
               <MenuItem icon={ClipboardList} label="Program" onClick={openPrograms} />
-              <MenuItem icon={Ruler} label="Measurements" note="Coming soon" disabled />
+              <MenuItem icon={Ruler} label="Measurements" onClick={openMeasurements} />
+            </>
+          ) : menu === "measurements" ? (
+            <>
+              <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>{first}&apos;s measurements</div>
+              {sets === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+                : sets.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No measurements for {first} yet. Add them on the Clients page.</p>
+                : sets.map(m => <MenuItem key={m.id} icon={Ruler} label={setDate(m.takenOn)} note={`Taken by ${m.mine ? "you" : m.takenBy}`} onClick={() => attachMeasurements(m)} />)}
             </>
           ) : (
             <>

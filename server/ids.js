@@ -28,7 +28,9 @@ export const PREFIX = {
   /* Glenn's tags, 18 Oct 2026 (Messages). */
   conversation: "cnv",   // a conversation: a trainer and a client, more people one day
   message: "msg",        // one message in a conversation
-  attachment: "att",     // a picture, video, program (or, later, measurements) on a message
+  attachment: "att",     // a picture, video, program or measurements on a message
+  /* Glenn's tag, 18 Oct 2026 (Measurements). */
+  measurement: "msr",    // one day's body measurements for one client
 };
 
 const DIGITS = "0123456789";

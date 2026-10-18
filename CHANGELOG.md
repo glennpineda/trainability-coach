@@ -18,12 +18,13 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   cards for Clients, Programs and Messages, with how many clients you have
   and how many messages are waiting.
 - **Messages.** Write to a client from the Messages tab and attach pictures,
-  videos (up to 100 MB) and their programs; a program goes as a copy of it as
-  it was, which opens laid out like the printed one. The client is emailed
+  videos (up to 100 MB), their programs and their measurements; a program or
+  a set of measurements goes as a copy of it as it was, which opens as a page
+  ready to print. The client is emailed
   that there is a message (not what it says, and once for a run of them) and
   reads and answers it on their page in Trainability. A red number on the
-  Messages button counts the replies you haven't read. Measurements are
-  listed as Coming soon. Messages from Coach are kept in Coach.
+  Messages button counts the replies you haven't read. Messages from Coach
+  are kept in Coach.
 - **Today, on Home.** Your own sessions from Trainability's schedule, today
   and over the next 7 days, laid out as Studio's Today: the time and length,
   the client, where, and First session, New client or Nothing booked after
@@ -90,6 +91,12 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   the header, the sign-in screen, the browser tab and the emails; a slightly
   bigger mark in the icon. Remove Coach from your home screen and add it
   again to see the new icon.
+- **Measurements.** On a client's details, under Limitations: weight, body
+  fat, and neck, chest, waist, hips, and arm, thigh and calf left and right,
+  one set per day, in your own units, with how each changed since the set
+  before. Every trainer of the client sees them; only the one who took a set
+  can change or delete it. A set can be attached to a message, and opens as a
+  page ready to print.
 - **Notifications.** Turn them on for a phone or computer from the account
   menu, as in Studio, and be told when a client writes to you in Messages:
   who, and the start of what they wrote. A tap opens the conversation. Send a

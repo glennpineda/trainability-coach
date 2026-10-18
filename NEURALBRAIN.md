@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Measurements: a client's body measurements, kept, compared and sent in Messages** (18 Oct 2026; Glenn: "Go with 2", after "What's next?" offered measurements as the attachment he had said was coming). Build 1.0.63. Not from Next up. **Studio first**: Studio has no body measurements (a search of its server and src: only unrelated words), so this was designed here, in the shape of Coach's limitations. **Decisions, asked one at a time**: (1) which: offered the usual set (recommended), the usual set left and right, or just weight and body fat; Glenn chose **"Usual set, left and right"**: weight, body fat %, neck, chest, waist, hips, and arm, thigh and calf each left and right, plus a note, each optional. (2) the id tag: offered msr (recommended) or bdy; Glenn chose **msr**. (3) who sees them: offered all the client's trainers, as limitations (recommended), or only the one who took them, as programs; Glenn chose **all the client's trainers**, changed and deleted only by the trainer who took a set. **Shared rules** (`src/lib/measures.js`, used by the page and the server, as units.js is): the twelve measures with their words, kind (mass, percent, length) and a person's plausible range in metric; kept in kg and cm to two decimal places, shown in the trainer's units (Units in the account menu): lb to a tenth, inches to the nearest quarter as a tape reads them, metric and % to a tenth. **What turned out differently**: the first build stored to one decimal of a centimetre or kilogram, so 14.25 in came back as 14.3 and 186.4 lb as 186.3; two decimals made what was typed come back as typed, and a set typed in centimetres then read as 36.81 in until inches were shown to the nearest quarter (36.75). **Server** (`server/measurements.js`): table `coach_measurements` (one row per day taken; weight, body_fat, neck, chest, waist, hips, arm_l, arm_r, thigh_l, thigh_r, calf_l, calf_r as REAL, note, the trainer and their name), `check` (a day that has been and not before 1990, at least one value, each a number inside its range in the trainer's words, "Weight of 1800 doesn't look right. Check it and try again."), add, update and remove for the trainer who took the set ("Only the trainer who took them can change them." otherwise). Routes `GET`/`POST /api/clients/:client/measurements` (the client must be on the trainer's list, as limitations), `PUT`/`DELETE /api/measurements/:id`, each answering the list newest first with the trainer's units. A Coach account's client moved into Studio takes its measurements to Studio's id (`coach-clients.moved`), and a linked Coach account's sets become the Studio user's (`accounts.link`). **Page**: `src/clients/Measurements.jsx`, under Limitations on a client's details and laid out as they are: the latest set ("Latest: Oct 18, 2026", who took it, "changes since …"), each value with its change since the set before in grey (up or down is shown as a fact, not as good or bad), one column on a phone and two from `sm` (two on a phone cut "Arm, right" short), the note, Earlier measurements (n) to open the rest, Add measurements opening a form (Taken on, today by default; Weight, Body fat, Neck, Chest, Waist, Hips; Arm, Thigh and Calf each Left and Right; Note; each box with its unit), the pencil and bin on the trainer's own sets, and Limitations' red inline confirmation for a delete. **In Messages**: the paperclip's Measurements, until now Coming soon, lists the client's sets by date and who took them ("No measurements for … yet. Add them on the Clients page." with none); a set is attached as a copy (`messages.measurementsAttachment`, kind `measurements`, with the set before it for the changes and the trainer's units), shown in the thread as a card "Measurements · Oct 18" with the first three values, and opening `/print/sent/<att>` as a sheet of its own (`src/clients/PrintMeasurements.jsx`, through PrintProgram's sent route): each measurement, its value and the change since the set before, black on white, ready to print. Studio's client page will get the same copy through the client link. **Tested** against the stand-in Studio, with Glenn (Imperial) and Tess (Metric) on one client: at the API (an empty set, a future day and a slip refused; pounds and inches kept as kilograms and centimetres and back again exactly; another trainer's set seen but not changed or deleted; an attachment carrying the set before it); in Chromium at phone width (the section with sets by two trainers and their changes, the form, a new set saved in inches and pounds, the attach menu, the card in a thread, and the printed sheet at 800 wide); no page errors. **Not done**: Billy doesn't read measurements yet; no chart of a measurement over time; Studio's client page doesn't show them until its inbox is built. Files: `src/lib/measures.js`, `server/measurements.js`, `src/clients/Measurements.jsx`, `src/clients/PrintMeasurements.jsx` (new), `server/index.js`, `server/db.js`, `server/ids.js` (msr), `server/messages.js`, `server/coach-clients.js`, `server/accounts.js`, `src/tabs/ClientsTab.jsx`, `src/tabs/MessagesTab.jsx`, `src/programs/PrintProgram.jsx`, MANUAL.md (4.8 new, 7 and 7.3, Words), CHANGELOG.md.
+
 - **Notifications on a phone or computer, Studio's web push** (18 Oct 2026; Glenn: "Enable in-app push notifications here, put in the profile settings somewhere for now"). Build 1.0.62. Not from Next up. **Studio first**: its `server/push.js`, `public/push-sw.js`, `src/components/PushNotifications.jsx` and the five `/api/push` routes (main). Copied: VAPID keys from the environment and off without them (no row on screen either); the endpoint checked against the push services' own hosts before it is stored (Google's FCM, Mozilla, Apple, Windows), with `PUSH_FAKE_ORIGIN` for a fake one in tests; per-device subscriptions with `kinds`; subscribe, look up, turn off (letting the browser's own subscription go only when nobody else on it still wants it), and Send a test; `deliver` encrypting and signing with `web-push` (3.6.7, Studio's version, now a dependency) and posting itself with a 10-second timeout, a 24-hour TTL and the tag as the topic; a 404 or 410 deleting the row, anything else counted; `MESSAGES_OFF` stopping every push; the service worker doing nothing but notifications (no fetch, no cache), registered only when On is tapped, a tap bringing an open window forward and telling it where to go (`push-open`) or opening one; the dialog's words ("Notifications weren't allowed, so nothing changed.", "Sent. It should arrive in a few seconds.", the iPhone Home Screen and blocked-in-settings notes, "Messages are switched off on this server…"), the browser's own Allow box only after On is tapped, never on load. **Coach's**: one kind, `client_message`, "Messages from clients — When a client writes to you in Messages: who, and the start of what they wrote." It is pushed from the client link's reply route (`POST /api/client-link/conversations/:id/messages`) to the conversation's trainer: the client's name as the title, the first 140 characters as the body, `/?open=messages&client=<id>` as the address, `msg-<conversation>` as the tag so a run of messages is one entry. A Coach account has no clients who can write yet, so it is offered nothing (`kindsFor`) and has no menu line. Table `coach_push_subscriptions` keyed by the endpoint's hash and the trainer together, so a row needs no id and no new tag (Studio's has an id, `psh`). "The profile settings" is the account menu (Coach has no Profile tab): a **Notifications** line under Accessibility, "On for this device" / "Off on this device", opening `src/chrome/NotificationsDialog.jsx` in Coach's switch rather than Studio's chips, with the one kind written out under it (Studio shows a single kind's detail and ticks for several, kept for later kinds). **Added beyond Studio**: the browser's request to its push service is given up after 20 seconds with "This device couldn't reach its notification service. Check the connection and try again.", because in this sandbox it never answered and the button spun for good. `Shell.jsx` opens Messages on the client named in the address (from scratch, read once and tidied off the address bar), or on a `push-open` message from the worker, starting the Messages tab again so it lands on that conversation. `messagesOff` is now exported from `server/email.js`. **Tested** with a pair of VAPID keys made for the test and a fake push service on this machine: at the API (an address that isn't a push service's refused; subscribe, an unknown kind refused, look up, Send a test, off; a client's reply through the client link pushed, and the fake service's copy decrypted with the subscription's keys to `{"title":"Avery Stone","body":"Running 10 minutes late today, sorry! Traffic on the bridge.","url":"/?open=messages&client=c1","tag":"msg-…"}`; a Coach account offered nothing), and in Chromium at phone width (the menu line, the dialog Off, then On, Send a test arriving at the fake service, the line saying On, then Off; `/?open=messages&client=c1` opening Avery's conversation). The test Chromium can't reach Google's push service from the sandbox, so its subscription was a stand-in pointing at the fake service: the browser's own subscribe, a real phone's notification and its tap were not seen. **Glenn's to do** on the host: set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (`npx web-push generate-vapid-keys`) and, if `APP_ORIGIN` isn't https, `VAPID_SUBJECT`; on the iPhone, Coach from the Home Screen. Files: `server/push.js`, `public/push-sw.js`, `src/chrome/NotificationsDialog.jsx` (new), `server/index.js`, `server/db.js`, `server/email.js`, `src/chrome/AccountMenu.jsx`, `src/Shell.jsx`, `package.json`, `package-lock.json`, MANUAL.md (3.5's Notifications, 7.1), README.md (Notifications), CHANGELOG.md.
 
 - **Home's band fades into the page, under the cards** (18 Oct 2026; Glenn, with a screenshot of Home in dark: "That is not a gradient.. that's a sharp border", then "Can you put the today contents on top of that gradient band. Otherwise, frost the panels so you can see them"). Build 1.0.61. Not from Next up. Build 1.0.60 shaded the band left to right but it still stopped in a hard line where the page began, half way down the Today card. Now it runs on down behind the first card and fades out: `.cx-band` (`src/index.css`) masks it from solid at 45% of its height to clear at its foot, so it melts into the page and the drifting hexagons, with no edge; its bottom padding went from `pb-16` to `pb-32`, and the cards' pull-up from `-mt-10` to `-mt-[6.5rem]`, so as much band shows below the greeting as before. **What went wrong first**: a mask makes the band a layer of its own, which drew it over the cards that come after it, washing the Today card out (the screenshot that brought the second message); the cards' column is now `relative`, which puts it back on top. That answered "put the today contents on top", so frosting the cards wasn't needed. **Tested** in Chromium against the stand-in: Home at phone width in Default light and dark and the four themes, and at 1280 wide: cards solid over the band, the band fading with no line; no page errors. MANUAL 3.4 says it fades into the page. Files: `src/tabs/HomeTab.jsx`, `src/index.css`, MANUAL.md.
@@ -268,6 +270,7 @@ of the app gets its own chapter here as it arrives.
    - [4.5 Archived clients](#45-archived-clients)
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
+   - [4.8 A client's measurements](#48-a-clients-measurements)
 5. [Designing programs](#5-designing-programs)
    - [5.1 Starting a program](#51-starting-a-program)
    - [5.2 Adding exercises](#52-adding-exercises)
@@ -1157,6 +1160,45 @@ trainer who wrote a limitation can delete it: tap the bin beside it. A pale
 red box asks *Delete this limitation?*; tap **Delete**, or **Keep it** to
 leave it.
 
+#### 4.8 A client's measurements
+
+Under **Limitations**, a client's details show their **Measurements**: one set
+for each day they were taken. Every trainer of the client sees them, with who
+took each set.
+
+**Reading them.** The newest set comes first, headed **Latest:** and its date.
+Each measurement shows its value and, under it, how it has changed since the
+set before, such as *−3.1 lb* or *+0.25 in*. Up or down is shown as it is,
+neither good nor bad. Tap **Earlier measurements** to see the older sets, and
+**Show only the latest** to fold them away. With none yet, it says *None
+taken yet.*
+
+They are shown in your own units (3.5, **Units**): pounds and inches on
+**Imperial**, kilograms and centimetres on **Metric**. Inches are shown to the
+nearest quarter, as a tape reads them.
+
+**Adding a set:**
+
+1. Open the client (4.3) and tap **Add measurements**.
+2. **Taken on** starts on today; change it if they were taken on another day.
+3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
+   (%), **Neck**, **Chest**, **Waist**, **Hips**, and **Arm**, **Thigh** and
+   **Calf**, each **Left** and **Right**. Each box shows its unit.
+4. Add a **Note** if it helps, such as where the tape went.
+5. Tap **Save**. **Cancel** leaves without saving.
+
+If nothing is filled in it says *Fill in at least one measurement.* A number no
+person could have, which is usually a slip of the finger, is caught, such as
+*Weight of 1800 doesn't look right. Check it and try again.* A day still to
+come can't be chosen.
+
+**Changing or deleting a set.** Only the trainer who took a set can change it
+(the pencil) or delete it (the bin). Deleting asks *Delete these measurements?
+Its trainers will no longer see them.*; tap **Delete**, or **Keep it** to leave
+them.
+
+To send a set to the client, attach it to a message (7.3).
+
 <div style="page-break-after: always;"></div>
 
 ---
@@ -1450,8 +1492,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 ### 7. Messages
 
 Messages is where you and your clients write to each other. Besides words, a
-message can carry pictures, videos and the programs you design for them.
-Measurements will come later.
+message can carry pictures, videos, the programs you design for them, and
+their measurements (4.8).
 
 #### 7.1 Your messages
 
@@ -1499,16 +1541,21 @@ so a reply appears without you doing anything.
      A video can be up to 100 MB.
    - **Program**: your programs for this client are listed (**…'s
      programs**). Tap one. If there are none it says *No programs for … yet.*
-   - **Measurements** says **Coming soon**: it can't be chosen yet.
+   - **Measurements**: this client's sets are listed by date (**…'s
+     measurements**), with who took each. Tap one. If there are none it says
+     *No measurements for … yet. Add them on the Clients page.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
 To take one off before sending, tap the **X** beside it.
 
-A program is sent as it is at that moment. If you change it afterwards, the
+A program, or a set of measurements, is sent as it is at that moment. If you change it afterwards, the
 copy in the message stays as it was, so your client always has what you
 sent. Tap a program in a conversation to open it laid out like the printed
 program (5.6), in its own tab, ready to print.
+
+Tap a set of measurements to open it as a page of its own, ready to print:
+each measurement, and how it changed since the set before.
 
 Tap a picture to open it full size in its own tab. A video plays where it is.
 
@@ -1550,6 +1597,7 @@ can write to them here.*
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
+| **Measurements** | A client's weight, body fat and tape measurements, one set for each day taken (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
