@@ -951,6 +951,17 @@ neither good nor bad. Tap **Earlier measurements** to see the older sets, and
 **Show only the latest** to fold them away. With none yet, it says *None
 taken yet.*
 
+**Seeing progress.** With sets on two days or more, tap **Show progress**
+for a chart. Tap a measurement above it (**Weight**, **Waist**, **Waist to
+hip**, **Blood pressure** and so on) to chart that one; only those taken on
+two days or more are there. The line runs from the first day to the last,
+spaced by the time between them. It opens on the latest, written above the
+chart, such as *Oct 18, 2026: 183.2 lb*; tap any point to read its day and
+number instead. **Blood pressure** draws both numbers: the top as a solid
+line and the bottom as a dashed one, each named at its end. Where two sets
+were taken on one day, the later one counts. Tap **Hide progress** to put the
+chart away.
+
 They are shown in your own units (3.5, **Units**): pounds and inches on
 **Imperial**, kilograms and centimetres on **Metric**. Inches are shown to the
 nearest quarter, as a tape reads them.
@@ -1027,8 +1038,9 @@ with *Rated for women aged 26–35*. Under it is how it changed since the same
 test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
 test a lower heart rate is fitter, as is less velocity loss; for the rest a
 higher number is. Tap
-**Earlier results** to see the older ones, and **Show only the latest** to
-fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
+**Earlier results** to see the older ones, with a chart of them all above
+them (tap a point to read its day and result), and **Show only the latest**
+to fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
 rated: the tables start at 18.
 
 **Adding a result:**

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
+import { ChartLine, ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { MEASURES, toShown, unitOf, rowsOf, previousOf } from "../lib/measures";
+import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip } from "../lib/measures";
+import { Trend } from "./Trend";
 
 /*
  * A client's body measurements (Glenn, 18 Oct 2026): weight, body fat, and
@@ -32,6 +33,56 @@ function Values({ set, previous, units }) {
         </div>
       ))}
     </dl>
+  );
+}
+
+/* What can be charted, in the order the sets show them: each measurement
+   (blood pressure as its two numbers on one chart) and the waist-to-hip
+   ratio, with the newest set of each day. Only those taken on two days or
+   more. */
+function charts(list, units) {
+  const byDay = new Map();
+  /* Oldest first, so a day's later set wins for what it has; what it left
+     empty keeps the earlier one's. */
+  for (const set of [...list].reverse()) {
+    const had = byDay.get(set.takenOn) || {};
+    byDay.set(set.takenOn, { ...had, ...Object.fromEntries(Object.entries(set.values).filter(([, v]) => v != null)) });
+  }
+  const days = [...byDay.keys()].sort();
+  const pts = (get) => days.map(date => ({ date, value: get(byDay.get(date)) })).filter(p => p.value != null);
+  const out = [];
+  for (const m of MEASURES) {
+    if (m.key === "bpDia") continue;
+    if (m.key === "bpSys") {
+      const top = pts(v => (v.bpSys != null && v.bpDia != null ? Math.round(v.bpSys) : null));
+      const bottom = pts(v => (v.bpSys != null && v.bpDia != null ? Math.round(v.bpDia) : null));
+      out.push({ key: "bp", label: "Blood pressure", series: [{ name: "Top", points: top }, { name: "Bottom", points: bottom }], format: (v) => `${v} mmHg`, unit: "mmHg" });
+      continue;
+    }
+    const u = unitOf(m, units);
+    out.push({ key: m.key, label: m.label, series: [{ name: m.label, points: pts(v => toShown(m, v[m.key], units)) }], format: (v) => (u === "%" ? `${v}%` : `${v} ${u}`) });
+    if (m.key === "hips") out.push({ key: "waistToHip", label: "Waist to hip", series: [{ name: "Waist to hip", points: pts(v => waistToHip(v)) }], format: (v) => v.toFixed(2) });
+  }
+  return out.filter(c => c.series[0].points.length >= 2);
+}
+
+/* The progress chart, with a choice of what it shows. */
+function Progress({ list, units }) {
+  const options = charts(list, units);
+  const [key, setKey] = useState(options[0]?.key);
+  const c = options.find(o => o.key === key) || options[0];
+  if (!c) return <p className="text-sm mt-2" style={{ color: "var(--iron)" }}>A chart needs measurements taken on two days or more.</p>;
+  return (
+    <div className="mt-2">
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Which measurement to chart">
+        {options.map(o => (
+          <button key={o.key} type="button" aria-pressed={o.key === c.key} onClick={() => setKey(o.key)}
+            className="cx-chip text-xs px-2.5 py-1 rounded-full border"
+            style={o.key === c.key ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" } : { background: "var(--chalk)", color: "var(--ink)", borderColor: "var(--iron-line)" }}>{o.label}</button>
+        ))}
+      </div>
+      <Trend series={c.series} format={c.format} label={`${c.label} over time`} />
+    </div>
   );
 }
 
@@ -90,6 +141,7 @@ export function Measurements({ clientId, onSignedOut }) {
   const [editing, setEditing] = useState(null);   // "new", or a set's id
   const [deleting, setDeleting] = useState(null);
   const [showAll, setShowAll] = useState(false);
+  const [chart, setChart] = useState(false);
 
   const fail = useCallback((err) => {
     if (err.status === 401) onSignedOut?.();
@@ -165,11 +217,17 @@ export function Measurements({ clientId, onSignedOut }) {
             );
           })}
           {rest.length > 0 && (
+            <button type="button" className="cx-link text-sm mt-2 mr-4" aria-expanded={chart} onClick={() => setChart(s => !s)}>
+              <ChartLine size={14} aria-hidden="true" /> {chart ? "Hide progress" : "Show progress"}
+            </button>
+          )}
+          {rest.length > 0 && (
             <button type="button" className="cx-link text-sm mt-2" aria-expanded={showAll} onClick={() => setShowAll(s => !s)}>
               <ChevronDown size={14} aria-hidden="true" style={{ transform: showAll ? "rotate(180deg)" : undefined }} />
               {showAll ? "Show only the latest" : `Earlier measurements (${rest.length})`}
             </button>
           )}
+          {chart && rest.length > 0 && <Progress list={list} units={units} />}
 
           {editing === "new" ? (
             <Form units={units} busy={busy} onCancel={() => setEditing(null)}

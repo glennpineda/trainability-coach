@@ -112,6 +112,10 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   Reactive Strength Index; a wall sit or plank held; and velocity loss from a
   bar-speed sensor. Each shows how it changed since the same test (and
   exercise) before, and can be sent in a message and printed.
+- **Progress charts.** Show progress, under a client's measurements, charts
+  any measurement taken on two days or more (blood pressure's two numbers
+  together); opening a fitness test's earlier results charts that test. Tap a
+  point to read its day and number.
 - **Notifications.** Turn them on for a phone or computer from the account
   menu, as in Studio, and be told when a client writes to you in Messages:
   who, and the start of what they wrote. A tap opens the conversation. Send a

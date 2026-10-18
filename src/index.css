@@ -419,3 +419,7 @@
   html, body { background: #fff !important; }
   .cx-print { padding: 0 !important; min-height: 0 !important; }
 }
+
+/* A point on a progress chart (src/clients/Trend.jsx): the button over it
+   shows where focus is, and nothing otherwise. */
+.cx-chart-hit:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }

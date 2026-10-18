@@ -4,6 +4,7 @@ import { apiRequest } from "../lib/api";
 import { TESTS, TEST_GROUPS, VO2_SOURCES, NEEDS_WHO, JUMP_STYLES, JUMP_TOOLS, HOLDS, LIFT, HEIGHT, BOX,
   ageOn, sexOf, clockOf, describe, changeOf, seriesOf, titleOf, brzycki } from "../lib/fitness-tests";
 import { LibraryPicker } from "../tabs/ExercisesTab";
+import { Trend } from "./Trend";
 import { MEASURES, toShown, unitOf } from "../lib/measures";
 
 /*
@@ -277,6 +278,19 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
   );
 }
 
+/* A test's results as a chart, the newest of each day: in the trainer's
+   units, a hold in minutes and seconds. */
+function TestTrend({ results, units }) {
+  const k = results[0].kind;
+  const measure = k === "onerm" ? LIFT : k === "jump" ? HEIGHT : null;
+  const byDay = new Map();
+  for (const t of [...results].reverse()) byDay.set(t.takenOn, measure ? toShown(measure, t.result, units) : t.result);
+  const points = [...byDay].sort(([a], [b]) => (a < b ? -1 : 1)).map(([date, value]) => ({ date, value }));
+  const unit = k === "step" ? " bpm" : k === "vloss" ? "%" : measure ? ` ${unitOf(measure, units)}` : k === "rsi" ? "" : " ml/kg/min";
+  const format = k === "hold" ? (v) => clockOf(v) : k === "rsi" ? (v) => `RSI ${v.toFixed(2)}` : (v) => `${v}${unit}`;
+  return <Trend series={[{ name: titleOf(results[0]), points }]} format={format} tick={k === "hold" ? clockOf : undefined} label={`${titleOf(results[0])} over time`} />;
+}
+
 /* One result, as on the client's details and a message's card. */
 export function TestResult({ t, previous, units }) {
   const d = describe(t, units);
@@ -388,6 +402,7 @@ export function FitnessTests({ client, onSignedOut }) {
               <div key={k}>
                 {heading && <div className="text-xs font-medium mt-3" style={{ color: "var(--ink-soft)" }}>{heading}</div>}
                 {row(ofKind[0], true)}
+                {isOpen && <TestTrend results={ofKind} units={units} />}
                 {isOpen && ofKind.slice(1).map(t => row(t))}
                 {ofKind.length > 1 && (
                   <button type="button" className="cx-link text-sm mt-1.5" aria-expanded={isOpen}
