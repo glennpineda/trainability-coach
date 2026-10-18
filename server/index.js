@@ -168,6 +168,76 @@ app.get("/api/clients", async (req, res) => {
   }
 });
 
+/*
+ * A new client, added from Coach and kept in Studio (Glenn, 18 Oct 2026:
+ * "The Coach trainer should be able to add new clients from Coach … I'm ok
+ * saving the clients on Studio's db"). Coach keeps no copy: Studio's own
+ * routes, with the trainer's own session, the way Studio's Add client does
+ * it. First /clients/match by email and phone; somebody Studio already has is
+ * put on this trainer's list (/clients/:id/link, which also brings back one
+ * they had archived) rather than made twice (Glenn: "Link automatically"),
+ * when it is the same email; a phone alone is put to the trainer,
+ * and anybody else is made (/clients) on this trainer's list. Studio's checks
+ * (the four things a client must have, a complete email, a phone it can
+ * text) and its refusals come back as they are. The answer is the trainer's
+ * list again, with which client it was and what happened.
+ */
+app.post("/api/clients", async (req, res) => {
+  try {
+    const user = await signedIn(req);
+    const b = req.body || {};
+    const f = {
+      firstName: String(b.firstName || "").trim().slice(0, 90), lastName: String(b.lastName || "").trim().slice(0, 90),
+      email: String(b.email || "").trim().slice(0, 190), phone: String(b.phone || "").trim().slice(0, 40),
+      ...(b.dateOfBirth ? { dateOfBirth: String(b.dateOfBirth).slice(0, 10) } : {}),
+      ...(b.pronouns ? { pronouns: String(b.pronouns).trim().slice(0, 30) } : {}),
+    };
+    const ask = async (route, body) => {
+      const r = await studio(req, route, { method: "POST", body });
+      if (!r.ok) throw new StudioRefused(r.status, await r.text());
+      return r.json();
+    };
+    /* Studio's four, asked first in its words, so a half-filled form isn't
+       matched on what little it has. */
+    const missing = [["firstName", "First name"], ["lastName", "Last name"], ["email", "Email"], ["phone", "Phone"]].filter(([k]) => !f[k]).map(([, l]) => l);
+    if (missing.length) {
+      const list = missing.length < 2 ? missing[0] : `${missing.slice(0, -1).join(", ")} and ${missing.at(-1)}`;
+      return res.status(400).json({ error: `${list} ${missing.length === 1 ? "is" : "are"} required`, code: "missing_fields", fields: missing });
+    }
+    let done, clientId;
+    const { match } = await ask("/clients/match", { email: f.email, phone: f.phone });
+    /* Linked on its own only when the email is the same: a phone alone is
+       often a family's or twins', and linking the wrong person would show
+       this trainer somebody else's record. */
+    const sameEmail = !!match?.email && match.email.toLowerCase() === f.email.toLowerCase();
+    if (match?.id && !sameEmail) {
+      return res.status(409).json({ code: "phone_taken", name: `${match.firstName || ""} ${match.lastName || ""}`.trim(),
+        error: `${`${match.firstName || ""} ${match.lastName || ""}`.trim() || "Another client"} already has that phone number in Studio. If this is them, use the email they have there; if it's someone else, use a different phone number.` });
+    }
+    if (match?.id) {
+      const mine = (match.trainerIds || []).includes(user.id);
+      const archivedHere = (match.archivedBy || []).includes(user.id);
+      if (mine && !archivedHere) {
+        done = "already";
+      } else {
+        await ask(`/clients/${encodeURIComponent(match.id)}/link`, { trainerId: user.id, email: f.email, phone: f.phone });
+        done = mine ? "back" : "linked";
+      }
+      clientId = match.id;
+    } else {
+      const before = new Set((await myClients(req, user)).map(c => c.id));
+      await ask("/clients", f);
+      clientId = (await myClients(req, user)).find(c => !before.has(c.id))?.id || null;
+      done = "added";
+    }
+    res.set("Cache-Control", "private, no-store");
+    res.json({ done, clientId, clients: await myClients(req, user) });
+  } catch (err) {
+    if (err instanceof StudioRefused) return res.status(err.status).type("application/json").send(err.body);
+    unreachable(res, "POST /clients", err);
+  }
+});
+
 /* The trainer's equipment, the first part of their personal memory
    (server/equipment.js). Each person's own: the trainer is whoever Studio
    says is signed in, never an id the browser sends. */

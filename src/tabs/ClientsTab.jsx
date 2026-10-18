@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, ExternalLink } from "lucide-react";
-import { STUDIO_URL } from "../lib/api";
+import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
@@ -79,12 +78,65 @@ function ClientRow({ client: c, open, onToggle, onSignedOut }) {
   );
 }
 
+/* Adding a client: Studio's four things a client must have (first and last
+   name, email, phone), and a birthday and pronouns if known. Kept in Studio;
+   somebody Studio already has, by the same email, goes on this trainer's
+   list instead of being made twice (server/index.js, POST /api/clients). */
+function AddClient({ onAdd, onDone, onCancel }) {
+  const [f, setF] = useState({ firstName: "", lastName: "", email: "", phone: "", dateOfBirth: "", pronouns: "" });
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const set = (k) => (e) => setF(d => ({ ...d, [k]: e.target.value }));
+  const lab = (name, el) => <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>{name}{el}</label>;
+  const input = (k, props = {}) => <input className="cx-input" value={f[k]} onChange={set(k)} style={{ color: "var(--ink)" }} {...props} />;
+  const save = async (e) => {
+    e.preventDefault();
+    setBusy(true); setError("");
+    try {
+      onDone(await onAdd(f), `${f.firstName.trim()} ${f.lastName.trim()}`.trim());
+    } catch (err) {
+      setError(err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "That client couldn't be added. Try again.");
+    } finally { setBusy(false); }
+  };
+  return (
+    <form className="cx-card p-4 mb-4 grid gap-3" onSubmit={save}>
+      <h2 className="cx-display text-xl">Add a client</h2>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {lab("First name", input("firstName", { required: true, maxLength: 90, autoComplete: "off" }))}
+        {lab("Last name", input("lastName", { required: true, maxLength: 90, autoComplete: "off" }))}
+        {lab("Email", input("email", { required: true, type: "email", maxLength: 190, autoComplete: "off" }))}
+        {lab("Phone", input("phone", { required: true, type: "tel", maxLength: 40, autoComplete: "off" }))}
+        {lab("Birthday (optional)", input("dateOfBirth", { type: "date" }))}
+        {lab("Pronouns (optional)", input("pronouns", { maxLength: 30, placeholder: "Such as she/her" }))}
+      </div>
+      <p className="text-xs" style={{ color: "var(--iron)" }}>
+        Kept in Studio, with your other clients. If Studio already has someone with this email, they're added to your list instead.
+      </p>
+      {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
+      <div className="flex items-center gap-2">
+        <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy}>{busy ? "Adding…" : "Add client"}</button>
+        <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
+      </div>
+    </form>
+  );
+}
+
+/* What the trainer is told once a client is added, by what Studio did. */
+const ADDED = {
+  added: (n) => `${n} added.`,
+  linked: (n) => `${n} was already in Studio, so they're on your list now.`,
+  back: (n) => `${n} is back on your list.`,
+  already: (n) => `${n} is already on your list.`,
+};
+
 /* The Clients tab: everyone on this trainer's own list in Studio, read from
-   Studio (useClients). Clients are added and changed in Studio, not here. */
-export function ClientsTab({ clients, error, retry, onSignedOut }) {
+   Studio (useClients), and new clients added to it (kept in Studio too). */
+export function ClientsTab({ clients, error, retry, add, onSignedOut }) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
   const [openId, setOpenId] = useState(null);
+  const [adding, setAdding] = useState(false);
+  const [said, setSaid] = useState("");
 
   const active = useMemo(() => (clients || []).filter(c => !c.archived), [clients]);
   const archived = useMemo(() => (clients || []).filter(c => c.archived), [clients]);
@@ -102,9 +154,25 @@ export function ClientsTab({ clients, error, retry, onSignedOut }) {
   return (
     <div className="max-w-5xl mx-auto px-4">
       <TabHeading>Clients</TabHeading>
-      <p className="text-sm -mt-3 mb-4" style={{ color: "var(--iron)" }}>
-        {clients === undefined ? "Loading…" : plural(active.length, "active client")}
-      </p>
+      <div className="flex items-center justify-between gap-3 -mt-3 mb-4">
+        <p className="text-sm" style={{ color: "var(--iron)" }}>
+          {clients === undefined ? "Loading…" : plural(active.length, "active client")}
+        </p>
+        {add && !adding && (
+          <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-1.5" onClick={() => { setAdding(true); setSaid(""); }}>
+            <Plus size={16} aria-hidden="true" /> Add a client
+          </button>
+        )}
+      </div>
+      {said && <p className="text-sm mb-3" role="status" style={{ color: "var(--accent)" }}>{said}</p>}
+      {adding && (
+        <AddClient onAdd={add} onCancel={() => setAdding(false)}
+          onDone={(out, typed) => {
+            const c = (out.clients || []).find(x => x.id === out.clientId);
+            setSaid((ADDED[out.done] || ADDED.added)(c ? fullName(c) : typed));
+            setAdding(false); setQuery(""); setShowArchived(false); setOpenId(out.clientId);
+          }} />
+      )}
 
       <div className="cx-card p-3 sm:p-4">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -143,7 +211,7 @@ export function ClientsTab({ clients, error, retry, onSignedOut }) {
           <p className="p-6 text-center text-sm" style={{ color: "var(--iron)" }}>
             {query.trim() ? `No one matches “${query.trim()}”.`
               : showArchived ? "You have no archived clients."
-              : "You have no clients yet. Clients you add in Studio show here."}
+              : "You have no clients yet. Tap Add a client, or add them in Studio."}
           </p>
         ) : (
           <ul>
@@ -155,8 +223,7 @@ export function ClientsTab({ clients, error, retry, onSignedOut }) {
       </div>
 
       <p className="text-xs mt-4 text-center" style={{ color: "var(--iron)" }}>
-        Your clients are kept in Studio. To add a client or change their details,{" "}
-        <a href={STUDIO_URL} className="cx-link">open Studio <ExternalLink size={12} aria-hidden="true" /></a>.
+        Your clients are kept in Studio. To change a client's details, use Studio.
       </p>
     </div>
   );

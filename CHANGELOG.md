@@ -54,6 +54,10 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **Add a client from Coach.** The Clients page has Add a client: first
+  and last name, email and phone (birthday and pronouns if you like). The
+  client is kept in Studio; someone Studio already has with that email is
+  put on your list instead of being added twice.
 - **Your role badge is in your account menu.** The shield for an Admin,
   Master or Primary Master moved from the top bar to under your name in the
   menu, as in Studio.

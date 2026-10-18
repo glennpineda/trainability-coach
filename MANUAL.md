@@ -625,8 +625,8 @@ Each client has one line, in order of first name:
 | **First session booked for October 18** | They have not had a session yet, but one is booked. |
 | **No sessions yet** | Nothing has happened and nothing is booked. |
 
-If you have no clients yet, the list says *You have no clients yet. Clients
-you add in Studio show here.*
+If you have no clients yet, the list says *You have no clients yet. Tap Add
+a client, or add them in Studio.*
 
 ### 4.3 Seeing a client's details
 
@@ -672,13 +672,36 @@ apart from the rest.
 
 ### 4.6 Adding or changing a client
 
-Clients are added, changed and archived in **Studio**, not in Coach. At the
-foot of the Clients page it says *Your clients are kept in Studio. To add a
-client or change their details, open Studio.*
+A client you add in Coach is kept in **Studio**, with your other clients:
+they show in Studio under your name straight away.
 
-1. Tap **open Studio**. Studio opens.
-2. Make the change there.
-3. Come back to Coach and open **Clients** again. The change is there.
+1. On the Clients page, tap **Add a client** (top right).
+2. Fill in **First name**, **Last name**, **Email** and **Phone**; all four
+   are needed, as in Studio. **Birthday (optional)** and **Pronouns
+   (optional)** can be left empty.
+3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
+   open in the list. **Cancel** closes the form without adding anyone.
+
+If Studio already has someone with that email:
+
+- someone on another trainer's list is added to yours too: *Riley Hart was
+  already in Studio, so they're on your list now.*
+- someone you had archived comes back: *Morgan Hart is back on your list.*
+- someone already on your list is left as they are: *Casey Moss is already
+  on your list.*
+
+If only the phone number matches someone in Studio, nobody is added, since
+families and twins often share a phone. It says, for example, *Riley Hart
+already has that phone number in Studio. If this is them, use the email they
+have there; if it's someone else, use a different phone number.*
+
+If something is missing, it says what, such as *Last name and Email are
+required*.
+
+To **change** a client's details, or to archive one, use Studio. At the foot
+of the Clients page it says *Your clients are kept in Studio. To change a
+client's details, use Studio.* The change shows in Coach the next time you
+open Clients.
 
 ### 4.7 A client's limitations
 

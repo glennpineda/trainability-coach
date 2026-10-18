@@ -31,5 +31,19 @@ export function useClients(onSignedOut) {
 
   const retry = useCallback(() => { setClients(undefined); load(); }, [load]);
 
-  return { clients, error, retry, refresh: load };
+  /* A new client, kept in Studio (POST /api/clients): the list comes back
+     with it, and what happened (added, linked, back, already). Errors are
+     thrown for the form to show. */
+  const add = useCallback(async (fields) => {
+    try {
+      const out = await apiRequest("POST", "/clients", fields);
+      setClients(out.clients || []);
+      return out;
+    } catch (err) {
+      if (err.status === 401) onSignedOut?.();
+      throw err;
+    }
+  }, [onSignedOut]);
+
+  return { clients, error, retry, refresh: load, add };
 }

@@ -31,6 +31,13 @@ day they joined the list, last and next session dates, archived, and how many
 other trainers they share. No card, notes, address or message settings reach
 the browser. Studio did not have to change for this either.
 
+A client added in Coach (`POST /api/clients`) is added in Studio the way
+Studio's own Add client does it, with the trainer's session: Studio's
+`/api/clients/match` first; somebody it already has by the same email is put
+on the trainer's list with `/api/clients/:id/link`; a phone-only match is
+refused with the name, for the trainer to sort out; anybody else is made with
+`POST /api/clients` on the trainer's list. Coach still keeps no copy.
+
 Known limit: Studio counts failed sign-ins per IP address as well as per
 email. Relayed requests all come from Coach's server, so that per-IP budget is
 shared by everybody signing in through Coach. Fine at today's numbers; the fix,
