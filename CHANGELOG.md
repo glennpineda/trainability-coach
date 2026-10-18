@@ -56,7 +56,7 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   program opens with the same answers.
 - **The new logo.** The mark now has a dot in the middle and a bolder
   chevron, everywhere: the app icon (flat navy), the header, the sign-in
-  screen and the browser tab. Remove Coach from your home screen and add it
+  screen and the browser tab; a slightly bigger mark in the icon since. Remove Coach from your home screen and add it
   again to see the new icon.
 - **Studio's type.** Roboto throughout, headings at medium weight, and
   "Trainability" as a word in Quicksand, as in Studio.

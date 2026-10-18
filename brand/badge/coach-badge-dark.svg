@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168.40 180.00" width="168" height="180" role="img" aria-label="Trainability Coach">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.00 180.00" width="182" height="180" role="img" aria-label="Trainability Coach">
 <title>Trainability Coach</title>
-<path d="M 105.00 14.00 L 139.60 34.00 Q 160.40 46.00 160.40 70.00 L 160.40 110.00 Q 160.40 134.00 139.60 146.00 L 105.00 166.00 Q 84.20 178.00 63.40 166.00 L 28.80 146.00 Q 8.00 134.00 8.00 110.00 L 8.00 70.00 Q 8.00 46.00 28.80 34.00 L 63.40 14.00 Q 84.20 2.00 105.00 14.00 Z" fill="#FFFFFF"/>
-<path d="M 109.30 46.50 L 97.90 39.90 Q 84.20 32.00 70.50 39.90 L 47.70 53.10 Q 34.00 61.00 34.00 76.80 L 34.00 103.20 Q 34.00 119.00 47.70 126.90 L 70.50 140.10 Q 84.20 148.00 97.90 140.10 L 109.30 133.50" fill="none" stroke="#007BA7" stroke-width="19.00" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M 122.20 70.00 L 135.20 90.00 L 122.20 110.00" fill="none" stroke="#4FA8DC" stroke-width="19.00" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="84.20" cy="90.00" r="12.00" fill="#4FA8DC"/>
+<path d="M 111.80 14.00 L 153.20 37.90 Q 174.00 49.90 174.00 73.90 L 174.00 106.10 Q 174.00 130.10 153.20 142.10 L 111.80 166.00 Q 91.00 178.00 70.20 166.00 L 28.80 142.10 Q 8.00 130.10 8.00 106.10 L 8.00 73.90 Q 8.00 49.90 28.80 37.90 L 70.20 14.00 Q 91.00 2.00 111.80 14.00 Z" fill="#FFFFFF"/>
+<path d="M 116.10 46.50 L 104.70 39.90 Q 91.00 32.00 77.30 39.90 L 47.70 57.00 Q 34.00 64.90 34.00 80.70 L 34.00 99.30 Q 34.00 115.10 47.70 123.00 L 77.30 140.10 Q 91.00 148.00 104.70 140.10 L 116.10 133.50" fill="none" stroke="#007BA7" stroke-width="19.00" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 133.00 70.00 L 146.00 90.00 L 133.00 110.00" fill="none" stroke="#4FA8DC" stroke-width="19.00" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="91.00" cy="90.00" r="12.00" fill="#4FA8DC"/>
 </svg>
