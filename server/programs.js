@@ -94,20 +94,20 @@ export const MINUTES = { 30: 4, 45: 5, 60: 6, 75: 7, 90: 8 };
 /* "What are we working on?" in the add-an-exercise dialog (Glenn, 18 Oct
    2026: "have an optional “what are we working on?” question with an optional
    option about muscle groups, this will help Billy narrow the exercise
-   recommendations to a more precise way"): kinds of movement, each the
-   patterns it covers, and the muscles in groups. */
+   recommendations to a more precise way"). First kinds of movement (squat,
+   hinge, push …); then, as Glenn put it ("I would rather have strength,
+   cardio, balance, mobility.. The other options there seems out of place",
+   and "Go with the five"), the kind of training: what quality is being built,
+   with the muscle groups below saying where. Each matches the purposes Coach
+   IQ's families are tagged with. */
+const purposesOf = (x) => library.familyOf(x)?.purposes || [];
+const patternOfFamily = (x) => library.familyOf(x)?.pattern;
 export const WORK_ON = {
-  squat: { label: "Squat", patterns: ["squat"] },
-  hinge: { label: "Hinge", patterns: ["hinge"] },
-  lunge: { label: "Single leg", patterns: ["lunge"] },
-  push: { label: "Push", patterns: ["push-horizontal", "push-vertical", "isolation-push"] },
-  pull: { label: "Pull", patterns: ["pull-horizontal", "pull-vertical", "isolation-pull"] },
-  core: { label: "Core", patterns: ["core-anti-extension", "core-anti-rotation", "core-lateral", "core-flexion", "rotation"] },
-  carry: { label: "Carry", patterns: ["carry"] },
-  jump: { label: "Jumping", patterns: ["plyometric"] },
-  conditioning: { label: "Conditioning", patterns: ["conditioning"] },
-  mobility: { label: "Mobility", patterns: ["mobility", "breathing"] },
-  balance: { label: "Balance", patterns: ["balance"] },
+  strength: { label: "Strength", matches: (x) => purposesOf(x).some(p => ["strength", "muscle", "control"].includes(p)) && patternOfFamily(x) !== "breathing" },
+  power: { label: "Power", matches: (x) => purposesOf(x).includes("power") },
+  cardio: { label: "Cardio", matches: (x) => purposesOf(x).includes("conditioning") || (purposesOf(x).includes("endurance") && patternOfFamily(x) === "conditioning") },
+  balance: { label: "Balance", matches: (x) => purposesOf(x).includes("balance") },
+  mobility: { label: "Mobility", matches: (x) => purposesOf(x).includes("mobility") || patternOfFamily(x) === "breathing" },
 };
 /* The top-level groups, in Glenn's words and order (18 Oct 2026: "chest,
    shoulders, arms, core, legs as the top level muscle group categories",
@@ -607,13 +607,13 @@ export async function suggestFor(trainerId, program, dayId, { workOn = null, mus
      for mobility: "the lats" otherwise means training them. */
   const stretches = workOn === "mobility" || program.goal === "mobility";
   const pool = candidates(ctx, program.level).filter(x => !onDay.has(x.id)
-    && (!kind || kind.patterns.some(p => ofPattern(x, p)))
+    && (!kind || kind.matches(x))
     && (stretches || !["mobility", "breathing"].includes(library.familyOf(x)?.pattern))
     && (!want.length || hits(x).score > 0));
-  /* Main lifts first unless a kind of movement was asked for (its own order
-     stands), and one version of each family before a second, so the list
-     shows different movements rather than one in three versions. */
-  const base = rank(pool, ctx, { level: program.level, purpose: goal.purpose, role: kind ? null : "main" });
+  /* Main lifts first, for strength or for muscles alone, and one version of
+     each family before a second, so the list shows different movements
+     rather than one in three versions. */
+  const base = rank(pool, ctx, { level: program.level, purpose: workOn === "power" ? "power" : workOn === "cardio" ? "conditioning" : goal.purpose, role: !kind || workOn === "strength" ? "main" : null });
   const sorted = want.length ? [...base].sort((a, b) => hits(b).score - hits(a).score) : base;
   const seen = new Set();
   const firsts = sorted.filter(x => (seen.has(x.movement) ? false : seen.add(x.movement)));
