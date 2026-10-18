@@ -149,6 +149,9 @@ async function myClients(req, user) {
       lastSessionOn: c.lastSessionOn || null,
       latestSessionOn: c.latestSessionOn || null,
       archived: (c.archivedBy || []).includes(user.id),
+      /* Their gym in Studio: their home gym, else a membership still going
+         (Studio's homePlaceId and placeIds), for where a program is done. */
+      studioPlaceId: c.homePlaceId || (c.placeIds || []).find(p => !(c.archivedPlaceIds || []).includes(p)) || null,
       /* Other trainers they are still training with. */
       sharedWith: (c.trainerIds || []).filter(t => t !== user.id && !(c.archivedBy || []).includes(t)).length,
     }));
@@ -255,6 +258,21 @@ const ownClient = async (req, res, user, clientId) => {
 
 app.get("/api/coach-iq/conditions", asSignedIn("GET /coach-iq/conditions", async (_req, res) => {
   res.json({ conditions: limitations.conditionsList(), facts: FLAGS, joints: JOINTS });
+}));
+
+/* Where a client trains, from Studio: their gym there, as one of this
+   trainer's places (made the first time, with the equipment the Primary
+   Master set for it), for a new program's form. null when Studio has none. */
+app.get("/api/clients/:client/place", asSignedIn("GET /clients/place", async (req, res, user) => {
+  const client = (await myClients(req, user)).find(c => c.id === req.params.client);
+  if (!client) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.set("Cache-Control", "private, no-store");
+  if (!client.studioPlaceId) return res.json({ place: null });
+  const r = await studio(req, "/locations");
+  if (!r.ok) return res.json({ place: null });
+  const { places = [] } = await r.json();
+  const sp = places.find(p => p.id === client.studioPlaceId && !p.archivedAt);
+  res.json({ place: sp ? await equipment.linkClientPlace(user.id, sp) : null });
 }));
 
 /* What the trainer's programs for a client say about their level, for a new

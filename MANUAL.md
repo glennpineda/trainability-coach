@@ -748,7 +748,10 @@ next, and Billy can talk it over with you. Only you see your programs.
    programs yet it says *No programs for Jordan yet. What's their fitness
    level?*: choose one, as the program can't start without it. Then choose
    **Where they train**: one of your places from My equipment (3.7),
-   starting on your place in Studio if you have one. Add
+   starting on your place in Studio if you have one. If the client has a gym
+   in Studio (their home gym, or a membership), it starts there instead and
+   says *Jordan's gym in Studio.*; that gym is added to your places, with
+   anything the Primary Master set there. Add
    **Notes** if you want. **Back to the kind of program** goes back a step.
 9. Tap **Start designing**. The program opens with its days already made, as
    many as you chose: **Upper A**, **Lower A**, **Upper B**, **Lower B** for

@@ -421,6 +421,21 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
     }).catch(() => { if (live) setKnown(null); });
     return () => { live = false; };
   }, [clients, f.clientId]);
+  /* And where they train starts at their gym in Studio, if they have one,
+     made one of the trainer's places the first time. */
+  const [gym, setGym] = useState(null);
+  useEffect(() => {
+    if (!clients || !f.clientId) { setGym(null); return; }
+    let live = true;
+    apiRequest("GET", `/clients/${f.clientId}/place`).then(o => {
+      if (!live) return;
+      setGym(o.place);
+      /* With no gym in Studio, back to the trainer's first place. */
+      setF(d => ({ ...d, placeId: o.place ? o.place.id : places?.[0]?.id ?? "" }));
+    }).catch(() => { if (live) setGym(null); });
+    return () => { live = false; };
+  }, [clients, f.clientId]);
+  const placeList = gym && !(places || []).some(p => p.id === gym.id) ? [...(places || []), gym] : (places || []);
   const firstName = clients?.find(c => c.id === f.clientId)?.firstName;
   const lab = (name, el) => <label className="grid gap-1 text-xs" style={muted}>{name}{el}</label>;
   return (
@@ -453,9 +468,12 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
         {lab("Where they train", (
           <select className="cx-input" value={f.placeId} onChange={set("placeId")} style={{ color: "var(--ink)" }}>
             <option value="">Not chosen</option>
-            {(places || []).map(pl => <option key={pl.id} value={pl.id}>{pl.name}</option>)}
+            {placeList.map(pl => <option key={pl.id} value={pl.id}>{pl.name}</option>)}
           </select>
         ))}
+        {clients && gym && f.placeId === gym.id && (
+          <p className="text-xs sm:col-span-3 sm:order-last" style={muted}>{firstName ? `${firstName}'s` : "Their"} gym in Studio.</p>
+        )}
       </div>
       {!clients && vocab && (
         <>

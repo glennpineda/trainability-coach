@@ -127,6 +127,25 @@ export async function renamePlace(trainerId, placeId, name) {
   await run(`UPDATE coach_places SET name = ? WHERE id = ? AND trainer_id = ?`, [String(name).trim(), placeId, trainerId]);
 }
 
+/**
+ * A client's gym in Studio as one of this trainer's places: the one already
+ * linked to it (brought back if it was put away), or a new one named as
+ * Studio names it. Like any place, it shows what the Primary Master set
+ * there for everybody.
+ */
+export async function linkClientPlace(trainerId, place) {
+  const had = await get(`SELECT * FROM coach_places WHERE trainer_id = ? AND studio_place_id = ? ORDER BY from_studio DESC LIMIT 1`, [trainerId, place.id]);
+  if (had) {
+    if (Number(had.archived)) await run(`UPDATE coach_places SET archived = 0 WHERE id = ?`, [had.id]);
+    return shapePlace(had);
+  }
+  const name = String(place.name || "").trim().slice(0, 80) || "A place in Studio";
+  const id = await insertWithNewId("place", (newId) => run(
+    `INSERT INTO coach_places (id, trainer_id, name, archived, created_at, studio_place_id, from_studio) VALUES (?, ?, ?, 0, ?, ?, 0)`,
+    [newId, trainerId, name, now(), place.id]));
+  return { id, name, studioPlaceId: place.id };
+}
+
 /** Put away, never deleted: its answers stay, as everything in memory does. The last place stays. */
 export async function archivePlace(trainerId, placeId) {
   const places = await placesOf(trainerId);

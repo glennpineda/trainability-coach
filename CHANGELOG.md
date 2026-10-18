@@ -57,6 +57,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Your place in Studio is one of your places.** The trainer's default
   place in Studio shows first in My equipment, with its own checklist and
   Studio's name, and a new program starts there.
+- **A client's gym in Studio is where their program starts.** Their home
+  gym, or a membership, is chosen for "Where they train" on a new program.
 - **The Primary Master sets the equipment at Studio's places.** Their
   answers show, locked, for every trainer whose place in Studio it is;
   trainers answer only what is left.
