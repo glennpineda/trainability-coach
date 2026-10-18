@@ -54,6 +54,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **Your role badge is in your account menu.** The shield for an Admin,
+  Master or Primary Master moved from the top bar to under your name in the
+  menu, as in Studio.
 - **The new logo.** The mark now has a dot in the middle and a bolder
   chevron, everywhere: the app icon (flat navy), the header, the sign-in
   screen and the browser tab; a slightly bigger mark in the icon since. Remove Coach from your home screen and add it

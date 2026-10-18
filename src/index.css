@@ -295,14 +295,8 @@
     color: var(--ink); transition: background-color .15s ease; }
   .cx-app-row:hover { background: var(--ghost-fill); }
 
-  /* The badges on the right: a square that opens out to its name. */
+  /* The row on the right: Billy and the account menu. */
   .cx-badge-row { display: flex; align-items: center; gap: 6px; }
-  .cx-badge { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px;
-    overflow: hidden; white-space: nowrap; transition: width .2s ease; }
-  .cx-badge .cx-badge-label { max-width: 0; opacity: 0; margin-left: 0; overflow: hidden;
-    transition: max-width .2s ease, opacity .15s ease, margin-left .2s ease; }
-  .cx-badge:hover, .cx-badge:focus-visible { width: auto; justify-content: flex-start; padding: 0 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12); }
-  .cx-badge:hover .cx-badge-label, .cx-badge:focus-visible .cx-badge-label { max-width: 12em; opacity: 1; margin-left: 6px; }
 
   /* ---------------------------------------------------------- the tab bar
      Studio's: a frosted pill floating over the foot of the screen, the page
@@ -385,7 +379,7 @@
   .cx-cycle { animation: cx-cycle-in .55s ease-out both; }
 
   @media (prefers-reduced-motion: reduce) {
-    .cx-appdrawer, .cx-badge, .cx-nav-lit, .cx-navbtn, .cx-card-press, .cx-billy-button { transition: none; }
+    .cx-appdrawer, .cx-nav-lit, .cx-navbtn, .cx-card-press, .cx-billy-button { transition: none; }
     .cx-billy * { animation: none !important; }
     .cx-cycle { animation: none; }
   }

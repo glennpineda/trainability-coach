@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, LogOut, Settings } from "lucide-react";
+import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
 import { useUnits } from "../hooks/useUnits";
@@ -53,7 +53,7 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
             <div className="min-w-0">
               <div className="font-semibold truncate">{user.name}</div>
               <div className="text-xs truncate" style={{ color: "var(--iron)" }}>{user.email}</div>
-              {role && <div className="text-xs mt-0.5" style={{ color: "var(--accent)" }}>{role}</div>}
+              <RoleBadge user={user} role={role} />
             </div>
           </div>
           <div className="my-1 border-t" />
@@ -107,5 +107,34 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
         </div>
       )}
     </div>
+  );
+}
+
+/* The shield that named an admin's or a master's role stood in the header's
+   badge row; it is here now, beside the name it describes, as on Studio's
+   account menu (Glenn, 18 Oct 2026: "Can you put the badge on the header
+   inside the profile menu? See Studio how it's doing it"): rich gold with
+   sparkles for the Primary Master, paler gold for a Master, Coach's blue for
+   an Admin. Anyone else has the word. */
+function RoleBadge({ user, role }) {
+  if (!role) return null;
+  if (!user.isPrimary && user.role !== "master" && user.role !== "admin") {
+    return <div className="text-xs mt-0.5" style={{ color: "var(--accent)" }}>{role}</div>;
+  }
+  const look = user.isPrimary
+    ? { background: "linear-gradient(135deg, var(--gold-light), var(--gold))", color: "var(--gold-deep)" }
+    : user.role === "master"
+      ? { background: "linear-gradient(135deg, var(--gold-pale-light), var(--gold-pale))", color: "var(--gold-deep)" }
+      : { background: "var(--accent-soft)", color: "var(--accent)" };
+  return (
+    <span className="relative inline-flex items-center gap-1 mt-1 text-xs font-medium"
+      style={{ ...look, borderRadius: 8, padding: "2px 8px 2px 6px" }}>
+      <ShieldCheck size={14} className="flex-none" aria-hidden="true" />
+      {role}
+      {user.isPrimary && (
+        <Sparkles size={12} aria-hidden="true" className="absolute pointer-events-none"
+          style={{ top: -5, right: -5, color: "var(--gold)", filter: "drop-shadow(0 0 2px var(--chalk))" }} />
+      )}
+    </span>
   );
 }

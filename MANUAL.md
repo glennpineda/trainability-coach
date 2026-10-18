@@ -238,9 +238,6 @@ Across the top of every screen:
 
 - **On the left**, the Coach logo — a hexagon with a **C** in it — and the word
   **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
-- **On the right**, an Admin or Master account has a small shield, gold for a
-  Master. On a computer, point at it and it says which: **Admin**, **Master**
-  or **Primary Master**. A trainer's account has no shield.
 - **Billy's face**, in a lilac square, when Billy is set up for your
   business — tap it to ask him something (chapter 6).
 - **In the corner**, your photo (or your initials) with a small arrow
@@ -327,7 +324,9 @@ so — see 2.4.
 2. The menu shows:
    - **Your name**, your email address, and what kind of account you have:
      **Trainer**, **Admin**, **Master**, **Primary Master** or **Front desk** —
-     the same as in Studio.
+     the same as in Studio. An Admin, Master or Primary Master account says
+     so on a small shield badge: gold with a sparkle for the Primary Master,
+     paler gold for a Master, blue for an Admin.
    - **My equipment** — what you have to train with (3.7).
    - **My exercises** — what you call your exercises, and exercises of your
      own (3.8).
