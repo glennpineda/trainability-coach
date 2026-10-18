@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
+import { Accessibility, BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
 import { LinkDialog } from "../auth/LinkDialog";
+import { AccessibilityDialog } from "./AccessibilityDialog";
+import { lookOf, lookSummary } from "../lib/look";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
 import { useUnits } from "../hooks/useUnits";
@@ -14,9 +16,10 @@ const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "
  * after the role badge, and is the one place for these — the tab bar has no
  * Profile. Your name shows beside the photo where there is room.
  */
-export function AccountMenu({ user, onLogout, onOpen, billy }) {
+export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
   const [open, setOpen] = useState(false);
   const [linking, setLinking] = useState(false);
+  const [looking, setLooking] = useState(false);
   const ref = useRef(null);
   const btnRef = useRef(null);
 
@@ -40,6 +43,7 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
   return (
     <div className="relative cx-account" ref={ref}>
       {linking && <LinkDialog onClose={() => setLinking(false)} />}
+      {looking && chooseLook && <AccessibilityDialog user={user} chooseLook={chooseLook} onClose={() => setLooking(false)} />}
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
         aria-label={`${user.name}: account menu`}
         className="flex items-center gap-1.5 rounded-full pl-0.5 pr-1.5 h-9 transition-colors hover:bg-(--ghost-fill)"
@@ -110,6 +114,18 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
               ))}
             </div>
           </div>
+          {/* Studio's Accessibility (its Profile → Accessibility): the line
+              says light, dark or matching the device, and what else differs. */}
+          {chooseLook && (
+            <button role="menuitem" type="button" onClick={() => { setOpen(false); setLooking(true); }}
+              className="w-full flex items-start gap-2.5 px-3 py-2 rounded-lg text-sm text-left hover:bg-(--ghost-fill)">
+              <Accessibility size={16} className="mt-0.5 flex-none" style={{ color: "var(--accent)" }} aria-hidden="true" />
+              <span className="min-w-0">
+                <span className="block">Accessibility</span>
+                <span className="block text-xs" style={{ color: "var(--iron)" }}>{lookSummary(lookOf(user))}</span>
+              </span>
+            </button>
+          )}
           <div className="my-1 border-t" />
           <button role="menuitem" type="button" onClick={onLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
             <LogOut size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Log out

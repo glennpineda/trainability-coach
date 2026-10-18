@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { reducedMotionNow, watchReducedMotion } from "../lib/motion";
 
 /**
  * A line of text that cycles through the same thought in twenty languages:
@@ -68,11 +69,19 @@ export function PhraseCycle({ phrases, label, className = "text-base", style, al
   const [index, setIndex] = useState(0);
   const [still, setStill] = useState(false);
 
+  /* Held on the first while motion is reduced (Accessibility's Motion, or
+     the device's), and moving again if that changes. */
   useEffect(() => {
-    const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    if (query?.matches) { setStill(true); return; }
-    const timer = setInterval(() => setIndex(i => (i + 1) % phrases.length), PHRASE_MS);
-    return () => clearInterval(timer);
+    let timer = 0;
+    const start = () => {
+      clearInterval(timer);
+      const hold = reducedMotionNow();
+      setStill(hold);
+      if (!hold) timer = setInterval(() => setIndex(i => (i + 1) % phrases.length), PHRASE_MS);
+    };
+    start();
+    const unwatch = watchReducedMotion(start);
+    return () => { clearInterval(timer); unwatch(); };
   }, [phrases.length]);
 
   // Index is held across a list that could be shorter; guard rather than

@@ -11,8 +11,10 @@ described in `README.md`.
   (`glennpineda/trainability-studio`). Live at trainabilitycoach.com on GoDaddy
   Airo. The start command is `npm start`, which builds and then serves.
 - **Two kinds of account.** Trainability's own trainers sign in with their
-  Studio account: `server/index.js` relays six routes (`/api/auth/door`,
-  `login`, `me`, `logout`, `forgot-password`, `password`) to Studio's API at
+  Studio account: `server/index.js` relays the sign-in routes (`/api/auth/door`,
+  `login`, `me`, `logout`, `forgot-password`, `password`) and Accessibility's
+  six (`theme`, `tone`, `contrast`, `motion`, `color`, `text-size`, shared
+  with Studio; Glenn, 18 Oct 2026) to Studio's API at
   `STUDIO_ORIGIN`, the same password as Studio but a separate session, and
   their clients are kept in Studio, through its API, with nothing on screen
   saying so. Any other trainer can make a **Coach account**

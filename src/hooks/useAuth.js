@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { apiRequest } from "../lib/api";
+import { ROUTE, CHOICES } from "../lib/look";
 
 /**
  * Who is signed in: a Coach account, or a Studio account through Studio's
@@ -58,5 +59,21 @@ export function useAuth() {
   /* Their own password chosen after a temporary one. */
   const passwordChosen = useCallback(() => setUser(u => (u ? { ...u, mustChangePassword: false } : u)), []);
 
-  return { user, offline, login, signup, logout, signedOut, passwordChosen };
+  /* One Accessibility choice (src/lib/look.js): on the page at once, as
+     Studio's are, then saved on the account (Studio's, for a Trainability
+     trainer, through Coach's relay). Put back, and thrown, if it didn't save. */
+  const chooseLook = useCallback(async (key, value) => {
+    if (!ROUTE[key] || !CHOICES[key].includes(value)) return;
+    let before;
+    setUser(u => { before = u?.[key]; return u ? { ...u, [key]: value } : u; });
+    try {
+      const { user: saved } = await apiRequest("POST", ROUTE[key], { [key]: value });
+      if (saved && saved[key] !== undefined) setUser(u => (u ? { ...u, [key]: saved[key] } : u));
+    } catch (err) {
+      setUser(u => (u ? { ...u, [key]: before } : u));
+      throw err;
+    }
+  }, []);
+
+  return { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook };
 }

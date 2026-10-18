@@ -27,7 +27,7 @@ export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOp
     <>
       {/* A cerulean band, so the greeting has the sign-in screen's color and
           the page does not open on a blank grey. */}
-      <section style={{ background: "linear-gradient(150deg, #007BA7 0%, #0B4F6E 100%)" }}>
+      <section style={{ background: "linear-gradient(150deg, var(--band-from) 0%, var(--band-to) 100%)" }}>
         <div className="max-w-5xl mx-auto px-4 pt-7 pb-16">
           <p className="text-sm font-medium" style={{ color: "rgba(255,255,255,0.8)" }}>{today}</p>
           <h1 className="cx-display text-3xl sm:text-4xl text-white mt-1">{greeting()}, {firstName(user.name)}</h1>

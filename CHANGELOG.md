@@ -89,6 +89,13 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   the header, the sign-in screen, the browser tab and the emails; a slightly
   bigger mark in the icon. Remove Coach from your home screen and add it
   again to see the new icon.
+- **Accessibility, as in Studio.** In the account menu: light or dark, a
+  theme (Default, Purple, Blue, Orange or Green, Coach's own versions),
+  contrast, reduced color, motion and text size, with Studio's choices and
+  words. A Trainability account's are the same settings as in Studio, so
+  changing them in either app changes both; a Coach account keeps its own.
+  The look is on before the page draws, and the sign-in screen goes back to
+  the device's own when you sign out.
 - **Studio's drifting hexagons, in blues.** The logo's hexagon, a dozen
   times over and in four of Coach's blues, drifts slowly behind every page and
   over the sign-in screen, as Studio's purple ones do. Still on a device set to

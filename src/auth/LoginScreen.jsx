@@ -125,7 +125,7 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
   return (
     <div
       className="min-h-dvh flex justify-center items-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(150deg, #007BA7 0%, #0B4F6E 45%, #172A3A 100%)" }}
+      style={{ background: "var(--ground)" }}
     >
       {/* Studio's drifting hexagons over the gradient, as on its sign-in
           screen (bodyShare 1.3), with the backdrop's own three under them. */}

@@ -436,6 +436,14 @@ const COLUMNS = [
   /* Signed in with a temporary password (stage four, as Studio's
      must_change_password): they choose their own before anything else. */
   ["coach_accounts", "must_change_password", "INTEGER NOT NULL DEFAULT 0"],
+  /* A Coach account's Accessibility (accounts.js, setLook), Studio's six on
+     its users, with its values; a Trainability trainer's are Studio's own. */
+  ["coach_accounts", "theme", "VARCHAR(8) NOT NULL DEFAULT 'system'"],
+  ["coach_accounts", "tone", "VARCHAR(8) NOT NULL DEFAULT ''"],
+  ["coach_accounts", "contrast", "VARCHAR(8) NOT NULL DEFAULT 'system'"],
+  ["coach_accounts", "motion", "VARCHAR(8) NOT NULL DEFAULT 'system'"],
+  ["coach_accounts", "color", "VARCHAR(8) NOT NULL DEFAULT 'full'"],
+  ["coach_accounts", "text_size", "VARCHAR(8) NOT NULL DEFAULT 'medium'"],
 ];
 
 async function hasColumn(table, column) {

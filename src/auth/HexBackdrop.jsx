@@ -10,31 +10,32 @@ const DRIFT = `
   .cx-drift-a { animation-duration: 23s; animation-delay: -7s; }
   .cx-drift-b { animation-duration: 31s; animation-delay: -19s; animation-direction: alternate-reverse; }
   .cx-drift-c { animation-duration: 17s; animation-delay: -4s; }
-  @media (prefers-reduced-motion: reduce) { .cx-drift { animation: none; } }
+  :root[data-still] .cx-drift { animation: none; }
 `;
 
 /**
  * The cerulean field the sign-in screen sits on: Studio's hexagon backdrop,
  * in Coach's colors. Three of the logo's hexagons blown up and cropped by the
- * edges, two filled and one outlined, drifting slowly out of step. Still for
- * anyone who has asked their device for less motion.
+ * edges, two filled and one outlined, drifting slowly out of step. Still
+ * where motion is reduced (data-still: Accessibility's Motion, or the
+ * device's).
  */
 export function HexBackdrop() {
   return (
-    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <svg className="cx-hexbackdrop absolute inset-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <style>{DRIFT}</style>
       <defs>
         <radialGradient id="cx-glow-a" cx="0.2" cy="0.15" r="0.6">
-          <stop offset="0" stopColor="#4FA8DC" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#4FA8DC" stopOpacity="0" />
+          <stop offset="0" stopColor="var(--sky)" stopOpacity="0.55" />
+          <stop offset="1" stopColor="var(--sky)" stopOpacity="0" />
         </radialGradient>
         <radialGradient id="cx-glow-b" cx="0.85" cy="0.9" r="0.55">
-          <stop offset="0" stopColor="#007BA7" stopOpacity="0.5" />
-          <stop offset="1" stopColor="#007BA7" stopOpacity="0" />
+          <stop offset="0" stopColor="var(--cerulean)" stopOpacity="0.5" />
+          <stop offset="1" stopColor="var(--cerulean)" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="cx-fill-a" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#4FA8DC" stopOpacity="0.30" />
-          <stop offset="1" stopColor="#007BA7" stopOpacity="0.08" />
+          <stop offset="0" stopColor="var(--sky)" stopOpacity="0.30" />
+          <stop offset="1" stopColor="var(--cerulean)" stopOpacity="0.08" />
         </linearGradient>
         <linearGradient id="cx-fill-b" x1="1" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.10" />

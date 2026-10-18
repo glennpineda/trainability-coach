@@ -74,11 +74,12 @@ function hexPath(r) {
   return new Path2D(roundedPath(pts, r * 0.1));
 }
 
+/* High contrast on (src/lib/look.js answers "Same as device" as data-hc),
+   or reduced color: a backdrop is exactly what either reader asked to have
+   taken away (Studio hides it for both). */
 const moreContrast = () => {
-  const pick = document.documentElement.dataset.contrast;
-  if (pick === "more") return true;
-  if (pick === "standard") return false;
-  return !!window.matchMedia?.("(prefers-contrast: more)").matches;
+  const d = document.documentElement.dataset;
+  return !!d.hc || d.color === "reduced";
 };
 
 export function DriftingHexes({ barsOnly = false, bodyShare = BODY_SHARE }) {
@@ -100,7 +101,7 @@ export function DriftingHexes({ barsOnly = false, bodyShare = BODY_SHARE }) {
       tones = TONES.map(t => css.getPropertyValue(t).trim()).filter(Boolean);
       /* No palette (the tokens missing): the four blues as index.css sets them. */
       if (!tones.length) {
-        tones = window.matchMedia?.("(prefers-color-scheme: dark)").matches
+        tones = document.documentElement.dataset.scheme === "dark"
           ? ["#4FA8DC", "#7EC3EA", "#2E8BC0", "#6E9EE0"] : ["#007BA7", "#4FA8DC", "#0B5C8A", "#3D7BC4"];
       }
     };
@@ -226,7 +227,7 @@ export function DriftingHexes({ barsOnly = false, bodyShare = BODY_SHARE }) {
        dark, or the theme's colour), or the device going dark at sunset — and
        the colours come from it. */
     const themed = new MutationObserver(() => { readTones(); draw(); });
-    themed.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-tone", "data-color", "data-contrast"] });
+    themed.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-scheme", "data-tone", "data-color", "data-contrast", "data-hc"] });
     const dark = window.matchMedia?.("(prefers-color-scheme: dark)");
     const retone = () => { readTones(); draw(); };
     dark?.addEventListener("change", retone);

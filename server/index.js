@@ -58,7 +58,11 @@ const PKG = (() => { try { return JSON.parse(readFileSync(new URL("../package.js
 /* The sign-in routes Studio answers for Coach. /auth/door is the one sign-in
    screen's first question, which way in an email takes (Glenn, 17 Oct 2026);
    /auth/password is choosing one's own after a temporary one (build 1.0.52). */
-const RELAYED = new Set(["/auth/door", "/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password", "/auth/password"]);
+const RELAYED = new Set(["/auth/door", "/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password", "/auth/password",
+  /* Accessibility, shared with Studio (Glenn, 18 Oct 2026: "Shared with
+     Studio"): a Trainability trainer's six are saved on their Studio account,
+     so both apps look the same. A Coach account's are answered here first. */
+  "/auth/theme", "/auth/tone", "/auth/contrast", "/auth/motion", "/auth/color", "/auth/text-size"]);
 
 const app = express();
 app.disable("x-powered-by");
@@ -1734,6 +1738,24 @@ app.post("/api/auth/password", async (req, res, next) => {
     res.status(500).json({ error: "Your password couldn't be changed. Try again in a minute.", code: "failed" });
   }
 });
+
+/* A Coach account's Accessibility, one route each as Studio's: { user } back.
+   A Trainability trainer's goes on to Studio through the relay below. */
+for (const [route, key] of [["theme", "theme"], ["tone", "tone"], ["contrast", "contrast"], ["motion", "motion"], ["color", "color"], ["text-size", "textSize"]]) {
+  app.post(`/api/auth/${route}`, async (req, res, next) => {
+    try {
+      const own = await coachAccount(req);
+      if (!own) return next();
+      if (!await accounts.setLook(own, key, req.body?.[key])) {
+        return res.status(400).json({ error: "That is not one of the choices for how a screen looks", code: "invalid", field: key, allowed: accounts.LOOK[key].allowed });
+      }
+      res.json({ user: accounts.asUser(await accounts.accountOfSession(cookieOf(req, accounts.COOKIE))) });
+    } catch (err) {
+      console.error(`Coach ${route} failed: ${err.message}`);
+      res.status(500).json({ error: "That didn't save. Try again in a minute.", code: "failed" });
+    }
+  });
+}
 
 app.all(/^\/api\/.*/, async (req, res) => {
   const route = req.path.replace(/^\/api/, "");

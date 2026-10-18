@@ -10,10 +10,13 @@ So far: the sign-in screen, the home screen and the trainer's client list.
 ## One sign-in for every Trainability app
 
 Coach keeps no accounts. Every Trainability account lives in Studio's
-database, and Coach's server (`server/index.js`) relays exactly five routes to
-Studio's API: `/api/auth/door` (the sign-in screen's first question, which way
-in an email takes), `/api/auth/login`, `/api/auth/me`, `/api/auth/logout` and
-`/api/auth/forgot-password`. So:
+database, and Coach's server (`server/index.js`) relays its sign-in routes to
+Studio's API (`RELAYED`): `/api/auth/door` (the sign-in screen's first
+question, which way in an email takes), `/api/auth/login`, `/api/auth/me`,
+`/api/auth/logout`, `/api/auth/forgot-password` and `/api/auth/password`, and
+Accessibility's six (`/api/auth/theme`, `tone`, `contrast`, `motion`, `color`
+and `text-size`), so a Trainability trainer's look is Studio's own and the
+same in both apps (`src/lib/look.js`). So:
 
 - the email and password that work in Studio work in Coach, and a password
   changed or reset in one is changed in both;
@@ -28,8 +31,10 @@ kept in Coach's own database (`server/accounts.js`): `coach_accounts` (ids
 r 8, p 1, compared in constant time) and `coach_sessions` (only the SHA-256 of
 the random token in the HttpOnly `cx_session` cookie; a month with Keep me
 logged in, otherwise a day and the browser's session). `/api/auth/door`,
-`login`, `me`, `logout` and `forgot-password` look for a Coach account first
-and fall through to Studio when there is none; `/api/auth/signup` makes one
+`login`, `me`, `logout`, `forgot-password`, `password` and the six
+Accessibility routes look for a Coach account first and fall through to
+Studio when there is none (a Coach account's Accessibility is kept on
+`coach_accounts`); `/api/auth/signup` makes one
 (not for an email Studio says is a team account). Tries are limited: ten per
 email and fifty per address in fifteen minutes.
 

@@ -41,7 +41,7 @@ export function ForcedPasswordScreen({ user, onDone, onLogout }) {
     : "";
   return (
     <div className="min-h-dvh flex justify-center items-center p-4 relative overflow-hidden"
-      style={{ background: "linear-gradient(150deg, #007BA7 0%, #0B4F6E 45%, #172A3A 100%)" }}>
+      style={{ background: "var(--ground)" }}>
       <HexBackdrop />
       <form onSubmit={save} noValidate className="w-full max-w-sm relative z-10 cx-card p-7 space-y-4" style={{ borderRadius: 20, boxShadow: "0 18px 50px rgba(0,0,0,0.35)" }}>
         <div className="flex flex-col items-center text-center">

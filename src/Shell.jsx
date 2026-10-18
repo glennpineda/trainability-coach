@@ -37,7 +37,7 @@ const isPrimaryMaster = (user) => !!user?.isPrimary && user?.role === "master";
    The client list is held here, so Home can count it and the Clients tab
    opens on it without waiting, and asked for again on every change of tab
    so it never sits stale. */
-export function Shell({ user, onLogout, onSignedOut }) {
+export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
   const [tab, setTab] = useState(() => {
     try { const t = sessionStorage.getItem(KEY); return TABS.some(x => x.id === t) || PAGES.includes(t) ? t : "home"; } catch { return "home"; }
   });
@@ -70,7 +70,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
       <div aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
         <DriftingHexes bodyShare={0.75} />
       </div>
-      <Header user={user} onLogout={onLogout} billy={billy} onOpen={open} />
+      <Header user={user} onLogout={onLogout} billy={billy} onOpen={open} chooseLook={chooseLook} />
       {/* Room at the end for the bar floating over it; over the hexagons. */}
       <main className="pb-32 relative z-[1]">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} unread={unread} onOpenProgram={openProgram} onOpenClient={openClient} onSignedOut={onSignedOut} />}

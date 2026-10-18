@@ -29,7 +29,7 @@ of the app gets its own chapter here as it arrives.
    - [3.3 The bar at the bottom](#33-the-bar-at-the-bottom)
    - [3.4 The home screen](#34-the-home-screen)
    - [3.5 Your account menu](#35-your-account-menu)
-   - [3.6 Light or dark](#36-light-or-dark)
+   - [3.6 Accessibility — light or dark, theme, contrast, color, motion and text size](#36-accessibility--light-or-dark-theme-contrast-color-motion-and-text-size)
    - [3.7 My equipment](#37-my-equipment)
    - [3.8 My exercises](#38-my-exercises)
    - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
@@ -428,6 +428,9 @@ your Trainability account.* (3.5).
      2.5 kg. It is your own choice; other trainers keep theirs.
    - **Link your Trainability account** — only with a Coach account (2.1):
      connects it to a Trainability account with another email.
+   - **Accessibility** — light or dark, the app's colors, contrast, motion and
+     text size (3.6). The line under it says what you have chosen, such as
+     *Matches this device* or *Dark · High contrast*.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.1 · Caesious*. If you ever report a problem, say which
@@ -436,11 +439,80 @@ your Trainability account.* (3.5).
 To close it without choosing anything, tap the photo again, tap anywhere else,
 or press Esc on a keyboard.
 
-### 3.6 Light or dark
+### 3.6 Accessibility — light or dark, theme, contrast, color, motion and text size
 
-Coach follows your phone or computer. If your device is set to dark mode,
-Coach is dark too — a navy background with white and light blue words —
-and light otherwise. There is nothing to set in the app.
+Open your account menu (3.5) and tap **Accessibility**. It holds six
+settings, each a row of choices. The screen changes as soon as you tap, so
+there is nothing to save. Tap **X**, or anywhere outside the box, to close it.
+
+**Appearance** — light or dark.
+
+| | What you get |
+|---|---|
+| **Same as device** | Light or dark to match your phone or computer, changing when it does. This is where everybody starts. |
+| **Light** | Light, whatever the device is set to. |
+| **Dark** | Dark, whatever the device is set to: a navy background with white and light blue words. |
+
+**Theme** — the app's color. Each one comes in light and in dark, and follows
+whatever **Appearance** says.
+
+| | What you get |
+|---|---|
+| **Default** | Coach's usual cerulean and sky. This is where everybody starts. |
+| **Purple** | Violet and periwinkle, an homage to Trainability. |
+| **Blue** | A deep navy, a shade darker and calmer than Coach's usual blue. |
+| **Orange** | International Orange, the Golden Gate's own. Errors show in rose, so they aren't mistaken for the orange. |
+| **Green** | Olive, moss and sage. Something done, like a trained session's tick, shows in teal, so it stands apart from the green. |
+
+The Coach logo keeps its own blue in every theme. High contrast and reduced
+color still apply over any of them.
+
+**Contrast** — for when the usual colors are hard to make out.
+
+| | What you get |
+|---|---|
+| **Same as device** | High contrast only when your phone or computer is set to increase contrast in its own accessibility settings. This is where everybody starts. |
+| **Standard** | The usual colors, even on a device set to increase contrast. |
+| **High** | Black and white with strong outlines, and a bold ring around whatever you are on with the keyboard. It works with light or dark: high contrast in the dark is light text on black. The drifting hexagons in the background are left out. |
+
+**Color** — for when a screen full of color is too much.
+
+| | What you get |
+|---|---|
+| **Full** | The app's usual colors. This is where everybody starts. |
+| **Reduced** | Greys throughout, with one color kept for buttons, links and whatever is selected: Coach's blue, or your theme's own. Buttons and boxes you can type in get a darker outline. Photos keep their colors. The drifting hexagons are left out. |
+
+Nothing in Coach depends on color alone, so reduced color loses no
+information: a trained session has its tick, a cancelled one is crossed out,
+and what to know about a client is in words.
+
+**Motion** — for when things moving on the screen are distracting or make you
+feel unwell. Coach's quiet movement is mostly its background: blue hexagons
+drifting slowly behind every screen.
+
+| | What you get |
+|---|---|
+| **Same as device** | Less movement only when your phone or computer is set to reduce motion in its own accessibility settings. This is where everybody starts. |
+| **Reduced** | Nothing slides, sways or drifts. Panels open at once, Billy's face holds still, the hexagons hold still, and "You belong here." on the sign-in screen stays in one language. |
+| **Full** | All the app's movement, even on a device set to reduce motion. |
+
+**Text size** — **Small**, **Medium**, **Large** or **X Large**. Medium is the
+app's usual size and where everybody starts; **Small** is a step down, for
+fitting more on the screen, **Large** a step up and **X Large** one more.
+Everything grows with the words, buttons and spacing included, so nothing
+gets cramped.
+
+**It follows you.** All six are kept with your account rather than on the
+device, so picking **Dark** or **Large** on your phone changes your computer
+too the next time you sign in there. With a Trainability account they are the
+same settings as in Studio: change them in either app and both change. With a
+Coach account (2.1) they are Coach's own. Signed out, the sign-in screen goes
+back to the device's own size and colors.
+
+The pictures in this manual were all taken with these settings left where
+everybody starts, so a screen in a color theme, in dark or at a larger text
+size will not look like its picture. A program printed for a client (5.6)
+stays black on white whatever you choose.
 
 ### 3.7 My equipment
 
@@ -1211,6 +1283,7 @@ can write to them here.*
 | **Studio** | Trainability Studio, the business's scheduling and billing app, at trainabilitystudio.com. Your account lives there. |
 | **Temporary password** | A password emailed to you when yours is reset or forgotten. Use it once, then choose your own in Studio (2.4). |
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
+| **Accessibility** | Light or dark, the app's colors, contrast, motion and text size, chosen in the account menu (3.6). The same as in Studio for a Trainability account. |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
 | **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
@@ -1221,7 +1294,7 @@ can write to them here.*
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Accessibility, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>

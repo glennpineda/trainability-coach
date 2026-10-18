@@ -9,6 +9,7 @@ import { CoachWordmark } from "./CoachWordmark";
 import { AccountMenu } from "./AccountMenu";
 import { BillyButton, BillyPanel } from "../billy/Billy";
 import { STUDIO_URL } from "../lib/api";
+import { useScheme } from "../hooks/useScheme";
 
 /* A badge's square, as in Studio's header: the logo is drawn at it so
    everything in the row stands the same height. */
@@ -26,7 +27,8 @@ const SLIDE_MS = 220;
  * always there. Open, the badge stops being a badge on top of a panel and
  * becomes the top of it: one fill, one outline (.cx-logo-badge-open).
  */
-export function Header({ user, onLogout, billy, onOpen }) {
+export function Header({ user, onLogout, billy, onOpen, chooseLook }) {
+  const scheme = useScheme();
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const panelRef = useRef(null);
@@ -111,10 +113,9 @@ export function Header({ user, onLogout, billy, onOpen }) {
           title={open ? "Hide" : "Switch apps"}
         >
           {/* The logo kit's two badges: cerulean on light, white on dark. */}
-          <picture className="flex-none">
-            <source srcSet={badgeMarkDark} media="(prefers-color-scheme: dark)" />
-            <img src={badgeMark} alt="" style={{ width: BADGE, height: BADGE, display: "block" }} />
-          </picture>
+          {/* Light or dark as the page is (useScheme), which may be chosen
+              rather than the device's. */}
+          <img src={scheme === "dark" ? badgeMarkDark : badgeMark} alt="" className="flex-none" style={{ width: BADGE, height: BADGE, display: "block" }} />
           <span className="cx-logo-label">
             <CoachWordmark label="" className="h-[15px] sm:h-[17px] w-auto" style={{ color: "var(--wordmark)" }} />
           </span>
@@ -133,7 +134,7 @@ export function Header({ user, onLogout, billy, onOpen }) {
         <div className="cx-badge-row">
           {/* Billy, when this server has him (useBilly). */}
           {billy?.available && <BillyButton billy={billy} />}
-          <AccountMenu user={user} onLogout={onLogout} onOpen={onOpen} billy={billy} />
+          <AccountMenu user={user} onLogout={onLogout} onOpen={onOpen} billy={billy} chooseLook={chooseLook} />
         </div>
         {billy?.available && <BillyPanel billy={billy} />}
 

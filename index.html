@@ -26,6 +26,27 @@
          Studio); these only open the connections early. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Accessibility (src/lib/look.js): the look this browser was last
+         signed in with, on <html> before anything is drawn, so a dark or
+         large page doesn't open light and small for a moment. The same
+         answers as look.js's applyLook and resolveLook, kept short. -->
+    <script>
+      (function () {
+        var d = document.documentElement.dataset, l = {};
+        try { l = JSON.parse(localStorage.getItem("cx-look") || "{}") || {}; } catch (e) {}
+        var m = function (q) { return !!(window.matchMedia && window.matchMedia(q).matches); };
+        if (l.theme === "light" || l.theme === "dark") d.theme = l.theme;
+        if (["purple", "blue", "orange", "green"].indexOf(l.tone) >= 0) d.tone = l.tone;
+        if (l.contrast === "more" || l.contrast === "standard") d.contrast = l.contrast;
+        if (l.motion === "reduced" || l.motion === "full") d.motion = l.motion;
+        if (l.color === "reduced") d.color = "reduced";
+        var size = { small: "87.5%", large: "112.5%", xlarge: "125%" }[l.textSize];
+        if (size) document.documentElement.style.fontSize = size;
+        d.scheme = d.theme || (m("(prefers-color-scheme: dark)") ? "dark" : "light");
+        if (d.contrast === "more" || (d.contrast !== "standard" && m("(prefers-contrast: more)"))) d.hc = "on";
+        if (d.motion === "reduced" || (d.motion !== "full" && m("(prefers-reduced-motion: reduce)"))) d.still = "on";
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

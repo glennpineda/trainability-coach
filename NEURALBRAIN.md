@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Accessibility, copied from Studio** (18 Oct 2026; Glenn: "Can you copy all the accessibility settings into Coach from Studio as well?"). Build 1.0.59. Not from Next up. **Studio first**: its MANUAL 8.10 and `src/components/Appearance.jsx` (main): six settings on Profile → Accessibility, each a row of chips that changes the screen at once with nothing to save. Appearance (Same as device, Light, Dark), Theme (Default, Purple, Blue, Orange, Green; `tone` in the code), Contrast (Same as device, Standard, High), Color (Full, Reduced), Motion (Same as device, Reduced, Full), Text size (Small 87.5%, Medium, Large 112.5%, X Large 125% on `<html>`). Kept on the account (Studio's `users` columns, one route each: `POST /api/auth/theme`, `tone`, `contrast`, `motion`, `color`, `text-size`, each answering `{ user }`; `/auth/me` carries all six), put on `<html>` as data-theme, data-tone, data-contrast, data-motion, data-color and the font size; remembered in localStorage for the first paint and forgotten on signing out; its theme.jsx draws each tone's light and dark palette, reduced color (greys, one accent kept), high contrast (7:1, ink-coloured lines, no shadows or gradients, a 3px focus ring), both together, and `still()` for motion. **Decisions, asked one at a time**: (1) shared with Studio or Coach's own: Glenn chose **shared with Studio** (recommended): a Trainability trainer's are read from and saved to their Studio account, so both apps match; a Coach account's are kept in Coach. (2) the themes: offered Studio's own palettes (recommended) or Coach versions; Glenn chose **Coach versions of each**. **Server**: the six routes added to `RELAYED` (`server/index.js`), so a Studio trainer's choice goes to Studio unchanged and `/auth/me` already brings them back; for a Coach account the same six routes are answered first (a loop over theme, tone, contrast, motion, color, text-size), checked against Studio's values (`accounts.LOOK`), stored in new `coach_accounts` columns (`theme`, `tone`, `contrast`, `motion`, `color`, `text_size`, Studio's defaults) and returned through `asUser`; a value not on the list is refused with Studio's words ("That is not one of the choices for how a screen looks"). **Page**: `src/lib/look.js` (Studio's values, chip words and summary line; `applyLook`, `rememberLook` under `cx-look`, `lookOf`), applied by `App.jsx` whenever the user's six change, the device's own when signed out, untouched while the first `/auth/me` is on its way; `index.html` puts the remembered look on before anything draws. One difference from Studio, to keep Coach's stylesheet plain: Studio answers "Same as device" with media queries in its generated CSS, so Coach's look.js writes the answer too, as `data-scheme` (light or dark now), `data-hc` and `data-still`, and follows the device's own changes through `matchMedia` listeners; the stylesheet asks one attribute each. `chooseLook` in `useAuth` puts a choice on at once and saves it, putting it back with "Couldn't reach Trainability, so that wasn't saved." if it fails. **Dialog** (`src/chrome/AccessibilityDialog.jsx`), from the account menu's new **Accessibility** line, which says Studio's summary under it ("Matches this device · Reduced motion · X Large text"): Studio's six rows and sentences, in Coach's switch (the Clients page's Active and Archived) rather than Studio's chips; "on every device you sign in on" reads "in Coach and Studio, on every device you sign in on" for a Trainability trainer. The theme sentences are Coach's: Default "Coach's usual cerulean and sky."; Purple keeps Studio's homage; Blue "A deep navy, a shade darker and calmer than Coach's usual blue."; Orange keeps Studio's San Francisco line and says errors show in rose; Green keeps Studio's olive and says something done shows in teal. **Colours** (`src/look.css`, unlayered so it wins over the tokens and pieces; imported by `src/index.css`): index.css's dark block now answers `:root[data-scheme="dark"]` instead of `prefers-color-scheme`; new tokens for what was hard-coded blue (`--band-from`/`--band-to` for Home's band, `--ground` for the sign-in, temporary-password and loading screens, `--accent-glow` and `--accent-ring` for the primary button, the lit tab and the focused field; HexBackdrop's gradients now `var(--sky)`/`var(--cerulean)`). The four themes, light and dark, each setting the accent, its fills, `--cerulean`/`--sky` (the lit tab), the band and ground, the drifting hexagons and greys tinted toward it: Purple violet #5B4BC4 / periwinkle #ADA0F5 in dark; Blue a deep navy #1F4E8C / #8FB0EA; Orange #B03300 text and #B83500 fills / #FF8A4C, with errors moved to rose (#B3264E, #FF8FB0); Green olive #555C22 text and #5F6A2A fills / #C2C98A, with "done" moved to teal (#2F6F62, #7FD1C0). The logo keeps its own cerulean in every theme. Reduced color: Studio's greys and lightness steps light and dark, the accent left as the theme set it (Coach's cerulean darkened to #00668C on the light grey, where it read 4.0:1), a grey band and ground, flat buttons, darker control edges, a 3px focus ring, and no hexagons. High contrast: Studio's approach in Coach's blue (#00507A light, #8FD3FF dark), black or off-white ink lines, 2px card edges, solid header and tab bar, flat primary button with an ink ring, no shadows, glows or hexagons, and its reds, greens and ambers taken out when reduced color is on too (`html:root:root` so it outweighs reduced color's darker accent). Motion: index.css's `prefers-reduced-motion` block moved to `:root[data-still]`; the sign-in hexagons, "You belong here." (PhraseCycle, now on `lib/motion`), the drifting hexagons and Billy all follow it. The header badge and the sign-in lockup chose their dark versions by the device's media query; they now follow `data-scheme` (`src/hooks/useScheme.js`). DriftingHexes also redraws on `data-scheme` and `data-hc`, and is cleared under high contrast or reduced color. **Checked**: a WCAG pass over every palette (ink on paper, iron on chalk and paper, accent on chalk and paper, white on the fills and the band, ember, amber, moss): all four themes, light and dark, reduced color and high contrast (7:1 for its text) pass; Coach's own default accent on the page ground is 4.44:1, as it was before this. **Tested** against the stand-in Studio (taught the six routes) and a Coach account: at the API (a Studio trainer's tone saved through the relay and back on `/auth/me`; a Coach account's theme saved in Coach; bad values refused for both); in Chromium at phone width: the menu line, the dialog, Dark, all four themes in light and in dark, reduced color with Default and with Orange, high contrast light and dark (and its dialog), X Large text, reduced motion; a reload had the look on before first paint and the server held it; signing out put the device's own back and kept nothing; a Coach account's Dark and Green came back after a reload. The stand-in has no Log out route, which showed as a 404 on signing out; the real Studio has one. **Not tested**: the real Studio's `/auth/me` and save routes (a cloud session can't run its fixture), Windows' contrast themes (Studio has rules for them; Coach doesn't yet), and the printed program, which stays black on white by its own colours. Files: `src/lib/look.js`, `src/look.css`, `src/chrome/AccessibilityDialog.jsx`, `src/hooks/useScheme.js` (new), `index.html`, `src/index.css`, `src/App.jsx`, `src/hooks/useAuth.js`, `src/Shell.jsx`, `src/chrome/Header.jsx`, `src/chrome/AccountMenu.jsx`, `src/chrome/DriftingHexes.jsx`, `src/auth/CoachLockup.jsx`, `src/auth/HexBackdrop.jsx`, `src/auth/PhraseCycle.jsx`, `src/auth/LoginScreen.jsx`, `src/auth/ForcedPasswordScreen.jsx`, `src/tabs/HomeTab.jsx`, `server/index.js`, `server/accounts.js`, `server/db.js`, MANUAL.md (3.5's menu, 3.6 now Accessibility in Studio's words, Words), README.md, CLAUDE.md (the relayed routes), CHANGELOG.md.
+
 - **Studio's drifting hexagons, in Coach's blues** (18 Oct 2026; Glenn: "Can you replicate the floating sex on the background of Studio in Coach? But it different blue hues", hexes meant). Build 1.0.58. Not from Next up. **Studio first**: its `src/chrome/DriftingHexes.jsx` (main), a canvas of twelve of the logo's rounded hexagons (radius 8–42% of the shorter side, 3–12 px a second at a random angle, turning up to 0.02 rad/s, each laid down at 5–12% and less behind the page body, `bodyShare`), at twenty frames a second, carried on from one field to the next through a window global, still when motion is reduced, gone when contrast is turned up, and set from a fixed seed and held still under a driven browser so screenshots match. Studio mounts it behind its app shell (`bodyShare` 0.75, full strength behind its header and tab bar, `.iw-navbar`) and, held to the window in a fixed layer, over its sign-in gradient (`bodyShare` 1.3) on top of its older HexBackdrop. **Copied** as it is to `src/chrome/DriftingHexes.jsx`, with its helpers `roundedPath` (Studio's `src/lib/hexagon.js` → `src/lib/hexagon.js`) and `reducedMotionNow`/`watchReducedMotion` (its `src/hooks/useReducedMotion.js` → `src/lib/motion.js`; Coach has no Motion setting, so `data-motion` is only read if ever set). **Changed**: the tones are four blues as tokens in `src/index.css`, `--hex-1`…`--hex-4` (light: Cerulean #007BA7, Sky #4FA8DC, deep #0B5C8A, a bluer #3D7BC4; dark: #4FA8DC, #7EC3EA, #2E8BC0, #6E9EE0), where Studio reads `--mark-from`, `--lilac`, `--magenta`, `--plum`; the bars drawn at full strength are Coach's header and tab-bar pill (`.cx-headbar`, `.cx-navwrap`), found in the document rather than in a parent; the global is `__cxHexes` and the redraw event `cx-redraw`. **Placed** as Studio's sign-in screen places it, in a fixed layer behind everything (z-index 0) with the page's `main` lifted over it (`relative z-[1]`): in `Shell.jsx` at `bodyShare` 0.75, and on `LoginScreen.jsx` at 1.3 over the gradient with Coach's HexBackdrop kept, as Studio keeps its own. The sign-in field hands its shapes to the app's on sign-in. **Tested** in Chromium against the stand-ins at phone width, light and dark (sign-in, Home, Clients, Messages) and at 1280 wide: the hexagons show softly in the open ground and behind the header and bar, cards and the Home band stay solid over them, no page errors. Under a driven browser they are held still from the fixed seed, as in Studio, so the movement itself was not watched here; it is Studio's code unchanged. Files: `src/chrome/DriftingHexes.jsx`, `src/lib/hexagon.js`, `src/lib/motion.js` (new), `src/Shell.jsx`, `src/auth/LoginScreen.jsx`, `src/index.css`, CHANGELOG.md.
 
 - **The logo kit again: the dot taken out** (18 Oct 2026; Glenn, sending a new `trainability-coach-logo.zip`: "Replace the logo kit again"). Build 1.0.57. Not from Next up. Unpacked in the scratchpad (`logo-kit-4`) and compared with `brand/` (build 1.0.43): the same files, all changed but none renamed; side by side in Chromium the only difference is that the centred dot inside the C is gone, in the app icon, both badges, the lockups and the favicon. The kit's README says so too ("chevron and COACH on dark", no "centered dot"). Sizes are unchanged (the badge's viewBox still 182 × 180, the lockup's 507.52 × 521.25), and so are the COACH outlines (`CoachWordmark.jsx` untouched). **Checked**: the app-icon PNGs (512, 192, 180) fully opaque with the Navy corner; on the 512 px icon the white reaches 191 px from the centre, inside the 204.8 px maskable safe circle. **Put in place** as in builds 1.0.42 and 1.0.43: `brand/` replaced with the kit, its README's "In the app" section added back (the first try carried one line of the kit's own text over twice, taken out); the same copies into `src/assets/` and `public/`; and, missed at 1.0.43, `public/coach-mark.png`, the emails' logo, made again from the kit's light badge at 256 px, since it carried the dot. `?v=4` → `?v=5` on the icon addresses in `index.html` and `public/manifest.webmanifest`, with the note saying so. CHANGELOG's logo line now describes the mark without the dot. **Tested** in Chromium against the stand-ins: the four icon addresses at ?v=5 answered 200 and the manifest lists them; the sign-in lockup, the header badge and apps panel (dark), the rounded icon and the favicon; no page errors; the comparison and the screens sent to Glenn. **Glenn's to do**: after the deploy, remove Coach from the iPhone's home screen and add it again from Safari. The manual's pictures `docs/images/01`–`04` still show an earlier mark, for `npm run screenshots` on the Mac.
@@ -246,7 +248,7 @@ of the app gets its own chapter here as it arrives.
    - [3.3 The bar at the bottom](#33-the-bar-at-the-bottom)
    - [3.4 The home screen](#34-the-home-screen)
    - [3.5 Your account menu](#35-your-account-menu)
-   - [3.6 Light or dark](#36-light-or-dark)
+   - [3.6 Accessibility — light or dark, theme, contrast, color, motion and text size](#36-accessibility--light-or-dark-theme-contrast-color-motion-and-text-size)
    - [3.7 My equipment](#37-my-equipment)
    - [3.8 My exercises](#38-my-exercises)
    - [3.9 Reviewing and editing Coach IQ (Primary Master only)](#39-reviewing-and-editing-coach-iq-primary-master-only)
@@ -645,6 +647,9 @@ your Trainability account.* (3.5).
      2.5 kg. It is your own choice; other trainers keep theirs.
    - **Link your Trainability account** — only with a Coach account (2.1):
      connects it to a Trainability account with another email.
+   - **Accessibility** — light or dark, the app's colors, contrast, motion and
+     text size (3.6). The line under it says what you have chosen, such as
+     *Matches this device* or *Dark · High contrast*.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.1 · Caesious*. If you ever report a problem, say which
@@ -653,11 +658,80 @@ your Trainability account.* (3.5).
 To close it without choosing anything, tap the photo again, tap anywhere else,
 or press Esc on a keyboard.
 
-#### 3.6 Light or dark
+#### 3.6 Accessibility — light or dark, theme, contrast, color, motion and text size
 
-Coach follows your phone or computer. If your device is set to dark mode,
-Coach is dark too — a navy background with white and light blue words —
-and light otherwise. There is nothing to set in the app.
+Open your account menu (3.5) and tap **Accessibility**. It holds six
+settings, each a row of choices. The screen changes as soon as you tap, so
+there is nothing to save. Tap **X**, or anywhere outside the box, to close it.
+
+**Appearance** — light or dark.
+
+| | What you get |
+|---|---|
+| **Same as device** | Light or dark to match your phone or computer, changing when it does. This is where everybody starts. |
+| **Light** | Light, whatever the device is set to. |
+| **Dark** | Dark, whatever the device is set to: a navy background with white and light blue words. |
+
+**Theme** — the app's color. Each one comes in light and in dark, and follows
+whatever **Appearance** says.
+
+| | What you get |
+|---|---|
+| **Default** | Coach's usual cerulean and sky. This is where everybody starts. |
+| **Purple** | Violet and periwinkle, an homage to Trainability. |
+| **Blue** | A deep navy, a shade darker and calmer than Coach's usual blue. |
+| **Orange** | International Orange, the Golden Gate's own. Errors show in rose, so they aren't mistaken for the orange. |
+| **Green** | Olive, moss and sage. Something done, like a trained session's tick, shows in teal, so it stands apart from the green. |
+
+The Coach logo keeps its own blue in every theme. High contrast and reduced
+color still apply over any of them.
+
+**Contrast** — for when the usual colors are hard to make out.
+
+| | What you get |
+|---|---|
+| **Same as device** | High contrast only when your phone or computer is set to increase contrast in its own accessibility settings. This is where everybody starts. |
+| **Standard** | The usual colors, even on a device set to increase contrast. |
+| **High** | Black and white with strong outlines, and a bold ring around whatever you are on with the keyboard. It works with light or dark: high contrast in the dark is light text on black. The drifting hexagons in the background are left out. |
+
+**Color** — for when a screen full of color is too much.
+
+| | What you get |
+|---|---|
+| **Full** | The app's usual colors. This is where everybody starts. |
+| **Reduced** | Greys throughout, with one color kept for buttons, links and whatever is selected: Coach's blue, or your theme's own. Buttons and boxes you can type in get a darker outline. Photos keep their colors. The drifting hexagons are left out. |
+
+Nothing in Coach depends on color alone, so reduced color loses no
+information: a trained session has its tick, a cancelled one is crossed out,
+and what to know about a client is in words.
+
+**Motion** — for when things moving on the screen are distracting or make you
+feel unwell. Coach's quiet movement is mostly its background: blue hexagons
+drifting slowly behind every screen.
+
+| | What you get |
+|---|---|
+| **Same as device** | Less movement only when your phone or computer is set to reduce motion in its own accessibility settings. This is where everybody starts. |
+| **Reduced** | Nothing slides, sways or drifts. Panels open at once, Billy's face holds still, the hexagons hold still, and "You belong here." on the sign-in screen stays in one language. |
+| **Full** | All the app's movement, even on a device set to reduce motion. |
+
+**Text size** — **Small**, **Medium**, **Large** or **X Large**. Medium is the
+app's usual size and where everybody starts; **Small** is a step down, for
+fitting more on the screen, **Large** a step up and **X Large** one more.
+Everything grows with the words, buttons and spacing included, so nothing
+gets cramped.
+
+**It follows you.** All six are kept with your account rather than on the
+device, so picking **Dark** or **Large** on your phone changes your computer
+too the next time you sign in there. With a Trainability account they are the
+same settings as in Studio: change them in either app and both change. With a
+Coach account (2.1) they are Coach's own. Signed out, the sign-in screen goes
+back to the device's own size and colors.
+
+The pictures in this manual were all taken with these settings left where
+everybody starts, so a screen in a color theme, in dark or at a larger text
+size will not look like its picture. A program printed for a client (5.6)
+stays black on white whatever you choose.
 
 #### 3.7 My equipment
 
@@ -1428,6 +1502,7 @@ can write to them here.*
 | **Studio** | Trainability Studio, the business's scheduling and billing app, at trainabilitystudio.com. Your account lives there. |
 | **Temporary password** | A password emailed to you when yours is reset or forgotten. Use it once, then choose your own in Studio (2.4). |
 | **Keep me logged in** | The tick box that keeps you signed in for up to 30 days on this device (2.2). |
+| **Accessibility** | Light or dark, the app's colors, contrast, motion and text size, chosen in the account menu (3.6). The same as in Studio for a Trainability account. |
 | **Coming soon** | A part of Coach that is planned but not built yet. |
 | **Active client** | A client on your list who you are still training. |
 | **Program** | A plan of training days for one client, designed in Coach (chapter 5). Only the trainer who wrote it sees it. |
@@ -1438,7 +1513,7 @@ can write to them here.*
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Accessibility, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>

@@ -120,7 +120,30 @@ export const endSession = (token) => token ? run(`DELETE FROM coach_sessions WHE
 
 /** An account as the app sees a signed-in person: a trainer, marked as Coach's own. */
 export const asUser = (a) => ({ id: a.id, name: a.name, email: a.email, role: "trainer", coachAccount: true,
-  ...(Number(a.must_change_password) ? { mustChangePassword: true } : {}) });
+  ...(Number(a.must_change_password) ? { mustChangePassword: true } : {}),
+  theme: a.theme || "system", tone: a.tone || "", contrast: a.contrast || "system", motion: a.motion || "system",
+  color: a.color || "full", textSize: a.text_size || "medium" });
+
+/* ------------------------------------------------- Accessibility
+
+   A Coach account's six, as Studio keeps a trainer's (its server/people.js:
+   the same values, one route each, /api/auth/theme … /api/auth/text-size).
+   A Trainability trainer's are Studio's, through the relay. */
+export const LOOK = {
+  theme: { column: "theme", allowed: ["system", "light", "dark"] },
+  tone: { column: "tone", allowed: ["", "purple", "blue", "orange", "green"] },
+  contrast: { column: "contrast", allowed: ["system", "standard", "more"] },
+  motion: { column: "motion", allowed: ["system", "reduced", "full"] },
+  color: { column: "color", allowed: ["full", "reduced"] },
+  textSize: { column: "text_size", allowed: ["small", "medium", "large", "xlarge"] },
+};
+/** One of them changed; false when the value isn't one of its choices. */
+export async function setLook(account, key, value) {
+  const k = LOOK[key];
+  if (!k || !k.allowed.includes(value)) return false;
+  await run(`UPDATE coach_accounts SET ${k.column} = ? WHERE id = ?`, [value, account.id]);
+  return true;
+}
 
 /* ------------------------------------------------- a forgotten password
 
