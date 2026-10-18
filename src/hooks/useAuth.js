@@ -55,5 +55,8 @@ export function useAuth() {
      to sign-in, with nothing to tell Studio. */
   const signedOut = useCallback(() => setUser(null), []);
 
-  return { user, offline, login, signup, logout, signedOut };
+  /* Their own password chosen after a temporary one. */
+  const passwordChosen = useCallback(() => setUser(u => (u ? { ...u, mustChangePassword: false } : u)), []);
+
+  return { user, offline, login, signup, logout, signedOut, passwordChosen };
 }

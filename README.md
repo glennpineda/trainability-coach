@@ -174,6 +174,23 @@ As in Studio:
 - **`NEURALBRAIN.md`** — every finished item and test run, with how it was
   done, newest first.
 
+## Email
+
+Coach sends one email so far: a Coach account's temporary password, when
+Forgot password? is used (`server/accounts.js`, `resetPassword`). It is sent
+by `server/email.js`, Studio's own mailer cut down, with Studio's settings:
+
+| Setting | |
+|---|---|
+| `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` (`SMTP_PORT`, 465 by default) | A mail server, where the host lets a process reach one. |
+| `EMAIL_GATEWAY=on` (and `EMAIL_GATEWAY_FROM`) | GoDaddy Node.js Hosting's own gateway, for a host that routes no SMTP; as Studio's. |
+| `EMAIL_ALLOWLIST` | While set, only these addresses are emailed (testing). |
+| `MESSAGES_OFF=on` | Nothing is sent. |
+| `APP_ORIGIN` | The address put in the email, e.g. `https://trainabilitycoach.com`; the request's own if unset. |
+
+With none set, as with Studio, the temporary password is written to the
+server's log instead, since only its hash is kept.
+
 ## Deploying (GoDaddy Airo)
 
 Like Studio: push the repository to GitHub, point an Airo app at it, set the

@@ -22,8 +22,7 @@ finished stays here.
 
 _Things actually ready to do._
 
-- **Coach accounts, stage four: password reset by email**, which needs Coach
-  to send email.
+Nothing waiting.
 
 ## Found in testing
 

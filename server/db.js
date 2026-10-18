@@ -388,6 +388,9 @@ const COLUMNS = [
      in with Studio's password and its data is that Studio user's. */
   ["coach_accounts", "studio_user_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
   ["coach_accounts", "linked_at", "VARCHAR(32) NULL"],
+  /* Signed in with a temporary password (stage four, as Studio's
+     must_change_password): they choose their own before anything else. */
+  ["coach_accounts", "must_change_password", "INTEGER NOT NULL DEFAULT 0"],
 ];
 
 async function hasColumn(table, column) {

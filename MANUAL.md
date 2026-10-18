@@ -209,24 +209,30 @@ When you are still signed in, opening Coach goes straight to the home screen.
 The temporary password works in Coach and in Studio. See 2.4 for what to do
 next.
 
-For a Coach account (2.1), resetting the password by email isn't ready yet:
-tapping **Send temporary password** says *Resetting a Coach account's
-password by email isn't ready yet. It's coming soon.*
+It works the same for a Coach account (2.1): the temporary password comes
+from Coach, by email, and works in Coach only. The screen says *If that email
+belongs to an account, a temporary password is on its way to it.* Asking more
+than three times in a quarter of an hour says *Too many attempts. Try again in
+a few minutes.*
 
 ### 2.4 Signed in with a temporary password
 
 A temporary password is meant to be used once and then replaced with your own.
-When you sign in to Coach with one, the home screen shows a box at the top:
-*You're signed in with a temporary password.*
+When you sign in with one, before anything else Coach shows **Set a new
+password**: *Hi …, you logged in with a temporary password. Choose your own
+to continue.*
 
-1. Tap **Studio** in that box. Studio opens.
-2. Sign in to Studio with the same temporary password.
-3. Studio asks you to choose your own password. Type it into **New password**
-   and again into **Confirm new password** — at least 8 characters — and tap
-   **Set password & continue**.
+1. Type your own password into **New password**: at least 8 characters.
+2. Type it again into **Confirm new password**.
+3. Tap **Set password & continue**. You are on the home screen.
 
-Your new password now works in both apps. The box in Coach goes away the next
-time you sign in to Coach.
+If the two don't match, it says *Passwords don't match.*; if it is too short,
+*New password must be at least 8 characters.*; and it can't be the temporary
+one again (*Choose a password different from the one you have now.*).
+**Log out instead** leaves without choosing.
+
+For a Trainability account, your new password works in Studio too, as it is
+the same account. For a Coach account, it is Coach's.
 
 > **An account that came over from the old app.** If your account was moved
 > across from the old Trainability app and has not been given a password yet,

@@ -53,8 +53,9 @@ const SESSION_COOKIE = "ts_session";
 const PKG = (() => { try { return JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")); } catch { return {}; } })();
 
 /* The sign-in routes Studio answers for Coach. /auth/door is the one sign-in
-   screen's first question, which way in an email takes (Glenn, 17 Oct 2026). */
-const RELAYED = new Set(["/auth/door", "/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password"]);
+   screen's first question, which way in an email takes (Glenn, 17 Oct 2026);
+   /auth/password is choosing one's own after a temporary one (build 1.0.52). */
+const RELAYED = new Set(["/auth/door", "/auth/login", "/auth/logout", "/auth/me", "/auth/forgot-password", "/auth/password"]);
 
 const app = express();
 app.disable("x-powered-by");
@@ -1491,15 +1492,41 @@ app.post("/api/auth/logout", async (req, res, next) => {
   res.json({ ok: true });
 });
 
-/* Coach can't send email yet, so a Coach account's password can't be reset
-   by email; said plainly rather than pretending to send one. */
+/* A Coach account's forgotten password, Studio's way (accounts.resetPassword):
+   a temporary one emailed, and the same answer whoever asks, so the page
+   can't be used to learn who has an account. Any other email is Studio's. */
 app.post("/api/auth/forgot-password", async (req, res, next) => {
   try {
-    if (await accounts.accountByEmail(req.body?.email)) {
-      return res.status(400).json({ error: "Resetting a Coach account's password by email isn't ready yet. It's coming soon.", code: "not_yet" });
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const account = email ? await accounts.accountByEmail(email) : null;
+    if (!account) return next();
+    const wait = accounts.resetAllowed(req.ip, email);
+    if (wait) {
+      res.set("Retry-After", String(wait));
+      return res.status(429).json({ error: "Too many attempts. Try again in a few minutes.", code: "rate_limited" });
     }
-  } catch (err) { console.error(`Coach forgot-password failed: ${err.message}`); }
-  next();
+    await accounts.resetPassword(account, process.env.APP_ORIGIN || `${req.protocol}://${req.get("host")}`);
+    res.json({ ok: true, message: "If that email belongs to an account, a temporary password is on its way to it." });
+  } catch (err) {
+    console.error(`Coach forgot-password failed: ${err.message}`);
+    res.status(500).json({ error: "That could not be sent. Try again in a minute.", code: "failed" });
+  }
+});
+
+/* Choosing their own password (Studio's /api/auth/password): a Coach
+   account's here; a Studio account's is relayed to Studio. */
+app.post("/api/auth/password", async (req, res, next) => {
+  try {
+    const token = cookieOf(req, accounts.COOKIE);
+    const account = token ? await accounts.accountOfSession(token) : null;
+    if (!account) return next();
+    const wrong = await accounts.changePassword(account, req.body || {}, token);
+    if (wrong) return res.status(wrong.status).json({ error: wrong.error, ...(wrong.code ? { code: wrong.code } : {}) });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(`Coach password change failed: ${err.message}`);
+    res.status(500).json({ error: "Your password couldn't be changed. Try again in a minute.", code: "failed" });
+  }
 });
 
 app.all(/^\/api\/.*/, async (req, res) => {

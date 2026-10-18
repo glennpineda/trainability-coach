@@ -11,8 +11,8 @@ described in `README.md`.
   (`glennpineda/trainability-studio`). Live at trainabilitycoach.com on GoDaddy
   Airo. The start command is `npm start`, which builds and then serves.
 - **Two kinds of account.** Trainability's own trainers sign in with their
-  Studio account: `server/index.js` relays five routes (`/api/auth/door`,
-  `login`, `me`, `logout`, `forgot-password`) to Studio's API at
+  Studio account: `server/index.js` relays six routes (`/api/auth/door`,
+  `login`, `me`, `logout`, `forgot-password`, `password`) to Studio's API at
   `STUDIO_ORIGIN`, the same password as Studio but a separate session, and
   their clients are kept in Studio, through its API, with nothing on screen
   saying so. Any other trainer can make a **Coach account**
@@ -24,8 +24,10 @@ described in `README.md`.
   (`accounts.link`: same email at sign-in, or the account menu's Link your
   Trainability account) and becomes it, its data re-keyed to the Studio user;
   its clients stay in Coach until the trainer moves them
-  (`/api/clients/move`), since the business can see Studio's clients. Still
-  to come: password reset by email (BRAINSTORM, Next up). Most Coach work should need no change to
+  (`/api/clients/move`), since the business can see Studio's clients. A
+  Coach account's forgotten password is reset Studio's way: a temporary one
+  emailed (`server/email.js`, Studio's mailer and settings), and their own
+  chosen before anything else. Most Coach work should need no change to
   Studio. If one seems needed, say so and ask first.
 - The stack matches Studio's: React 18, Vite 8, Tailwind 4 (CSS-first: no tailwind.config.js), lucide icons and
   Express. So does the look: Roboto for text and headings (500, 0.01em),

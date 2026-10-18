@@ -2,6 +2,8 @@ import crypto from "node:crypto";
 import { promisify } from "node:util";
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
+import { tempPassword } from "./temp-password.js";
+import { sendEmail, EMAIL_CONFIGURED } from "./email.js";
 
 /**
  * Coach's own accounts, for trainers who aren't on Trainability's team
@@ -116,7 +118,88 @@ export async function accountOfSession(token) {
 export const endSession = (token) => token ? run(`DELETE FROM coach_sessions WHERE token_hash = ?`, [tokenHash(token)]) : null;
 
 /** An account as the app sees a signed-in person: a trainer, marked as Coach's own. */
-export const asUser = (a) => ({ id: a.id, name: a.name, email: a.email, role: "trainer", coachAccount: true });
+export const asUser = (a) => ({ id: a.id, name: a.name, email: a.email, role: "trainer", coachAccount: true,
+  ...(Number(a.must_change_password) ? { mustChangePassword: true } : {}) });
+
+/* ------------------------------------------------- a forgotten password
+
+   Studio's way (its /api/auth/forgot-password and account-emails.js; stage
+   four, Glenn, 18 Oct 2026): a temporary password, easy to type on a phone
+   (temp-password.js), emailed; the old one stops working and every session
+   ends; the next sign-in asks for their own before anything else. Only the
+   hash is kept, so if the email can't go, the password goes to the server's
+   log, as Studio's does, rather than being lost. */
+
+/* Three asks per account and twenty per address in fifteen minutes, Studio's numbers. */
+const resets = new Map();
+export function resetAllowed(ip, email) {
+  const t = Date.now();
+  for (const [k, max] of [[`ip:${ip}`, 20], [`em:${emailKey(email)}`, 3]]) {
+    const list = (resets.get(k) || []).filter(x => t - x < 15 * 60 * 1000);
+    resets.set(k, list);
+    if (list.length >= max) return Math.ceil((list[0] + 15 * 60 * 1000 - t) / 1000);
+  }
+  for (const k of [`ip:${ip}`, `em:${emailKey(email)}`]) resets.get(k).push(t);
+  return 0;
+}
+
+/** The email, built apart from the sending (Studio's credentialsEmail, for an asked-for reset). */
+export function resetEmail({ name, email, temp, origin }) {
+  const first = String(name || "").trim().split(" ")[0] || "there";
+  const link = String(origin || "").replace(/\/$/, "");
+  const text = [
+    `Hi ${first},`, "",
+    "A new password was asked for on Coach's sign-in page, so your old one no longer works.", "",
+    `Sign in with:  ${email}`, `Temporary password:  ${temp}`, link ? `\n${link}` : "", "",
+    "Sign in with this temporary one and choose your own.",
+    "If you did not ask for this, someone typed your email on Coach's sign-in page. Sign in with this one and choose your own all the same.",
+    "", "Trainability Coach",
+  ].join("\n");
+  const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const html = `<div style="font-family:Roboto,Arial,sans-serif;color:#172A3A;font-size:15px;line-height:1.5">
+<p>Hi ${esc(first)},</p>
+<p>A new password was asked for on Coach's sign-in page, so your old one no longer works.</p>
+<p style="background:#E8F4FA;border-radius:10px;padding:12px 14px">Sign in with: <strong>${esc(email)}</strong><br>Temporary password: <strong style="font-family:Menlo,monospace">${esc(temp)}</strong></p>
+${link ? `<p><a href="${esc(link)}" style="color:#007BA7">${esc(link)}</a></p>` : ""}
+<p>Sign in with this temporary one and choose your own.</p>
+<p style="color:#5B6B78">If you did not ask for this, someone typed your email on Coach's sign-in page. Sign in with this one and choose your own all the same.</p>
+<p>Trainability Coach</p></div>`;
+  return { subject: "Your password was reset", text, html };
+}
+
+/** A temporary password for this account, emailed (or logged if it can't be). */
+export async function resetPassword(account, origin) {
+  const temp = tempPassword();
+  await run(`UPDATE coach_accounts SET password_hash = ?, must_change_password = 1 WHERE id = ?`, [await hashPassword(temp), account.id]);
+  await run(`DELETE FROM coach_sessions WHERE account_id = ?`, [account.id]);
+  const result = await sendEmail({ to: account.email, ...resetEmail({ name: account.name, email: account.email, temp, origin }) });
+  if (!result.sent) {
+    console.log(`Temporary password for ${account.email}: ${temp} (${EMAIL_CONFIGURED() ? `email not sent: ${result.reason}` : "no email set up, so it is here instead"})`);
+  }
+  return result;
+}
+
+/**
+ * Their own password chosen (Studio's /api/auth/password): at least the
+ * minimum, not the one they have now; the current one asked for unless they
+ * signed in with a temporary one. Other sessions end; this one stays. Returns
+ * null or { status, error, code }.
+ */
+export async function changePassword(account, { currentPassword, newPassword }, keepToken) {
+  if (typeof newPassword !== "string" || newPassword.length < PASSWORD_MIN || !newPassword.trim()) {
+    return { status: 400, error: `New password must be at least ${PASSWORD_MIN} characters.`, code: "weak_password" };
+  }
+  if (newPassword.length > 200) return { status: 400, error: "New password can be at most 200 characters.", code: "weak_password" };
+  if (await verifyPassword(newPassword, account.password_hash)) {
+    return { status: 400, error: "Choose a password different from the one you have now.", code: "same_password" };
+  }
+  if (!Number(account.must_change_password) && !await verifyPassword(String(currentPassword || ""), account.password_hash)) {
+    return { status: 401, error: "Your current password is incorrect." };
+  }
+  await run(`UPDATE coach_accounts SET password_hash = ?, must_change_password = 0 WHERE id = ?`, [await hashPassword(newPassword), account.id]);
+  await run(`DELETE FROM coach_sessions WHERE account_id = ? AND token_hash != ?`, [account.id, tokenHash(keepToken)]);
+  return null;
+}
 
 /**
  * A Coach account joined to its owner's Studio account (stage three; Glenn,

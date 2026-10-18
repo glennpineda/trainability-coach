@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { KeyRound, Link2, X } from "lucide-react";
-import { STUDIO_URL } from "../lib/api";
+import { Link2, X } from "lucide-react";
 import { SECTIONS } from "./sections";
 import { ComingSoonCard } from "./ComingSoonCard";
 
@@ -44,17 +43,6 @@ export function HomeTab({ user, onOpen, clients }) {
               <span style={{ color: "var(--iron)" }}>From now on, sign in with your Trainability password. Everything you made in Coach is still here.</span>
             </div>
             <button type="button" className="cx-icon-btn" aria-label="Dismiss" onClick={() => setLinked(false)}><X size={16} aria-hidden="true" /></button>
-          </div>
-        )}
-        {user.mustChangePassword && (
-          <div className="cx-card p-4 mb-4 flex items-start gap-3" style={{ borderColor: "var(--accent)" }}>
-            <KeyRound size={20} className="flex-none mt-0.5" style={{ color: "var(--accent)" }} aria-hidden="true" />
-            <div className="text-sm">
-              <strong className="block">You&apos;re signed in with a temporary password.</strong>
-              <span style={{ color: "var(--iron)" }}>Choose your own in </span>
-              <a href={STUDIO_URL} className="font-semibold" style={{ color: "var(--accent)" }}>Studio</a>
-              <span style={{ color: "var(--iron)" }}> — it will work here too.</span>
-            </div>
           </div>
         )}
         <div className="grid gap-4 sm:grid-cols-2">
