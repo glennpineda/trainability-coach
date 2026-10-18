@@ -58,7 +58,7 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
           {making ? (
             <section className="cx-card p-4 mb-4">
               <h2 className="cx-display text-xl mb-3">A new program</h2>
-              {active.length === 0 ? <p className="text-sm" style={muted}>You have no clients yet. Add them in Studio first.</p>
+              {active.length === 0 ? <p className="text-sm" style={muted}>You have no clients yet. Add them on the Clients page first.</p>
                 : !data ? <p className="text-sm" style={muted}>Loading…</p>
                 : !kind ? (
                   <KindForm vocab={data} onCancel={() => setMaking(false)} onNext={setKind} />

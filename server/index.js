@@ -14,6 +14,7 @@ import * as principles from "./principles.js";
 import * as books from "./books.js";
 import * as trainerSettings from "./trainer-settings.js";
 import * as programs from "./programs.js";
+import * as accounts from "./accounts.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -112,8 +113,23 @@ class StudioRefused extends Error {
   constructor(status, body) { super(`Studio answered ${status}`); this.status = status; this.body = body; }
 }
 
-/* Who is signed in, asked of Studio with this request's session. */
+/* A cookie of the browser's, by name. */
+function cookieOf(req, name) {
+  const hit = String(req.headers.cookie || "").split(";").map(s => s.trim()).find(s => s.startsWith(`${name}=`));
+  return hit ? decodeURIComponent(hit.slice(name.length + 1)) : "";
+}
+
+/* The Coach account signed in on this request (accounts.js), or null. */
+async function coachAccount(req) {
+  const token = cookieOf(req, accounts.COOKIE);
+  return token ? accounts.accountOfSession(token) : null;
+}
+
+/* Who is signed in: a Coach account (its own session cookie, checked here),
+   else whoever Studio says, asked with this request's Studio session. */
 async function signedIn(req) {
+  const own = await coachAccount(req);
+  if (own) return accounts.asUser(own);
   const r = await studio(req, "/auth/me");
   if (!r.ok) throw new StudioRefused(r.status, await r.text());
   return (await r.json()).user;
@@ -130,6 +146,8 @@ async function signedIn(req) {
  * no card, notes, address or message settings, to the browser or to Billy.
  */
 async function myClients(req, user) {
+  /* A Coach account's clients are the next stage; none yet. */
+  if (user?.coachAccount) return [];
   const r = await studio(req, "/clients");
   if (!r.ok) throw new StudioRefused(r.status, await r.text());
   const { clients = [] } = await r.json();
@@ -186,6 +204,7 @@ app.get("/api/clients", async (req, res) => {
 app.post("/api/clients", async (req, res) => {
   try {
     const user = await signedIn(req);
+    if (user.coachAccount) return res.status(400).json({ error: "Adding clients to a Coach account is coming next.", code: "not_yet" });
     const b = req.body || {};
     const f = {
       firstName: String(b.firstName || "").trim().slice(0, 90), lastName: String(b.lastName || "").trim().slice(0, 90),
@@ -311,6 +330,7 @@ app.put("/api/my-settings", asSignedIn("PUT /my-settings", async (req, res, user
  */
 const studioPlaceAsked = new Map();
 async function syncStudioPlace(req, user, { force = false } = {}) {
+  if (user?.coachAccount) return;
   if (!force && Date.now() - (studioPlaceAsked.get(user.id) || 0) < 10 * 60 * 1000) return;
   try {
     const r = await studio(req, "/locations");
@@ -1234,6 +1254,115 @@ app.post("/api/assistant", async (req, res) => {
   }
 });
 
+/* ---------------------------------------------------- Coach's own accounts
+
+   Sign-in and sign-up for a trainer who isn't on Trainability's team
+   (accounts.js), answered here before anything is relayed to Studio: an email
+   with a Coach account signs in here, any other is Studio's as before. */
+
+const sessionCookie = (req, token, maxAge) =>
+  `${accounts.COOKIE}=${token}; Path=/; HttpOnly; SameSite=Lax${req.secure ? "; Secure" : ""}${maxAge ? `; Max-Age=${Math.floor(maxAge / 1000)}` : ""}`;
+const clearCookie = (name) => `${name}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`;
+const tryKeys = (req, email) => [`ip:${req.ip}`, `email:${accounts.emailKey(email)}`];
+function slowDown(req, res, email) {
+  const wait = Math.max(...tryKeys(req, email).map(accounts.tooMany));
+  if (!wait) return false;
+  res.set("Retry-After", String(wait));
+  res.status(429).json({ error: "Too many tries. Wait a few minutes and try again.", code: "rate_limited" });
+  return true;
+}
+/* Studio's answer about an email: "password" for a team account, or null if
+   Studio can't be reached (which a Coach account doesn't need). */
+async function studioDoor(req, email) {
+  try {
+    const r = await studio(req, "/auth/door", { method: "POST", body: { email } });
+    return r.ok ? (await r.json()).door : null;
+  } catch { return null; }
+}
+
+/* Which way in an email takes: "coach" for a Coach account, else Studio's
+   answer, passed on as it is. */
+app.post("/api/auth/door", async (req, res, next) => {
+  try {
+    if (await accounts.accountByEmail(req.body?.email)) return res.json({ door: "coach" });
+  } catch (err) { console.error(`Coach door failed: ${err.message}`); }
+  next();
+});
+
+app.post("/api/auth/login", async (req, res, next) => {
+  const { email, password, remember } = req.body || {};
+  let account;
+  try { account = await accounts.accountByEmail(email); } catch (err) { console.error(`Coach login failed: ${err.message}`); }
+  if (!account) {
+    /* Signing in to Studio ends any Coach account's session in this browser. */
+    res.append("Set-Cookie", clearCookie(accounts.COOKIE));
+    return next();
+  }
+  if (slowDown(req, res, email)) return;
+  const ok = await accounts.checkLogin(email, password);
+  if (!ok) {
+    for (const k of tryKeys(req, email)) accounts.counted(k);
+    return res.status(401).json({ error: "That email and password don't match.", code: "invalid_credentials" });
+  }
+  accounts.forget(`email:${accounts.emailKey(email)}`);
+  const { token, maxAge } = await accounts.startSession(ok.id, !!remember);
+  res.append("Set-Cookie", sessionCookie(req, token, maxAge));
+  res.append("Set-Cookie", clearCookie(SESSION_COOKIE));
+  res.json({ user: accounts.asUser(ok) });
+});
+
+/* A new Coach account: name, email and password. Not for an email that
+   already has one, nor for a Trainability team account, which signs in with
+   Studio's password. Signed in at once. */
+app.post("/api/auth/signup", async (req, res) => {
+  try {
+    const { name, email, password, remember } = req.body || {};
+    if (slowDown(req, res, email)) return;
+    accounts.counted(`ip:${req.ip}`);
+    const wrong = accounts.checkSignup({ name, email, password });
+    if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+    if (await accounts.accountByEmail(email)) return res.status(409).json({ error: "There's already a Coach account for that email. Log in instead.", code: "account_exists" });
+    if (await studioDoor(req, accounts.emailKey(email)) === "password") {
+      return res.status(409).json({ error: "That email already has a Trainability account. Log in with it instead.", code: "team_account" });
+    }
+    const id = await accounts.createAccount({ name, email, password });
+    const { token, maxAge } = await accounts.startSession(id, !!remember);
+    res.append("Set-Cookie", sessionCookie(req, token, maxAge));
+    res.append("Set-Cookie", clearCookie(SESSION_COOKIE));
+    res.json({ user: accounts.asUser(await accounts.accountByEmail(email)) });
+  } catch (err) {
+    console.error(`Sign-up failed: ${err.message}`);
+    res.status(500).json({ error: "Your account couldn't be made just now. Try again in a minute.", code: "failed" });
+  }
+});
+
+app.get("/api/auth/me", async (req, res, next) => {
+  try {
+    const own = await coachAccount(req);
+    if (own) { res.set("Cache-Control", "private, no-store"); return res.json({ user: accounts.asUser(own) }); }
+  } catch (err) { console.error(`Coach me failed: ${err.message}`); }
+  next();
+});
+
+app.post("/api/auth/logout", async (req, res, next) => {
+  const token = cookieOf(req, accounts.COOKIE);
+  if (!token) return next();
+  try { await accounts.endSession(token); } catch (err) { console.error(`Coach logout failed: ${err.message}`); }
+  res.append("Set-Cookie", clearCookie(accounts.COOKIE));
+  res.json({ ok: true });
+});
+
+/* Coach can't send email yet, so a Coach account's password can't be reset
+   by email; said plainly rather than pretending to send one. */
+app.post("/api/auth/forgot-password", async (req, res, next) => {
+  try {
+    if (await accounts.accountByEmail(req.body?.email)) {
+      return res.status(400).json({ error: "Resetting a Coach account's password by email isn't ready yet. It's coming soon.", code: "not_yet" });
+    }
+  } catch (err) { console.error(`Coach forgot-password failed: ${err.message}`); }
+  next();
+});
+
 app.all(/^\/api\/.*/, async (req, res) => {
   const route = req.path.replace(/^\/api/, "");
   if (!RELAYED.has(route)) return res.status(404).json({ error: "Not found", code: "not_found" });
@@ -1272,6 +1401,8 @@ try {
   await store.load();
   await refreshStorage({ force: true });
   await books.resume();
+  await accounts.sweep();
+  setInterval(() => accounts.sweep().catch(() => {}), 6 * 3600 * 1000).unref();
   console.log(`Database: ${db.describe()}`);
 } catch (err) {
   console.error(`Database not ready (${db.describe()}): ${err.message}`);

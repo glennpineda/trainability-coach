@@ -317,6 +317,29 @@ const SCHEMA = [
     value VARCHAR(1000) NOT NULL,
     updated_at VARCHAR(32) NOT NULL
   )`,
+  /* Coach's own accounts (accounts.js; Glenn, 18 Oct 2026: "anyone creating
+     an account at Coach stores it on Coach's db, and if they have an account
+     on Studio, it's just linked"), for trainers who aren't on Trainability's
+     team. Ids are usr…, Glenn's tag, the same as Studio's users. email is
+     kept lowercase. password_hash is Studio's scrypt form. */
+  `CREATE TABLE IF NOT EXISTS coach_accounts (
+    id VARCHAR(40) PRIMARY KEY,
+    email VARCHAR(190) NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at VARCHAR(32) NOT NULL,
+    last_login_at VARCHAR(32) NULL,
+    UNIQUE (email)
+  )`,
+  /* A Coach account signed in on one device: a random token in the browser's
+     cx_session cookie, only its SHA-256 kept here, so a copy of this table
+     signs nobody in. */
+  `CREATE TABLE IF NOT EXISTS coach_sessions (
+    token_hash VARCHAR(64) PRIMARY KEY,
+    account_id VARCHAR(40) NOT NULL,
+    created_at VARCHAR(32) NOT NULL,
+    expires_at VARCHAR(32) NOT NULL
+  )`,
 ];
 
 /*

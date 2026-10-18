@@ -10,11 +10,19 @@ described in `README.md`.
 - The coaching app in the Trainability family, alongside Trainability Studio
   (`glennpineda/trainability-studio`). Live at trainabilitycoach.com on GoDaddy
   Airo. The start command is `npm start`, which builds and then serves.
-- **Coach keeps no accounts.** `server/index.js` relays five routes
-  (`/api/auth/door`, `login`, `me`, `logout`, `forgot-password`) to Studio's API at
-  `STUDIO_ORIGIN`. A user signs in with the same password as Studio but gets a
-  separate session. Most Coach work should need no change to Studio. If one
-  seems needed, say so and ask first.
+- **Two kinds of account.** Trainability's own trainers sign in with their
+  Studio account: `server/index.js` relays five routes (`/api/auth/door`,
+  `login`, `me`, `logout`, `forgot-password`) to Studio's API at
+  `STUDIO_ORIGIN`, the same password as Studio but a separate session, and
+  their clients are kept in Studio, through its API, with nothing on screen
+  saying so. Any other trainer can make a **Coach account**
+  (`server/accounts.js`, `coach_accounts`, ids `usr…`, Glenn's tag; Glenn, 18
+  Oct 2026), kept in Coach's database, answered before the relay (`cx_session`
+  cookie). Still to come, in order: their clients, linking a Coach account to
+  a Studio account when they join Studio (asking before their clients move
+  there, since the business can see Studio's clients), and password reset by
+  email (BRAINSTORM, Next up). Most Coach work should need no change to
+  Studio. If one seems needed, say so and ask first.
 - The stack matches Studio's: React 18, Vite 8, Tailwind 4 (CSS-first: no tailwind.config.js), lucide icons and
   Express. So does the look: Roboto for text and headings (500, 0.01em),
   Quicksand 600 for "Trainability" written as text (`cx-wordmark`, standing

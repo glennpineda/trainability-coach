@@ -22,6 +22,17 @@ in an email takes), `/api/auth/login`, `/api/auth/me`, `/api/auth/logout` and
 - each app holds its own session. Signing in to Coach does not sign you in to
   Studio's tab, and logging out of one leaves the other alone.
 
+Trainers who aren't on Trainability's team can make a **Coach account**,
+kept in Coach's own database (`server/accounts.js`): `coach_accounts` (ids
+`usr…`, email kept lowercase, the password as Studio keeps it: scrypt, N 16384,
+r 8, p 1, compared in constant time) and `coach_sessions` (only the SHA-256 of
+the random token in the HttpOnly `cx_session` cookie; a month with Keep me
+logged in, otherwise a day and the browser's session). `/api/auth/door`,
+`login`, `me`, `logout` and `forgot-password` look for a Coach account first
+and fall through to Studio when there is none; `/api/auth/signup` makes one
+(not for an email Studio says is a team account). Tries are limited: ten per
+email and fifty per address in fifteen minutes.
+
 Clients work the same way. Coach keeps no copy: `GET /api/clients` on
 Coach's server asks Studio's own `/api/clients` and `/api/auth/me` with the
 same session, keeps only the clients on the signed-in account's own list (a

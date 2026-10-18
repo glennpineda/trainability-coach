@@ -130,12 +130,32 @@ by Studio, so:
 
 You are now signed in, and you land on the home screen (3.4).
 
-**An email that isn't a trainer's.** Coach is for Trainability's trainers for
-now; clients will be able to sign in here later. If the email is not a team
-account (a client's, or one nobody has), the box says *Coach is for
-Trainability's trainers for now. Clients will be able to sign in here soon.*,
-with **Go to my page**, which opens the client's own page in Studio, and **Use
-a different email**.
+**A Coach account.** A trainer who isn't on Trainability's team can make a
+Coach account of their own. If the email has no trainer account, the box
+says *There's no trainer account for … yet.* and *If you're a trainer, make
+your Coach account now. It's free.*
+
+1. Tap **Create a Coach account**. The box shows *Create your Coach account*.
+2. Type **Your name**. Your **Email** is there already (tap **Use a different
+   email** to change it).
+3. Type a password in **Choose a password**: at least 8 characters.
+4. Tick **Keep me logged in** if this is your own phone or computer.
+5. Tap **Create account**. It says **One moment…**, then you are signed in
+   and on the home screen.
+
+Next time, type your email, tap **Continue**, and the password step opens as
+in steps 5–7 above. If the email already has a Coach account, it says
+*There's already a Coach account for that email. Log in instead.*; if it is a
+Trainability team account, *That email already has a Trainability account.
+Log in with it instead.*
+
+A Coach account can't add clients yet: the Clients page says *Adding clients
+to your Coach account is coming next.* Equipment, exercises and Billy work
+already.
+
+**A client.** Coach has no sign-in for clients yet. Under the Coach account
+button the box says *Training with us as a client? Your own page is in
+Studio.*, with **Go to my page**, which opens it.
 
 If the email and password do not match, the box says *That email and password
 don't match.* in red under **Keep me logged in**, and nothing else happens.
@@ -172,6 +192,10 @@ When you are still signed in, opening Coach goes straight to the home screen.
 
 The temporary password works in Coach and in Studio. See 2.4 for what to do
 next.
+
+For a Coach account (2.1), resetting the password by email isn't ready yet:
+tapping **Send temporary password** says *Resetting a Coach account's
+password by email isn't ready yet. It's coming soon.*
 
 ### 2.4 Signed in with a temporary password
 

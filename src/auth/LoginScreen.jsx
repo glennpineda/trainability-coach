@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { KeyRound, Loader2, UserRound } from "lucide-react";
+import { KeyRound, Loader2, UserPlus, UserRound } from "lucide-react";
 import { HexBackdrop } from "./HexBackdrop";
 import { CoachLockup } from "./CoachLockup";
 import { apiRequest, STUDIO_URL } from "../lib/api";
@@ -32,14 +32,17 @@ function Field({ label, children }) {
  * or member signs in with, answered the same for an address nobody has, so the
  * screen can't be used to learn who is a client.
  *
- * Coach has no client sign-in yet, so the code's way ends, for now, at a
- * page saying so and pointing to their own page in Studio. The password is
- * checked on Studio's server; this screen never sees a hash, and a wrong
- * email and a wrong password get the same answer by design.
+ * Coach's own accounts (Glenn, 18 Oct 2026) come in here too: an email with
+ * a Coach account goes to the same password step ("coach"), checked on
+ * Coach's server; any other email that isn't a team account is offered a
+ * Coach account, or, for a client, their own page in Studio (Coach has no
+ * client sign-in yet). This screen never sees a hash, and a wrong email and
+ * a wrong password get the same answer by design.
  */
-export function LoginScreen({ onLogin, offline }) {
-  const [mode, setMode] = useState("email"); // email | password | client | forgot
+export function LoginScreen({ onLogin, onSignup, offline }) {
+  const [mode, setMode] = useState("email"); // email | password | client | signup | forgot
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
@@ -58,7 +61,9 @@ export function LoginScreen({ onLogin, offline }) {
     setBusy(true);
     try {
       const out = await apiRequest("POST", "/auth/door", { email: address });
-      setMode(out.door === "password" ? "password" : "client");
+      /* A team account's password is Studio's; a Coach account's ("coach")
+         is Coach's own; anybody else may make a Coach account. */
+      setMode(out.door === "password" || out.door === "coach" ? "password" : "client");
     } catch (err) {
       setError(err.status >= 500 || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "That didn't work. Try again.");
     } finally { setBusy(false); }
@@ -82,6 +87,22 @@ export function LoginScreen({ onLogin, offline }) {
     }
   }
 
+  /* A Coach account for a trainer who isn't on Trainability's team. */
+  async function handleSignup(e) {
+    e.preventDefault();
+    if (busy) return;
+    setError("");
+    if (!name.trim()) { setError("Type your name."); return; }
+    if (password.length < 8) { setError("Your password needs at least 8 characters."); return; }
+    setBusy(true);
+    try {
+      await onSignup(name.trim(), email, password, remember);
+    } catch (err) {
+      setError(err.status >= 500 || err.status === undefined ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "Your account couldn't be made. Try again.");
+      setBusy(false);
+    }
+  }
+
   async function handleReset(e) {
     e.preventDefault();
     const address = withStudioDomain(email);
@@ -95,7 +116,7 @@ export function LoginScreen({ onLogin, offline }) {
     } finally { setBusy(false); }
   }
 
-  function backToEmail() { setMode("email"); setPassword(""); setError(""); setMoved(false); }
+  function backToEmail() { setMode("email"); setPassword(""); setName(""); setError(""); setMoved(false); }
   function backToLogin() { setMode("password"); setResetResult(null); setError(""); }
 
   return (
@@ -135,19 +156,51 @@ export function LoginScreen({ onLogin, offline }) {
             </form>
           ) : mode === "client" ? (
             <div className="space-y-3">
-              {/* Not a team account here: a client or member, or an address
-                  nobody has. Studio answers both the same, and so does this. */}
+              {/* Not a team account or a Coach account: a trainer new to
+                  Coach, or a client or member, or an address nobody has.
+                  Studio answers those alike, and so does this: a trainer
+                  makes a Coach account; a client goes to their own page. */}
               <p className="text-sm" style={{ color: "var(--ink-soft)" }}>
-                Coach is for Trainability&apos;s trainers for now. Clients will be able to sign in here soon.
+                There&apos;s no trainer account for {email} yet.
               </p>
               <p className="text-sm" style={{ color: "var(--iron)" }}>
-                If you train with us, your own page is in Studio. Open it and sign in there with {email}.
+                If you&apos;re a trainer, make your Coach account now. It&apos;s free.
               </p>
-              <a href={`${STUDIO_URL}me`} className="cx-btn-primary w-full py-2.5 text-base flex items-center justify-center gap-2">
-                <UserRound size={18} aria-hidden="true" /> Go to my page
+              <button type="button" onClick={() => { setMode("signup"); setError(""); }} className="cx-btn-primary w-full py-2.5 text-base flex items-center justify-center gap-2">
+                <UserPlus size={18} aria-hidden="true" /> Create a Coach account
+              </button>
+              <p className="text-sm pt-1" style={{ color: "var(--iron)" }}>
+                Training with us as a client? Your own page is in Studio.
+              </p>
+              <a href={`${STUDIO_URL}me`} className="cx-btn-row w-full justify-center">
+                <UserRound size={16} aria-hidden="true" /> Go to my page
               </a>
               <button type="button" onClick={backToEmail} className="cx-quiet w-full text-sm">Use a different email</button>
             </div>
+          ) : mode === "signup" ? (
+            <form onSubmit={handleSignup} className="space-y-4" noValidate>
+              <p className="text-sm font-semibold" style={{ color: "var(--accent)" }}>Create your Coach account</p>
+              <Field label="Your name">
+                <input className="cx-input" value={name} onChange={e => setName(e.target.value)} autoFocus autoComplete="name" maxLength={120} />
+              </Field>
+              <Field label="Email">
+                <input type="email" className="cx-input" value={email} readOnly autoComplete="username" style={{ color: "var(--iron)" }} />
+              </Field>
+              <Field label="Choose a password">
+                <input type="password" className="cx-input" value={password} onChange={e => setPassword(e.target.value)} autoComplete="new-password" />
+              </Field>
+              <p className="text-xs -mt-2" style={{ color: "var(--iron)" }}>At least 8 characters.</p>
+              <label className="flex items-center gap-2 text-sm select-none" style={{ color: "var(--iron)" }}>
+                <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
+                  className="w-4 h-4" style={{ accentColor: "var(--cerulean)" }} />
+                Keep me logged in
+              </label>
+              {error && <div role="alert" className="text-sm" style={{ color: "var(--ember)" }}>{error}</div>}
+              <button type="submit" disabled={busy} aria-busy={busy} className="cx-btn-primary w-full py-2.5 text-base flex items-center justify-center gap-2">
+                {busy ? <><Loader2 size={18} className="animate-spin" aria-hidden="true" /> One moment…</> : "Create account"}
+              </button>
+              <button type="button" onClick={backToEmail} className="cx-quiet w-full text-sm">Use a different email</button>
+            </form>
           ) : mode === "password" ? (
             <form onSubmit={handleLogin} className="space-y-4" noValidate>
               <Field label="Email">

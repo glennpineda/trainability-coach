@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { apiRequest } from "../lib/api";
 
 /**
- * Who is signed in, asked of Studio's API.
+ * Who is signed in: a Coach account, or a Studio account through Studio's
+ * API (Coach's server decides which).
  *
  * `undefined` while the first answer is on its way, `null` when nobody is.
  * Somebody who signed in to Coach before (and ticked "Keep me logged in")
@@ -34,6 +35,15 @@ export function useAuth() {
     return user;
   }, []);
 
+  /* A new Coach account (Coach's own, for a trainer not on Trainability's
+     team), signed in at once. */
+  const signup = useCallback(async (name, email, password, remember) => {
+    const { user } = await apiRequest("POST", "/auth/signup", { name, email, password, remember });
+    setOffline(false);
+    setUser(user);
+    return user;
+  }, []);
+
   /* Ends Coach's session only; a Studio tab signed in separately stays in. */
   const logout = useCallback(async () => {
     try { await apiRequest("POST", "/auth/logout"); } finally { setUser(null); }
@@ -43,5 +53,5 @@ export function useAuth() {
      to sign-in, with nothing to tell Studio. */
   const signedOut = useCallback(() => setUser(null), []);
 
-  return { user, offline, login, logout, signedOut };
+  return { user, offline, login, signup, logout, signedOut };
 }

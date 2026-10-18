@@ -51,7 +51,7 @@ export function Shell({ user, onLogout, onSignedOut }) {
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
-        {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
+        {tab === "clients" && <ClientsTab {...clients} {...(user.coachAccount ? { add: null, edit: null, archive: null, soon: true } : {})} onSignedOut={onSignedOut} />}
         {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}

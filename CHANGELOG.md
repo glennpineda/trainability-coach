@@ -54,6 +54,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   shoulders, back, arms, core, legs, each opening to its muscles), which narrow Coach IQ's suggestions and go with
   the question when you ask Billy. The next exercise you add to the same
   program opens with the same answers.
+- **Coach accounts.** A trainer who isn't on Trainability's team can make a
+  Coach account from the sign-in screen (name, email, password) and use
+  Coach with it. Their clients come next.
 - **Add, change and archive clients in Coach.** The Clients page has Add a
   client: first and last name, email and phone (birthday, gender and
   pronouns if you like, picked from Studio's lists or typed); someone already a client with that email is put on your list instead
