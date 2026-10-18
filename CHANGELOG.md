@@ -41,7 +41,7 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   Coach is for trainers for now, and pointed to its own page in Studio.
 - **"You belong here." on the sign-in screen**, in twenty languages under the
   logo, as on Studio's; the Open Studio link is no longer at the foot of it
-  (Open Studio is still in your account menu).
+  (Studio is opened from the apps panel only).
 - **Add Coach to your Home Screen.** On a phone, a strip at the bottom of the
   sign-in screen offers it, as in Studio: the steps on an iPhone, the install
   box on Android. From its icon Coach opens full screen.
@@ -92,7 +92,7 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   Imperial to start. Weights and distances in Coach IQ and in Billy's answers
   are shown in your units only, rounded to what a gym has (5 lb or 2.5 kg).
 - **Your account menu.** Your photo in the top corner opens a menu with your
-  name, email and kind of account, Open Studio, Log out and the version.
+  name, email and kind of account, Log out and the version.
 - **Billy.** Studio's assistant, beside the badges in the header: ask him
   about the clients on your list, or send him a photo or a PDF — a food log,
   a form, a program — and he reads it. He changes nothing. Shown only where

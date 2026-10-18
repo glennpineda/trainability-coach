@@ -341,7 +341,6 @@ so — see 2.4.
      Weights and distances in Coach IQ, and in Billy's answers, are then
      shown in your units only, rounded to what a gym has: loads to 5 lb or
      2.5 kg. It is your own choice; other trainers keep theirs.
-   - **Open Studio** — goes to Studio, at trainabilitystudio.com.
    - **Log out** — signs you out (2.5).
    - **The last line** is the version the app is on, such as
      *Version 1.0.1 · Caesious*. If you ever report a problem, say which
@@ -1009,7 +1008,7 @@ page clears it too: Coach does not keep your conversations with Billy.
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, Open Studio, Log out and the version (3.5). |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>

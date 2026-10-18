@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, ExternalLink, LogOut, Settings } from "lucide-react";
-import { STUDIO_URL } from "../lib/api";
+import { BookOpen, ChevronDown, ClipboardCheck, Dumbbell, LogOut, Settings } from "lucide-react";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
 import { useUnits } from "../hooks/useUnits";
@@ -9,7 +8,7 @@ const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "
 
 /**
  * You, in the corner: your photo or initials with a chevron, opening a menu
- * with who is signed in, Open Studio, Log out and the version. Coach's first
+ * with who is signed in, Log out and the version (Studio is in the apps panel under the logo). Coach's first
  * header had it (Glenn liked it and asked for it back, 16 Oct 2026); it sits
  * after the role badge, and is the one place for these — the tab bar has no
  * Profile. Your name shows beside the photo where there is room.
@@ -101,9 +100,6 @@ export function AccountMenu({ user, onLogout, onOpen, billy }) {
             </div>
           </div>
           <div className="my-1 border-t" />
-          <a role="menuitem" href={STUDIO_URL} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
-            <ExternalLink size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Open Studio
-          </a>
           <button role="menuitem" type="button" onClick={onLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-(--ghost-fill)">
             <LogOut size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Log out
           </button>
