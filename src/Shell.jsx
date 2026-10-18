@@ -44,13 +44,17 @@ export function Shell({ user, onLogout, onSignedOut }) {
   useEffect(() => refresh(), [tab, refresh]);
   const billy = useBilly(onSignedOut);
   const open = (id) => { setTab(id); window.scrollTo({ top: 0 }); };
+  /* From Today: a client's program, opened in Programs, or the client,
+     opened out in Clients. */
+  const openProgram = (id) => { try { sessionStorage.setItem("coach-program", id); } catch { /* not kept */ } open("programs"); };
+  const openClient = (id) => { try { sessionStorage.setItem("coach-client", id); } catch { /* not kept */ } open("clients"); };
 
   return (
     <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
       <Header user={user} onLogout={onLogout} billy={billy} onOpen={open} />
       {/* Room at the end for the bar floating over it. */}
       <main className="pb-32">
-        {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} />}
+        {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} onOpenProgram={openProgram} onOpenClient={openClient} onSignedOut={onSignedOut} />}
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
         {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}

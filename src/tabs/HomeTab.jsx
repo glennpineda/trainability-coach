@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link2, X } from "lucide-react";
 import { SECTIONS } from "./sections";
 import { ComingSoonCard } from "./ComingSoonCard";
+import { TodayCard } from "./TodayCard";
 
 function greeting(now = new Date()) {
   const h = now.getHours();
@@ -16,9 +17,10 @@ function clientCount(clients) {
   return `${n} active client${n === 1 ? "" : "s"}`;
 }
 
-/* Where Coach opens: the date, a greeting by name, and the parts of Coach on
-   the way. Each card but Today opens its own tab. */
-export function HomeTab({ user, onOpen, clients }) {
+/* Where Coach opens: the date, a greeting by name, the day's sessions
+   (TodayCard), and a card for each of the other parts of Coach, opening its
+   own tab. */
+export function HomeTab({ user, onOpen, clients, onOpenProgram, onOpenClient, onSignedOut }) {
   const [linked, setLinked] = useState(() => { try { const v = sessionStorage.getItem("cx-linked"); sessionStorage.removeItem("cx-linked"); return !!v; } catch { return false; } });
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
@@ -45,9 +47,10 @@ export function HomeTab({ user, onOpen, clients }) {
             <button type="button" className="cx-icon-btn" aria-label="Dismiss" onClick={() => setLinked(false)}><X size={16} aria-hidden="true" /></button>
           </div>
         )}
+        <TodayCard onOpenProgram={onOpenProgram} onOpenClient={onOpenClient} onSignedOut={onSignedOut} />
         <div className="grid gap-4 sm:grid-cols-2">
-          {Object.entries(SECTIONS).map(([id, section]) => (
-            <ComingSoonCard key={id} section={section} onOpen={id === "today" ? undefined : () => onOpen(id)}
+          {Object.entries(SECTIONS).filter(([id]) => id !== "today").map(([id, section]) => (
+            <ComingSoonCard key={id} section={section} onOpen={() => onOpen(id)}
               badge={id === "clients" ? clientCount(clients) : undefined} />
           ))}
         </div>

@@ -16,6 +16,7 @@ import * as trainerSettings from "./trainer-settings.js";
 import * as programs from "./programs.js";
 import * as accounts from "./accounts.js";
 import * as coachClients from "./coach-clients.js";
+import * as today from "./today.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -445,6 +446,32 @@ async function equipmentFor(req, user) {
     return { ...out, everyone: null };
   }
 }
+
+/*
+ * Today on Home (server/today.js): the trainer's own sessions today and over
+ * the next 7 days, read from Studio's schedule each time, as Studio's Today
+ * tab reads them. `date` is the browser's own today, so the day turns at the
+ * trainer's midnight. A Coach account has no schedule: `schedule: false`.
+ */
+app.get("/api/today", asSignedIn("GET /today", async (req, res, user) => {
+  res.set("Cache-Control", "private, no-store");
+  if (user.coachAccount) return res.json({ schedule: false });
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(String(req.query.date || "")) ? String(req.query.date) : new Date().toISOString().slice(0, 10);
+  const ask = async (route) => {
+    const r = await studio(req, route);
+    if (!r.ok) throw new StudioRefused(r.status, await r.text());
+    return r.json();
+  };
+  const [{ appointments = [] }, locations, clients, mine] = await Promise.all([
+    ask("/appointments"), ask("/locations").catch(() => ({})), myClients(req, user), programs.list(user.id)]);
+  const ids = [...new Set(appointments.filter(a => a.trainerId === user.id && a.clientId).map(a => a.clientId))];
+  const limits = new Map();
+  if (ids.length) {
+    const rows = await db.all(`SELECT client_id, COUNT(*) AS n FROM coach_limitations WHERE client_id IN (${ids.map(() => "?").join(", ")}) GROUP BY client_id`, ids);
+    for (const r of rows) limits.set(r.client_id, Number(r.n));
+  }
+  res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, programs: mine, limits }) });
+}));
 
 app.get("/api/equipment", asSignedIn("GET /equipment", async (req, res, user) => {
   await syncStudioPlace(req, user);

@@ -22,6 +22,8 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Today, on Home** (18 Oct 2026; Glenn: "Let's do the Today tab"). Build 1.0.55. Not from Next up (it was empty); the next part of Coach after "What's next?". **Studio first** (CLAUDE.md, "Studio is the template"): copied from Studio's `src/tabs/TodayTab.jsx` (main), its "Today" and "→ 7 days" tabs and nothing of its money, cards, session counts, check-ins, milestones, birthdays, desk requests or standby weeks, which belong to Studio's business side. Copied as they are: the row (the time with the length under it in `w-[3.9rem]`, the client's name with " · Assessment", `whereLabel`'s "Place · Room" from `/api/locations` studios and places, a green tick for a trained session, a struck-through name with "Cancelled" for a cancelled one, "Private" for a session with no client); the flags and their colours from its `flags(a)`: "First session" (ink, bold) when no earlier session with this trainer is still on (an assessment counts, Studio's Run 11), "New client" (ink) for the second and third (`NEW_UNTIL = 3`), and "Nothing booked after this" (amber, bold) until the session is over; the empty states "Nothing booked today." with "Next: {Tue, Oct 20} at {10:00 AM} with {Sam}." and "Nothing booked in the next 7 days."; the 7 days list as day lines "{Weekday}, {Mon d} · N appointments" (today in the accent, as Studio's magenta) that open on a tap, the first day with something booked open (Studio's `flippedDays`); a clock turning with the minute (Studio's `useMinute`) so "Nothing booked after this" goes when a session ends and the day rolls over at midnight. Studio's `--amber` (light `#5E4500`, dark `#FFD966`) added to `src/index.css`, as Coach had none. **Coach's own**: under each client, their program (the one changed last, in the accent with the clipboard icon) or "No program yet", and "N limitations" in amber when any are written; tapping a row opens the program in Programs (`coach-program` in sessionStorage, as the Programs tab already remembers it), or with no program the client opened out on Clients (a new `coach-client` key, read once by `ClientsTab`). Studio's row opens its appointment sheet and holds a menu; Coach books nothing, so it has neither. **Where**: Home, not a tab, as `sections.js` always said ("Today lives on Home"): a card under the greeting band, in place of the Today "Coming soon" card; the other three cards follow it. A first try had a "Today" heading over the tabs, which read "Today / Today" on screen; Studio's card has no heading either, so the tabs are its top and the name is kept for screen readers (`sr-only` h2). **Server**: `GET /api/today?date=YYYY-MM-DD` (`server/index.js`), with the browser's own date so the day turns at the trainer's midnight; it asks Studio for `/appointments` with no range (as Studio's own app loads the schedule, which the First session and New client counts need) and `/locations`, keeps only the trainer's own (`trainerId === user.id`; a master is sent others' too), and builds the rows in the new `server/today.js` (`todayOf`), joined with `myClients`, `programs.list` and a count of `coach_limitations` per client. A client not on the trainer's list shows as "Client", as in Studio. A Coach account answers `{ schedule: false }` and the card says "Your sessions show here once your Coach account is linked to your Trainability account." Files: `server/today.js` (new), `server/index.js`, `src/tabs/TodayCard.jsx` (new), `src/tabs/HomeTab.jsx`, `src/tabs/sections.js` (Today built), `src/Shell.jsx`, `src/tabs/ClientsTab.jsx`, `src/index.css`, MANUAL.md (1, 3.4 with a Today part; the line about a temporary-password box on Home, gone since build 1.0.52, removed), CHANGELOG.md. **Tested** against the stand-in Studio (its `/api/appointments` taught a schedule: a trained, an assessment that is a first session, a new client with two limitations, a private one, a cancelled one, another trainer's left out, and days ahead; `EMPTY_TODAY` for an empty day) and a Coach account, at the API and in Chromium at phone and desktop width: rows, flags, tabs, day lines, empty states, the tap to a program and to a client's details. **Not tested**: Studio's real `/api/appointments` and the fixture (a cloud session can't run it), a master's schedule with other trainers' sessions in it from the real server, and the day turning at midnight.
+
 - **The email template in Coach's colours** (18 Oct 2026; Glenn: "Also use Coach's colors for the email template"). Build 1.0.54. Not from Next up. `server/email-template.js`'s palette is now Coach's light theme from `src/index.css`, frozen, in the places Studio's went: the page `--paper` #F3F7FA, the card `--chalk` #FFFFFF, its border and rules `--iron-line` #D5DEE5, text `--ink` Navy #172A3A and `--ink-soft` #3B4F60, the last footer line `--iron` #5B6B78; Studio's magenta becomes Cerulean #007BA7 (the password in mono, `accent`, and the button, `fill`, white on it 4.9:1), the top edge runs Cerulean to Sky #4FA8DC (Studio's magenta to violet), and the band behind the logo is pale blue, #F5FAFD to `--accent-soft` #E3F1F8 (Studio's lilac sky). The keys were renamed for what they are (`accent`, `fill`, `edge`, `bandTop`, `band`). The signature under the card keeps Trainability's own hexagon and wordmark images, which are the business's brand rather than Studio's. **Tested**: the reset email rendered in Chromium; screenshot sent to Glenn. Commit: build 1.0.54.
 
 - **Coach's email in Studio's template** (18 Oct 2026; Glenn: "Check with Studio on our email template there, use the same email template but just change the logo and “Trainability Studio” text in it."). Build 1.0.53. Not from Next up. **Studio's template** (`server/email-template.js`, `emailShell`): a grey page, a 560px card with a 4px magenta-to-violet edge along the top, a lilac "sky" band with the logo alone in the middle (64px), a centred 22px title, the body (`para`, a `panel` of `rows` with the password in `mono` magenta, one filled pill from `cta`), a footer row saying why it was sent with the last line fainter, and under the card Trainability signed in its hexagon and wordmark images with "© {year} Trainability. All rights reserved."; inline styles and tables, Studio's frozen light palette, the system font stack, `color-scheme:light`; pictures only from an origin a mail client can reach (never localhost), else the name in words. Its reset email (`account-emails.js` `credentialsEmail`, reset asked): title "Your password was reset", Hi, the lead, Sign in with / Temporary password, a Sign in button, "Sign in with this temporary one and choose your own.", footer "Sent because the password on your {business} account was reset." and the unexpected line; plain text signed "- Trainability". **Copied** as `server/email-template.js` (the shell and the pieces the reset uses, with Studio's values; cut: logo editions, letterheads, stop links, uploaded business logos), changing only the logo (`public/coach-mark.png`, the kit's light badge at 256px, for Studio's `studio-mark.png`) and Studio's name: the plain text's lead says "Trainability Coach's sign-in page" where Studio's says its scheduling app, and the footer "your Trainability Coach account". The signature's images are Studio's own Trainability files, copied to `public/` (`trainability-logo.png`, `trainability-wordmark.png`). The colours stay Studio's (magenta), as asked. `accounts.resetEmail` now builds the email with them; the unexpected line keeps Coach's wording ("someone typed your email on the sign-in page…"), since a Coach account has no business to tell. README's Email section says so. **Tested**: the email rendered in Chromium with its pictures (the plain text checked too); screenshot sent to Glenn. Not sent through a real mail server (none in the cloud). Commit: build 1.0.53.
@@ -279,9 +281,9 @@ of the app gets its own chapter here as it arrives.
 Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
-programs you build for them, and your messages with them. Your list of
-clients is here already (chapter 4); the other parts are still being built —
-the app shows them as **Coming soon** (3.3).
+programs you build for them, and your messages with them. Your day, your
+list of clients (chapter 4) and your programs (chapter 5) are here already;
+Messages is still being built — the app shows it as **Coming soon** (3.3).
 
 #### One account for every Trainability app
 
@@ -550,23 +552,59 @@ Coach opens on Home. From the top:
 - **The blue band.** Today's date, and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.
-- **Four cards**, one for each part of Coach:
+- **Today**: your sessions, read from Trainability's schedule (see *Today*,
+  below).
+- **Three cards**, one for each of the other parts of Coach:
 
 | Card | What it is for |
 |---|---|
-| **Today** | Your sessions for the day, at a glance. |
 | **Clients** | Everyone you coach, with their contact details and sessions. |
 | **Programs** | Programs you design for your clients, with Coach IQ beside you. |
 | **Messages** | Check-ins and notes between you and your clients. |
 
 **Clients** is ready: next to its name it says how many clients you have,
-such as **5 active clients**. **Programs** is ready too. **Today** and
-**Messages** are marked **Coming soon**.
-Tapping **Clients**, **Programs** or **Messages** opens its page, the same as
-its button on the bottom bar; **Today** will live on Home itself.
+such as **5 active clients**. **Programs** is ready too. **Messages** is
+marked **Coming soon**. Tapping a card opens its page, the same as its button
+on the bottom bar.
 
-If you are signed in with a temporary password, a box at the top of Home says
-so — see 2.4.
+##### Today
+
+Today shows your own sessions, the ones booked for you in Trainability. Coach
+only shows them: it does not book, move or cancel anything. It has two tabs
+at its top:
+
+- **Today**: today's sessions, in time order.
+- **→ 7 days**: today and the next six days, one line per day with something
+  booked, such as **Tuesday, Oct 20 · 1 appointment**. The first day with
+  something booked is open; tap a day's line to open or close it.
+
+Each session shows, from the left:
+
+1. The time it starts, with its length under it, such as **60 min**.
+2. The client's name (**· Assessment** after it for an assessment), and where
+   it is: the place and the room. A session with nobody's name on it says
+   **Private**.
+3. What to know before they walk in, when it applies:
+   - **First session**: their first session with you.
+   - **New client**: one of their first three sessions with you.
+   - **Nothing booked after this** (in amber): they have nothing booked with
+     you after this one. It goes once the session is over.
+4. Their program in blue, or **No program yet**, and how many limitations
+   are written for them, such as **2 limitations** (4.7).
+
+A green tick on the right means the session was trained. A cancelled one is
+greyed out and crossed through, with **Cancelled** on the right.
+
+**Tap a session** to open the client's program. If they have no program yet,
+their details open on the Clients page instead.
+
+When nothing is booked today, Today says **Nothing booked today.** and when
+the next one is, such as *Next: Tue, Oct 20 at 10:00 AM with Sam.* With
+nothing in the next week it says **Nothing booked in the next 7 days.**
+
+Signed in with a Coach account (2.1), you have no schedule in Trainability,
+so Today says *Your sessions show here once your Coach account is linked to
+your Trainability account.* (3.5).
 
 #### 3.5 Your account menu
 

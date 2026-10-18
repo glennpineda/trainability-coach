@@ -70,9 +70,9 @@ of the app gets its own chapter here as it arrives.
 Trainability Coach is the coaching app in the Trainability family, alongside
 **Trainability Studio**, the app the business runs its schedule and billing
 in. Coach is where your coaching will live: your day, your clients, the
-programs you build for them, and your messages with them. Your list of
-clients is here already (chapter 4); the other parts are still being built —
-the app shows them as **Coming soon** (3.3).
+programs you build for them, and your messages with them. Your day, your
+list of clients (chapter 4) and your programs (chapter 5) are here already;
+Messages is still being built — the app shows it as **Coming soon** (3.3).
 
 ### One account for every Trainability app
 
@@ -341,23 +341,59 @@ Coach opens on Home. From the top:
 - **The blue band.** Today's date, and a greeting with your first name:
   **Good morning** until noon, **Good afternoon** until 5 PM, and
   **Good evening** after that.
-- **Four cards**, one for each part of Coach:
+- **Today**: your sessions, read from Trainability's schedule (see *Today*,
+  below).
+- **Three cards**, one for each of the other parts of Coach:
 
 | Card | What it is for |
 |---|---|
-| **Today** | Your sessions for the day, at a glance. |
 | **Clients** | Everyone you coach, with their contact details and sessions. |
 | **Programs** | Programs you design for your clients, with Coach IQ beside you. |
 | **Messages** | Check-ins and notes between you and your clients. |
 
 **Clients** is ready: next to its name it says how many clients you have,
-such as **5 active clients**. **Programs** is ready too. **Today** and
-**Messages** are marked **Coming soon**.
-Tapping **Clients**, **Programs** or **Messages** opens its page, the same as
-its button on the bottom bar; **Today** will live on Home itself.
+such as **5 active clients**. **Programs** is ready too. **Messages** is
+marked **Coming soon**. Tapping a card opens its page, the same as its button
+on the bottom bar.
 
-If you are signed in with a temporary password, a box at the top of Home says
-so — see 2.4.
+#### Today
+
+Today shows your own sessions, the ones booked for you in Trainability. Coach
+only shows them: it does not book, move or cancel anything. It has two tabs
+at its top:
+
+- **Today**: today's sessions, in time order.
+- **→ 7 days**: today and the next six days, one line per day with something
+  booked, such as **Tuesday, Oct 20 · 1 appointment**. The first day with
+  something booked is open; tap a day's line to open or close it.
+
+Each session shows, from the left:
+
+1. The time it starts, with its length under it, such as **60 min**.
+2. The client's name (**· Assessment** after it for an assessment), and where
+   it is: the place and the room. A session with nobody's name on it says
+   **Private**.
+3. What to know before they walk in, when it applies:
+   - **First session**: their first session with you.
+   - **New client**: one of their first three sessions with you.
+   - **Nothing booked after this** (in amber): they have nothing booked with
+     you after this one. It goes once the session is over.
+4. Their program in blue, or **No program yet**, and how many limitations
+   are written for them, such as **2 limitations** (4.7).
+
+A green tick on the right means the session was trained. A cancelled one is
+greyed out and crossed through, with **Cancelled** on the right.
+
+**Tap a session** to open the client's program. If they have no program yet,
+their details open on the Clients page instead.
+
+When nothing is booked today, Today says **Nothing booked today.** and when
+the next one is, such as *Next: Tue, Oct 20 at 10:00 AM with Sam.* With
+nothing in the next week it says **Nothing booked in the next 7 days.**
+
+Signed in with a Coach account (2.1), you have no schedule in Trainability,
+so Today says *Your sessions show here once your Coach account is linked to
+your Trainability account.* (3.5).
 
 ### 3.5 Your account menu
 

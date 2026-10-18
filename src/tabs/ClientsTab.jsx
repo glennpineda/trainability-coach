@@ -200,7 +200,8 @@ function MoveOffer({ count, move }) {
 export function ClientsTab({ clients, error, retry, add, edit, archive, toMove, move, onSignedOut }) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
-  const [openId, setOpenId] = useState(null);
+  /* Opened out already when Today sent the trainer here. */
+  const [openId, setOpenId] = useState(() => { try { const id = sessionStorage.getItem("coach-client"); sessionStorage.removeItem("coach-client"); return id || null; } catch { return null; } });
   const [adding, setAdding] = useState(false);   // true, or the client whose details are being changed
   const [said, setSaid] = useState("");
   const [busy, setBusy] = useState(false);

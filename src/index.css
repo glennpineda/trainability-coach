@@ -29,6 +29,7 @@
     --ember-soft: #FBEAE7;
     --moss: #2E7D4F;
     --moss-soft: #E5F3EA;
+    --amber: #5E4500;           /* something to see to, Studio's light amber */
     --soft-shadow: 0 10px 24px -12px rgba(23, 42, 58, 0.28), 0 1px 3px rgba(23, 42, 58, 0.10);
     --wordmark: #007BA7;        /* COACH in the header, as the lockup sets it */
     --badge-open: #FFFFFF;      /* a badge opened out, and the apps panel */
@@ -63,6 +64,7 @@
       --ember-soft: #3D2526;
       --moss: #8FCB8A;
       --moss-soft: #1E3A2C;
+      --amber: #FFD966;
       --soft-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
       --wordmark: #4FA8DC;      /* sky, as the dark lockup sets COACH */
       --badge-open: #213749;
