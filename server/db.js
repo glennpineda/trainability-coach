@@ -520,6 +520,8 @@ const COLUMNS = [
   ["coach_accounts", "motion", "VARCHAR(8) NOT NULL DEFAULT 'system'"],
   ["coach_accounts", "color", "VARCHAR(8) NOT NULL DEFAULT 'full'"],
   ["coach_accounts", "text_size", "VARCHAR(8) NOT NULL DEFAULT 'medium'"],
+  /* Wide screen, as Studio's users.wide_screen (Glenn, 19 Oct 2026). */
+  ["coach_accounts", "wide_screen", "INTEGER NOT NULL DEFAULT 0"],
   /* Measurements' later four (Glenn, 18 Oct 2026: "shoulder to the
      measurements too, … heart rate (optional), blood pressure (optional)"):
      cm, bpm and mmHg. */

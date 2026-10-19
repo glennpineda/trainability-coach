@@ -452,3 +452,26 @@
 }
 @media (min-width: 1024px) and (min-height: 501px) { .cx-app-shell { max-width: 56rem; } }
 @media (min-width: 1280px) and (min-height: 501px) { .cx-app-shell { max-width: 64rem; } }
+
+/* Wide screen, Studio's (its theme.jsx, .iw-wide; Glenn, 19 Oct 2026): the
+   fourth view after phone, tablet and desktop. Only on a window wider than
+   the panel's widest (64rem and its ground): the panel's cap goes, so the
+   ground at its sides is the root's padding, the same as above and below,
+   and the pages inside it take the width too. The button sits after the
+   panel in the row, though written before it, and no wider than nothing:
+   it hangs off the panel into the ground. Wide, the ground beside the panel
+   is 24px, narrower than the button, so it sits partly on the panel and is
+   filled in to be read over whatever is under it, in Coach's blues for
+   Studio's magenta and lilac. */
+.cx-wide-btn, .cx-wide-at { display: none; }
+@media (min-width: 1100px) and (min-height: 501px) {
+  .cx-wide > .cx-app-shell { max-width: none; }
+  .cx-wide .cx-app-shell .max-w-5xl { max-width: none; }
+  .cx-wide-at { display: block; order: 2; width: 0; align-self: center; position: relative; z-index: 2; }
+  .cx-wide-btn { display: inline-flex; align-items: center; justify-content: center; position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 999px; color: rgba(255, 255, 255, 0.85); background: rgba(255, 255, 255, 0.14); }
+  .cx-wide-btn:hover, .cx-wide-btn:focus-visible { color: #fff; background: rgba(255, 255, 255, 0.28); }
+  .cx-wide .cx-wide-btn { left: -22px; color: #fff; background: linear-gradient(135deg, var(--cerulean), var(--sky));
+    border: 1.5px solid rgba(255, 255, 255, 0.75); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3); }
+  .cx-wide .cx-wide-btn:hover, .cx-wide .cx-wide-btn:focus-visible { filter: brightness(1.12); }
+}

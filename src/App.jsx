@@ -7,7 +7,7 @@ import { PrintProgram } from "./programs/PrintProgram";
 import { ForcedPasswordScreen } from "./auth/ForcedPasswordScreen";
 
 export default function App() {
-  const { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook } = useAuth();
+  const { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook, chooseWide } = useAuth();
   /* Their Accessibility on the page, and kept for the next time this browser
      opens it (index.html puts it on first). Nobody signed in: the device's
      own. Untouched while the first answer is on its way, since index.html
@@ -34,5 +34,5 @@ export default function App() {
   /* A program as it was sent in a message (MessagesTab), printed the same way. */
   const sent = /^\/print\/sent\/([a-z0-9]+)$/.exec(window.location.pathname);
   if (sent) return <PrintProgram sent={sent[1]} />;
-  return <Shell user={user} onLogout={logout} onSignedOut={signedOut} chooseLook={chooseLook} />;
+  return <Shell user={user} onLogout={logout} onSignedOut={signedOut} chooseLook={chooseLook} chooseWide={chooseWide} />;
 }

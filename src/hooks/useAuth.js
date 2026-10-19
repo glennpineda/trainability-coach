@@ -75,5 +75,18 @@ export function useAuth() {
     }
   }, []);
 
-  return { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook };
+  /* Wide screen, Studio's (its App.jsx, toggleWide): on the page at once, then
+     kept with the person, on their Studio account through the relay for a
+     Trainability trainer, so it is the same in both apps (Glenn, 19 Oct 2026). */
+  const chooseWide = useCallback(async (on) => {
+    setUser(u => (u ? { ...u, wideScreen: on } : u));
+    try {
+      const { user: saved } = await apiRequest("POST", "/auth/wide-screen", { on });
+      if (saved && saved.wideScreen !== undefined) setUser(u => (u ? { ...u, wideScreen: !!saved.wideScreen } : u));
+    } catch {
+      setUser(u => (u ? { ...u, wideScreen: !on } : u));
+    }
+  }, []);
+
+  return { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook, chooseWide };
 }

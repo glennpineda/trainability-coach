@@ -68,7 +68,9 @@ const RELAYED = new Set(["/auth/door", "/auth/login", "/auth/logout", "/auth/me"
   /* Accessibility, shared with Studio (Glenn, 18 Oct 2026: "Shared with
      Studio"): a Trainability trainer's six are saved on their Studio account,
      so both apps look the same. A Coach account's are answered here first. */
-  "/auth/theme", "/auth/tone", "/auth/contrast", "/auth/motion", "/auth/color", "/auth/text-size"]);
+  "/auth/theme", "/auth/tone", "/auth/contrast", "/auth/motion", "/auth/color", "/auth/text-size",
+  /* Studio's wide screen, kept with the person and shared by both apps (Glenn, 19 Oct 2026). */
+  "/auth/wide-screen"]);
 
 const app = express();
 app.disable("x-powered-by");
@@ -1997,6 +1999,21 @@ app.post("/api/auth/password", async (req, res, next) => {
   } catch (err) {
     console.error(`Coach password change failed: ${err.message}`);
     res.status(500).json({ error: "Your password couldn't be changed. Try again in a minute.", code: "failed" });
+  }
+});
+
+/* A Coach account's wide screen, as Studio's route: { on } in, { user } back.
+   A Trainability trainer's goes on to Studio through the relay below. */
+app.post("/api/auth/wide-screen", async (req, res, next) => {
+  try {
+    const own = await coachAccount(req);
+    if (!own) return next();
+    if (typeof req.body?.on !== "boolean") return res.status(400).json({ error: "Say on: true or false", code: "invalid" });
+    await accounts.setWideScreen(own, req.body.on);
+    res.json({ user: accounts.asUser(await accounts.accountOfSession(cookieOf(req, accounts.COOKIE))) });
+  } catch (err) {
+    console.error(`Coach wide-screen failed: ${err.message}`);
+    res.status(500).json({ error: "That didn't save. Try again in a minute.", code: "failed" });
   }
 });
 

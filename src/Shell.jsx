@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { scrollPageTo } from "./lib/scroll";
-import { House, Users, ClipboardList, MessageCircle } from "lucide-react";
+import { House, Users, ClipboardList, MessageCircle, FoldHorizontal, UnfoldHorizontal } from "lucide-react";
 import { Header } from "./chrome/Header";
 import { DriftingHexes } from "./chrome/DriftingHexes";
 import { HexBackdrop } from "./auth/HexBackdrop";
@@ -39,7 +39,7 @@ const isPrimaryMaster = (user) => !!user?.isPrimary && user?.role === "master";
    The client list is held here, so Home can count it and the Clients tab
    opens on it without waiting, and asked for again on every change of tab
    so it never sits stale. */
-export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
+export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
   const [tab, setTab] = useState(() => {
     try { const t = sessionStorage.getItem(KEY); return TABS.some(x => x.id === t) || PAGES.includes(t) ? t : "home"; } catch { return "home"; }
   });
@@ -94,9 +94,22 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
      the whole app is one rounded card floating on the sign-in screen's field,
      the page scrolling inside it and the tab bar at its foot. On a phone it
      is the whole screen, as it was (src/index.css, "app shell"). */
+  const wide = !!user?.wideScreen;
   return (
-    <div className="cx-root">
+    <div className={`cx-root${wide ? " cx-wide" : ""}`}>
       <div className="cx-app-backdrop" aria-hidden="true" style={{ background: "var(--ground)" }}><HexBackdrop /></div>
+      {/* Studio's wide screen (its App.jsx; Glenn, 19 Oct 2026): the app takes
+          the window, with the same ground at its sides as above and below it.
+          The button hangs off the panel's right side, half way down, and is
+          drawn only where the window is wider than the panel can be
+          (index.css, .cx-wide-btn). Its holder has no width, so the panel
+          stays in the middle. Kept with the person: shared with Studio. */}
+      {chooseWide && (
+        <span className="cx-wide-at"><button type="button" className="cx-wide-btn" onClick={() => chooseWide(!wide)} aria-pressed={wide}
+          aria-label={wide ? "Leave wide screen" : "Wide screen"} title={wide ? "Leave wide screen" : "Wide screen"}>
+          {wide ? <FoldHorizontal size={22} aria-hidden="true" /> : <UnfoldHorizontal size={22} aria-hidden="true" />}
+        </button></span>
+      )}
       <div className="cx-app-shell">
       {/* Studio's drifting hexagons, in Coach's blues, behind every page
           (Glenn, 18 Oct 2026), held to the window (on a phone) or the card as

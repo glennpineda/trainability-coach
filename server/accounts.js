@@ -122,7 +122,14 @@ export const endSession = (token) => token ? run(`DELETE FROM coach_sessions WHE
 export const asUser = (a) => ({ id: a.id, name: a.name, email: a.email, role: "trainer", coachAccount: true,
   ...(Number(a.must_change_password) ? { mustChangePassword: true } : {}),
   theme: a.theme || "system", tone: a.tone || "", contrast: a.contrast || "system", motion: a.motion || "system",
-  color: a.color || "full", textSize: a.text_size || "medium" });
+  color: a.color || "full", textSize: a.text_size || "medium", wideScreen: !!Number(a.wide_screen) });
+
+/** Wide screen, kept with the account as Studio keeps it with the person (its
+    /api/auth/wide-screen; Glenn, 19 Oct 2026: shared with Studio for a
+    Trainability trainer, through the relay; a Coach account's here). */
+export async function setWideScreen(account, on) {
+  await run(`UPDATE coach_accounts SET wide_screen = ? WHERE id = ?`, [on ? 1 : 0, account.id]);
+}
 
 /* ------------------------------------------------- Accessibility
 

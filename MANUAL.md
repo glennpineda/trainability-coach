@@ -288,6 +288,16 @@ signing in: the bar at the top, the page, and the bar at the bottom all
 inside it. The page scrolls inside the panel, and the two bars stay where
 they are. A phone turned on its side fills the screen too.
 
+**Wide screen.** On a computer screen wider than the panel, a round button
+sits just outside the panel's right side, half way down (two arrows pointing
+apart; its name is **Wide screen**). Tap it and the panel spreads across the
+whole window, with the blue field showing only round its edges, and the
+pages inside use the room. The button then sits on the panel's edge, filled
+in blue (**Leave wide screen**, two arrows pointing together); tap it to go
+back. Your choice is kept with your account, so it is the same on every
+computer you sign in on, and, with a Trainability account, in Studio too.
+On a narrower window the button isn't there.
+
 ### 3.1 The bar at the top
 
 ![The home screen, with the bar at the top and the bar at the bottom](docs/images/02-home.png)
