@@ -1414,12 +1414,12 @@ the suggestions, and talks it through; he changes nothing himself.
 
 **What a day works.** Under a day's name, a drawing of a body, from the
 front and from the back, shades the muscles that day's exercises work, from
-light to dark: the darker, the more sets. Beside it, **Sets this day, by
-muscle** lists each one with its sets, the most first. An exercise's sets
-count fully for the muscles it mainly works and half for those it also
-works, as Coach IQ's library has them; an exercise with no sets filled in
-counts as one, and a range such as 2–3 counts as its top. The shades are
-on one scale across the whole program, so a lighter day looks lighter. The
+light to dark: the darker, the more exercises work it. Beside it,
+**Exercises this day, by muscle** lists each one with its count, the most
+first. An exercise counts one for the muscles it mainly works and a half for
+those it also works, as Coach IQ's library has them, whatever its sets. The
+shades are on one scale across the whole program, so a lighter day looks
+lighter. The
 pelvic floor is in the list but not drawn. A day with no exercises has no
 drawing.
 

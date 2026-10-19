@@ -117,8 +117,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   together); opening a fitness test's earlier results charts that test. Tap a
   point to read its day and number.
 - **What a day works.** Each day of a program shows a drawing of a body,
-  front and back, its muscles shaded light to dark by the day's sets, with the
-  sets for each muscle listed beside it.
+  front and back, its muscles shaded light to dark by how many of the day's
+  exercises work them, with the count for each muscle listed beside it.
 - **Loads from a 1RM.** In a program, write a load as a percentage, such as
   75%, and Coach works it out from the client's latest 1RM for that exercise:
   4 × 5 · 75% (190 lb). Coach IQ's check warns when there is no 1RM to go by,

@@ -4,27 +4,26 @@ import React from "react";
  * What a day of a program works, on a drawing of a body (Glenn, 19 Oct 2026:
  * "visualize with a drawing of a body and colored spots (from lighter to
  * darker) what muscles a workout program is hitting", then, asked what makes
- * a spot darker, "Weekly sets, but show for each Day"). Studio has nothing
- * like it.
+ * a spot darker, "Weekly sets, but show for each Day", then "So if it's
+ * better with by exercises instead of weekly then let's do that"). Studio
+ * has nothing like it.
  *
- * Each exercise's sets count fully for the muscles it mainly works and half
- * for the ones it also works (Coach IQ's library); with no sets filled in it
- * counts as one. A range counts its top ("2–3" is 3). Every spot is the
- * accent colour, lighter to darker by sets; the scale is the program's
- * busiest muscle on any day (at least 6 sets), so days can be compared and
- * one exercise isn't drawn as the most there is. Untouched muscles stay the
+ * Each exercise counts one for the muscles it mainly works and a half for
+ * the ones it also works (Coach IQ's library), whatever its sets, so the
+ * drawing doesn't wait on sets being filled in. Every spot is the accent
+ * colour, lighter to darker by that count; the scale is the program's
+ * busiest muscle on any day (at least 2 exercises), so days can be compared
+ * and one exercise isn't drawn as the most there is. Untouched muscles stay the
  * body's own grey. The numbers are beside the drawing, for anyone who
  * can't tell shades apart and for the pelvic floor, which can't be drawn.
  */
 
-/** Sets per muscle for a list of exercises: { muscle: sets }. */
+/** Exercises per muscle for a list of exercises: { muscle: count }. */
 export function setsByMuscle(exercises) {
   const out = {};
   for (const e of exercises) {
-    const nums = String(e.sets || "").match(/\d+(?:\.\d+)?/g);
-    const sets = nums ? Math.max(...nums.map(Number)) : 1;
-    for (const m of e.primary || []) out[m] = (out[m] || 0) + sets;
-    for (const m of e.secondary || []) if (!(e.primary || []).includes(m)) out[m] = (out[m] || 0) + sets / 2;
+    for (const m of e.primary || []) out[m] = (out[m] || 0) + 1;
+    for (const m of e.secondary || []) if (!(e.primary || []).includes(m)) out[m] = (out[m] || 0) + 0.5;
   }
   return out;
 }
@@ -104,7 +103,7 @@ function Figure({ spots, sets, top, label, x }) {
 const nice = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 const cap = (m) => m[0].toUpperCase() + m.slice(1);
 
-/** One day's drawing and its numbers. `top` is the scale (sets for the darkest spot). */
+/** One day's drawing and its numbers. `top` is the scale (exercises for the darkest spot). */
 export function BodyMap({ exercises, top }) {
   const sets = setsByMuscle(exercises);
   const list = Object.entries(sets).sort((a, b) => b[1] - a[1]);
@@ -112,12 +111,12 @@ export function BodyMap({ exercises, top }) {
   const said = list.map(([m, v]) => `${cap(m)} ${nice(v)}`).join(", ");
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 rounded-lg p-2.5" style={{ background: "var(--chalk)", border: "1px solid var(--iron-line)" }}>
-      <svg viewBox="0 0 250 280" role="img" style={{ width: "100%", maxWidth: 220, height: "auto" }} aria-label={`Sets this day by muscle: ${said}`} className="flex-none mx-auto sm:mx-0">
+      <svg viewBox="0 0 250 280" role="img" style={{ width: "100%", maxWidth: 220, height: "auto" }} aria-label={`Exercises this day by muscle: ${said}`} className="flex-none mx-auto sm:mx-0">
         <Figure spots={FRONT} sets={sets} top={top} label="Front" x={0} />
         <Figure spots={BACK} sets={sets} top={top} label="Back" x={130} />
       </svg>
       <div className="flex-1 text-xs" style={{ color: "var(--iron)", minWidth: "14rem" }}>
-        <div className="font-medium mb-1" style={{ color: "var(--ink)" }}>Sets this day, by muscle</div>
+        <div className="font-medium mb-1" style={{ color: "var(--ink)" }}>Exercises this day, by muscle</div>
         <ul className="grid grid-cols-2 gap-x-3 gap-y-0.5" style={{ maxWidth: 280 }}>
           {list.map(([m, v]) => (
             <li key={m} className="flex items-center gap-1.5 min-w-0">
@@ -133,5 +132,5 @@ export function BodyMap({ exercises, top }) {
   );
 }
 
-/** The scale for a program: its busiest muscle on any day, and at least 6 sets. */
-export const scaleOf = (days) => Math.max(6, ...days.map(d => Math.max(0, ...Object.values(setsByMuscle(d.exercises)))));
+/** The scale for a program: its busiest muscle on any day, and at least 2 exercises. */
+export const scaleOf = (days) => Math.max(2, ...days.map(d => Math.max(0, ...Object.values(setsByMuscle(d.exercises)))));

@@ -262,7 +262,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
             )}
             {d.notes && !is("day", d.id) && <p className="text-sm mt-1" style={muted}>{d.notes}</p>}
             {dayPoints.length > 0 && <ul className="grid gap-1 mt-2">{dayPoints.map((c, i) => <Point key={i} p={c} />)}</ul>}
-            {/* What the day works (Glenn, 19 Oct 2026), shaded by its sets. */}
+            {/* What the day works (Glenn, 19 Oct 2026), shaded by its exercises. */}
             {d.exercises.length > 0 && <BodyMap exercises={d.exercises} top={bodyScale} />}
 
             {d.exercises.length === 0 && <p className="text-sm mt-2" style={muted}>No exercises yet. Add one, or take one of Coach IQ's suggestions below.</p>}
