@@ -1707,6 +1707,14 @@ have **Change** (the same box) and the bin: *Delete this session?*, then
 **Delete** or **Keep it**. With none it says *None logged yet. Open a
 program and tap Log this session under a day.*
 
+**Seeing a lift's progress.** With two sessions or more, tap **Show
+progress** above the list. Tap a lift (such as **Barbell back squat**) to
+chart its heaviest set in each session it was logged in, in your units,
+with the whole change under it, such as *Since Oct 17: +10 lb over 2
+weeks*. Only lifts logged with a weight on two days or more are there; with
+none it says *A chart needs a lift logged with a weight on two days or
+more.* Tap **Hide progress** to put it away.
+
 <div style="page-break-after: always;"></div>
 
 ---

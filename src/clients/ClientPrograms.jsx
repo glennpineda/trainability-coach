@@ -1,10 +1,53 @@
 import React, { useEffect, useState } from "react";
-import { ChevronDown, ClipboardCheck, ClipboardList, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChartLine, ChevronDown, ClipboardCheck, ClipboardList, Pencil, Plus, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 import { ConfirmDialog } from "../chrome/ConfirmDialog";
 import { LogSession } from "../programs/LogSession";
-import { entryText } from "../lib/workout-log";
+import { entryText, setsDone } from "../lib/workout-log";
+import { Trend } from "./Trend";
+
+/*
+ * Each lift's heaviest set over its logged sessions (Glenn, 19 Oct 2026: "A
+ * chart for each lift"), like the measurement charts: one point a day, in
+ * the trainer's units; only lifts with a weight on two days or more.
+ */
+function liftCharts(sessions, units) {
+  const byLift = new Map();
+  for (const log of [...sessions].reverse()) {
+    for (const e of log.entries) {
+      const top = Math.max(0, ...setsDone(e).map(x => x.weightKg || 0));
+      if (!top) continue;
+      const kg = units === "metric" ? 1 : 2.20462262;
+      const value = units === "metric" ? Math.round(top * 2) / 2 : Math.round(top * kg);
+      if (!byLift.has(e.exerciseId)) byLift.set(e.exerciseId, { key: e.exerciseId, label: e.name, points: new Map() });
+      const pts = byLift.get(e.exerciseId).points;
+      pts.set(log.doneOn, Math.max(pts.get(log.doneOn) || 0, value));
+    }
+  }
+  return [...byLift.values()].map(l => ({ ...l, points: [...l.points].sort().map(([date, value]) => ({ date, value })) })).filter(l => l.points.length >= 2);
+}
+
+function LiftProgress({ sessions, units }) {
+  const options = liftCharts(sessions, units);
+  const [key, setKey] = useState(options[0]?.key);
+  const c = options.find(o => o.key === key) || options[0];
+  if (!c) return <p className="text-sm mt-2" style={{ color: "var(--iron)" }}>A chart needs a lift logged with a weight on two days or more.</p>;
+  const unit = units === "metric" ? "kg" : "lb";
+  return (
+    <div className="mt-2 mb-3">
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Which lift to chart">
+        {options.map(o => (
+          <button key={o.key} type="button" aria-pressed={o.key === c.key} onClick={() => setKey(o.key)}
+            className="cx-chip text-xs px-2.5 py-1 rounded-full border"
+            style={o.key === c.key ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" } : { background: "var(--chalk)", color: "var(--ink)", borderColor: "var(--iron-line)" }}>{o.label}</button>
+        ))}
+      </div>
+      <Trend series={[{ name: c.label, points: c.points }]} format={(v) => `${v} ${unit}`} label={`${c.label}, heaviest set over time`} />
+      <p className="text-xs mt-1" style={{ color: "var(--iron)" }}>The heaviest set of each session it was logged in.</p>
+    </div>
+  );
+}
 
 const dayText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
 
@@ -19,6 +62,7 @@ function Sessions({ client, onSignedOut }) {
   const [open, setOpen] = useState(null);
   const [changing, setChanging] = useState(null);   // { log, program, day }
   const [deleting, setDeleting] = useState(null);
+  const [chart, setChart] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const fail = (err) => { if (err.status === 401) onSignedOut?.(); else setError(err.message || "That didn't work. Try again."); };
@@ -42,6 +86,12 @@ function Sessions({ client, onSignedOut }) {
   return (
     <>
       {error && <p className="text-sm mb-2" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
+      {data.sessions.length > 1 && (
+        <button type="button" className="cx-link text-sm mb-1" aria-expanded={chart} onClick={() => setChart(c => !c)}>
+          <ChartLine size={14} aria-hidden="true" /> {chart ? "Hide progress" : "Show progress"}
+        </button>
+      )}
+      {chart && <LiftProgress sessions={data.sessions} units={units} />}
       {data.sessions.length === 0 ? (
         <p className="text-sm" style={muted}>None logged yet. Open a program and tap <strong>Log this session</strong> under a day.</p>
       ) : (
