@@ -535,6 +535,44 @@ const COLUMNS = [
   ["coach_measurements", "bp_dia", "REAL NULL"],
 ];
 
+/*
+ * Indexes on what the app looks things up by (Run 1, O-1 and O-2): the
+ * schema had only primary keys and UNIQUEs, so every list of a client's
+ * measurements, a program's days or a conversation's messages read the whole
+ * table. With 12,000 messages the Messages list took 1.3 to 2.2 seconds;
+ * with these, about 7 ms. Added where missing on start, like COLUMNS.
+ */
+const INDEXES = [
+  ["coach_messages", ["conversation_id", "created_at"]],
+  ["coach_attachments", ["message_id"]],
+  ["coach_conversations", ["trainer_id", "client_id"]],
+  ["coach_conversations", ["client_id"]],
+  ["coach_measurements", ["client_id"]],
+  ["coach_fitness_tests", ["client_id"]],
+  ["coach_progress_photos", ["client_id"]],
+  ["coach_limitations", ["client_id"]],
+  ["coach_programs", ["trainer_id", "client_id"]],
+  ["coach_program_days", ["program_id"]],
+  ["coach_program_exercises", ["program_id"]],
+  ["coach_program_exercises", ["day_id"]],
+  ["coach_clients", ["trainer_id"]],
+  ["coach_sessions", ["account_id"]],
+  ["coach_places", ["trainer_id"]],
+  ["coach_place_equipment", ["trainer_id"]],
+  ["coach_place_equipment", ["place_id"]],
+  ["coach_private_exercises", ["trainer_id"]],
+  ["coach_own_names", ["trainer_id"]],
+  ["coach_push_subscriptions", ["user_id"]],
+];
+const indexName = (table, cols) => `ix_${table.replace(/^coach_/, "")}_${cols.join("_")}`;
+
+async function hasIndex(table, name) {
+  if (dialect() === "mysql") {
+    return !!(await get(`SELECT INDEX_NAME FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?`, [table, name]));
+  }
+  return (await all(`PRAGMA index_list(${table})`)).some(i => i.name === name);
+}
+
 async function hasColumn(table, column) {
   if (dialect() === "mysql") {
     return !!(await get(`SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?`, [table, column]));
@@ -546,5 +584,9 @@ export async function migrate() {
   for (const sql of SCHEMA) await run(sql);
   for (const [table, column, definition] of COLUMNS) {
     if (!await hasColumn(table, column)) await run(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
+  for (const [table, cols] of INDEXES) {
+    const name = indexName(table, cols);
+    if (!await hasIndex(table, name)) await run(`CREATE INDEX ${name} ON ${table} (${cols.join(", ")})`);
   }
 }

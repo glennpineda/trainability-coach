@@ -48,12 +48,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   be the accent look); Review and Equipment places use round chips that wrap on
   a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
   against its track.
-- **Speed: the message list scans whole tables (O-1, O-2).** Two queries per
-  conversation with no index: 1.3–2.2 s at 12,000 messages, 7 ms with an index
-  on `coach_messages(conversation_id, created_at)` and
-  `coach_attachments(message_id)`. The schema has no secondary indexes at all
-  (`client_id`, `program_id`, `day_id`, `trainer_id`, `message_id`); add an
-  `INDEXES` list to `migrate()`.
 - **Speed: Studio is asked again on every request, often twice or more
   (O-3).** `/auth/me` and `/clients` each time; adding a client is six Studio
   calls; a master downloads the whole business list. Remember per request,
