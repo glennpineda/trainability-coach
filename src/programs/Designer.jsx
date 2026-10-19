@@ -213,6 +213,13 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
   return (
     <div className="grid gap-4">
       <button type="button" className="text-sm cx-link justify-self-start" onClick={onBack}><ChevronLeft size={16} aria-hidden="true" /> All programs</button>
+      {/* Its client no longer on the trainer's list (Run 1, B-2; Glenn: "Freeze them"). */}
+      {p.frozen && (
+        <p className="text-sm rounded-lg p-3 flex items-start gap-2" style={{ background: "var(--ghost-fill)", color: "var(--ink-soft)" }}>
+          <Info size={16} className="flex-none mt-0.5" style={{ color: "var(--iron)" }} aria-hidden="true" />
+          {p.clientName} is no longer on your list, so this program can be read and printed but not changed. Their newest 1RMs and limitations aren't read into it.
+        </p>
+      )}
 
       <section className="cx-card p-4">
         {is("details", p.id) ? (
@@ -228,16 +235,16 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
               {[p.kindLabel, p.minutes ? `${p.minutes}-minute sessions` : null, p.focusLabels.length ? `focus: ${p.focusLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
             </div>
             {p.notes && <p className="text-sm mt-2 whitespace-pre-wrap cx-wrap">{p.notes}</p>}
-            {gym && p.placeId !== gym.placeId && (
+            {gym && !p.frozen && p.placeId !== gym.placeId && (
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-sm">
                 <span className="inline-flex items-start gap-1.5"><Info size={15} className="flex-none mt-0.5" style={{ color: "var(--iron)" }} aria-hidden="true" />{gym.text}</span>
                 <button type="button" className="cx-link" disabled={busy} onClick={() => call("PATCH", `/programs/${p.id}`, { placeId: gym.placeId })}>Use {gym.name}</button>
               </div>
             )}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
-              <button type="button" className="cx-btn-row" onClick={() => setOpen({ kind: "details", id: p.id })}><Pencil size={15} aria-hidden="true" /> Edit the details</button>
+              {!p.frozen && <button type="button" className="cx-btn-row" onClick={() => setOpen({ kind: "details", id: p.id })}><Pencil size={15} aria-hidden="true" /> Edit the details</button>}
               <a className="text-sm cx-link" href={`/print/program/${p.id}`} target="_blank" rel="noreferrer"><Printer size={15} aria-hidden="true" /> Print for the client</a>
-              {billy?.available && (
+              {billy?.available && !p.frozen && (
                 <button type="button" className="text-sm cx-link" onClick={() => askBilly(`Look over my program “${p.name}” for ${p.clientName} (${p.id}). What would you change or add next?`)}>
                   <Sparkles size={15} aria-hidden="true" /> Ask Billy about it
                 </button>
@@ -269,6 +276,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
 
       {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
 
+      <fieldset disabled={!!p.frozen} className="contents">
       {p.days.map((d, di, days) => {
         const bodyScale = scaleOf(days);
         const dayPoints = points(c => c.day === d.id && !c.exercise);
@@ -330,7 +338,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
               })}
             </ol>
 
-            <div className="mt-2">
+            {!p.frozen && <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   <button type="button" className="cx-btn-row" onClick={() => openDialog({ day: d, first: d.exercises.length === 0 })}><Plus size={15} aria-hidden="true" /> Add an exercise</button>
                   {billy?.available && (
@@ -339,16 +347,19 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                     </button>
                   )}
                 </div>
-            </div>
-            <Next dayId={d.id} version={version} busy={busy} units={units}
-              onTake={(s) => openDialog({ day: d, suggested: s, first: d.exercises.length === 0 })} />
+            </div>}
+            {!p.frozen && <Next dayId={d.id} version={version} busy={busy} units={units}
+              onTake={(s) => openDialog({ day: d, suggested: s, first: d.exercises.length === 0 })} />}
           </section>
         );
       })}
 
-      <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy} onClick={() => call("POST", `/programs/${p.id}/days`, {})}>
-        <Plus size={15} className="inline" aria-hidden="true" /> Add a day
-      </button>
+      {!p.frozen && (
+        <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy} onClick={() => call("POST", `/programs/${p.id}/days`, {})}>
+          <Plus size={15} className="inline" aria-hidden="true" /> Add a day
+        </button>
+      )}
+      </fieldset>
       {taking && (
         <ConfirmDialog busy={busy} no="Keep it"
           title={taking.exercise ? `Take ${taking.exercise.name} out of ${taking.day.name}?` : `Take ${taking.day.name} out of the program?`}

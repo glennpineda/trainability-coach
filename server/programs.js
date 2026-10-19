@@ -401,12 +401,14 @@ async function theirNames(trainerId) {
 
 /* What the program's checks and suggestions need to know about its world,
    and what the client has done in this trainer's earlier programs. */
-async function context(trainerId, program) {
+async function context(trainerId, program, { frozen = false } = {}) {
   const { places } = await equipment.equipmentOf(trainerId);
   const place = places.find(p => p.id === program.place_id) || null;
-  const lims = await limitations.limitationsOf(program.client_id, trainerId);
+  /* A client no longer the trainer's: nothing new of theirs is read (Run 1,
+     B-2; Glenn, 19 Oct 2026: "Freeze them"). */
+  const lims = frozen ? [] : await limitations.limitationsOf(program.client_id, trainerId);
   const history = await historyOf(trainerId, program.client_id, { before: program });
-  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms: await oneRmsOf(program.client_id) };
+  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms: frozen ? new Map() : await oneRmsOf(program.client_id) };
 }
 
 /* The client's latest 1RM for each exercise (fitness-tests.js, kind onerm;
@@ -497,11 +499,11 @@ export async function historyOf(trainerId, clientId, { before = null } = {}) {
 }
 
 /** A program as the designer, the print page and Billy are shown it. */
-export async function full(trainerId, program, { withCheck = true, ctx: given = null } = {}) {
+export async function full(trainerId, program, { withCheck = true, ctx: given = null, frozen = false } = {}) {
   const days = await all(`SELECT * FROM coach_program_days WHERE program_id = ? ORDER BY pos, id`, [program.id]);
   const rows = await all(`SELECT * FROM coach_program_exercises WHERE program_id = ? ORDER BY pos, id`, [program.id]);
   const names = await theirNames(trainerId);
-  const ctx = given || await context(trainerId, program);
+  const ctx = given || await context(trainerId, program, { frozen });
   const own = new Map();
   for (const r of rows) {
     if (!library.isExercise(r.exercise_id) && !own.has(r.exercise_id)) own.set(r.exercise_id, await library.privateBrief(trainerId, r.exercise_id));
@@ -536,6 +538,7 @@ export async function full(trainerId, program, { withCheck = true, ctx: given = 
     /* The client's latest 1RM for each exercise, for the exercise dialog. */
     oneRms: Object.fromEntries(ctx.oneRms),
   };
+  if (frozen) out.frozen = true;
   if (withCheck) out.check = check(out, rows, ctx, own);
   return out;
 }

@@ -128,7 +128,7 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
                       <span className="block text-sm" style={muted}>
                         For {p.clientName} · {p.kindLabel || p.goalLabel} · {p.days} {p.days === 1 ? "day" : "days"}, {p.exercises} {p.exercises === 1 ? "exercise" : "exercises"}
                       </span>
-                      <span className="block text-xs" style={muted}>Changed {new Date(p.updatedAt).toLocaleDateString()}</span>
+                      <span className="block text-xs" style={muted}>{p.frozen ? `${p.clientName} is no longer on your list · read only` : `Changed ${new Date(p.updatedAt).toLocaleDateString()}`}</span>
                     </button>
                     {asking !== p.id && <button type="button" className="cx-icon-btn" onClick={() => setAsking(p.id)} aria-label={`Put ${p.name} away`} title="Put away"><Archive size={16} aria-hidden="true" /></button>}
                   </div>

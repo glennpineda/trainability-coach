@@ -24,10 +24,6 @@ _Things actually ready to do._
 
 Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
-- **A program keeps reading a client after they leave (B-2, privacy).** An old
-  program still loads the client's newest 1RMs and limitations
-  (`programs.full`), can be edited, and Billy lists it. Read them only while the
-  client is still the trainer's, or freeze it.
 - **Linking a Coach account doubles "Where I usually train" (B-6).**
   `accounts.link` moves places without merging; Tess now has three of the same
   name. Merge, or rename.

@@ -1510,10 +1510,30 @@ const sendProgram = async (res, user, program) => {
   res.json(await programs.full(user.id, await programs.programOf(user.id, program.id)));
 };
 
+/* Their programs for clients still on their list: what Billy is shown (Run 1, B-2). */
+const liveProgramsOf = async (req, user) => {
+  const theirs = new Set((await myClients(req, user)).map(c => c.id));
+  return (await programs.list(user.id)).filter(p => theirs.has(p.clientId));
+};
+
+/* A program whose client is no longer on the trainer's list (Archived still
+   counts as on it) is frozen (Run 1, B-2; Glenn, 19 Oct 2026: "Freeze them"):
+   read and printed as it stands, with nothing new of the client's read into
+   it, and not changed. */
+const stillTheirs = async (req, user, program) => (await myClients(req, user)).some(c => c.id === program.client_id);
+const FROZEN = { error: "This client is no longer on your list, so the program can be read and printed but not changed.", code: "not_your_client" };
+const changeable = async (req, res, user, program) => {
+  if (await stillTheirs(req, user, program)) return true;
+  res.status(403).json(FROZEN);
+  return false;
+};
+
 app.get("/api/programs", asSignedIn("GET /programs", async (req, res, user) => {
   await syncStudioPlace(req, user);
   res.set("Cache-Control", "private, no-store");
-  res.json({ programs: await programs.list(user.id), putAway: await programs.list(user.id, { putAway: true }), goals: programs.goalsList(), ...programs.kindsFor() });
+  const theirs = new Set((await myClients(req, user)).map(c => c.id));
+  const marked = (list) => list.map(p => (theirs.has(p.clientId) ? p : { ...p, frozen: true }));
+  res.json({ programs: marked(await programs.list(user.id)), putAway: marked(await programs.list(user.id, { putAway: true })), goals: programs.goalsList(), ...programs.kindsFor() });
 }));
 
 /* A client of theirs and one of their places, or a 400 saying which. */
@@ -1543,7 +1563,7 @@ app.get("/api/programs/:id", asSignedIn("GET /programs/one", async (req, res, us
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
   res.set("Cache-Control", "private, no-store");
-  const out = await programs.full(user.id, program);
+  const out = await programs.full(user.id, program, { frozen: !await stillTheirs(req, user, program) });
   /* The client's gym in Studio, read now: if it has changed since the program
      was made for one of Studio's places (or none), say so, and offer it. A
      place of the trainer's own choosing (a client's home) is left alone. */
@@ -1564,6 +1584,7 @@ app.get("/api/programs/:id", asSignedIn("GET /programs/one", async (req, res, us
 app.patch("/api/programs/:id", asSignedIn("PATCH /programs", async (req, res, user) => {
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   const wrong = programs.checkDetails(req.body);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
   const world = await programWorld(req, user, { clientId: req.body.clientId, placeId: req.body.placeId });
@@ -1588,6 +1609,7 @@ app.post("/api/programs/:id/back", asSignedIn("POST /programs/back", async (req,
 app.post("/api/programs/:id/days", asSignedIn("POST /programs/days", async (req, res, user) => {
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   const next = await programs.nextDay(program);
   await programs.addDay(program.id, req.body?.name || next.name, next.kind);
   await sendProgram(res, user, program);
@@ -1596,6 +1618,7 @@ app.post("/api/programs/:id/days", asSignedIn("POST /programs/days", async (req,
 app.patch("/api/program-days/:id", asSignedIn("PATCH /program-days", async (req, res, user) => {
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   if (req.body?.move) await programs.moveDay(req.params.id, program.id, Number(req.body.move));
   const wrong = await programs.updateDay(req.params.id, program.id, req.body || {});
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
@@ -1605,6 +1628,7 @@ app.patch("/api/program-days/:id", asSignedIn("PATCH /program-days", async (req,
 app.delete("/api/program-days/:id", asSignedIn("DELETE /program-days", async (req, res, user) => {
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   await programs.deleteDay(req.params.id, program.id);
   await sendProgram(res, user, program);
 }));
@@ -1613,6 +1637,7 @@ app.delete("/api/program-days/:id", asSignedIn("DELETE /program-days", async (re
 app.get("/api/program-days/:id/suggestions", asSignedIn("GET /program-days/suggestions", async (req, res, user) => {
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   res.set("Cache-Control", "private, no-store");
   /* Narrowed to what they are working on, when the dialog says (workOn, a
      kind of movement; muscles, comma-separated); otherwise what comes next. */
@@ -1626,6 +1651,7 @@ app.get("/api/program-days/:id/suggestions", asSignedIn("GET /program-days/sugge
 app.get("/api/program-days/:id/preview", asSignedIn("GET /program-days/preview", async (req, res, user) => {
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   const out = await programs.preview(user.id, program, String(req.query.exercise || ""));
   if (!out) return notFound(res);
   res.set("Cache-Control", "private, no-store");
@@ -1636,6 +1662,7 @@ app.get("/api/program-days/:id/preview", asSignedIn("GET /program-days/preview",
 app.post("/api/program-days/:id/exercises", asSignedIn("POST /program-days/exercises", async (req, res, user) => {
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   if (!await programs.canUse(user.id, req.body?.exerciseId)) return res.status(400).json({ error: "Choose an exercise from the library or your own.", code: "invalid" });
   const dose = programs.doseFrom(req.body);
   if (dose.error) return res.status(400).json({ error: dose.error, code: "invalid" });
@@ -1646,6 +1673,7 @@ app.post("/api/program-days/:id/exercises", asSignedIn("POST /program-days/exerc
 app.patch("/api/program-exercises/:id", asSignedIn("PATCH /program-exercises", async (req, res, user) => {
   const program = await programs.programOfExercise(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   if (req.body?.exerciseId !== undefined && !await programs.canUse(user.id, req.body.exerciseId)) {
     return res.status(400).json({ error: "Choose an exercise from the library or your own.", code: "invalid" });
   }
@@ -1659,6 +1687,7 @@ app.patch("/api/program-exercises/:id", asSignedIn("PATCH /program-exercises", a
 app.delete("/api/program-exercises/:id", asSignedIn("DELETE /program-exercises", async (req, res, user) => {
   const program = await programs.programOfExercise(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   await programs.deleteExercise(req.params.id, program.id);
   await sendProgram(res, user, program);
 }));
@@ -1667,6 +1696,7 @@ app.delete("/api/program-exercises/:id", asSignedIn("DELETE /program-exercises",
 app.get("/api/program-exercises/:id/swaps", asSignedIn("GET /program-exercises/swaps", async (req, res, user) => {
   const program = await programs.programOfExercise(user.id, req.params.id);
   if (!program) return notFound(res);
+  if (!await changeable(req, res, user, program)) return;
   const row = await db.get(`SELECT exercise_id FROM coach_program_exercises WHERE id = ?`, [req.params.id]);
   res.set("Cache-Control", "private, no-store");
   res.json(await programs.swapsFor(user.id, program, row.exercise_id));
@@ -1793,7 +1823,7 @@ app.post("/api/assistant", async (req, res) => {
          and what could come next on each day, never changed by him. */
       my_programs: async (input) => {
         const want = String(input?.program || "").trim().toLowerCase();
-        const list = await programs.list(user.id);
+        const list = await liveProgramsOf(req, user);
         if (!want) return { programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName, goal: p.goalLabel, days: p.days, exercises: p.exercises })) };
         const hit = list.find(p => p.id === want) || list.filter(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want))[0];
         if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };
@@ -1802,7 +1832,7 @@ app.post("/api/assistant", async (req, res) => {
       /* Narrowed suggestions for one day of one of their programs, by kind of
          movement and muscles, already passing the place, level and limitations. */
       suggest_exercises: async (input) => {
-        const list = await programs.list(user.id);
+        const list = await liveProgramsOf(req, user);
         const want = String(input?.program || "").trim().toLowerCase();
         const hit = list.find(p => p.id === want) || list.find(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want));
         if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };

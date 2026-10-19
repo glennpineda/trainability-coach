@@ -1313,6 +1313,14 @@ are kept, not deleted.
    it back.* Tap **Put away**, or **Keep it** to leave it.
 3. A note says *Next block put away.*
 
+**When a client leaves your list.** A program for someone no longer on your
+list (they moved to another trainer, say; an archived client still counts as
+yours) stays in the list, marked *… is no longer on your list · read only*.
+Open it to read or print it: it says *… is no longer on your list, so this
+program can be read and printed but not changed.*, and nothing new of
+theirs (their latest 1RMs or limitations) is read into it. Billy doesn't
+offer it.
+
 Above the list, **Active** and **Put away** switch between your programs and
 the ones put away, with how many of each. To bring one back, tap **Put away**,
 then **Put back** beside it; a note says *Next block is back on your list.*
