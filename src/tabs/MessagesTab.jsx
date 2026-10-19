@@ -6,6 +6,7 @@ import { uploadAttachment, fileUrl } from "../messages/upload";
 import { rowsOf } from "../lib/measures";
 import { describe, titleOf } from "../lib/fitness-tests";
 import { Face } from "../clients/Face";
+import { usePoll } from "../hooks/usePoll";
 
 /*
  * Messages (Glenn, 18 Oct 2026: "Let's do messages now, apart from basic
@@ -69,12 +70,8 @@ export function MessagesTab({ clients, onSignedOut, onUnread }) {
       });
   }, [onSignedOut, onUnread]);
   useEffect(() => { if (!open) load(); }, [open, load]);
-  /* Asked again every half minute while the list is on screen. */
-  useEffect(() => {
-    if (open) return undefined;
-    const t = setInterval(load, 30 * 1000);
-    return () => clearInterval(t);
-  }, [open, load]);
+  /* Asked again every half minute while the list is on screen and in sight. */
+  usePoll(load, 30 * 1000, !open);
 
   if (open) return <Thread clientId={open} clients={clients} onBack={() => setOpen(null)} onSignedOut={onSignedOut} onRead={load} />;
 
@@ -269,13 +266,16 @@ function Thread({ clientId, clients, onBack, onSignedOut, onRead }) {
   const [error, setError] = useState("");
   const end = useRef(null);
   const load = useCallback(() => apiRequest("GET", `/messages/${encodeURIComponent(clientId)}`)
-    .then(d => { setT(d); setError(""); onRead?.(); })
+    /* The list (and the tab's red number) asked again only when this
+       reading took some away, not on every 15 seconds (Run 1, O-4). */
+    .then(d => { setT(d); setError(""); if (d.wasUnread) onRead?.(); })
     .catch(err => {
       if (err.status === 401) return onSignedOut?.();
       if (err.status === 404) return setError("That client isn't on your list.");
       setError("Messages couldn't be loaded. Try again in a minute.");
     }), [clientId, onSignedOut, onRead]);
-  useEffect(() => { load(); const i = setInterval(load, 15 * 1000); return () => clearInterval(i); }, [load]);
+  useEffect(() => { load(); }, [load]);
+  usePoll(load, 15 * 1000);
   const count = t?.messages.length || 0;
   useEffect(() => { end.current?.scrollIntoView({ block: "end" }); }, [count]);
 

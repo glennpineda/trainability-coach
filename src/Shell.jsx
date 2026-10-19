@@ -18,6 +18,7 @@ import { apiRequest } from "./lib/api";
 import { useClients } from "./hooks/useClients";
 import { useBilly } from "./hooks/useBilly";
 import { SECTIONS } from "./tabs/sections";
+import { usePoll } from "./hooks/usePoll";
 
 const TABS = [
   { id: "home", label: "Home", icon: House },
@@ -56,12 +57,10 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
   /* Messages from clients not yet read, on the Messages button (Studio's
      count on a tab), asked on every change of tab and every minute. */
   const [unread, setUnread] = useState(0);
-  useEffect(() => {
-    const ask = () => apiRequest("GET", "/messages").then(d => setUnread(d.unread || 0)).catch(() => {});
-    ask();
-    const t = setInterval(ask, 60 * 1000);
-    return () => clearInterval(t);
-  }, [tab]);
+  const askUnread = useCallback(() => apiRequest("GET", "/messages").then(d => setUnread(d.unread || 0)).catch(() => {}), []);
+  useEffect(() => { askUnread(); }, [tab, askUnread]);
+  /* Every minute while Coach is in sight (hooks/usePoll.js; Run 1, O-4). */
+  usePoll(askUnread, 60 * 1000);
   const open = (id) => { setTab(id); scrollPageTo({ top: 0 }); };
   /* A notification tapped (public/push-sw.js): its address says where, such
      as /?open=messages&client=… for a client's message. Opened from scratch

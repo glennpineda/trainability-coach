@@ -303,8 +303,12 @@ export async function trainerThread(trainerId, clientId) {
   const c = await conversationOf(trainerId, clientId);
   if (!c) return null;
   const messages = await messagesOf(c.id);
-  await run(`UPDATE coach_conversations SET trainer_read_at = ? WHERE id = ?`, [now(), c.id]);
-  return { id: c.id, clientReadAt: c.client_read_at, messages };
+  /* Marked read only when the client has written since: every reading wrote
+     before, every 15 seconds while a conversation was open (Run 1, O-4).
+     `wasUnread` tells the page to ask for its red number again. */
+  const wasUnread = messages.some(m => m.authorKind === "client" && m.at > (c.trainer_read_at || ""));
+  if (wasUnread) await run(`UPDATE coach_conversations SET trainer_read_at = ? WHERE id = ?`, [now(), c.id]);
+  return { id: c.id, clientReadAt: c.client_read_at, messages, wasUnread };
 }
 
 /** The client's side of one conversation, read now. */

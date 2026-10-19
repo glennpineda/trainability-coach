@@ -52,10 +52,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   (O-3).** `/auth/me` and `/clients` each time; adding a client is six Studio
   calls; a master downloads the whole business list. Remember per request,
   cache briefly with Studio's ETag.
-- **Speed: message polling (O-4).** An open thread reloads every 15 s and pulls
-  the list again; nothing pauses when the tab is hidden; ~18 Studio calls a
-  minute per open thread; 56 KB each time (video stills inline); a database
-  write each poll.
 - **Speed: other (O-5 to O-10).** Today asks Studio for the whole calendar
   (pass `from`/`before`); unsent attachments and their files are never cleaned
   (no delete, no sweep; photos copied, not linked); nothing gzipped and built
