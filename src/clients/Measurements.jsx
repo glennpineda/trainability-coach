@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ChartLine, ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip } from "../lib/measures";
+import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip, exactIfSame } from "../lib/measures";
 import { Trend } from "./Trend";
 import { todayIso } from "../lib/date";
 
@@ -107,7 +107,7 @@ function Form({ units, initial, busy, onSave, onCancel }) {
     else groups.push({ pair: m.pair || null, items: [m] });
   }
   return (
-    <form className="mt-2 grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave({ takenOn, note, values, units }); }}>
+    <form className="mt-2 grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave({ takenOn, note, values: Object.fromEntries(MEASURES.map(m => [m.key, exactIfSame(values[m.key], initial?.values[m.key], m, units)])), units }); }}>
       <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Taken on
         <input type="date" className="cx-input" style={{ color: "var(--ink)" }} max={todayIso()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
       </label>

@@ -70,6 +70,18 @@ export function fromShown(measure, value, units) {
   return round(value / (measure.kind === "mass" ? LB_PER_KG : IN_PER_CM), 2);
 }
 
+/**
+ * What a box sends when saved: what was typed, except that a box still
+ * showing a kept value as it was filled in sends that value unrounded, so
+ * saving changes nothing the trainer didn't (Run 1, A-3). Shown rounded (lb to
+ * 0.1, inches to a quarter) and read back, 80.3 kg became 80.29.
+ */
+export function exactIfSame(text, value, measure, units) {
+  if (value == null || String(text).trim() !== String(toShown(measure, value, units) ?? "")) return text;
+  if (whole(measure.kind) || units === "metric" || measure.kind === "percent") return String(value);
+  return String(value * (measure.kind === "mass" ? LB_PER_KG : IN_PER_CM));
+}
+
 /** "82.4 kg", "34.5 in", "18.2%", "62 bpm" */
 export function shownText(measure, value, units) {
   const v = toShown(measure, value, units);

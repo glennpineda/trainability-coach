@@ -5,7 +5,7 @@ import { TESTS, TEST_GROUPS, VO2_SOURCES, NEEDS_WHO, JUMP_STYLES, JUMP_TOOLS, HO
   ageOn, sexOf, clockOf, describe, changeOf, seriesOf, titleOf, brzycki } from "../lib/fitness-tests";
 import { LibraryPicker } from "../tabs/ExercisesTab";
 import { Trend } from "./Trend";
-import { MEASURES, toShown, unitOf } from "../lib/measures";
+import { MEASURES, toShown, unitOf, exactIfSame } from "../lib/measures";
 import { todayIso } from "../lib/date";
 
 /*
@@ -143,12 +143,16 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
   return (
     <form className="mt-2 grid gap-3" onSubmit={(e) => {
       e.preventDefault();
-      onSave(kind === "onerm" ? { kind, takenOn, note, units, exerciseId: exercise?.id, method, weight: lift, reps, bodyWeight }
-        : kind === "jump" ? { kind, takenOn, note, units, style, tool, height }
-        : kind === "rsi" ? { kind, takenOn, note, units, height, contactMs, box }
+      /* A weight or height still as it was filled in goes unrounded, so
+         saving a changed note leaves the numbers as they were (Run 1, A-3). */
+      const exact = (text, m, v) => exactIfSame(text, v, m, units);
+      const liftX = exact(lift, LIFT, d0.weightKg);
+      onSave(kind === "onerm" ? { kind, takenOn, note, units, exerciseId: exercise?.id, method, weight: liftX, reps, bodyWeight: exact(bodyWeight, WEIGHT, d0.bodyWeightKg ?? latestWeight) }
+        : kind === "jump" ? { kind, takenOn, note, units, style, tool, height: exact(height, HEIGHT, d0.heightCm) }
+        : kind === "rsi" ? { kind, takenOn, note, units, height: exact(height, HEIGHT, d0.heightCm), contactMs, box: exact(box, BOX, d0.boxCm) }
         : kind === "hold" ? { kind, takenOn, note, units, hold, time: held }
-        : kind === "vloss" ? { kind, takenOn, note, units, exerciseId: exercise?.id, percent, reps, loss, weight: lift }
-        : { kind, takenOn, age, sex, heartRate, time, weight, vo2, source, note, units });
+        : kind === "vloss" ? { kind, takenOn, note, units, exerciseId: exercise?.id, percent, reps, loss, weight: liftX }
+        : { kind, takenOn, age, sex, heartRate, time, weight: exact(weight, WEIGHT, initial?.data?.weightKg ?? latestWeight), vo2, source, note, units });
     }}>
       <div className="text-sm font-medium">{t.label}</div>
       {/* How it is done, in the article's words; Coach IQ's card. */}

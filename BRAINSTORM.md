@@ -24,11 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **Changing only a note changes the numbers (A-3).** The edit form fills its
-  boxes with rounded shown values and saves them all back: 80.3 kg, waist
-  80.3 cm, arm 30.1 cm became 80.29, 80.01 and 29.84 after the trainer switched
-  to Imperial and edited the note. Fitness test edits the same. Save only what
-  was changed.
 - **The tab bar covers the exercise dialog's buttons (U-1, D-1).**
   `ExerciseDialog.jsx` is drawn inside the page, not portalled like every other
   dialog, so the tab bar sits over **Add to …** and **Save** and dimming stops
