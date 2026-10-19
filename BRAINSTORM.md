@@ -55,8 +55,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   title, Billy's errors, missing words (Coach account, Primary Master,
   Settings, Wide screen, Today, Superset, Place), and a "what each account can
   do" chapter like Studio's. Each with its corrected text in the report.
-- **Coach IQ ignores the client's tests (U-15)**: a 1.26 × body weight squat
-  still gets Bodyweight squat at beginner.
 - **"No sessions yet" on the client while Home shows them trained today (U-22,
   D-16)**: maybe the stand-in Studio; check against the fixture.
 

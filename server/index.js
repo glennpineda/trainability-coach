@@ -911,7 +911,10 @@ app.get("/api/clients/:client/level", asSignedIn("GET /clients/level", async (re
   if (!await ownClient(req, res, user, req.params.client)) return;
   res.set("Cache-Control", "private, no-store");
   const { level, why, programs: count, trend } = await programs.historyOf(user.id, req.params.client);
-  res.json({ level, why: why || null, programs: count, trend });
+  /* And what their lifts say, by the gender Studio has for them (Run 1, U-15). */
+  const client = (await myClients(req, user)).find(c => c.id === req.params.client);
+  const sex = { female: "female", male: "male" }[String(client?.gender || "").toLowerCase()];
+  res.json({ level, why: why || null, programs: count, trend, fromTests: await programs.levelFromTests(req.params.client, sex) });
 }));
 
 app.get("/api/clients/:client/limitations", asSignedIn("GET /clients/limitations", async (req, res, user) => {

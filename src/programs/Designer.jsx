@@ -541,7 +541,8 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
     apiRequest("GET", `/clients/${f.clientId}/level`).then(o => {
       if (!live) return;
       setKnown(o);
-      setF(d => ({ ...d, level: o.level || "" }));
+      /* With no programs to go by, their lifts (Run 1, U-15). */
+      setF(d => ({ ...d, level: o.level || o.fromTests?.level || "" }));
     }).catch(() => { if (live) setKnown(null); });
     return () => { live = false; };
   }, [clients, f.clientId]);
@@ -586,7 +587,8 @@ export function DetailsForm({ initial = {}, goals, vocab, places, clients, busy,
         </select>)}
         {clients && f.clientId && known && (
           <p className="text-xs sm:col-span-3 sm:order-last" style={muted}>
-            {known.level ? <>Coach IQ: {known.why}</> : <>No programs for {firstName || "them"} yet. What's their fitness level?</>}
+            {known.level ? <>Coach IQ: {known.why}</> : known.fromTests ? null : <>No programs for {firstName || "them"} yet. What's their fitness level?</>}
+            {known.fromTests && <>{known.level ? " " : "Coach IQ: "}{known.fromTests.why}</>}
           </p>
         )}
         {lab("Where they train", (

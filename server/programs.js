@@ -427,8 +427,9 @@ async function context(trainerId, program, { frozen = false } = {}) {
   /* A client no longer the trainer's: nothing new of theirs is read (Run 1,
      B-2; Glenn, 19 Oct 2026: "Freeze them"). */
   const lims = frozen ? [] : await limitations.limitationsOf(program.client_id, trainerId);
-  const history = await historyOf(trainerId, program.client_id, { before: program });
-  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms: frozen ? new Map() : await oneRmsOf(program.client_id) };
+  const oneRms = frozen ? new Map() : await oneRmsOf(program.client_id);
+  const history = await historyOf(trainerId, program.client_id, { before: program, tested: [...oneRms.keys()] });
+  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms };
 }
 
 /* The client's latest 1RM for each exercise (fitness-tests.js, kind onerm;
@@ -437,12 +438,51 @@ async function oneRmsOf(clientId) {
   const out = new Map();
   for (const r of await all(`SELECT data, result, taken_on FROM coach_fitness_tests WHERE client_id = ? AND kind = 'onerm' ORDER BY taken_on DESC, created_at DESC`, [clientId])) {
     let d; try { d = JSON.parse(r.data || "{}"); } catch { d = {}; }
-    if (d.exerciseId && !out.has(d.exerciseId)) out.set(d.exerciseId, { kg: Number(r.result), takenOn: r.taken_on });
+    if (d.exerciseId && !out.has(d.exerciseId)) out.set(d.exerciseId, { kg: Number(r.result), takenOn: r.taken_on, bodyWeightKg: d.bodyWeightKg ? Number(d.bodyWeightKg) : null });
   }
   return out;
 }
 
 /* ---------------------------------------------- what the client has done */
+
+/* A level from a client's lifts (Run 1, U-15; Glenn, 19 Oct 2026: "Suggest
+   a level"): a 1RM over their body weight on the four barbell lifts, against
+   the bands most strength-standard tables give, rounded, men and women apart.
+   Below the first number is beginner, from it intermediate, from the second
+   advanced. A guide for the trainer, not a rule; change the numbers here. */
+const STANDARDS = {
+  squat: { label: "back squat", male: [1.0, 1.5], female: [0.75, 1.25] },
+  bench: { label: "bench press", male: [0.75, 1.25], female: [0.5, 0.85] },
+  deadlift: { label: "deadlift", male: [1.25, 2.0], female: [1.0, 1.5] },
+  press: { label: "overhead press", male: [0.5, 0.8], female: [0.35, 0.6] },
+};
+/* Which of the four a library exercise is: the barbell versions only. */
+function standardOf(x) {
+  const f = library.familyOf(x)?.label, a = x.attributes || {};
+  if (f === "Squat" && a.implement === "Barbell" && !a.load) return "squat";
+  if (f === "Chest Press" && a.implement === "Barbell" && a.support === "Bench") return "bench";
+  if (f === "Deadlift" && (a.implement === "Barbell" || a.implement === "Trap Bar")) return "deadlift";
+  if (f === "Overhead Press" && a.implement === "Barbell") return "press";
+  return null;
+}
+
+/** What the client's latest 1RMs say about their level: { level, why } or null. `sex` "female" or "male". */
+export async function levelFromTests(clientId, sex) {
+  if (sex !== "female" && sex !== "male") return null;
+  const said = [];
+  for (const [id, t] of await oneRmsOf(clientId)) {
+    const x = library.exerciseById(id), lift = x && standardOf(x);
+    if (!lift || !t.bodyWeightKg || said.some(s => s.lift === lift)) continue;
+    const ratio = t.kg / t.bodyWeightKg;
+    const [mid, top] = STANDARDS[lift][sex];
+    said.push({ lift, ratio, level: ratio >= top ? "advanced" : ratio >= mid ? "intermediate" : "beginner" });
+  }
+  if (!said.length) return null;
+  /* The lowest of them, to be safe. */
+  const level = LEVELS[Math.min(...said.map(s => LEVELS.indexOf(s.level)))];
+  const each = said.map(s => `${STANDARDS[s.lift].label} ${s.ratio.toFixed(2)} × body weight (${s.level})`);
+  return { level, why: `Their 1RM ${each.join(", ")}${said.length > 1 ? `: ${level}, the lowest` : ""}.` };
+}
 
 const WEEK = 7 * 24 * 3600 * 1000;
 /* Weeks on programs at one level, without stepping back, before Coach IQ
@@ -464,7 +504,11 @@ const WEEKS_TO_MOVE_UP = 12;
  * the name of the one it follows) and the easier ones they have moved past
  * (outgrown, likewise).
  */
-export async function historyOf(trainerId, clientId, { before = null } = {}) {
+/* `tested`: the library exercises the client has a 1RM for. A lift they can
+   be tested on counts as done, as one in an earlier program does, so Coach IQ
+   offers its next step and not the easier ones (Run 1, U-15; Glenn, 19 Oct
+   2026: "Suggest a level, and steps on"). */
+export async function historyOf(trainerId, clientId, { before = null, tested = [] } = {}) {
   const rows = await all(`SELECT id, name, level, created_at FROM coach_programs WHERE trainer_id = ? AND client_id = ? ORDER BY created_at, id`, [trainerId, clientId]);
   /* Every one of their exercises in one question, not one a program (Run 1, O-10). */
   const byProgram = new Map();
@@ -480,16 +524,19 @@ export async function historyOf(trainerId, clientId, { before = null } = {}) {
     list.push({ ...p, xs, reach: xs.length ? xs.reduce((n, x) => n + LEVELS.indexOf(x.level), 0) / xs.length : null });
   }
   const done = new Set(), next = new Map(), outgrown = new Map();
-  for (const p of list) for (const x of p.xs) done.add(x.id);
-  for (const p of list) for (const x of p.xs) {
-    for (const h of x.harder || []) if (!done.has(h) && !next.has(h)) next.set(h, x.name);
+  const testedXs = tested.map(id => library.exerciseById(id)).filter(Boolean);
+  /* Each step says what it is a step from: { name, tested }. */
+  const doneXs = [...list.flatMap(p => p.xs).map(x => [x, false]), ...testedXs.map(x => [x, true])];
+  for (const [x] of doneXs) done.add(x.id);
+  for (const [x, wasTested] of doneXs) {
+    for (const h of x.harder || []) if (!done.has(h) && !next.has(h)) next.set(h, { name: x.name, tested: wasTested });
     /* Every easier step down the chain: past a goblet squat is past a box
        squat and a sit to stand. */
     const down = [...library.easierOf(x.id)];
     while (down.length) {
       const e = down.shift();
       if (done.has(e) || outgrown.has(e)) continue;
-      outgrown.set(e, x.name);
+      outgrown.set(e, { name: x.name, tested: wasTested });
       down.push(...library.easierOf(e));
     }
   }
@@ -638,7 +685,7 @@ function check(program, rows, ctx, own) {
         if (lim === "no") add({ ...at, level: "stop", from: "limitations", text: `${e.name} is something ${program.clientName}'s limitations say to avoid. Swap it.` });
         else if (lim.length) add({ ...at, level: "warn", from: "limitations", text: `${e.name}: make it easier or supported for ${program.clientName} (${lim.join(", ")}).` });
         if (LEVELS.indexOf(x.level) > level) add({ ...at, level: "warn", from: "starting-out", text: `${e.name} is ${x.level}, above ${program.clientName}'s level (${program.level}).` });
-        else if (ctx.outgrown?.has(x.id)) add({ ...at, level: "note", from: "progression", text: `${e.name} is a step back from ${ctx.outgrown.get(x.id)}, which ${program.clientName} did in an earlier program. Fine if that's the plan.` });
+        else if (ctx.outgrown?.has(x.id)) add({ ...at, level: "note", from: "progression", text: ((o) => `${e.name} is a step back from ${o.name}, ${o.tested ? `which ${program.clientName} has a 1RM for` : `which ${program.clientName} did in an earlier program`}. Fine if that's the plan.`)(ctx.outgrown.get(x.id)) });
         /* The usual order: main lifts before accessories and finishers. */
         const roles = library.familyOf(x)?.roles || [];
         if (roles.includes("main") && !roles.includes("accessory") && sawLater) {
@@ -764,7 +811,7 @@ function suggestion(x, ctx, why, dose) {
   const lim = library.limitsCheck(x, ctx.rules);
   const step = ctx.next?.get(x.id);
   return {
-    ...library.brief(x), why: step ? `${why} A step on from ${step}, from an earlier program.` : why,
+    ...library.brief(x), why: step ? `${why} A step on from ${step.name}, ${step.tested ? "which they have a 1RM for" : "from an earlier program"}.` : why,
     ...(Array.isArray(fit) ? { askFirst: fit } : {}),
     ...(Array.isArray(lim) && lim.length ? { modifyFor: lim } : {}),
     dose: { ...dose, restText: restWords(dose.rest) },
