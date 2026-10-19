@@ -215,14 +215,13 @@ export async function programOfExercise(trainerId, peId) {
 /** This trainer's programs; with `putAway`, the ones put away instead (Run 1, U-5). */
 export async function list(trainerId, { putAway = false } = {}) {
   const rows = await all(`SELECT * FROM coach_programs WHERE trainer_id = ? AND archived = ? ORDER BY updated_at DESC`, [trainerId, putAway ? 1 : 0]);
-  const out = [];
-  for (const r of rows) {
-    const days = await get(`SELECT COUNT(*) AS n FROM coach_program_days WHERE program_id = ?`, [r.id]);
-    const ex = await get(`SELECT COUNT(*) AS n FROM coach_program_exercises WHERE program_id = ?`, [r.id]);
-    out.push({ id: r.id, name: r.name, clientId: r.client_id, clientName: r.client_name, goal: r.goal, goalLabel: GOALS[r.goal]?.label || r.goal, kindLabel: (KINDS[r.kind] || KINDS.full).label,
-      level: r.level, days: Number(days.n), exercises: Number(ex.n), updatedAt: r.updated_at });
-  }
-  return out;
+  /* Days and exercises counted for all of them at once, not two questions a
+     program (Run 1, O-10). */
+  const counts = async (table) => new Map((await all(`SELECT t.program_id, COUNT(*) AS n FROM ${table} t JOIN coach_programs p ON p.id = t.program_id
+    WHERE p.trainer_id = ? AND p.archived = ? GROUP BY t.program_id`, [trainerId, putAway ? 1 : 0])).map(r => [r.program_id, Number(r.n)]));
+  const [days, ex] = await Promise.all([counts("coach_program_days"), counts("coach_program_exercises")]);
+  return rows.map(r => ({ id: r.id, name: r.name, clientId: r.client_id, clientName: r.client_name, goal: r.goal, goalLabel: GOALS[r.goal]?.label || r.goal, kindLabel: (KINDS[r.kind] || KINDS.full).label,
+    level: r.level, days: days.get(r.id) || 0, exercises: ex.get(r.id) || 0, updatedAt: r.updated_at }));
 }
 
 /** What makes a program's details worth keeping, or the reason not. */
@@ -445,11 +444,17 @@ const WEEKS_TO_MOVE_UP = 12;
  */
 export async function historyOf(trainerId, clientId, { before = null } = {}) {
   const rows = await all(`SELECT id, name, level, created_at FROM coach_programs WHERE trainer_id = ? AND client_id = ? ORDER BY created_at, id`, [trainerId, clientId]);
+  /* Every one of their exercises in one question, not one a program (Run 1, O-10). */
+  const byProgram = new Map();
+  for (const r of await all(`SELECT pe.program_id, pe.exercise_id FROM coach_program_exercises pe JOIN coach_programs p ON p.id = pe.program_id
+    WHERE p.trainer_id = ? AND p.client_id = ?`, [trainerId, clientId])) {
+    if (!byProgram.has(r.program_id)) byProgram.set(r.program_id, []);
+    byProgram.get(r.program_id).push(r.exercise_id);
+  }
   const list = [];
   for (const p of rows) {
     if (before && (p.id === before.id || p.created_at > before.created_at)) continue;
-    const xs = (await all(`SELECT exercise_id FROM coach_program_exercises WHERE program_id = ?`, [p.id]))
-      .map(r => library.exerciseById(r.exercise_id)).filter(Boolean);
+    const xs = (byProgram.get(p.id) || []).map(id => library.exerciseById(id)).filter(Boolean);
     list.push({ ...p, xs, reach: xs.length ? xs.reduce((n, x) => n + LEVELS.indexOf(x.level), 0) / xs.length : null });
   }
   const done = new Set(), next = new Map(), outgrown = new Map();
@@ -492,11 +497,11 @@ export async function historyOf(trainerId, clientId, { before = null } = {}) {
 }
 
 /** A program as the designer, the print page and Billy are shown it. */
-export async function full(trainerId, program, { withCheck = true } = {}) {
+export async function full(trainerId, program, { withCheck = true, ctx: given = null } = {}) {
   const days = await all(`SELECT * FROM coach_program_days WHERE program_id = ? ORDER BY pos, id`, [program.id]);
   const rows = await all(`SELECT * FROM coach_program_exercises WHERE program_id = ? ORDER BY pos, id`, [program.id]);
   const names = await theirNames(trainerId);
-  const ctx = await context(trainerId, program);
+  const ctx = given || await context(trainerId, program);
   const own = new Map();
   for (const r of rows) {
     if (!library.isExercise(r.exercise_id) && !own.has(r.exercise_id)) own.set(r.exercise_id, await library.privateBrief(trainerId, r.exercise_id));
@@ -763,8 +768,8 @@ export async function suggestFor(trainerId, program, dayId, { workOn = null, mus
  * version, already passing the place, the level and the limitations, with a
  * starting dose. Up to `limit`, the program's gaps first.
  */
-export async function suggestNext(trainerId, program, dayId, limit = 4) {
-  const ctx = await context(trainerId, program);
+export async function suggestNext(trainerId, program, dayId, limit = 4, given = null) {
+  const ctx = given || await context(trainerId, program);
   const rows = await all(`SELECT day_id, exercise_id FROM coach_program_exercises WHERE program_id = ?`, [program.id]);
   const patternOf = (id) => { const x = library.exerciseById(id); return x ? library.familyOf(x)?.pattern : null; };
   const inProgram = new Set(rows.map(r => patternOf(r.exercise_id)).filter(Boolean));
@@ -880,9 +885,12 @@ export async function swapsFor(trainerId, program, exerciseId) {
 
 /** A program as Billy reads it: its days in words, the check, and what could come next on each day. */
 export async function forBilly(trainerId, program) {
-  const p = await full(trainerId, program);
+  /* Its world read once, for the program and every day's suggestions; it
+     was read again for each (Run 1, O-10). */
+  const ctx = await context(trainerId, program);
+  const p = await full(trainerId, program, { ctx });
   const next = {};
-  for (const d of p.days) next[d.name] = (await suggestNext(trainerId, program, d.id, 3)).suggestions.map(s => ({ name: s.name, id: s.id, why: s.why, dose: s.dose, ...(s.askFirst ? { askFirst: s.askFirst } : {}), ...(s.modifyFor ? { modifyFor: s.modifyFor } : {}) }));
+  for (const d of p.days) next[d.name] = (await suggestNext(trainerId, program, d.id, 3, ctx)).suggestions.map(s => ({ name: s.name, id: s.id, why: s.why, dose: s.dose, ...(s.askFirst ? { askFirst: s.askFirst } : {}), ...(s.modifyFor ? { modifyFor: s.modifyFor } : {}) }));
   return {
     id: p.id, name: p.name, client: p.clientName, place: p.placeName, goal: p.goalLabel, level: p.level, notes: p.notes,
     kind: p.kindLabel, ...(p.focusLabels.length ? { focus: p.focusLabels } : {}), ...(p.minutes ? { sessionMinutes: p.minutes } : {}),
