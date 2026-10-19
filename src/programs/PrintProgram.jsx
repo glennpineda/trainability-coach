@@ -4,6 +4,7 @@ import { Printer } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
 import { labelsFor } from "./Designer";
+import { BodyMap, scaleOf } from "./BodyMap";
 import { PrintMeasurements } from "../clients/PrintMeasurements";
 import { PrintTest } from "../clients/PrintTest";
 import { PrintPhotos } from "../clients/PrintPhotos";
@@ -39,6 +40,12 @@ export function PrintProgram({ id, sent }) {
   if (p.measurements) return <PrintMeasurements data={p.measurements} />;
   if (p.test) return <PrintTest data={p.test} />;
   if (p.photos) return <PrintPhotos data={p.photos} />;
+  /* What each day works (BodyMap), on one scale for the program, in the
+     printed page's own light colours whatever the screen's, and kept in
+     colour when printed. */
+  const bodyScale = scaleOf(p.days);
+  const PAPER = { "--accent": "#007BA7", "--chalk": "#fff", "--ghost-fill": "#E7EEF3", "--iron-line": "#D5DEE5", "--iron": "#5b6b78", "--ink": "#172A3A",
+    WebkitPrintColorAdjust: "exact", printColorAdjust: "exact" };
   const cols = [
     ["sets", "Sets"], ["reps", "Reps"], ["load", "Load"], ["effort", "Effort"], ["tempo", "Tempo"], ["restText", "Rest"],
   ];
@@ -87,6 +94,9 @@ export function PrintProgram({ id, sent }) {
               </table>
             )}
             {labels.some(l => l.inPair) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>Exercises sharing a number (3a, 3b) are done together, one after the other, before resting.</p>}
+            {/* What the day works (Glenn, 19 Oct 2026: "Go with 3"). A copy
+                sent before the muscles were kept with it has none, and no drawing. */}
+            {d.exercises.some(e => e.primary?.length) && <div style={PAPER}><BodyMap exercises={d.exercises} top={bodyScale} /></div>}
           </section>
         );
       })}

@@ -1433,8 +1433,14 @@ drawing.
    new tab.
 2. The page shows the program's name, who it is for and the date, then each
    day's exercises in your names for them, with whatever you filled in, in
-   your units. Coach IQ's check is not on it.
+   your units. Under each day is its body drawing and muscle list (5.5),
+   in colour, so the client sees what the day works. Coach IQ's check is not
+   on it.
 3. Tap **Print**, and print it or save it as a PDF to send.
+
+A program sent in a message (7.3) opens the same way, with the drawing; one
+sent before the drawing came to Coach (version 1.0.81) has none, since its
+copy didn't keep the muscles.
 
 <div style="page-break-after: always;"></div>
 

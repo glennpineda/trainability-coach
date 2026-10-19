@@ -118,7 +118,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   point to read its day and number.
 - **What a day works.** Each day of a program shows a drawing of a body,
   front and back, its muscles shaded light to dark by how many of the day's
-  exercises work them, with the count for each muscle listed beside it.
+  exercises work them, with the count for each muscle listed beside it. It is on
+  the printed program too, and a program sent in a message.
 - **Loads from a 1RM.** In a program, write a load as a percentage, such as
   75%, and Coach works it out from the client's latest 1RM for that exercise:
   4 × 5 · 75% (190 lb). Coach IQ's check warns when there is no 1RM to go by,
