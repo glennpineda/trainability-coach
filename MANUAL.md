@@ -1823,6 +1823,12 @@ read, it says *Messages couldn't be loaded. Try again in a minute.*
      … with…*: tap **Just this day** to send it on its own, or another day
      to send the two side by side. If there are none it says *No progress
      photos of … yet. Take them on the Clients page.*
+   - **Progress report** (*First to latest*): everything at once, attached
+     straight away: their measurements (the latest against the first),
+     each fitness test (the latest result against the first), and their
+     first and latest progress photos, if they have agreed to photos. With
+     nothing to report it says *There's nothing to report for … yet: no
+     measurements, fitness tests or progress photos.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
@@ -1843,9 +1849,15 @@ show the comparison (**Side by side** or **Slider**, as in 4.9), and under it
 **Every angle**, each angle's two photos next to each other, which is what
 prints.
 
+A progress report opens as one page: **Measurements**, with each one now
+and how it changed since the first set; **Fitness tests**, each test's
+latest result and how it changed since the first (*Only one so far* when
+there has been one); and **Progress photos**, the first and the latest day
+side by side, angle by angle.
+
 Tap a picture to open it full size in its own tab. A video plays where it is.
 A picture or a video has no printed page: only a program, measurements, a
-fitness test or progress photos can be printed.
+fitness test, progress photos or a progress report can be printed.
 
 If something can't be sent, it says why beside it, for example *That video
 is too large. Keep it under 100 MB.* or *That file is not a video Coach can

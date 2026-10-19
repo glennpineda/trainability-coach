@@ -718,6 +718,46 @@ app.post("/api/attachments/photos", asSignedIn("POST /attachments/photos", async
   res.json(await messages.photosAttachment(user.id, { clientId: client.id, sets, clientName: `${client.firstName} ${client.lastName}`.trim() }));
 }));
 
+/* A progress report (Run 1, I-13): the client's measurements, fitness tests
+   and progress photos in one, each from their first to their latest. */
+app.post("/api/attachments/report", asSignedIn("POST /attachments/report", async (req, res, user) => {
+  const client = (await myClients(req, user)).find(c => c.id === String(req.body?.clientId || ""));
+  if (!client) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const name = `${client.firstName} ${client.lastName}`.trim();
+  const sets = await measurements.measurementsOf(client.id, user.id);   // newest first
+  const latest = sets[0], first = sets[sets.length - 1];
+  let height = null;
+  for (const s of [...sets].reverse()) if (s.values.height != null) height = s.values.height;
+  const tests = await fitnessTests.testsOf(client.id, user.id);   // newest first
+  const series = [];
+  for (const t of tests) {
+    if (series.some(x => seriesOf(x.latest) === seriesOf(t))) continue;
+    const all = tests.filter(x => seriesOf(x) === seriesOf(t));
+    const old = all[all.length - 1];
+    series.push({ latest: t, first: old.id === t.id ? null : { takenOn: old.takenOn, result: old.result, rating: old.rating } });
+  }
+  const photoRows = await progressPhotos.consentOf(client.id, user.id) ? (await progressPhotos.setsOf(client.id, user.id)) : [];
+  const pick = photoRows.length > 1 ? [photoRows[photoRows.length - 1], photoRows[0]] : photoRows.slice(0, 1);   // the first, then the latest
+  if (!latest && !series.length && !pick.length) {
+    return res.status(400).json({ error: `There's nothing to report for ${client.firstName || name} yet: no measurements, fitness tests or progress photos.`, code: "empty" });
+  }
+  const photoSets = [];
+  for (const p of pick) {
+    const row = await progressPhotos.setById(p.id);
+    photoSets.push({ row, files: Object.fromEntries(String(row.angles).split(",").filter(Boolean).map(a => [a, progressPhotos.pathOf(row.id, a)])) });
+  }
+  const sex = { female: "female", male: "male" }[String(client.gender || "").toLowerCase()] || null;
+  const strip = (t) => ({ kind: t.kind, takenOn: t.takenOn, takenBy: t.takenBy, age: t.age, sex: t.sex, data: t.data, result: t.result, rating: t.rating, ratingAges: t.ratingAges });
+  res.json(await messages.reportAttachment(user.id, {
+    clientId: client.id, clientName: name, sets: photoSets,
+    report: {
+      units: await trainerSettings.unitsOf(user.id), sex, heightCm: height,
+      measurements: latest ? { latest: { takenOn: latest.takenOn, values: latest.values }, first: first.id === latest.id ? null : { takenOn: first.takenOn, values: first.values } } : null,
+      tests: series.map(s => ({ ...strip(s.latest), first: s.first })),
+    },
+  }));
+}));
+
 /* One taken off the composer before sending (Run 1, O-6). */
 app.delete("/api/attachments/:id", asSignedIn("DELETE /attachments", async (req, res, user) => {
   if (!await messages.removeUnsent(user.id, req.params.id)) return res.status(404).json({ error: "Not found", code: "not_found" });
@@ -752,7 +792,7 @@ const sendPhoto = (res, file) => {
 /* One of the progress photos on an attachment, for the trainer. */
 app.get("/api/attachments/:id/photo/:n/:angle", asSignedIn("GET /attachments/photo", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
-  if (!a || a.kind !== "photos" || !/^[01]$/.test(req.params.n) || !["front", "left", "right", "back"].includes(req.params.angle)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  if (!a || (a.kind !== "photos" && a.kind !== "report") || !/^[01]$/.test(req.params.n) || !["front", "left", "right", "back"].includes(req.params.angle)) return res.status(404).json({ error: "Not found", code: "not_found" });
   sendPhoto(res, messages.attachmentPhotoPath(a.id, req.params.n, req.params.angle));
 }));
 app.get("/api/attachments/:id/file", asSignedIn("GET /attachments/file", async (req, res, user) => {
@@ -801,6 +841,8 @@ const forClient = (req, thread) => ({
     ? { ...a, url: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET()),
       ...(a.still?.startsWith("/api/") ? { still: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET(), undefined, { still: true }) } : {}) }
     /* Progress photos: each picture by its own signed link. */
+    : a.kind === "report" && a.report?.photos ? { ...a, report: { ...a.report, photos: { ...a.report.photos, sets: a.report.photos.sets.map((x, n) => ({ ...x,
+      photos: Object.fromEntries((x.angles || []).map(g => [g, progressPhotos.signedUrl(`${coachOrigin(req)}/api/attachment-photo`, `${a.id}.${n}.${g}`)])) })) } } }
     : a.kind === "photos" && a.photos ? { ...a, photos: { ...a.photos, sets: a.photos.sets.map((x, n) => ({ ...x,
       photos: Object.fromEntries((x.angles || []).map(g => [g, progressPhotos.signedUrl(`${coachOrigin(req)}/api/attachment-photo`, `${a.id}.${n}.${g}`)])) })) } }
     : a) })),

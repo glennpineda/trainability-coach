@@ -227,12 +227,37 @@ export const attachmentPhotoPath = (id, n, angle) => {
  * later doesn't take them from the message. `sets`: [{ row, files: { angle:
  * path } }].
  */
+const photoSetsData = (sets) => sets.map(({ row, files }) => ({ setId: row.id, takenOn: row.taken_on, takenBy: row.trainer_name, angles: Object.keys(files) }));
+
 export async function photosAttachment(owner, { clientId, sets, clientName }) {
-  const data = { clientName, sets: sets.map(({ row, files }) => ({ setId: row.id, takenOn: row.taken_on, takenBy: row.trainer_name, angles: Object.keys(files) })) };
+  const data = { clientName, sets: photoSetsData(sets) };
   const id = await insertWithNewId("attachment", (newId) => run(
     `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
      VALUES (?, '', ?, ?, 'photos', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
     [newId, owner, clientId, `Progress photos, ${sets.map(s => s.row.taken_on).join(" and ")}`, JSON.stringify(data), now()]));
+  await copyPhotos(id, sets);
+  return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
+}
+
+/**
+ * A progress report (Run 1, I-13; Glenn, 19 Oct 2026: "Progress report"):
+ * one attachment with the client's measurements (the first set and the
+ * latest), each fitness test's latest result against its first, and their
+ * first and latest progress photos, kept as a copy as the others are.
+ * `report`: { units, sex, measurements, tests }; `sets` as photosAttachment's.
+ */
+export async function reportAttachment(owner, { clientId, clientName, report, sets = [] }) {
+  const data = { clientName, madeOn: now().slice(0, 10), ...report, photos: sets.length ? { sets: photoSetsData(sets) } : null };
+  const id = await insertWithNewId("attachment", (newId) => run(
+    `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, ?, 'report', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, clientId, `Progress report, ${data.madeOn}`, JSON.stringify(data), now()]));
+  await copyPhotos(id, sets);
+  return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
+}
+
+async function copyPhotos(id, sets) {
+  if (!sets.length) return;
   await fs.mkdir(dir(), { recursive: true });
   for (const [n, { files }] of sets.entries()) {
     /* A second name for the same file where the disk allows it, rather than
@@ -243,7 +268,6 @@ export async function photosAttachment(owner, { clientId, sets, clientName }) {
       await fs.link(from, to).catch(() => fs.copyFile(from, to));
     }
   }
-  return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
 function shapeAttachment(r, { full = false } = {}) {
@@ -260,9 +284,11 @@ function shapeAttachment(r, { full = false } = {}) {
   if (r.kind === "measurements") out.measurements = parse(r.data);
   if (r.kind === "test") out.test = parse(r.data);
   /* Each picture's address: the trainer's; the client's are signed (index.js). */
-  if (r.kind === "photos") {
+  const withUrls = (d) => ({ ...d, sets: (d.sets || []).map((x, n) => ({ ...x, photos: Object.fromEntries((x.angles || []).map(a => [a, `/api/attachments/${r.id}/photo/${n}/${a}`])) })) });
+  if (r.kind === "photos") out.photos = withUrls(parse(r.data));
+  if (r.kind === "report") {
     const d = parse(r.data);
-    out.photos = { ...d, sets: (d.sets || []).map((x, n) => ({ ...x, photos: Object.fromEntries((x.angles || []).map(a => [a, `/api/attachments/${r.id}/photo/${n}/${a}`])) })) };
+    out.report = { ...d, photos: d.photos ? withUrls(d.photos) : null };
   }
   return out;
 }

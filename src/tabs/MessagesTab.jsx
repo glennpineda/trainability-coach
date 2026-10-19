@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUp, Camera, HeartPulse, ChevronLeft, ClipboardList, Loader2, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
+import { ArrowUp, Camera, HeartPulse, ChevronLeft, ClipboardList, FileBarChart, Loader2, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
@@ -223,6 +223,22 @@ function Attachment({ a }) {
       </a>
     );
   }
+  if (a.kind === "report") {
+    const d = a.report || {};
+    const parts = [d.measurements && "measurements", d.tests?.length && `${d.tests.length} test${d.tests.length === 1 ? "" : "s"}`, d.photos && "photos"].filter(Boolean);
+    return (
+      <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
+        className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
+        <span className="flex-none w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--accent-soft)" }}>
+          <FileBarChart size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
+        </span>
+        <span className="min-w-0">
+          <span className="block font-medium truncate" style={{ color: "var(--ink)" }}>Progress report{d.madeOn ? ` · ${shortDate(d.madeOn)}` : ""}</span>
+          <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>{parts.join(", ")}</span>
+        </span>
+      </a>
+    );
+  }
   if (a.kind === "test") {
     const d = a.test || {};
     const shown = d.kind ? describe(d, d.units) : null;
@@ -395,6 +411,14 @@ function Composer({ clientId, first, onSent }) {
     try { update(key, { att: await apiRequest("POST", "/attachments/photos", { setId: set.id, compareId: other?.id }), progress: 1 }); }
     catch (err) { update(key, { error: err.message }); }
   }
+  /* Everything at once, first to latest (Run 1, I-13). */
+  async function attachReport() {
+    setMenu(null);
+    const key = `${Date.now()}-report`;
+    setItems(xs => [...xs, { key, kind: "report", name: "Progress report", progress: 0 }]);
+    try { update(key, { att: await apiRequest("POST", "/attachments/report", { clientId }), progress: 1 }); }
+    catch (err) { update(key, { error: err.message }); }
+  }
   /* Taken off before sending: gone from the server too, files and all
      (Run 1, O-6); one still uploading is swept a day on. */
   const remove = (key) => {
@@ -433,12 +457,13 @@ function Composer({ clientId, first, onSent }) {
                       : x.kind === "measurements" ? <Ruler size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : x.kind === "test" ? <HeartPulse size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : x.kind === "photos" ? <Camera size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
+                      : x.kind === "report" ? <FileBarChart size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : <ImageIcon size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />}
                   </span>}
               <span className="min-w-0">
                 <span className="block truncate max-w-[10rem]">{x.name || (x.kind === "video" ? "Video" : "Picture")}</span>
                 <span className="block text-[11px]" style={{ color: x.error ? "var(--ember)" : "var(--iron)" }}>
-                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", test: "Fitness test", photos: "Progress photos", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
+                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", test: "Fitness test", photos: "Progress photos", report: "Progress report", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
                 </span>
               </span>
               <button type="button" className="cx-icon-btn" aria-label={`Remove ${x.name}`} onClick={() => remove(x.key)}><X size={14} aria-hidden="true" /></button>
@@ -469,6 +494,7 @@ function Composer({ clientId, first, onSent }) {
               <MenuItem icon={Ruler} label="Measurements" onClick={openMeasurements} />
               <MenuItem icon={HeartPulse} label="Fitness test" onClick={openTests} />
               <MenuItem icon={Camera} label="Progress photos" onClick={openPhotos} />
+              <MenuItem icon={FileBarChart} label="Progress report" note="First to latest" onClick={attachReport} />
             </>
           ) : menu === "photos" ? (
             <>

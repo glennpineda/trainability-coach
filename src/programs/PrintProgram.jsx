@@ -10,6 +10,7 @@ import { BodyMap, scaleOf } from "./BodyMap";
 import { PrintMeasurements } from "../clients/PrintMeasurements";
 import { PrintTest } from "../clients/PrintTest";
 import { PrintPhotos } from "../clients/PrintPhotos";
+import { PrintReport } from "../clients/PrintReport";
 
 /**
  * A program printed for the client (Glenn, 17 Oct 2026: "Printable for the
@@ -40,20 +41,21 @@ export function PrintProgram({ id, sent }) {
         /* Measurements sent in a message print as their own sheet. */
         /* A picture or a video has no printed page: it showed one for nobody,
            dated "Invalid Date" (Run 1, D-16). */
-        .then(a => (a.kind === "measurements" ? setP({ measurements: a.measurements }) : a.kind === "test" ? setP({ test: a.test }) : a.kind === "photos" ? setP({ photos: a.photos })
-          : a.kind !== "program" ? setError("Only a program, measurements, a fitness test or progress photos can be printed. Open this one in Messages.") : setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) })))
+        .then(a => (a.kind === "measurements" ? setP({ measurements: a.measurements }) : a.kind === "test" ? setP({ test: a.test }) : a.kind === "photos" ? setP({ photos: a.photos }) : a.kind === "report" ? setP({ report: a.report })
+          : a.kind !== "program" ? setError("Only a program, measurements, a fitness test, progress photos or a progress report can be printed. Open this one in Messages.") : setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) })))
         .catch(err => setError(err.status === 404 ? "That isn't something you sent." : err.message));
       return;
     }
     apiRequest("GET", `/programs/${id}`).then(setP).catch(err => setError(err.status === 404 ? "That program isn't one of yours." : err.message));
   }, [id, sent]);
   const units = (sent && p?.units) || ownUnits;
-  useEffect(() => { if (p) document.title = p.measurements ? `Measurements · ${p.measurements.clientName}` : p.test ? `Fitness test · ${p.test.clientName}` : p.photos ? `Progress photos · ${p.photos.clientName}` : `${p.name} · ${p.clientName}`; }, [p]);
+  useEffect(() => { if (p) document.title = p.measurements ? `Measurements · ${p.measurements.clientName}` : p.test ? `Fitness test · ${p.test.clientName}` : p.photos ? `Progress photos · ${p.photos.clientName}` : p.report ? `Progress report · ${p.report.clientName}` : `${p.name} · ${p.clientName}`; }, [p]);
 
   if (!p) return <div className="cx-print p-8 text-sm">{error || "Loading…"}</div>;
   if (p.measurements) return <PrintMeasurements data={p.measurements} />;
   if (p.test) return <PrintTest data={p.test} />;
   if (p.photos) return <PrintPhotos data={p.photos} />;
+  if (p.report) return <PrintReport data={p.report} />;
   /* What each day works (BodyMap), on one scale for the program, in the
      printed page's own light colours whatever the screen's, and kept in
      colour when printed. */
