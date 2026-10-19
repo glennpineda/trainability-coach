@@ -115,6 +115,12 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
   const openProgram = (id) => { try { sessionStorage.setItem("coach-program", id); } catch { /* not kept */ } open("programs"); };
   const openClient = (id) => { try { sessionStorage.setItem("coach-client", id); } catch { /* not kept */ } open("clients"); };
   /* A new program for a client, started from their page (Run 1, U-9). */
+  /* A client's conversation, from their page (Run 1, I-9). */
+  const messageClient = (c) => {
+    try { sessionStorage.setItem("coach-thread", c.id); sessionStorage.removeItem("coach-attach-program"); } catch { /* not kept */ }
+    setOpened(n => n + 1);
+    open("messages");
+  };
   const newProgramFor = (c) => { try { sessionStorage.setItem("coach-new-program", c.id); sessionStorage.removeItem("coach-program"); } catch { /* not kept */ } open("programs"); };
 
   /* Studio's app shell (its App.jsx, .iw-app-shell; Glenn, 19 Oct 2026:
@@ -153,7 +159,8 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
       {/* Room at the end for the bar floating over it; over the hexagons. */}
       <main className="pb-32 relative z-[1]">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} unread={unread} onOpenProgram={openProgram} onOpenClient={openClient} onSignedOut={onSignedOut} />}
-        {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} onOpenProgram={openProgram} onNewProgram={newProgramFor} />}
+        {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} onOpenProgram={openProgram} onNewProgram={newProgramFor}
+          onMessage={user.coachAccount ? null : messageClient} />}
         {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} onSend={user.coachAccount ? null : sendProgram} />}
         {tab === "messages" && <MessagesTab key={opened} clients={clients.clients} onSignedOut={onSignedOut} onUnread={setUnread} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}

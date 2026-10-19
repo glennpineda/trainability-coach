@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { scrollPageTo } from "../lib/scroll";
-import { Search, ChevronLeft, ChevronRight, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore, MessageCircle } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
@@ -104,7 +104,7 @@ const CLIENT_TABS = [
  * Messages is: the back arrow, their face and their name. The band is
  * Coach's own segmented row (the list's Active · Archived).
  */
-function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured, onOpenProgram, onNewProgram }) {
+function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured, onOpenProgram, onNewProgram, onMessage }) {
   const [tab, setTab] = useState("details");
   /* Each part, once opened, stays as it is behind the others, rather than
      being read again on every tap of the band (Run 1, O-12). Fitness tests
@@ -133,6 +133,14 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
         {/* Studio's archive: a quiet iron icon at the top right that only
             asks; the red button is in the question (its CONTRIBUTING,
             "Quiet on the row, weighty in the dialog"; Run 1, D-7). */}
+        {/* Their conversation, as Studio's client page has its speech bubble
+            to reach them (its ReachOut; Run 1, I-9). Not for a client kept
+            only in Coach (cli…), whom messages can't reach yet. */}
+        {onMessage && !c.archived && !String(c.id).startsWith("cli") && (
+          <button type="button" className="cx-icon-btn flex-none" aria-label={`Message ${c.firstName || fullName(c)}`} title="Message" onClick={() => onMessage(c)}>
+            <MessageCircle size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
+          </button>
+        )}
         {onArchive && !c.archived && (
           <button type="button" className="cx-icon-btn flex-none" aria-label={`Archive ${fullName(c)}`} title="Archive" onClick={() => setAsking(true)} disabled={busy}>
             <Archive size={16} style={{ color: "var(--iron)" }} aria-hidden="true" />
@@ -305,7 +313,7 @@ function MoveOffer({ count, move }) {
   );
 }
 
-export function ClientsTab({ clients, error, retry, refresh, add, edit, archive, toMove, move, onSignedOut, onOpenProgram, onNewProgram }) {
+export function ClientsTab({ clients, error, retry, refresh, add, edit, archive, toMove, move, onSignedOut, onOpenProgram, onNewProgram, onMessage }) {
   const [{ measureEvery }] = useMySettings();
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
@@ -356,7 +364,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
     return (
       <>
       {outcome}
-      <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram}
+      <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} onMessage={onMessage}
         onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); scrollPageTo({ top: 0, behavior: "smooth" }); } : null}
         onArchive={archive ? archiveOne : null} />
       </>

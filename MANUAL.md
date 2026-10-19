@@ -911,7 +911,9 @@ your clients…* beside a small turning circle.
    five tabs:
    - **Details & limitations**: who they are (below), their limitations
      (4.7), and **Edit details**. **Archive** is the box button at the top
-     right (4.5).
+     right (4.5). Beside it, the speech bubble opens your conversation with
+     them in Messages (chapter 7). It isn't there for a client kept only in
+     Coach, or with a Coach account.
    - **Programs**: your programs for them, each opening in the designer (5),
      and **New program for Avery**, which starts a new program (5.1) with
      them already chosen.
