@@ -7,6 +7,7 @@ import { Limitations } from "../clients/Limitations";
 import { Measurements } from "../clients/Measurements";
 import { ProgressPhotos } from "../clients/ProgressPhotos";
 import { FitnessTests } from "../clients/FitnessTests";
+import { ClientPrograms } from "../clients/ClientPrograms";
 import { Face } from "../clients/Face";
 import { useMySettings } from "../hooks/useUnits";
 import { Toast } from "../chrome/Toast";
@@ -82,6 +83,8 @@ const CLIENT_TABS = [
   ["measurements", "Measurements", "Measurements"],
   ["photos", "Progress photos", "Photos"],
   ["tests", "Fitness tests", "Tests"],
+  /* Their programs (Run 1, U-9; Glenn, 19 Oct 2026: "Fifth tab: Programs"). */
+  ["programs", "Programs", "Programs"],
 ];
 
 /*
@@ -97,7 +100,7 @@ const CLIENT_TABS = [
  * Messages is: the back arrow, their face and their name. The band is
  * Coach's own segmented row (the list's Active · Archived).
  */
-function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured }) {
+function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured, onOpenProgram, onNewProgram }) {
   const [tab, setTab] = useState("details");
   const [asking, setAsking] = useState(false);   // the Archive question open
   const next = nextBooked(c);
@@ -178,6 +181,7 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
         {tab === "measurements" && <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={onMeasured} inTab />}
         {tab === "photos" && <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />}
         {tab === "tests" && <FitnessTests client={c} onSignedOut={onSignedOut} inTab />}
+        {tab === "programs" && <ClientPrograms client={c} onSignedOut={onSignedOut} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} />}
       </div>
     </div>
   );
@@ -295,7 +299,7 @@ function MoveOffer({ count, move }) {
   );
 }
 
-export function ClientsTab({ clients, error, retry, refresh, add, edit, archive, toMove, move, onSignedOut }) {
+export function ClientsTab({ clients, error, retry, refresh, add, edit, archive, toMove, move, onSignedOut, onOpenProgram, onNewProgram }) {
   const [{ measureEvery }] = useMySettings();
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
@@ -346,7 +350,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
     return (
       <>
       {outcome}
-      <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh}
+      <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram}
         onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); scrollPageTo({ top: 0, behavior: "smooth" }); } : null}
         onArchive={archive ? archiveOne : null} />
       </>

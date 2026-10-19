@@ -870,15 +870,19 @@ a client, or add them in Studio.*
 
 1. Tap the client's line. Their own page opens in place of the list: their
    name at the top, with their photo and their last session, and under it
-   four tabs:
+   five tabs:
    - **Details & limitations**: who they are (below), their limitations
-     (4.7), and **Edit details** and **Archive**.
+     (4.7), and **Edit details**. **Archive** is the box button at the top
+     right (4.5).
    - **Measurements** (4.8).
    - **Progress photos** (4.9).
    - **Fitness tests** (4.10).
+   - **Programs**: your programs for them, each opening in the designer (5),
+     and **New program for Avery**, which starts a new program (5.1) with
+     them already chosen.
 
-   On a phone the tabs say **Details**, **Measurements**, **Photos** and
-   **Tests**. Tap one to see it. The page opens on **Details & limitations**,
+   On a phone the tabs say **Details**, **Measurements**, **Photos**,
+   **Tests** and **Programs**. Tap one to see it. The page opens on **Details & limitations**,
    which shows:
 
 | Detail | What it shows |

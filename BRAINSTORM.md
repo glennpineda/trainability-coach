@@ -24,8 +24,6 @@ _Things actually ready to do._
 
 Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
-- **A client's page has no programs (U-9, I-8).** No list, no "New program for
-  Riley"; Today links client → program but not back.
 - **A Coach account sees doors to nowhere (U-10).** Today's card says "once
   linked" forever; Home advertises Messages; the app switcher's Studio goes to
   the live trainabilitystudio.com (hard-coded, even in a test copy). Hide or

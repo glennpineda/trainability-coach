@@ -17,7 +17,9 @@ const muted = { color: "var(--iron)" };
 export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
   const [data, setData] = useState(null);
   const [openId, setOpenId] = useState(() => { try { return sessionStorage.getItem("coach-program") || null; } catch { return null; } });
-  const [making, setMaking] = useState(false);
+  /* Started from a client's page (Run 1, U-9): the steps open with them chosen. */
+  const [forClient] = useState(() => { try { const id = sessionStorage.getItem("coach-new-program"); sessionStorage.removeItem("coach-new-program"); return id || null; } catch { return null; } });
+  const [making, setMaking] = useState(!!forClient);
   /* The answers to the first step, what kind of program, until the second is saved. */
   const [kind, setKind] = useState(null);
   const [places, setPlaces] = useState([]);
@@ -77,7 +79,7 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
                   <KindForm vocab={data} onCancel={() => setMaking(false)} onNext={setKind} />
                 ) : (
                   <DetailsForm key={kind.kind} clients={active} goals={data.goals || []} places={places} busy={busy} word="Start designing"
-                    initial={{ goal: data.kinds.find(k => k.key === kind.kind)?.goal }}
+                    initial={{ goal: data.kinds.find(k => k.key === kind.kind)?.goal, ...(forClient && active.some(c => c.id === forClient) ? { clientId: forClient, name: `${active.find(c => c.id === forClient).firstName}'s program` } : {}) }}
                     onBack={() => setKind(null)} onCancel={() => { setMaking(false); setKind(null); }} onSave={create} />
                 )}
             </section>
