@@ -5,6 +5,7 @@ import { apiRequest } from "../lib/api";
 import { percentOf, kgAt, weightText, oneRmText, unreadPercent } from "../lib/one-rm";
 import { convertText } from "../lib/units";
 import { TECHNIQUES, MAX_DROPS, isPyramid } from "../lib/techniques";
+import { aOrAn } from "../lib/words";
 
 /**
  * Adding an exercise to a day, or changing one, in a dialog of its own (Glenn,
@@ -328,7 +329,7 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, o
       )) : !next ? <p className="text-xs" style={muted}>Coach IQ is looking…</p> : (
         <div className="grid gap-1.5">
           <div className="text-xs font-medium inline-flex items-center gap-1" style={{ color: "var(--accent)" }}>
-            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{narrowed ? `: ${[workOnLabel, musclesWords].filter(Boolean).join(" · ")}` : next.day ? ` for a ${next.day.toLowerCase()} day` : ""}
+            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{narrowed ? `: ${[workOnLabel, musclesWords].filter(Boolean).join(" · ")}` : next.day ? ` for ${aOrAn(next.day)} ${next.day.toLowerCase()} day` : ""}
           </div>
           {next.suggestions.length > 0 ? (
             <ul className="rounded-lg overflow-hidden border" style={line}>

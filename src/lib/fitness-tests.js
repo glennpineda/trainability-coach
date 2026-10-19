@@ -23,6 +23,7 @@
  */
 
 import { MEASURES, toShown, fromShown, unitOf } from "./measures.js";
+import { aOrAn } from "./words.js";
 
 export const TESTS = {
   step: {
@@ -222,7 +223,7 @@ export function describe(t, units = "imperial") {
   }
   if (t.kind === "rsi") {
     return { title: titleOf(t), value: t.result, text: `RSI ${t.result.toFixed(2)}`, rating: null,
-      detail: `Jumped ${toShown(HEIGHT, d.heightCm, units)} ${unitOf(HEIGHT, units)}, ${d.contactMs} ms on the ground${d.boxCm ? `, from a ${toShown(BOX, d.boxCm, units)} ${unitOf(BOX, units)} box` : ""}` };
+      detail: `Jumped ${toShown(HEIGHT, d.heightCm, units)} ${unitOf(HEIGHT, units)}, ${d.contactMs} ms on the ground${d.boxCm ? `, from ${aOrAn(toShown(BOX, d.boxCm, units))} ${toShown(BOX, d.boxCm, units)} ${unitOf(BOX, units)} box` : ""}` };
   }
   if (t.kind === "hold") {
     return { title: titleOf(t), value: t.result, text: `${clockOf(t.result)} held`, rating: null, detail: "" };

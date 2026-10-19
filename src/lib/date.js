@@ -23,3 +23,9 @@ export function isRealDay(iso) {
   const t = Date.parse(`${iso}T00:00:00Z`);
   return !Number.isNaN(t) && new Date(t).toISOString().slice(0, 10) === iso;
 }
+
+/** A moment as its day, "Oct 19, 2026", the way the rest of Coach writes a
+    date (Run 1, B-19): not the browser's "10/19/2026". */
+export function fmtDay(at) {
+  return new Date(at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}

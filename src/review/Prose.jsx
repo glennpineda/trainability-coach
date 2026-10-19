@@ -1,6 +1,7 @@
 import React from "react";
 import { convertText } from "../lib/units";
 import { useUnits } from "../hooks/useUnits";
+import { fmtDay } from "../lib/date";
 
 /**
  * Coach IQ's principles drawn from their Markdown, as the files have it:
@@ -110,7 +111,7 @@ export function Prose({ text, onTopic }) {
 export function Standing({ p }) {
   return (
     <div className="text-xs" style={muted}>
-      {p.status === "reviewed" ? `Reviewed ${new Date(`${p.reviewed}T12:00:00`).toLocaleDateString()}` : "Draft: Billy doesn't use it yet"}
+      {p.status === "reviewed" ? `Reviewed ${fmtDay(`${p.reviewed}T12:00:00`)}` : "Draft: Billy doesn't use it yet"}
       {p.sources?.length ? ` · From ${p.sources.join("; ")}` : ""}
     </div>
   );

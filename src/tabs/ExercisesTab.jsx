@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Plus, Trash2, Sparkles, Search, Send, Undo2, Link2, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
+import { fmtDay } from "../lib/date";
 
 const ByBilly = () => (
   <span className="inline-flex items-center gap-1 text-[11px] font-medium px-1.5 py-0.5 rounded-full" style={{ background: "rgba(201,162,220,0.22)", color: "var(--ink)" }}>
@@ -268,7 +269,7 @@ export function ExercisesTab({ onSignedOut }) {
                       </div>
                       {x.suggestedAt ? (
                         <div className="flex flex-wrap items-center gap-3 mt-1 text-xs" style={muted}>
-                          <span>Suggested for the library on {new Date(x.suggestedAt).toLocaleDateString()}</span>
+                          <span>Suggested for the library on {fmtDay(x.suggestedAt)}</span>
                           <button type="button" className="cx-btn-row" disabled={busy}
                             onClick={() => call("DELETE", `/my-exercises/own/${x.id}/suggestion`)}>
                             <Undo2 size={12} aria-hidden="true" /> Take back

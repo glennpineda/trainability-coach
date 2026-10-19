@@ -9,6 +9,7 @@ import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
 import { ExerciseDialog } from "./ExerciseDialog";
 import { ConfirmDialog } from "../chrome/ConfirmDialog";
+import { aOrAn, kindsWords, plural } from "../lib/words";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "Go"): one program, day by day,
@@ -37,7 +38,7 @@ export function doseLine(e, units) {
   const parts = [];
   if (e.sets && e.reps) parts.push(`${e.sets} × ${e.reps}`);
   else if (e.sets) parts.push(`${e.sets} sets`);
-  else if (e.reps) parts.push(`${e.reps} reps`);
+  else if (e.reps) parts.push(plural(e.reps, "rep"));
   if (e.load) parts.push(loadLine(e, units));
   if (e.effort) parts.push(e.effort);
   if (e.tempo) parts.push(`tempo ${e.tempo}`);
@@ -89,7 +90,7 @@ function Points({ list }) {
 }
 
 /* Equipment nobody has said a place has, in the dialog's own words (Run 1, U-13). */
-const checkWords = (placeName, list) => `Check ${placeName ? `“${placeName}”` : "the place"} has ${list.join(", ").toLowerCase()}.`;
+const checkWords = (placeName, list) => `Check ${placeName ? `“${placeName}”` : "the place"} has ${kindsWords(list)}.`;
 
 /* Alternatives for one exercise, fitted to this program. */
 function Swaps({ peId, onPick, onCancel, busy, placeName }) {
@@ -138,7 +139,7 @@ function Next({ dayId, version, busy, onTake, units, placeName }) {
   return (
     <div className="mt-3 pt-3 border-t" style={line}>
       <div className="text-xs font-medium mb-1.5 inline-flex items-center gap-1" style={{ color: "var(--accent)" }}>
-        <Lightbulb size={13} aria-hidden="true" /> Could come next{out.day ? ` on a ${out.day.toLowerCase()} day` : ""}{out.place ? `, for “${out.place}”` : ""}
+        <Lightbulb size={13} aria-hidden="true" /> Could come next{out.day ? ` on ${aOrAn(out.day)} ${out.day.toLowerCase()} day` : ""}{out.place ? `, for “${out.place}”` : ""}
       </div>
       {out.full && <p className="text-xs mb-1.5" style={muted}>{out.full}</p>}
       <ul className="grid gap-2">

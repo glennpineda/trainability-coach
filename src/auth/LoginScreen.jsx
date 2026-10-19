@@ -42,6 +42,8 @@ function Field({ label, children }) {
  */
 export function LoginScreen({ onLogin, onSignup, offline }) {
   const [mode, setMode] = useState("email"); // email | password | client | signup | forgot
+  /* A Coach account's temporary password works in Coach only (Run 1, M-8). */
+  const [coachAccount, setCoachAccount] = useState(false);
   const [linking, setLinking] = useState(false); // a Coach account whose email now has a Trainability account
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -66,6 +68,7 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
       /* A team account's password is Studio's; a Coach account's ("coach")
          is Coach's own; anybody else may make a Coach account. */
       setLinking(out.door === "link");
+      setCoachAccount(out.door === "coach");
       setMode(out.door === "password" || out.door === "coach" || out.door === "link" ? "password" : "client");
     } catch (err) {
       setError(err.status >= 500 || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "That didn't work. Try again.");
@@ -155,8 +158,11 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
                 Please use the email you used when you signed up with Trainability.
               </p>
               {/* No caption over the box, as on Studio's: the line above and the words in it say what goes there. */}
+              {/* Back from "Use a different email", the old address is kept, as Studio keeps it, but
+                  chosen, so typing replaces it rather than adding to it (Run 1, M-7). */}
               <input type="email" className="cx-input" value={email} onChange={e => setEmail(e.target.value)}
-                autoComplete="username" autoFocus aria-label="Email" placeholder="Your email address" />
+                autoComplete="username" autoFocus aria-label="Email" placeholder="Your email address"
+                onFocus={e => e.target.select()} />
               {error && <div role="alert" className="text-sm" style={{ color: "var(--ember)" }}>{error}</div>}
               <button type="submit" disabled={busy} aria-busy={busy} className="cx-btn-primary w-full py-2.5 text-base flex items-center justify-center gap-2">
                 {busy ? <><Loader2 size={18} className="animate-spin" aria-hidden="true" /> One moment…</> : "Continue"}
@@ -259,7 +265,7 @@ export function LoginScreen({ onLogin, onSignup, offline }) {
               {!resetResult ? (
                 <>
                   <p className="text-sm" style={{ color: "var(--iron)" }}>
-                    Enter your account email and we&apos;ll send a temporary password to it. It works in Studio and Coach.
+                    Enter your account email and we&apos;ll send a temporary password to it.{coachAccount ? "" : " It works in Studio and Coach."}
                   </p>
                   <Field label="Email">
                     <input type="email" className="cx-input" value={email} onChange={e => setEmail(e.target.value)} autoFocus autoComplete="username" />

@@ -6,6 +6,7 @@ import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
 import { percentOf, kgAt, maxRepsAt, weightText, unreadPercent, topReps } from "../src/lib/one-rm.js";
 import { TECHNIQUE_KEYS, MAX_DROPS, isPyramid, groupSizes, techniqueText } from "../src/lib/techniques.js";
+import { aOrAn, kindsWords, plural } from "../src/lib/words.js";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "We need to start creating a
@@ -624,7 +625,7 @@ function check(program, rows, ctx, own) {
         if (ctx.place) {
           const fit = library.placeCheck(x, ctx.place);
           if (fit === "no") add({ ...at, level: "stop", from: "equipment", text: `${e.name} needs equipment that “${ctx.place.name}” doesn't have. Swap it.` });
-          else if (Array.isArray(fit)) add({ ...at, level: "note", from: "equipment", text: `${e.name}: nobody has said whether “${ctx.place.name}” has ${fit.join(", ").toLowerCase()}. Check before the session.` });
+          else if (Array.isArray(fit)) add({ ...at, level: "note", from: "equipment", text: `${e.name}: nobody has said whether “${ctx.place.name}” has ${kindsWords(fit)}. Check before the session.` });
         }
         const lim = library.limitsCheck(x, ctx.rules);
         if (lim === "no") add({ ...at, level: "stop", from: "limitations", text: `${e.name} is something ${program.clientName}'s limitations say to avoid. Swap it.` });
@@ -642,13 +643,13 @@ function check(program, rows, ctx, own) {
         if (ctx.place && p.needs.length) {
           const has = new Set(ctx.place.categories.filter(c => c.has === true).map(c => c.key));
           const missing = p.needs.filter(k => !has.has(k) && ctx.place.categories.find(c => c.key === k)?.has === false);
-          if (missing.length) add({ ...at, level: "stop", from: "equipment", text: `${e.name} needs ${missing.map(library.kindLabel).join(", ").toLowerCase()}, which “${ctx.place.name}” doesn't have.` });
+          if (missing.length) add({ ...at, level: "stop", from: "equipment", text: `${e.name} needs ${kindsWords(missing.map(library.kindLabel))}, which “${ctx.place.name}” doesn't have.` });
         }
       }
       const r = range(e.reps);
       if (r && goal.reps_range) {
         if (r[1] < goal.reps_range[0] || r[0] > goal.reps_range[1]) {
-          add({ ...at, level: "note", from: "reps", text: `${e.name}: ${e.reps} reps is outside ${goal.reps_range[0]}–${goal.reps_range[1]}, the usual range for ${goal.label.toLowerCase()}.` });
+          add({ ...at, level: "note", from: "reps", text: `${e.name}: ${plural(e.reps, "rep")} is outside ${goal.reps_range[0]}–${goal.reps_range[1]}, the usual range for ${goal.label.toLowerCase()}.` });
         }
       }
       if (r && beginner && r[0] < 8) add({ ...at, level: "note", from: "reps", text: `${e.name}: in the first year about 8 reps and up work best; ${e.reps} is heavy for a beginner.` });
@@ -665,7 +666,7 @@ function check(program, rows, ctx, own) {
         else if (pct > 100) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% is more than their 1RM, the most they can lift once.` });
         else if (pct < 10) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% of their 1RM is next to nothing. Check the load.` });
         /* The top of a range counts: 10–12 at 75% asks for 12 (Run 1, B-8). */
-        else if (top && top > maxRepsAt(pct) + 1) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: at ${pct}% of 1RM about ${maxRepsAt(pct)} reps can be done; ${e.reps} asks for more. Lighten it, or fewer reps.` });
+        else if (top && top > maxRepsAt(pct) + 1) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: at ${pct}% of 1RM about ${plural(maxRepsAt(pct), "rep")} can be done; ${e.reps} asks for more. Lighten it, or fewer reps.` });
       } else if (unreadPercent(e.load)) {
         add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: “${e.load}” can't be worked out from a 1RM. Write one share of it, such as 75%, or the weight.` });
       }
@@ -687,7 +688,7 @@ function check(program, rows, ctx, own) {
     }
     if (beginner && dayRows.length > 7) add({ day: day.id, level: "note", from: "starting-out", text: `${day.name}: ${dayRows.length} exercises. A beginner's session is usually 4–7, unless it is a circuit.` });
     const fits = MINUTES[program.minutes];
-    if (fits && dayRows.length > fits + 1) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: ${dayRows.length} exercises, more than about ${fits} fit in a ${program.minutes}-minute session.` });
+    if (fits && dayRows.length > fits + 1) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: ${dayRows.length} exercises, more than about ${fits} fit in ${aOrAn(program.minutes)} ${program.minutes}-minute session.` });
   }
   const order = { stop: 0, warn: 1, note: 2 };
   return points.sort((a, b) => order[a.level] - order[b.level]);
@@ -865,7 +866,7 @@ export async function suggestNext(trainerId, program, dayId, limit = 4, given = 
   return {
     suggestions: out,
     day: DAY_KINDS[dayKind].label,
-    ...(holds && dayRows.length >= holds ? { full: `This day has about as much as a ${program.minutes}-minute session holds.` } : {}),
+    ...(holds && dayRows.length >= holds ? { full: `This day has about as much as ${aOrAn(program.minutes)} ${program.minutes}-minute session holds.` } : {}),
     ...(ctx.place ? { place: ctx.place.name } : {}),
     ...(ctx.hasLimitations ? { limitationsChecked: true } : {}),
   };
@@ -907,7 +908,7 @@ export async function preview(trainerId, program, exerciseId) {
   if (ctx.place) {
     const fit = library.placeCheck(x, ctx.place);
     if (fit === "no") points.push({ level: "stop", text: `Needs equipment that “${ctx.place.name}” doesn't have.` });
-    else if (Array.isArray(fit)) points.push({ level: "note", text: `Nobody has said whether “${ctx.place.name}” has ${fit.join(", ").toLowerCase()}.` });
+    else if (Array.isArray(fit)) points.push({ level: "note", text: `Nobody has said whether “${ctx.place.name}” has ${kindsWords(fit)}.` });
   }
   const lim = library.limitsCheck(x, ctx.rules);
   if (lim === "no") points.push({ level: "stop", text: `${program.client_name}'s limitations say to avoid it.` });

@@ -7,6 +7,7 @@ import { VersionForm, FamilyForm, ConditionForm, PrincipleForm, ChangeList, AddB
 import { Prose, Standing } from "../review/Prose";
 import { BooksSection } from "../review/Books";
 import { SegRow } from "../chrome/SegRow";
+import { fmtDay } from "../lib/date";
 
 const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
@@ -42,7 +43,7 @@ function Marker({ mark, onMark, busy }) {
           <span className="inline-flex items-center gap-1 font-medium" style={{ color: flag ? "var(--ember)" : "var(--cerulean)" }}>
             {flag ? <Flag size={14} aria-hidden="true" /> : <Check size={14} aria-hidden="true" />} {flag ? "Flagged" : "Approved"}
           </span>
-          <span style={muted}> on {new Date(mark.at).toLocaleDateString()}</span>
+          <span style={muted}> on {fmtDay(mark.at)}</span>
           {mark.comment && <span className="block mt-0.5">“{mark.comment}”</span>}
         </span>
         <button type="button" className="cx-btn-row" disabled={busy}
@@ -448,7 +449,7 @@ export function ReviewTab({ onSignedOut }) {
                   {summary.suggestions.map(x => (
                     <article key={x.id} className="cx-card p-4">
                       <div className="font-semibold">{x.name}</div>
-                      <div className="text-sm mb-2" style={muted}>Suggested by {x.by || "a trainer"} on {new Date(x.suggestedAt).toLocaleDateString()}</div>
+                      <div className="text-sm mb-2" style={muted}>Suggested by {x.by || "a trainer"} on {fmtDay(x.suggestedAt)}</div>
                       <Fact label="Closest to">{x.family}</Fact>
                       <Fact label="Works">{x.primary}</Fact>
                       <Fact label="Needs">{x.needs}</Fact>

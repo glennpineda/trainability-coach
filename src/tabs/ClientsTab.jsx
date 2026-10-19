@@ -15,6 +15,7 @@ import { NoticeDialog } from "../chrome/NoticeDialog";
 import { ConfirmDialog } from "../chrome/ConfirmDialog";
 import { SegRow } from "../chrome/SegRow";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
+import { formatPhone } from "../lib/people";
 
 /* What "Last session" says under a name: the date, or that there has not been
    one. */
@@ -147,7 +148,7 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
               {c.email ? <a href={`mailto:${c.email}`} className="cx-link">{c.email}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
             </Detail>
             <Detail icon={Phone} label="Phone">
-              {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="cx-link">{c.phone}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
+              {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="cx-link">{formatPhone(c.phone)}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
             </Detail>
             <Detail icon={Cake} label="Birthday">
               {birthday(c.dateOfBirth) || <span style={{ color: "var(--iron)" }}>Not given</span>}

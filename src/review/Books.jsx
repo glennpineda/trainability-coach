@@ -3,6 +3,7 @@ import { BookOpen, Check, ChevronLeft, ChevronRight, Loader2, RotateCcw, Archive
 import { API, apiRequest } from "../lib/api";
 import { Prose } from "./Prose";
 import { PrincipleForm, Problems } from "./LibraryEditor";
+import { fmtDay } from "../lib/date";
 
 /**
  * Review Coach IQ → Books (build 1.0.16; Glenn, 17 Oct 2026: "Do all 3"):
@@ -147,7 +148,7 @@ export function BooksSection({ onSignedOut, onAccepted }) {
                 <div className="text-sm mt-1">{b.counts.decided} of {b.counts.proposals} topics decided{b.counts.accepted ? `, ${b.counts.accepted} accepted` : ""}</div>
               )}
               <div className="text-xs mt-1" style={muted}>
-                {b.pages} pages · uploaded by {b.by || "the Primary Master"} on {new Date(b.at).toLocaleDateString()}
+                {b.pages} pages · uploaded by {b.by || "the Primary Master"} on {fmtDay(b.at)}
                 {b.tokensIn ? ` · ${tokens(b.tokensIn)} tokens read, ${tokens(b.tokensOut)} written` : ""}
               </div>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">

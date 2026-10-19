@@ -55,12 +55,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   title, Billy's errors, missing words (Coach account, Primary Master,
   Settings, Wide screen, Today, Superset, Place), and a "what each account can
   do" chapter like Studio's. Each with its corrected text in the report.
-- **"Use a different email" keeps the old address (M-7)**, so typing adds to
-  it. The forgotten-password screen says "It works in Studio and Coach." (not
-  for a Coach account, M-8).
-- **Wording (B-15, U-19).** "a upper body day"; "1 reps"; "(trx)" and no "and"
-  in equipment lists; programs dated "10/19/2026" against "Oct 19, 2026"
-  elsewhere (B-19); phone numbers as typed ("5550001111").
 - **Odd entries go through (B-16, B-17)**: tempo "3-1-1", reps "-5", a carry
   suggested at "1–3 × 8–12".
 - **Billy's my_programs gives kg to a pounds trainer (B-13)**; a program by
