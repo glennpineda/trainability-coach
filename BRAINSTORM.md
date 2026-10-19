@@ -89,6 +89,20 @@ _Not thought through yet._
 
 _To decide before building._
 
+- **Studio 2's old measurements (`Measurements_T`): remind Glenn when he is
+  on his Mac.** (19 Oct 2026; Glenn: "remind me again later, I'm on cloud
+  right now") He wants to see what the old app kept, matched to today's
+  clients through Studio's `migrated_ids`, shown only, nothing written. A
+  cloud session can't read live (no credentials, and it was refused), and
+  Studio's migration never read this table (not in docs/OLD-SCHEMA.md). On
+  the Mac, read-only: in Studio 2's data database `SHOW COLUMNS FROM
+  Measurements_T;`, `SELECT COUNT(*) FROM Measurements_T;`, `SELECT * FROM
+  Measurements_T ORDER BY 1 DESC LIMIT 20;` and the whole table as a CSV; in
+  Studio's database `SELECT old_id, new_id, kind FROM migrated_ids;` as a
+  CSV. With those files: what it measured and in what units, how many rows,
+  clients and days, how many match a client today and which don't, and how
+  each would map onto Coach's measurements. Then Glenn decides on an import.
+
 - **Should Studio trust the address Coach forwards?** Studio limits failed
   sign-ins per IP address as well as per email. Every request relayed through
   Coach arrives from Coach's server, so that per-IP budget is shared by
