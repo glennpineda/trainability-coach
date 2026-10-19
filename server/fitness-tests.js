@@ -117,11 +117,12 @@ function strength(kind, body, units) {
     if (w.value == null) return { error: method === "estimated" ? "Fill in the weight of the set." : "Fill in the weight lifted." };
     const bw = inMetric(BODY_WEIGHT, body.bodyWeight, units, "A body weight");
     if (bw.error) return bw;
-    if (method === "tested") return { data: { ...ex, method, weightKg: w.value, bodyWeightKg: bw.value }, result: w.value };
+    /* The units the weight was typed in, to show it back as typed (Run 1, U-17). */
+    if (method === "tested") return { data: { ...ex, method, weightKg: w.value, bodyWeightKg: bw.value, units }, result: w.value };
     const reps = num(body.reps);
     if (reps == null || !Number.isInteger(reps) || reps < 1) return { error: "Fill in the reps done, in whole reps." };
     if (reps > MAX_REPS) return { error: "Over 10 reps the estimate gets loose: test with a heavier weight, for 10 reps or fewer." };
-    return { data: { ...ex, method, weightKg: w.value, reps, bodyWeightKg: bw.value }, result: brzycki(w.value, reps) };
+    return { data: { ...ex, method, weightKg: w.value, reps, bodyWeightKg: bw.value, units }, result: brzycki(w.value, reps) };
   }
   if (kind === "jump") {
     const style = JUMP_STYLES.some(([k]) => k === body.style) ? body.style : "";
@@ -163,7 +164,7 @@ function strength(kind, body, units) {
   if (loss == null || !Number.isFinite(loss) || loss < 0 || loss > 100) return { error: "Fill in the velocity loss the sensor showed, as a percentage." };
   const w = inMetric(LIFT, body.weight, units, "A weight");
   if (w.error) return w;
-  return { data: { ...ex, percent: Math.round(percent), reps, weightKg: w.value }, result: Math.round(loss * 10) / 10 };
+  return { data: { ...ex, percent: Math.round(percent), reps, weightKg: w.value, units }, result: Math.round(loss * 10) / 10 };
 }
 
 export async function add(clientId, trainer, row) {

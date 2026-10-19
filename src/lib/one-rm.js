@@ -46,9 +46,10 @@ export function weightText(kg, units = "imperial") {
   return `${roundTo("lb", kg * 2.20462262)} lb`;
 }
 
-/** A 1RM as Fitness tests shows it, to a tenth: "253.1 lb". */
+/** A 1RM as Fitness tests shows it: to the pound or the half kilo, "253 lb",
+    as a lift can be (it was to a tenth, "253.1 lb", Run 1, U-17). */
 export function oneRmText(kg, units = "imperial") {
-  return units === "metric" ? `${Math.round(kg * 10) / 10} kg` : `${Math.round(kg * 2.20462262 * 10) / 10} lb`;
+  return units === "metric" ? `${Math.round(kg * 2) / 2} kg` : `${Math.round(kg * 2.20462262)} lb`;
 }
 
 /** A program's load as written, in the trainer's units, with the weight a

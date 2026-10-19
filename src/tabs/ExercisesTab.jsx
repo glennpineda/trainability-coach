@@ -14,19 +14,19 @@ const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
 
 /* Search Coach IQ's library and pick one (also a 1RM's exercise, FitnessTests). */
-export function LibraryPicker({ onPick, onCancel, busy }) {
+export function LibraryPicker({ onPick, onCancel, busy, lifted = false }) {
   const [q, setQ] = useState("");
   const [found, setFound] = useState(null);
   useEffect(() => {
     if (q.trim().length < 2) { setFound(null); return undefined; }
     let alive = true;
     const t = setTimeout(() => {
-      apiRequest("GET", `/coach-iq/exercises?q=${encodeURIComponent(q.trim())}`)
+      apiRequest("GET", `/coach-iq/exercises?q=${encodeURIComponent(q.trim())}${lifted ? "&for=lift" : ""}`)
         .then(({ exercises }) => { if (alive) setFound(exercises); })
         .catch(() => { if (alive) setFound([]); });
     }, 250);
     return () => { alive = false; clearTimeout(t); };
-  }, [q]);
+  }, [q, lifted]);
   return (
     <div className="mt-2 grid gap-2">
       <div className="flex items-center gap-2">

@@ -1146,7 +1146,7 @@ app.delete("/api/everyone/items/:id", asSetter("DELETE /everyone/items", async (
 /* Coach IQ's library, searched by name, and the exercises part of the
    trainer's memory: their own names and private exercises (library.js). */
 app.get("/api/coach-iq/exercises", asSignedIn("GET /coach-iq/exercises", async (req, res) => {
-  res.json({ exercises: library.searchLibrary(String(req.query.q || "").slice(0, 120)).map(library.brief) });
+  res.json({ exercises: library.searchLibrary(String(req.query.q || "").slice(0, 120), 20, { lifted: req.query.for === "lift" }).map(library.brief) });
 }));
 
 app.get("/api/my-exercises", asSignedIn("GET /my-exercises", async (_req, res, user) => {

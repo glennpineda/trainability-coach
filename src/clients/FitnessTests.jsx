@@ -136,7 +136,7 @@ function Form({ client, units, initial, latestWeight, busy, error, onSave, onCan
       </div>
     ) : (
       <div className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Exercise
-        <LibraryPicker onPick={(x) => setExercise({ id: x.id, name: x.name })} onCancel={() => (initial ? setExercise({ id: d0.exerciseId, name: d0.exercise }) : setKind(null))} />
+        <LibraryPicker lifted onPick={(x) => setExercise({ id: x.id, name: x.name })} onCancel={() => (initial ? setExercise({ id: d0.exerciseId, name: d0.exercise }) : setKind(null))} />
       </div>
     )
   );

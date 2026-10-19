@@ -69,7 +69,14 @@ const labelOfKind = (key) => CATEGORIES.find(c => c.key === key)?.label || key;
  * alias or a former name, compared the way names are (nameKey). Exact first;
  * then names holding every word asked for ("goblet" finds Squat — Goblet).
  */
-export function searchLibrary(query, limit = 20) {
+/* How a lift is loaded, for a 1RM: a straight barbell first, then the other loads,
+   then what has none to speak of (bands, body weight) (Run 1, U-16). */
+const LOADED = { barbells: 0, dumbbells: 1, kettlebells: 1, machines: 1, cables: 1, sled: 1, loaded: 1 };
+const loadRank = (x) => (x.attributes?.implement === "Barbell" ? -1
+  : Math.min(2, ...equipmentFor(x, FAMILIES[x.movement]).needs.map(k => LOADED[k] ?? 2)));
+
+/** The library by name; `lifted` puts the versions a 1RM is usually taken on first. */
+export function searchLibrary(query, limit = 20, { lifted = false } = {}) {
   const want = loose(query);
   if (!want) return [];
   const words = want.split(" ");
@@ -79,7 +86,10 @@ export function searchLibrary(query, limit = 20) {
     if (keys.includes(want)) exact.push(x);
     else if (keys.some(k => words.every(w => k.split(" ").some(kw => kw.startsWith(w))))) partial.push(x);
   }
-  return [...exact, ...partial].slice(0, limit);
+  /* Then those named so ahead of those found by another name. */
+  const named = (x) => (words.every(w => loose(x.name).split(" ").some(kw => kw.startsWith(w))) ? 0 : 1);
+  const byLoad = (list) => (lifted ? [...list].sort((a, b) => loadRank(a) - loadRank(b) || named(a) - named(b)) : list);
+  return [...byLoad(exact), ...byLoad(partial)].slice(0, limit);
 }
 
 /* ---------------------------------------------------------- own names */

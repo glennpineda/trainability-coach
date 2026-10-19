@@ -24,6 +24,7 @@
 
 import { MEASURES, toShown, fromShown, unitOf } from "./measures.js";
 import { aOrAn } from "./words.js";
+import { oneRmText } from "./one-rm.js";
 
 export const TESTS = {
   step: {
@@ -212,10 +213,13 @@ export function describe(t, units = "imperial") {
       detail: `1 mile in ${clockOf(d.seconds)}, heart rate ${d.heartRate} bpm` };
   }
   if (t.kind === "onerm") {
-    const w = (kg) => `${toShown(LIFT, kg, units)} ${unitOf(LIFT, units)}`;
-    const how = d.method === "estimated" ? `Worked out from ${w(d.weightKg)} × ${d.reps}` : "Lifted once";
+    /* The set as it was typed, in the units it was typed in, whatever the
+       trainer works in now: 185 lb, not 83.9 kg (Run 1, U-17). The 1RM in
+       their units, to what a gym has: an estimate isn't good to a tenth. */
+    const typed = d.units || units;
+    const how = d.method === "estimated" ? `Worked out from ${toShown(LIFT, d.weightKg, typed)} ${unitOf(LIFT, typed)} × ${d.reps}` : "Lifted once";
     const ratio = d.bodyWeightKg ? ` · ${(t.result / d.bodyWeightKg).toFixed(2)} × body weight` : "";
-    return { title: titleOf(t), value: t.result, text: `1RM ${w(t.result)}`, rating: null, detail: `${how}${ratio}` };
+    return { title: titleOf(t), value: t.result, text: `1RM ${oneRmText(t.result, units)}`, rating: null, detail: `${how}${ratio}` };
   }
   if (t.kind === "jump") {
     return { title: titleOf(t), value: t.result, text: `${toShown(HEIGHT, t.result, units)} ${unitOf(HEIGHT, units)}`, rating: null,
@@ -230,7 +234,7 @@ export function describe(t, units = "imperial") {
   }
   if (t.kind === "vloss") {
     return { title: titleOf(t), value: t.result, text: `Velocity loss ${t.result}%`, rating: null,
-      detail: `${d.reps} reps at ${d.percent}% of 1RM${d.weightKg ? ` (${toShown(LIFT, d.weightKg, units)} ${unitOf(LIFT, units)})` : ""}` };
+      detail: `${d.reps} reps at ${d.percent}% of 1RM${d.weightKg ? ` (${toShown(LIFT, d.weightKg, d.units || units)} ${unitOf(LIFT, d.units || units)})` : ""}` };
   }
   return { title: TESTS.vo2.label, value: t.result, text: `VO2 max ${t.result} ml/kg/min`, rating: null, detail: d.source || "" };
 }

@@ -58,9 +58,7 @@ item keeps the ids of the reports that found it. How the run was done is in
 - **Step test bands (A-13)**: 65 falls in 56–65 while "65+" starts at 66;
   women 56–65 Average and Below average overlap (a misprint?).
 - **Coach IQ ignores the client's tests (U-15)**: a 1.26 × body weight squat
-  still gets Bodyweight squat at beginner. The 1RM search lists banded and
-  goblet squats before the barbell (U-16); "1RM 208.1 lb" and "Worked out from
-  83.9 kg × 5" for 185 lb typed (U-17).
+  still gets Bodyweight squat at beginner.
 - **The printed program is written for the trainer (U-18)**: "75% (155 lb)",
   the primary/secondary line, "Nothing yet." days, no trainer name.
 - **"No sessions yet" on the client while Home shows them trained today (U-22,
