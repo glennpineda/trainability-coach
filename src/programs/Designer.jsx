@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { BodyMap, scaleOf } from "./BodyMap";
 import { loadLine, percentOf } from "../lib/one-rm";
 import {
-  ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Sparkles, Trash2, TriangleAlert, Info, X,
+  ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Send, Sparkles, Trash2, TriangleAlert, Info, X,
 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
@@ -133,7 +133,19 @@ function Next({ dayId, version, busy, onTake, units }) {
   );
 }
 
-export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
+const firstOf = (name) => String(name || "").split(" ")[0] || "the client";
+/* What to see to before a program goes to the client: days with nothing on
+   them, and Coach IQ's stop points. */
+function sendIssues(p) {
+  const empty = p.days.filter(d => !d.exercises.length).map(d => d.name);
+  const stops = p.check.filter(c => c.level === "stop").length;
+  return [
+    empty.length && `${empty.join(", ")} ${empty.length === 1 ? "has" : "have"} no exercises.`,
+    stops && `Coach IQ has ${stops === 1 ? "one point" : `${stops} points`} to stop at.`,
+  ].filter(Boolean);
+}
+
+export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend }) {
   const [p, setP] = useState(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -192,6 +204,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
     } finally { setBusy(false); }
   };
   const askBilly = (words) => { billy?.setOpen(true); billy?.ask(words); };
+  /* Sending with something to see to first (Run 1, U-8): its question open. */
+  const [sending, setSending] = useState(false);
   /* Taking an exercise or a day out asks first, in Coach's own question
      rather than the browser's (Run 1, U-7): { day, exercise? }. */
   const [taking, setTaking] = useState(null);
@@ -244,6 +258,14 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
               {!p.frozen && <button type="button" className="cx-btn-row" onClick={() => setOpen({ kind: "details", id: p.id })}><Pencil size={15} aria-hidden="true" /> Edit the details</button>}
               <a className="text-sm cx-link" href={`/print/program/${p.id}`} target="_blank" rel="noreferrer"><Printer size={15} aria-hidden="true" /> Print for the client</a>
+              {/* Straight to the client's conversation with it attached (Run 1,
+                  U-8; Glenn: "Send button + check"). Not for a client still
+                  kept in Coach (ids cli…), whom messages can't reach yet. */}
+              {onSend && !p.frozen && !/^cli/.test(p.clientId) && (
+                <button type="button" className="text-sm cx-link" onClick={() => (sendIssues(p).length ? setSending(true) : onSend(p.clientId, p))}>
+                  <Send size={15} aria-hidden="true" /> Send to {firstOf(p.clientName)}
+                </button>
+              )}
               {billy?.available && !p.frozen && (
                 <button type="button" className="text-sm cx-link" onClick={() => askBilly(`Look over my program “${p.name}” for ${p.clientName} (${p.id}). What would you change or add next?`)}>
                   <Sparkles size={15} aria-hidden="true" /> Ask Billy about it
@@ -360,6 +382,12 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
         </button>
       )}
       </fieldset>
+      {sending && (
+        <ConfirmDialog title={`Send “${p.name}” as it is?`} yes="Send it" no="Not yet" danger={false}
+          onNo={() => setSending(false)} onYes={() => { setSending(false); onSend(p.clientId, p); }}>
+          {sendIssues(p).join(" ")}
+        </ConfirmDialog>
+      )}
       {taking && (
         <ConfirmDialog busy={busy} no="Keep it"
           title={taking.exercise ? `Take ${taking.exercise.name} out of ${taking.day.name}?` : `Take ${taking.day.name} out of the program?`}

@@ -325,6 +325,13 @@ function Composer({ clientId, first, onSent }) {
   const ready = items.filter(x => x.att);
 
   const update = (key, patch) => setItems(xs => xs.map(x => (x.key === key ? { ...x, ...patch } : x)));
+  /* A program sent from its page (Designer's Send; Run 1, U-8): attached at
+     once, once, if it is this client's. */
+  useEffect(() => {
+    let want = null;
+    try { want = JSON.parse(sessionStorage.getItem("coach-attach-program") || "null"); sessionStorage.removeItem("coach-attach-program"); } catch { /* not kept */ }
+    if (want?.id && want.clientId === clientId) attachProgram(want);
+  }, [clientId]); // eslint-disable-line react-hooks/exhaustive-deps
   function choose(e) {
     const files = [...(e.target.files || [])];
     e.target.value = "";

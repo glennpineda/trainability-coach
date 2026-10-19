@@ -24,9 +24,6 @@ _Things actually ready to do._
 
 Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
-- **Sending a program takes six taps, and isn't checked first (U-8).** No
-  "Send to Riley" beside Print for the client; empty days and "stop" points go
-  unremarked.
 - **A client's page has no programs (U-9, I-8).** No list, no "New program for
   Riley"; Today links client → program but not back.
 - **A Coach account sees doors to nowhere (U-10).** Today's card says "once

@@ -14,7 +14,7 @@ import { Toast } from "../chrome/Toast";
 
 const muted = { color: "var(--iron)" };
 
-export function ProgramsTab({ clients, billy, onSignedOut }) {
+export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
   const [data, setData] = useState(null);
   const [openId, setOpenId] = useState(() => { try { return sessionStorage.getItem("coach-program") || null; } catch { return null; } });
   const [making, setMaking] = useState(false);
@@ -60,7 +60,7 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
       <Toast toast={toast} onGone={toastGone} />
       <TabHeading>Programs</TabHeading>
       {openId && data ? (
-        <Designer id={openId} goals={data.goals} vocab={data} billy={billy} onSignedOut={onSignedOut} onBack={() => { setOpenId(null); load(); }} />
+        <Designer id={openId} goals={data.goals} vocab={data} billy={billy} onSignedOut={onSignedOut} onSend={onSend} onBack={() => { setOpenId(null); load(); }} />
       ) : (
         <>
           <p className="text-sm -mt-2 mb-4" style={muted}>

@@ -6,9 +6,10 @@ import { createPortal } from "react-dom";
  * control on the row only asks, and the red button lives here; its
  * CONTRIBUTING, "Quiet on the row, weighty in the dialog"). The safe answer
  * first and focused; Escape gives it. First used for archiving a client
- * (Run 1, D-7).
+ * (Run 1, D-7). `danger={false}` for a question that takes nothing away
+ * (sending a program as it is), with the primary button.
  */
-export function ConfirmDialog({ title, children, yes, no = "Cancel", busy, onYes, onNo }) {
+export function ConfirmDialog({ title, children, yes, no = "Cancel", busy, onYes, onNo, danger = true }) {
   useEffect(() => {
     const key = (e) => { if (e.key === "Escape") onNo(); };
     window.addEventListener("keydown", key);
@@ -23,7 +24,7 @@ export function ConfirmDialog({ title, children, yes, no = "Cancel", busy, onYes
         </div>
         <div className="p-4 border-t flex gap-2" style={{ borderColor: "var(--iron-line)" }}>
           <button type="button" autoFocus className="flex-1 py-2 text-sm" style={{ color: "var(--iron)" }} onClick={onNo}>{no}</button>
-          <button type="button" className="cx-btn-ember flex-1 py-2 text-sm" disabled={busy} aria-busy={busy} onClick={onYes}>{yes}</button>
+          <button type="button" className={`${danger ? "cx-btn-ember" : "cx-btn-primary"} flex-1 py-2 text-sm`} disabled={busy} aria-busy={busy} onClick={onYes}>{yes}</button>
         </div>
       </div>
     </div>,

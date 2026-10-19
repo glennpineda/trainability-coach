@@ -78,6 +78,16 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
     setOpened(n => n + 1);
     open("messages");
   }, []);
+  /* A program sent from its page (Run 1, U-8): its client's conversation
+     opened, with the program waiting in the composer (MessagesTab). */
+  const sendProgram = useCallback((clientId, program) => {
+    try {
+      sessionStorage.setItem("coach-thread", clientId);
+      sessionStorage.setItem("coach-attach-program", JSON.stringify({ clientId, id: program.id, name: program.name }));
+    } catch { /* not kept */ }
+    setOpened(n => n + 1);
+    open("messages");
+  }, []);
   useEffect(() => {
     if (new URLSearchParams(window.location.search).has("open")) {
       goTo(window.location.href);
@@ -129,7 +139,7 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
       <main className="pb-32 relative z-[1]">
         {tab === "home" && <HomeTab user={user} onOpen={open} clients={clients.clients} unread={unread} onOpenProgram={openProgram} onOpenClient={openClient} onSignedOut={onSignedOut} />}
         {tab === "clients" && <ClientsTab {...clients} onSignedOut={onSignedOut} />}
-        {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} />}
+        {tab === "programs" && <ProgramsTab clients={clients.clients} billy={billy} onSignedOut={onSignedOut} onSend={user.coachAccount ? null : sendProgram} />}
         {tab === "messages" && <MessagesTab key={opened} clients={clients.clients} onSignedOut={onSignedOut} onUnread={setUnread} />}
         {tab === "equipment" && <EquipmentTab onSignedOut={onSignedOut} />}
         {tab === "exercises" && <ExercisesTab onSignedOut={onSignedOut} />}

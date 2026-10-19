@@ -1492,6 +1492,15 @@ program, so a lighter day looks fainter. The pelvic floor is in the list but
 not drawn. A day with no exercises has no
 drawing.
 
+**Sending it to the client.** Tap **Send to Avery** at the top of the
+program. Their conversation in Messages opens with the program already
+attached (7.3); write a few words if you like and tap send. If a day has no
+exercises, or Coach IQ has a point to stop at, it asks first, such as *Send
+“Next block” as it is? Day B has no exercises.*: tap **Send it** to go on, or
+**Not yet** to stay on the program. It isn't offered for a client kept only in
+Coach (4.6), or with a Coach account, since messages reach clients through
+Trainability.
+
 ### 5.6 Printing it for the client
 
 1. Tap **Print for the client**, at the top of the program. It opens in a
