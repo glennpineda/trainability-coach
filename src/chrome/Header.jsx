@@ -157,13 +157,15 @@ export function Header({ user, onLogout, billy, onOpen, chooseLook }) {
                 </span>
                 <Check size={20} className="flex-none" style={{ color: "var(--accent)" }} aria-hidden="true" />
               </button>
-              <a href={STUDIO_URL} className="cx-app-row">
+              {/* Not for a Coach account, which has no Studio sign-in (Run 1, U-10;
+                  Glenn, 19 Oct 2026: "Hide them"); it shows once linked. */}
+              {!user?.coachAccount && <a href={STUDIO_URL} className="cx-app-row">
                 <img src={studioIcon} alt="" className="flex-none" style={{ width: 40, height: 40, borderRadius: 10 }} />
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold">Studio</span>
                   <span className="block text-sm" style={{ color: "var(--iron)" }}>Schedule, sessions, and payments</span>
                 </span>
-              </a>
+              </a>}
             </div>
           </div>
         )}

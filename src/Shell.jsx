@@ -29,6 +29,9 @@ const TABS = [
 /* Pages with no button on the bar, opened from elsewhere: My equipment, My
    exercises and, for the Primary Master, Review Coach IQ and Installation,
    all from the account menu. */
+/* No Messages for a Coach account: clients read them on Trainability's own
+   page, which it has no part in until linked (Run 1, U-10). */
+const tabsFor = (user) => (user?.coachAccount ? TABS.filter(t => t.id !== "messages") : TABS);
 const PAGES = ["equipment", "exercises", "review", "installation"];
 const PRIMARY_PAGES = ["review", "installation"];
 const KEY = "coach-tab";
@@ -46,7 +49,7 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
     /* Only a page this person may open: Review and Installation are the
        Primary Master's, and somebody else signing in on the same tab was
        left on an empty page (Run 1, B-3). */
-    const mayOpen = (t) => TABS.some(x => x.id === t) || (PAGES.includes(t) && (!PRIMARY_PAGES.includes(t) || isPrimaryMaster(user)));
+    const mayOpen = (t) => tabsFor(user).some(x => x.id === t) || (PAGES.includes(t) && (!PRIMARY_PAGES.includes(t) || isPrimaryMaster(user)));
     try { const t = sessionStorage.getItem(KEY); return mayOpen(t) ? t : "home"; } catch { return "home"; }
   });
   useEffect(() => { try { sessionStorage.setItem(KEY, tab); } catch { /* not kept */ } }, [tab]);
@@ -58,9 +61,9 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
      count on a tab), asked on every change of tab and every minute. */
   const [unread, setUnread] = useState(0);
   const askUnread = useCallback(() => apiRequest("GET", "/messages").then(d => setUnread(d.unread || 0)).catch(() => {}), []);
-  useEffect(() => { askUnread(); }, [tab, askUnread]);
+  useEffect(() => { if (!user.coachAccount) askUnread(); }, [tab, askUnread, user.coachAccount]);
   /* Every minute while Coach is in sight (hooks/usePoll.js; Run 1, O-4). */
-  usePoll(askUnread, 60 * 1000);
+  usePoll(askUnread, 60 * 1000, !user.coachAccount);
   const open = (id) => { setTab(id); scrollPageTo({ top: 0 }); };
   /* A notification tapped (public/push-sw.js): its address says where, such
      as /?open=messages&client=… for a client's message. Opened from scratch
@@ -150,7 +153,7 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
       </div>
-      <BottomNav tabs={TABS.map(t => (t.id === "messages" ? { ...t, count: unread, countWord: "new" } : t))} activeTab={tab} onChange={open} />
+      <BottomNav tabs={tabsFor(user).map(t => (t.id === "messages" ? { ...t, count: unread, countWord: "new" } : t))} activeTab={tab} onChange={open} />
       </div>
     </div>
   );

@@ -24,10 +24,6 @@ _Things actually ready to do._
 
 Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
-- **A Coach account sees doors to nowhere (U-10).** Today's card says "once
-  linked" forever; Home advertises Messages; the app switcher's Studio goes to
-  the live trainabilitystudio.com (hard-coded, even in a test copy). Hide or
-  label them for Coach accounts.
 - **Coach IQ's check is noisy on one exercise (U-13).** Five lines on one
   squat; "Ask first: Resistance bands" vs the dialog's "Nobody has said whether
   … has resistance bands." Group by exercise; word it as the dialog does.

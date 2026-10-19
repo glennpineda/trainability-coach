@@ -58,9 +58,12 @@ export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOp
             <button type="button" className="cx-icon-btn" aria-label="Dismiss" onClick={() => setLinked(false)}><X size={16} aria-hidden="true" /></button>
           </div>
         )}
-        <TodayCard onOpenProgram={onOpenProgram} onOpenClient={onOpenClient} onSignedOut={onSignedOut} />
+        {/* A Coach account has no schedule and no messages to clients (both
+            come through Trainability), so neither card shows for it until it
+            is linked (Run 1, U-10; Glenn, 19 Oct 2026: "Hide them"). */}
+        {!user.coachAccount && <TodayCard onOpenProgram={onOpenProgram} onOpenClient={onOpenClient} onSignedOut={onSignedOut} />}
         <div className="grid gap-4 sm:grid-cols-2">
-          {Object.entries(SECTIONS).filter(([id]) => id !== "today").map(([id, section]) => (
+          {Object.entries(SECTIONS).filter(([id]) => id !== "today" && !(user.coachAccount && id === "messages")).map(([id, section]) => (
             <ComingSoonCard key={id} section={section} onOpen={() => onOpen(id)}
               badge={id === "clients" ? clientCount(clients) : id === "messages" && unread ? `${unread} new` : undefined} />
           ))}

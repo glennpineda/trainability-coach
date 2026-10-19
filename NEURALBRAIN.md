@@ -357,6 +357,7 @@ put-away programs with no way back, the body drawing's dark caption), about 35
 medium, the manual's 40 points and the smaller ones, two questions and 14
 ideas — all in BRAINSTORM.md, Found in testing, Run 1.
 
+- **U-10, a Coach account saw doors to nowhere** (fixed 19 Oct 2026; Glenn, offered hiding them, labelling them, or hiding only Studio: "Hide them (Recommended)"). Build 1.0.125. A trainer with a Coach account has no schedule and no messages to clients (both come through Trainability) and no Studio sign-in, but saw Home's Today card (*Your sessions show here once your Coach account is linked…*, for good), the Messages tab and Home card (which only said clients read messages in Trainability), and Studio in the apps panel (the live trainabilitystudio.com, where they have no account). For a Coach account now: no Today card and no Messages card on Home (`HomeTab.jsx`); no Messages tab in the bar (`tabsFor`, `Shell.jsx`), nor a stored one reopened, and the red number isn't asked for; and only Coach in the apps panel (`Header.jsx`). All come back once the account is linked, when it is a Trainability account. MANUAL 3.2, 3.4 and 7 say so. Tested on a copy, each in its own browser: Casey (a Coach account) had Home, Clients and Programs in the bar, no Today or Messages on Home, and only Coach in the apps panel; Glenn had all four tabs and Coach and Studio.
 - **U-9 and I-8, a client's page had no programs** (fixed 19 Oct 2026; Glenn, offered a fifth tab, a section on Details, or neither: "Fifth tab: Programs (Recommended)"). Build 1.0.124. A client's page (`ClientsTab.jsx`) has a fifth tab, **Programs** (the same word on a phone), drawn by a new `src/clients/ClientPrograms.jsx`: the trainer's programs for them (put-away ones stay on the Programs page), each opening in the designer through the Shell's `openProgram`, the way Today's sessions do; and **New program for Avery** (not for an archived client), which opens Programs with the new-program steps started (`coach-new-program`, read once by `ProgramsTab.jsx`) and, after the kind, the client chosen and the name *Avery's program* filled in, as choosing them by hand does. MANUAL 4.3 lists the tab (and now says Archive is the box button, D-7). Tested on a copy, iPhone 13, Avery: five tabs and no sideways scroll; Programs listed Next block and Foundations; New program for Avery, then a kind and Next, showed Avery Stone chosen and *Avery's program*; tapping Next block opened it in the designer.
 - **U-8, sending a program took six taps and wasn't checked first** (fixed 19 Oct 2026; Glenn, offered a send button with a check, the button alone, or neither: "Send button + check (Recommended)"). Build 1.0.123. A program's page (`Designer.jsx`) has **Send to Avery** beside Print for the client. It opens the client's conversation in Messages with the program waiting in the composer: the Shell (`sendProgram`) keeps the client and the program for the tab (`coach-thread`, `coach-attach-program`) and opens Messages afresh, and the composer (`MessagesTab.jsx`) attaches it once, if it is that client's, the way the paperclip's Program does. Before that it asks when there is something to see to (`sendIssues`): days with no exercises and Coach IQ's stop points, in a `ConfirmDialog` with the primary button (a new `danger={false}`, `src/chrome/ConfirmDialog.jsx`): *Send “Next block” as it is? Day B has no exercises.*, **Not yet** and **Send it**. Not offered for a frozen program (B-2), a client kept only in Coach (ids `cli…`, whom messages can't reach yet), or a Coach account (no messages). MANUAL 5.5 says so. Tested on a copy, iPhone 13, Next block (its Day B empty): the question showed in those words; Send it opened Avery's conversation with *Next block, Program* in the composer (taken off again after).
 - **B-6, linking a Coach account doubled "Where I usually train"** (fixed 19 Oct 2026; Glenn, offered merging, renaming or asking: "Ask at linking"). Build 1.0.122. Every account starts with a place called *Where I usually train*, and linking moved the Coach account's places across as they were, so the trainer could have two (tester B's Tess had three), each with its own answers and indistinguishable in a program's Where they train. Now `accounts.link` (server/accounts.js) notes each of the Coach account's own places (not one of Studio's) whose name, ignoring case, is one the Trainability account already has, and returns the pairs; both linking routes (sign-in with the same email, and Link your Trainability account) send them back with each place's number of equipment answers (`placesToAsk`, server/index.js). The page keeps them for the tab (`cx-same-places`, from `useAuth.js` and `LinkDialog.jsx`) and Home asks about each in turn (`src/chrome/SamePlaces.jsx`): *Two places called “Where I usually train”*, *Your Coach account had one (1 answer about its equipment) and your Trainability account had one (2 answers). What should happen to them?*, with **Merge them into one**, **Keep both (the Coach one as “Where I usually train (Coach)”)** and **Keep only the Trainability one**. A new POST /api/places/same runs `equipment.settleSame`: merge moves the Coach place's answers the other hasn't got and puts it away; both renames it; theirs puts it away; either way its programs use the one kept. Places are put away, never deleted, as everywhere. MANUAL 2.1 says so. Tested on a copy: a new Coach account linked to Tess returned the pair; merging kept Tess's *dumbbells: yes*, added the Coach place's *barbells: no*, and put the Coach place away; on an iPhone 13 the question showed on Home in those words and Keep both renamed the other to *Where I usually train (Coach)* and didn't ask again; keeping only one left one; asking again after was 404.
@@ -756,6 +757,9 @@ To close the panel without going anywhere, tap the logo again, tap anywhere
 else on the screen, or press Esc on a keyboard. On a computer it also folds
 back up by itself when you move the mouse away from the logo and the panel.
 
+With a Coach account (2.1) the panel lists only Coach, since you have no Studio
+sign-in; Studio is there once your account is linked (3.5).
+
 #### 3.3 The bar at the bottom
 
 The rounded bar floating at the bottom of the screen moves you between the
@@ -835,8 +839,9 @@ the next one is, such as *Next: Tue, Oct 20 at 10:00 AM with Sam.* With
 nothing in the next week it says **Nothing booked in the next 7 days.**
 
 Signed in with a Coach account (2.1), you have no schedule in Trainability,
-so Today says *Your sessions show here once your Coach account is linked to
-your Trainability account.* (3.5).
+so Home has no Today card, and no Messages card or tab either (7). Both
+appear once your Coach account is linked to your Trainability account
+(3.5).
 
 #### 3.5 Your account menu
 
@@ -2131,10 +2136,9 @@ their messages. The email doesn't contain the message itself. However many
 messages you send in a few minutes, they get one email.
 
 Messages can only be sent to clients kept in Trainability. With a Coach
-account (2.1), your clients are kept in Coach, so Messages says *Your clients
-read messages on Trainability's client page. Once your Coach account is
-linked to your Trainability account and your clients are moved there, you
-can write to them here.*
+account (2.1), your clients are kept in Coach, so there is no Messages tab;
+it appears once your Coach account is linked to your Trainability account
+and you can write to clients moved there.
 
 <div style="page-break-after: always;"></div>
 

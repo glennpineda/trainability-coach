@@ -347,6 +347,9 @@ To close the panel without going anywhere, tap the logo again, tap anywhere
 else on the screen, or press Esc on a keyboard. On a computer it also folds
 back up by itself when you move the mouse away from the logo and the panel.
 
+With a Coach account (2.1) the panel lists only Coach, since you have no Studio
+sign-in; Studio is there once your account is linked (3.5).
+
 ### 3.3 The bar at the bottom
 
 The rounded bar floating at the bottom of the screen moves you between the
@@ -426,8 +429,9 @@ the next one is, such as *Next: Tue, Oct 20 at 10:00 AM with Sam.* With
 nothing in the next week it says **Nothing booked in the next 7 days.**
 
 Signed in with a Coach account (2.1), you have no schedule in Trainability,
-so Today says *Your sessions show here once your Coach account is linked to
-your Trainability account.* (3.5).
+so Home has no Today card, and no Messages card or tab either (7). Both
+appear once your Coach account is linked to your Trainability account
+(3.5).
 
 ### 3.5 Your account menu
 
@@ -1722,10 +1726,9 @@ their messages. The email doesn't contain the message itself. However many
 messages you send in a few minutes, they get one email.
 
 Messages can only be sent to clients kept in Trainability. With a Coach
-account (2.1), your clients are kept in Coach, so Messages says *Your clients
-read messages on Trainability's client page. Once your Coach account is
-linked to your Trainability account and your clients are moved there, you
-can write to them here.*
+account (2.1), your clients are kept in Coach, so there is no Messages tab;
+it appears once your Coach account is linked to your Trainability account
+and you can write to clients moved there.
 
 <div style="page-break-after: always;"></div>
 
