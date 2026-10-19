@@ -44,7 +44,8 @@ of the app gets its own chapter here as it arrives.
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
    - [4.8 A client's measurements](#48-a-clients-measurements)
-   - [4.9 A client's fitness tests](#49-a-clients-fitness-tests)
+   - [4.9 A client's progress photos](#49-a-clients-progress-photos)
+   - [4.10 A client's fitness tests](#410-a-clients-fitness-tests)
 5. [Designing programs](#5-designing-programs)
    - [5.1 Starting a program](#51-starting-a-program)
    - [5.2 Adding exercises](#52-adding-exercises)
@@ -994,7 +995,75 @@ them.
 
 To send a set to the client, attach it to a message (7.3).
 
-### 4.9 A client's fitness tests
+### 4.9 A client's progress photos
+
+Under **Measurements**, a client's details show their **Progress photos**:
+the front, the left side, the right side and the back, one set for each day
+they were taken. Coach guides each photo so that one day's can be put beside
+the next.
+
+**Their agreement first.** Before the first photos, ask the client if they
+agree. The section says *Before taking any, ask … if they agree. The photos
+are kept in Coach, and every trainer of … can see them.* Tick **… agrees to
+progress photos being taken and kept.** and tap **Save their agreement**.
+This is done once, by any of their trainers; the section then says who
+recorded it and when, such as *Avery agreed · recorded by you on Oct 19,
+2026*.
+
+**Taking a set:**
+
+1. Open the client (4.3) and tap **Take progress photos**. The screen turns
+   dark and fills the whole phone.
+2. A short list says how to take them the same way every time: the same spot
+   with a plain wall behind and even light, the camera about 3 m (10 ft)
+   away at hip height, the same fitted clothes, standing tall with arms a
+   little away from the sides, and the same time of day. Tap **Start**. On
+   an iPhone, it may ask to use the phone's motion; allow it for the level.
+3. The camera opens for the **Front** (*Front · 1 of 4*, *Facing the
+   camera*). Over the camera are:
+   - two dashed lines, **Top of the head** and **Feet**: stand back until
+     the client fits between them, and a figure to stand them in;
+   - from the second set on, last time's front photo, faint: line the
+     client up with it. Tap **Last time** to hide it or show it again;
+   - on a phone, a level at the top: it says what to do, such as *Tilt the
+     top of the phone toward you*, until it says **Level**.
+4. Tap the round camera button. To take it from a distance, tap **10 s
+   timer** first, and the photo is taken after a count from 10. **Switch
+   camera** changes between the back and the front camera, and **Choose a
+   photo** uses one already on the phone.
+5. Look at the photo. Tap **Use it, next**, or **Take it again**.
+6. The same for the **Left side**, the **Right side** and the **Back**. Tap
+   **Skip** to leave one out, or **Back** to go to the one before.
+7. All four are shown together (**Look them over**). Tap **Take again** on
+   any of them. Check **Day taken**, add a **Note** if you like, and tap
+   **Save**.
+
+If Coach can't use the camera, it says *Coach couldn't use the camera here.
+Choose a photo instead.* Photos are kept upright, 3 by 4, and not mirrored.
+
+**Reading them.** The newest set comes first, headed **Latest:** and its
+date, with who took it. Tap a photo to open it full size. Tap **Earlier
+photos** to see the older sets.
+
+**Comparing two days.** Tap **Compare two days**. Choose the **Earlier** and
+the **Later** day; they start as the first and the latest. Tap an angle
+(**Front**, **Left side**, **Right side** or **Back**), then **Side by side**
+to see them next to each other, or **Slider** to see one over the other and
+slide between them.
+
+**Deleting.** Only the trainer who took a set can delete it (the bin): *Delete
+these photos? Its trainers will no longer see them.*; tap **Delete**, or
+**Keep them**.
+
+**If the client stops agreeing**, tap **… no longer agrees** under the
+section. It asks *Delete all of …'s progress photos, taken by any of their
+trainers? Photos already sent in a message stay there.* Tap **Delete them
+all**, or **Keep them**. To take photos again later, record their agreement
+again.
+
+To send photos to the client, attach them to a message (7.3).
+
+### 4.10 A client's fitness tests
 
 Under **Measurements**, a client's details show their **Fitness tests**, in
 two groups: **Heart and lungs** and **Strength**. Every trainer of the client
@@ -1396,7 +1465,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 Messages is where you and your clients write to each other. Besides words, a
 message can carry pictures, videos, the programs you design for them,
-their measurements (4.8) and their fitness test results (4.9).
+their measurements (4.8), their progress photos (4.9) and their fitness
+test results (4.10).
 
 ### 7.1 Your messages
 
@@ -1450,12 +1520,17 @@ so a reply appears without you doing anything.
    - **Fitness test**: this client's results are listed (**…'s fitness
      tests**), newest first. Tap one. If there are none it says *No fitness
      tests for … yet. Add them on the Clients page.*
+   - **Progress photos**: this client's sets are listed by date (**…'s
+     progress photos**). Tap one. With more than one, it then asks *Compare
+     … with…*: tap **Just this day** to send it on its own, or another day
+     to send the two side by side. If there are none it says *No progress
+     photos of … yet. Take them on the Clients page.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
 To take one off before sending, tap the **X** beside it.
 
-A program, a set of measurements or a test result is sent as it is at that moment. If you change it afterwards, the
+A program, a set of measurements, a test result or progress photos are sent as they are at that moment. If you change it afterwards, the
 copy in the message stays as it was, so your client always has what you
 sent. Tap a program in a conversation to open it laid out like the printed
 program (5.6), in its own tab, ready to print.
@@ -1464,6 +1539,11 @@ Tap a set of measurements to open it as a page of its own, ready to print:
 each measurement, and how it changed since the set before. A fitness test
 result opens the same way: the result, its rating, how it changed since the
 same test before, and how the test is done.
+
+Progress photos open the same way. One day shows its four photos; two days
+show the comparison (**Side by side** or **Slider**, as in 4.9), and under it
+**Every angle**, each angle's two photos next to each other, which is what
+prints.
 
 Tap a picture to open it full size in its own tab. A video plays where it is.
 
@@ -1506,10 +1586,11 @@ can write to them here.*
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
-| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.9). |
-| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.9). |
-| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.9). |
-| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
+| **Progress photos** | Photos of a client from the front, both sides and the back, taken the same way each time to see change; kept only once the client has agreed (4.9). |
+| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.10). |
+| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.10). |
+| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.10). |
+| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.10). |
 | **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |

@@ -411,6 +411,28 @@ const SCHEMA = [
     created_at VARCHAR(32) NOT NULL,
     updated_at VARCHAR(32) NOT NULL
   )`,
+  /* A client's progress photos (server/progress-photos.js; Glenn, 19 Oct
+     2026): one row per day's set, its pictures files in the files folder
+     (progress/<id>-<angle>.jpg), `angles` the ones taken. */
+  `CREATE TABLE IF NOT EXISTS coach_progress_photos (
+    id VARCHAR(40) PRIMARY KEY,
+    client_id VARCHAR(64) NOT NULL,
+    trainer_id VARCHAR(64) NOT NULL,
+    trainer_name VARCHAR(120) NOT NULL DEFAULT '',
+    taken_on VARCHAR(10) NOT NULL,
+    angles VARCHAR(64) NOT NULL DEFAULT '',
+    note VARCHAR(1000) NOT NULL DEFAULT '',
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
+  /* That a client agreed to progress photos being kept ("Trainers, with a
+     client opt-in"), recorded once by one of their trainers. */
+  `CREATE TABLE IF NOT EXISTS coach_photo_consent (
+    client_id VARCHAR(64) PRIMARY KEY,
+    trainer_id VARCHAR(64) NOT NULL,
+    trainer_name VARCHAR(120) NOT NULL DEFAULT '',
+    agreed_at VARCHAR(32) NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS coach_conversations (
     id VARCHAR(40) PRIMARY KEY,
     trainer_id VARCHAR(64) NOT NULL,

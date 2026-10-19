@@ -182,6 +182,32 @@ export async function testAttachment(owner, { test, previous, clientName, units 
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
+/* A progress photo copied onto an attachment: `<att>.<set n>.<angle>.jpg`. */
+const PHOTO_ANGLES = ["front", "left", "right", "back"];
+export const attachmentPhotoPath = (id, n, angle) => {
+  if (!ATT.test(String(id)) || !/^[01]$/.test(String(n)) || !PHOTO_ANGLES.includes(angle)) throw new Error("Bad attachment photo");
+  return path.join(dir(), `${id}.${n}.${angle}.jpg`);
+};
+
+/**
+ * Progress photos kept as a copy, waiting to be sent: one set, or two to
+ * compare (the earlier first). The pictures are copied, so deleting the set
+ * later doesn't take them from the message. `sets`: [{ row, files: { angle:
+ * path } }].
+ */
+export async function photosAttachment(owner, { sets, clientName }) {
+  const data = { clientName, sets: sets.map(({ row, files }) => ({ setId: row.id, takenOn: row.taken_on, takenBy: row.trainer_name, angles: Object.keys(files) })) };
+  const id = await insertWithNewId("attachment", (newId) => run(
+    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, 'photos', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, `Progress photos, ${sets.map(s => s.row.taken_on).join(" and ")}`, JSON.stringify(data), now()]));
+  await fs.mkdir(dir(), { recursive: true });
+  for (const [n, { files }] of sets.entries()) {
+    for (const [angle, from] of Object.entries(files)) await fs.copyFile(from, attachmentPhotoPath(id, n, angle));
+  }
+  return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
+}
+
 function shapeAttachment(r, { full = false } = {}) {
   const out = { id: r.id, kind: r.kind, name: r.name, mime: r.mime, bytes: Number(r.bytes) || 0,
     width: r.width == null ? null : Number(r.width), height: r.height == null ? null : Number(r.height) };
@@ -193,6 +219,11 @@ function shapeAttachment(r, { full = false } = {}) {
   /* Small enough to come whole every time. */
   if (r.kind === "measurements") out.measurements = parse(r.data);
   if (r.kind === "test") out.test = parse(r.data);
+  /* Each picture's address: the trainer's; the client's are signed (index.js). */
+  if (r.kind === "photos") {
+    const d = parse(r.data);
+    out.photos = { ...d, sets: (d.sets || []).map((x, n) => ({ ...x, photos: Object.fromEntries((x.angles || []).map(a => [a, `/api/attachments/${r.id}/photo/${n}/${a}`])) })) };
+  }
   return out;
 }
 const parse = (s) => { try { return JSON.parse(s || "{}"); } catch { return {}; } };

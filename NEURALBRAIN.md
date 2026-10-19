@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Progress photos, guided** (19 Oct 2026; Glenn: "Part of the measurements, let's add \"progress photos\" as well. Pictures from front, sides and back side. Is there a way we can help guide to create similar pictures?"). Build 1.0.70. Not from Next up. **Glenn's decisions** (one at a time): the guidance, all four offered ("Ghost of last photo, Outline and level, Checklist and steps, Compare afterwards"); who sees them, "Trainers, with a client opt-in" (every trainer of the client, once one of them has recorded the client's agreement); the id tag, "pph"; Messages, "Yes, compare view" (one day, or two compared, sent as a copy). **Copied from Studio**: its in-page camera (`public/JoinPage.jsx`, `PhotoPart`, and the kiosk's `Register.jsx`): getUserMedia drawn in the page, a picture chosen instead where there is no camera, `createImageBitmap(..., { imageOrientation: \"from-image\" })` for a chosen one. Differences: the back camera first (a trainer holds the phone), a switch to the front one, never mirrored (left stays left in every photo), and 3:4 upright (1200 by 1600 JPEG at 0.82) rather than Studio's square. Studio has no progress photos. **The guidance** (`src/clients/PhotoSession.jsx`): a checklist (`CHECKLIST` in `src/lib/progress-photos.js`: same spot, plain wall and even light, about 3 m / 10 ft at hip height, same fitted clothes, standing tall with arms a little out, same time of day), then Front, Left side, Right side, Back (`ANGLES`), each with: last set's photo of that angle at 35% over the live view (**Last time**, on by default, to toggle); dashed lines for the top of the head and the feet, with a figure facing or side on (an SVG in the photo's own 300 by 400); a level from `deviceorientation` (beta 90 and gamma 0 upright, 4 degrees either way; it says which way to tilt, \"Level\" when right; iOS asks permission, so Start requests it on the tap; nothing shows on a computer); a 10-second count; Take it again or Use it, next; Skip; Back; then all four together to retake any, the day and a note, Save. The photo is cropped from the middle of the camera's frame exactly as the view shows it (object-fit cover in a 3:4 box), so the ghost and the new photo line up. **What turned out differently**: the camera screen first opened inside the page and Coach's own top and bottom bars covered its title and shutter: the page's main area is its own layer (`z-[1]` in Shell.jsx), so a fixed child can't rise above the bars; it is now in a portal on the body at z-index 60. The review's Take again was first an underlined button, which check-ui refused (links are accent words after an icon); it is a small outlined button. The compare panel's date pickers were cut off side by side on a phone; they stack there now. **Server** (`server/progress-photos.js`, new): table `coach_progress_photos` (id pph, client, trainer and name, day, the angles taken, note) and `coach_photo_consent` (one row per client: who recorded it and when); the pictures are files, `progress/<id>-<angle>.jpg` in the files folder, never in the database. A set is sent as JPEG data URIs in one request (its own JSON limit, 18 MB, for that one route), each checked to be a JPEG (data URI, FF D8 FF) of at most 3 MB; at least one angle; a day not still to come; no agreement, refused (\"Record that they agreed to progress photos first.\"). Pictures are shown through links signed for an hour or two (HMAC on the client link's secret, or a key made at start), rounded to the hour so the browser's cached copy is used, handed out only with the list, which only the client's trainers get: so each picture isn't another question to Studio about the client's trainers. Only the trainer who took a set may delete it (\"not_yours\"). \"… no longer agrees\", open to any of their trainers, deletes every set (files too) and the agreement; copies already sent in messages stay. A Coach account's client moved to Studio, and a linked Coach account, re-key both tables. **Messages** (`server/messages.js` `photosAttachment`, kind `photos`): one set or two (earlier first), the pictures copied into `messages/<att>.<n>.<angle>.jpg`; the trainer reads them at `/api/attachments/<att>/photo/<n>/<angle>`, the client link hands out signed `/api/attachment-photo/<att>.<n>.<angle>` links. The paperclip's **Progress photos** lists the days; with more than one, *Compare … with…* offers **Just this day** or another day. The card shows a front photo of each day; it opens `PrintPhotos` (`src/clients/PrintPhotos.jsx`): one day's four, or the comparison with **Every angle** below, side by side, which is what prints. **Page**: `src/clients/ProgressPhotos.jsx` (the section under Measurements: the agreement, the latest set's four thumbnails, Earlier photos, Compare two days with Earlier and Later pickers, Take progress photos, … no longer agrees), `src/clients/PhotoCompare.jsx` (angle chips, Side by side or Slider, the earlier on the left). MANUAL: new 4.9, Fitness tests renumbered 4.10 (contents, chapter 7's intro and Words updated), 7.3's Progress photos, Words; CHANGELOG. **Checked** in Chromium at phone width with a fake camera playing a drawn figure (`--use-file-for-fake-video-capture`), two sets: the agreement box, the checklist, the front with the level saying \"Tilt the top of the phone toward you\" (a dispatched deviceorientation of beta 81), the second set with the first set's wider figure faint behind the slimmer one, the review, the section, Compare side by side and with the slider, the paperclip's compare step, the message card and the sent page (10 of 10 pictures loaded); no page errors. At the API: no agreement refused; a non-JPEG and an empty set refused; a future day refused; the signed link loads with no session, a changed signature or another angle with the same signature doesn't; another trainer (Tess) sees the set but can't delete it; withdrawing deleted Sam's two files and kept the eight copied into messages; the client link's signed link to a sent photo loads. **Untested**: a real phone's camera, its level and iOS's motion permission (a fake camera and a dispatched event only); the shutter's timing on a slow phone; Studio's /me showing sent photos (not built).
 - **Client photos from Studio, and the trainer's own** (19 Oct 2026; Glenn: "Are we able to sync profile pictures of clients from studio?", then "Yes"). Build 1.0.69. Not from Next up. **What Studio already had** (read in its code, no change to Studio): its `/api/clients` gives each client `photoUrl: photoLink("client", id, photo_url)` (`server/people.js`), a link `/api/photos/client/<id>?v=<hash of the picture>` (`server/photos.js`); its `GET /api/photos/:kind/:id` (`server/index.js`) answers only a signed-in session, a client's face only to someone who may see the client (`canEditClient`, or front-desk staff for a member) and as a 404 to anyone else, and caches "private, max-age=31536000, immutable" with an ETag, since a new picture comes with a new link. Its `/auth/me` gives the trainer's own `photoUrl` the same way. **Why it didn't show**: those links are relative to Studio, so in Coach they asked Coach's own `/api/photos/…`, which the relay refused (not in `RELAYED`) with a JSON 404; the account menu's `Avatar` then fell back to initials. So the trainer's own photo had never shown in Coach either. **How**: a route at the same address in Coach (`app.get("/api/photos/:kind/:id")`, before the relay) fetches the picture from Studio with the trainer's Studio session cookie, passing If-None-Match and the ?v=, and sends it with Studio's caching (304 passed through; anything not an image, any refusal or failure answered as a plain 404, so a missing picture falls back to initials). Only kinds trainer and client and ids of letters, digits, _ and - are asked for; with no Studio session (a Coach account) it answers 404 without asking. Who may see whose face is left to Studio's own rule rather than checked again in Coach, which would cost a client-list call per picture. `studioShape` now keeps `photoUrl`; `/api/messages` adds each conversation's client's `photoUrl`, and `/api/messages/:client` the client's. On screen, `src/clients/Face.jsx` (new) shows the photo round at the disc's size, lazily loaded, and the screen's own initials disc when there is none or it fails: the Clients list (`ClientsTab.jsx`), and in Messages the conversations list, the New message list and the conversation's header (`MessagesTab.jsx`, `Initials`). Today's rows have no initials or faces, so none were added there. Coach accounts' clients (kept in Coach) have no photos and keep their initials. MANUAL 3.1 (the corner), 4.2 (each client's line: their photo, or initials; photos are changed in Studio), 7.1; CHANGELOG. **Checked** against the session's stand-in Studio, given portraits for Avery, Sam and the trainer and none for Jordan: the photo route 200 image/png with the immutable caching, 304 on If-None-Match, 404 for no photo, signed out, a kind not trainer or client and an id with ../ in it; the client list and conversations carrying the links; in Chromium at phone width, the faces on the Clients list (Jordan's initials kept), the account menu's corner, Messages' list, New message and the conversation header; no page errors. **Untested**: against the real Studio (its permission check on a client's photo was read, not run); a trainer seeing a colleague's client's photo is refused by Studio, not by Coach.
 - **Progress charts for measurements and fitness tests** (18 Oct 2026; Glenn, asked "What's next?", chose "Go with 2" from: Studio's client inbox, progress charts, 1RM in programs, Billy reading the numbers, a first test run). Build 1.0.68 (first committed as 1.0.67; renumbered when merged with the 1.0.67 build bump made on Glenn's Mac, so the two don't share a number). Not from Next up (it was empty). **Copied from Studio**: its Events card's chart (`src/components/EventsChart.jsx` in Studio, on the Business tab): drawn as SVG polylines and gridlines rather than with a chart library (its own comment: a library for a line chart is a large dependency that brings its own palette), ticks on numbers people count in, the read-out line above the chart that opens on the latest point, and a real button over each point (keyboard focus, a screen reader's label, pressable on a phone) rather than hover. **Differences from Studio's**: the days are spaced by time, not evenly, since sets are taken weeks apart; the gridlines sit around the values, not from zero (`niceRange`: about four steps of 1, 2, 2.5 or 5 × a power of ten), or a weight would be a flat line; each point's button reaches halfway to its neighbours; the axis names only the first and last days and the one being read. **Colour** (the dataviz checklist): one line in `--accent` (Cerulean in light, Sky in dark); the palette validator passes its contrast on both surfaces (its dark lightness-band FAIL is a check for categorical sets of hues and doesn't apply to one line). A second line (blood pressure's bottom number) is dashed with hollow points and both are named at their ends, so colour never tells them apart; no legend needed for one line, the chip names it. Up and down are drawn without good or bad. **Where**: `src/clients/Trend.jsx` (new; `Trend`, `niceRange`; `.cx-chart-hit` in `src/index.css` shows focus), kept no wider than 520 px, since drawn to scale a desktop-wide chart only made its lettering huge (seen in the first desktop screenshot). Measurements (`src/clients/Measurements.jsx`): **Show progress** / **Hide progress** beside Earlier measurements whenever there is more than one set, opening chips of the measurements taken on two days or more (Weight first, in the sets' order, Waist to hip after Hips, Blood pressure last as one chart of both numbers) and the chart; with none on two days, "A chart needs measurements taken on two days or more." Several sets on one day are merged, the later one winning for what it has and the earlier keeping what the later left empty (my first version let a later set's empty fields wipe the earlier's). Fitness tests (`src/clients/FitnessTests.jsx`, `TestTrend`): opening Earlier results shows the chart of that series above them, in the trainer's units, a hold in minutes and seconds, RSI to two places. MANUAL 4.8 (Seeing progress) and 4.9, CHANGELOG. **Checked** in Chromium at phone width, in dark mode and on a desktop, with history added for Avery (weight Jul 20 to Oct 18, blood pressure, squat 1RM, plank): the weight chart reading "Oct 18, 2026: 183.2 lb", tapping the first blood pressure point reading "Jul 20, 2026: Top 128 mmHg · Bottom 84 mmHg", waist to hip, the squat 1RM and the plank (ticks 0:40 to 2:00); no page errors. **Untested**: sign-in against Studio's fixture (cloud session); a screen reader reading the point buttons (their labels were set, not heard).
 - **Strength tests: 1RM, jumps, holds and velocity loss** (18 Oct 2026; Glenn: "After this, let's add strength tests, here's the website printed."). Build 1.0.66. Not from Next up; straight after build 1.0.65. **The source**: Glenn printed GymAware's "Muscular strength tests to track fitness progress" by Loek Vossen (gymaware.com, 30 pages). It lists fifteen tests (1RM, muscular endurance, Dynamic Strength Index, Reactive Strength Index, drop jump, vertical jump, countermovement jump, rate of force development, power, bar speed, force- and load-velocity profiling, muscular profiling, bar path, muscle recovery), gives **no ratings tables** for any of them, and most need a bar-speed sensor (GymAware RS or FLEX: the article is theirs). Studio has no strength tests to copy (searched for 1RM, one-rep, strength test, vertical jump). **Glenn's decisions** (asked one at a time): which tests, "1RM, Jumps, Muscular endurance" (not the sensor-only power, bar speed, DSI and recovery tests); the 1RM from a lighter set, "Brzycki, up to 10 reps" (1RM = weight × 36 ÷ (37 − reps); the article's own way is two bar speeds on a load-velocity line, which needs a sensor); where, "One section, two groups": the Fitness tests section with **Heart and lungs** and **Strength** headings, in the same table `coach_fitness_tests` (no new id tag; `kind` is VARCHAR(16), `data` JSON). Muscular endurance was offered as wall sit or plank holds, plus velocity loss with a sensor (the article's own way), so both were built. **The tests** (`src/lib/fitness-tests.js`): `onerm` (an exercise from Coach IQ's library, `method` tested or estimated, the weight, the reps 1–10, an optional body weight shown as "1.38 × body weight"; result in kg to two places), `jump` (style Hands on hips or Arm swing, height, optional tool Wall reach, Jump mat, Phone app, Sensor), `rsi` (height, ground contact 80–1500 ms, optional box; RSI = height m ÷ contact s, to two places), `hold` (Wall sit, Plank, Side plank left or right; 5 s to 60 min; "1:30" or bare seconds "45"), `vloss` (exercise, % of 1RM 20–100, reps 2–30, loss 0–100%, optional weight). Weights and heights are typed in the trainer's units and kept in metric through `fromShown`, as measurements are (new measure-like objects `LIFT` 1–500 kg, `HEIGHT` 2–150 cm, `BOX` 10–120 cm). The how-to texts paraphrase the article; the hold's and jump's tips are Coach's own (compare like with like). The strength forms' reminder is the article's bar-path point ("Only good form counts…") rather than Verywell's overtraining line. **Compared like with like**: `seriesOf(t)` (kind plus exercise, jump style or hold) decides which results are compared and grouped, so a bench press 1RM is never compared with a squat's; `titleOf` names them ("1RM · Barbell back squat", "Hold · Plank", "Vertical jump · Hands on hips"). `describe(t, units)` and `changeOf(t, before, units)` now take the trainer's units ("+15 lb", "+1.25 in", "+0:27"; velocity loss in points). The section lists one block per series in the groups' order with a heading where the group changes; the Which test? list is grouped too. **Files**: `src/lib/fitness-tests.js` (TESTS gains five kinds; TEST_GROUPS, NEEDS_WHO (step and rockport only), JUMP_STYLES, JUMP_TOOLS, HOLDS, MAX_REPS, LIFT, HEIGHT, BOX, brzycki, rsiOf, seriesOf, titleOf), `server/fitness-tests.js` (`strength()` checks and works out each, the exercise looked up by id in the library with its name kept), `server/index.js` (the attachment's previous result is the same series; the trainer's units are kept on the copy), `server/messages.js` (units on the copy), `src/clients/FitnessTests.jsx` (the forms: the library search reused from My exercises, `LibraryPicker` now exported from `src/tabs/ExercisesTab.jsx`, with Change; a live "1RM about 192.4 lb" as the set is typed; body weight filled from the latest measurements), `src/clients/PrintTest.jsx` (titled by `titleOf`, units from the copy, Details only where there are some), `src/tabs/MessagesTab.jsx` (names and cards by `titleOf`, units). MANUAL 4.9 (the two groups, each strength test, the steps, the 10-rep message), Words (1RM, RSI, Fitness test), CHANGELOG. **Checked** at the API on the stand-in Studio: Brzycki 225 lb × 5 → 253.1 lb (114.82 kg), 155 × 8 → 192.4; 12 reps refused with its message; an exercise not in the library, a weight of 5000, a jump with no style, 20 ms on the ground, a hold of "abc" and a velocity loss of 180 all refused; RSI 12 in in 240 ms → 1.27; a plank of "75" kept as 1:15. In Chromium at phone width and on a desktop: the section with both headings and changes ("+15 lb since Sep 20, 2026", "+0:27"), the grouped Which test? list, the 1RM form with the exercise picked, body weight 183.2 filled in and the live estimate, the hold and drop jump forms, the attach menu, the message card "1RM · Barbell back squat" and the printed sheet; no page errors. **What turned out differently**: my first screenshot script clicked the picker's X instead of an exercise (the clients list is itself a list, so "li button" matched outside the picker), which looked like the form closing on a pick; a test-script fault, not the app's. **Untested**: sign-in against Studio's fixture (cloud session); another trainer's strength result (the same not_yours path as the heart and lungs tests, which was checked); Billy doesn't read tests; no chart over time; no strength ratings, since the article has none.
@@ -277,7 +278,8 @@ of the app gets its own chapter here as it arrives.
    - [4.6 Adding or changing a client](#46-adding-or-changing-a-client)
    - [4.7 A client's limitations](#47-a-clients-limitations)
    - [4.8 A client's measurements](#48-a-clients-measurements)
-   - [4.9 A client's fitness tests](#49-a-clients-fitness-tests)
+   - [4.9 A client's progress photos](#49-a-clients-progress-photos)
+   - [4.10 A client's fitness tests](#410-a-clients-fitness-tests)
 5. [Designing programs](#5-designing-programs)
    - [5.1 Starting a program](#51-starting-a-program)
    - [5.2 Adding exercises](#52-adding-exercises)
@@ -1227,7 +1229,75 @@ them.
 
 To send a set to the client, attach it to a message (7.3).
 
-#### 4.9 A client's fitness tests
+#### 4.9 A client's progress photos
+
+Under **Measurements**, a client's details show their **Progress photos**:
+the front, the left side, the right side and the back, one set for each day
+they were taken. Coach guides each photo so that one day's can be put beside
+the next.
+
+**Their agreement first.** Before the first photos, ask the client if they
+agree. The section says *Before taking any, ask … if they agree. The photos
+are kept in Coach, and every trainer of … can see them.* Tick **… agrees to
+progress photos being taken and kept.** and tap **Save their agreement**.
+This is done once, by any of their trainers; the section then says who
+recorded it and when, such as *Avery agreed · recorded by you on Oct 19,
+2026*.
+
+**Taking a set:**
+
+1. Open the client (4.3) and tap **Take progress photos**. The screen turns
+   dark and fills the whole phone.
+2. A short list says how to take them the same way every time: the same spot
+   with a plain wall behind and even light, the camera about 3 m (10 ft)
+   away at hip height, the same fitted clothes, standing tall with arms a
+   little away from the sides, and the same time of day. Tap **Start**. On
+   an iPhone, it may ask to use the phone's motion; allow it for the level.
+3. The camera opens for the **Front** (*Front · 1 of 4*, *Facing the
+   camera*). Over the camera are:
+   - two dashed lines, **Top of the head** and **Feet**: stand back until
+     the client fits between them, and a figure to stand them in;
+   - from the second set on, last time's front photo, faint: line the
+     client up with it. Tap **Last time** to hide it or show it again;
+   - on a phone, a level at the top: it says what to do, such as *Tilt the
+     top of the phone toward you*, until it says **Level**.
+4. Tap the round camera button. To take it from a distance, tap **10 s
+   timer** first, and the photo is taken after a count from 10. **Switch
+   camera** changes between the back and the front camera, and **Choose a
+   photo** uses one already on the phone.
+5. Look at the photo. Tap **Use it, next**, or **Take it again**.
+6. The same for the **Left side**, the **Right side** and the **Back**. Tap
+   **Skip** to leave one out, or **Back** to go to the one before.
+7. All four are shown together (**Look them over**). Tap **Take again** on
+   any of them. Check **Day taken**, add a **Note** if you like, and tap
+   **Save**.
+
+If Coach can't use the camera, it says *Coach couldn't use the camera here.
+Choose a photo instead.* Photos are kept upright, 3 by 4, and not mirrored.
+
+**Reading them.** The newest set comes first, headed **Latest:** and its
+date, with who took it. Tap a photo to open it full size. Tap **Earlier
+photos** to see the older sets.
+
+**Comparing two days.** Tap **Compare two days**. Choose the **Earlier** and
+the **Later** day; they start as the first and the latest. Tap an angle
+(**Front**, **Left side**, **Right side** or **Back**), then **Side by side**
+to see them next to each other, or **Slider** to see one over the other and
+slide between them.
+
+**Deleting.** Only the trainer who took a set can delete it (the bin): *Delete
+these photos? Its trainers will no longer see them.*; tap **Delete**, or
+**Keep them**.
+
+**If the client stops agreeing**, tap **… no longer agrees** under the
+section. It asks *Delete all of …'s progress photos, taken by any of their
+trainers? Photos already sent in a message stay there.* Tap **Delete them
+all**, or **Keep them**. To take photos again later, record their agreement
+again.
+
+To send photos to the client, attach them to a message (7.3).
+
+#### 4.10 A client's fitness tests
 
 Under **Measurements**, a client's details show their **Fitness tests**, in
 two groups: **Heart and lungs** and **Strength**. Every trainer of the client
@@ -1629,7 +1699,8 @@ page clears it too: Coach does not keep your conversations with Billy.
 
 Messages is where you and your clients write to each other. Besides words, a
 message can carry pictures, videos, the programs you design for them,
-their measurements (4.8) and their fitness test results (4.9).
+their measurements (4.8), their progress photos (4.9) and their fitness
+test results (4.10).
 
 #### 7.1 Your messages
 
@@ -1683,12 +1754,17 @@ so a reply appears without you doing anything.
    - **Fitness test**: this client's results are listed (**…'s fitness
      tests**), newest first. Tap one. If there are none it says *No fitness
      tests for … yet. Add them on the Clients page.*
+   - **Progress photos**: this client's sets are listed by date (**…'s
+     progress photos**). Tap one. With more than one, it then asks *Compare
+     … with…*: tap **Just this day** to send it on its own, or another day
+     to send the two side by side. If there are none it says *No progress
+     photos of … yet. Take them on the Clients page.*
 3. Add words if you like, then tap the blue arrow. You can send attachments
    with no words.
 
 To take one off before sending, tap the **X** beside it.
 
-A program, a set of measurements or a test result is sent as it is at that moment. If you change it afterwards, the
+A program, a set of measurements, a test result or progress photos are sent as they are at that moment. If you change it afterwards, the
 copy in the message stays as it was, so your client always has what you
 sent. Tap a program in a conversation to open it laid out like the printed
 program (5.6), in its own tab, ready to print.
@@ -1697,6 +1773,11 @@ Tap a set of measurements to open it as a page of its own, ready to print:
 each measurement, and how it changed since the set before. A fitness test
 result opens the same way: the result, its rating, how it changed since the
 same test before, and how the test is done.
+
+Progress photos open the same way. One day shows its four photos; two days
+show the comparison (**Side by side** or **Slider**, as in 4.9), and under it
+**Every angle**, each angle's two photos next to each other, which is what
+prints.
 
 Tap a picture to open it full size in its own tab. A video plays where it is.
 
@@ -1739,10 +1820,11 @@ can write to them here.*
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
-| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.9). |
-| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.9). |
-| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.9). |
-| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.9). |
+| **Progress photos** | Photos of a client from the front, both sides and the back, taken the same way each time to see change; kept only once the client has agreed (4.9). |
+| **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.10). |
+| **1RM** | One-repetition maximum: the heaviest weight a client can lift once in an exercise (4.10). |
+| **RSI** | Reactive Strength Index: from a drop jump, the height jumped divided by the time on the ground (4.10). |
+| **VO2 max** | The most oxygen the body can use in exercise, in ml for each kg of weight each minute. The higher, the fitter (4.10). |
 | **Waist to hip** | A client's waist measurement divided by their hips, worked out from a set of measurements (4.8). |
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |

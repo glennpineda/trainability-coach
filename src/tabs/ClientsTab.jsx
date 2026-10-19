@@ -4,6 +4,7 @@ import { fullName, clientInitials, longDate, birthday, plural } from "../clients
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
 import { Measurements } from "../clients/Measurements";
+import { ProgressPhotos } from "../clients/ProgressPhotos";
 import { FitnessTests } from "../clients/FitnessTests";
 import { Face } from "../clients/Face";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
@@ -79,6 +80,7 @@ function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, 
           )}
           <Limitations clientId={c.id} onSignedOut={onSignedOut} />
           <Measurements clientId={c.id} onSignedOut={onSignedOut} />
+          <ProgressPhotos client={c} onSignedOut={onSignedOut} />
           <FitnessTests client={c} onSignedOut={onSignedOut} />
           {(onEdit || onArchive) && (
             <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>

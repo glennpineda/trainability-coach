@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUp, HeartPulse, ChevronLeft, ClipboardList, Loader2, MessageCircle, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
+import { ArrowUp, Camera, HeartPulse, ChevronLeft, ClipboardList, Loader2, MessageCircle, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
@@ -212,6 +212,24 @@ function Attachment({ a }) {
       </a>
     );
   }
+  if (a.kind === "photos") {
+    const d = a.photos || {};
+    const sets = d.sets || [];
+    return (
+      <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
+        className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
+        <span className="flex-none flex gap-1">
+          {sets.map((x, n) => { const first = x.photos?.front || Object.values(x.photos || {})[0]; return first
+            ? <img key={n} src={first} alt="" className="w-9 h-12 rounded-md object-cover" style={{ background: "var(--ghost-fill)" }} />
+            : <span key={n} className="w-9 h-12 rounded-md flex items-center justify-center" style={{ background: "var(--accent-soft)" }}><Camera size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /></span>; })}
+        </span>
+        <span className="min-w-0">
+          <span className="block font-medium truncate" style={{ color: "var(--ink)" }}>Progress photos</span>
+          <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>{sets.map(x => shortDate(x.takenOn)).join(" and ")}{sets.length > 1 ? ", compared" : ""}</span>
+        </span>
+      </a>
+    );
+  }
   if (a.kind === "test") {
     const d = a.test || {};
     const shown = d.kind ? describe(d, d.units) : null;
@@ -359,6 +377,21 @@ function Composer({ clientId, first, onSent }) {
     try { update(key, { att: await apiRequest("POST", "/attachments/test", { testId: t.id }), progress: 1 }); }
     catch (err) { update(key, { error: err.message }); }
   }
+  /* The client's progress photos: one day, then another to compare it with, or none. */
+  const [photoSets, setPhotoSets] = useState(null);
+  const [photoFirst, setPhotoFirst] = useState(null);
+  function openPhotos() {
+    setMenu("photos"); setPhotoFirst(null);
+    apiRequest("GET", `/clients/${encodeURIComponent(clientId)}/progress-photos`).then(d => setPhotoSets(d.consent ? d.sets || [] : [])).catch(() => setPhotoSets([]));
+  }
+  async function attachPhotos(set, other) {
+    setMenu(null);
+    const key = `${Date.now()}-${set.id}`;
+    const dates = [set, other].filter(Boolean).map(x => x.takenOn).sort().map(setDate).join(" and ");
+    setItems(xs => [...xs, { key, kind: "photos", name: `Progress photos, ${dates}`, progress: 0 }]);
+    try { update(key, { att: await apiRequest("POST", "/attachments/photos", { setId: set.id, compareId: other?.id }), progress: 1 }); }
+    catch (err) { update(key, { error: err.message }); }
+  }
   const remove = (key) => setItems(xs => { const x = xs.find(y => y.key === key); if (x?.preview) URL.revokeObjectURL(x.preview); return xs.filter(y => y.key !== key); });
 
   async function send(e) {
@@ -390,12 +423,13 @@ function Composer({ clientId, first, onSent }) {
                     {x.kind === "program" ? <ClipboardList size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : x.kind === "measurements" ? <Ruler size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : x.kind === "test" ? <HeartPulse size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
+                      : x.kind === "photos" ? <Camera size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />
                       : <ImageIcon size={16} style={{ color: "var(--accent)" }} aria-hidden="true" />}
                   </span>}
               <span className="min-w-0">
                 <span className="block truncate max-w-[10rem]">{x.name || (x.kind === "video" ? "Video" : "Picture")}</span>
                 <span className="block text-[11px]" style={{ color: x.error ? "var(--ember)" : "var(--iron)" }}>
-                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", test: "Fitness test", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
+                  {x.error || (x.att ? ({ program: "Program", measurements: "Measurements", test: "Fitness test", photos: "Progress photos", video: "Video" }[x.kind] || "Picture") : `Uploading ${Math.round(x.progress * 100)}%`)}
                 </span>
               </span>
               <button type="button" className="cx-icon-btn" aria-label={`Remove ${x.name}`} onClick={() => remove(x.key)}><X size={14} aria-hidden="true" /></button>
@@ -425,6 +459,22 @@ function Composer({ clientId, first, onSent }) {
               <MenuItem icon={ClipboardList} label="Program" onClick={openPrograms} />
               <MenuItem icon={Ruler} label="Measurements" onClick={openMeasurements} />
               <MenuItem icon={HeartPulse} label="Fitness test" onClick={openTests} />
+              <MenuItem icon={Camera} label="Progress photos" onClick={openPhotos} />
+            </>
+          ) : menu === "photos" ? (
+            <>
+              <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>
+                {photoFirst ? `Compare ${setDate(photoFirst.takenOn)} with…` : `${first}'s progress photos`}
+              </div>
+              {photoSets === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+                : photoSets.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No progress photos of {first} yet. Take them on the Clients page.</p>
+                : !photoFirst ? photoSets.map(x => <MenuItem key={x.id} icon={Camera} label={setDate(x.takenOn)} note={`Taken by ${x.mine ? "you" : x.takenBy}`} onClick={() => (photoSets.length > 1 ? setPhotoFirst(x) : attachPhotos(x))} />)
+                : (
+                  <>
+                    <MenuItem icon={Camera} label="Just this day" note="Send it on its own" onClick={() => attachPhotos(photoFirst)} />
+                    {photoSets.filter(x => x.id !== photoFirst.id).map(x => <MenuItem key={x.id} icon={Camera} label={setDate(x.takenOn)} note="Side by side" onClick={() => attachPhotos(photoFirst, x)} />)}
+                  </>
+                )}
             </>
           ) : menu === "tests" ? (
             <>

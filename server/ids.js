@@ -33,6 +33,8 @@ export const PREFIX = {
   measurement: "msr",    // one day's body measurements for one client
   /* Glenn's tag, 18 Oct 2026 (Tests). */
   fitnessTest: "tst",    // one fitness test result for one client
+  /* Glenn's tag, 19 Oct 2026 (Progress photos). */
+  progressPhotos: "pph", // one day's progress photos for one client
 };
 
 const DIGITS = "0123456789";

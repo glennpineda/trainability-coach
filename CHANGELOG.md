@@ -116,6 +116,14 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   any measurement taken on two days or more (blood pressure's two numbers
   together); opening a fitness test's earlier results charts that test. Tap a
   point to read its day and number.
+- **Progress photos.** On a client's details, under Measurements: the
+  front, both sides and the back, once a trainer has recorded that the client
+  agrees. Coach guides each photo: a checklist for the setup, then each angle
+  in turn with last time's photo faint over the camera to line up with, lines
+  for the head and feet, a level on a phone, and a 10-second timer. Compare
+  two days side by side or with a slider, and send one day, or two compared,
+  in a message. Every trainer of the client sees them; if the client stops
+  agreeing, they are all deleted.
 - **Photos from Studio.** Your clients' photos, as they are in Studio, on
   the Clients list and in Messages, and your own in the account menu (which
   showed only your initials before). Initials stay for anyone without one.

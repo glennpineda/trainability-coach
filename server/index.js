@@ -22,6 +22,7 @@ import * as messages from "./messages.js";
 import * as push from "./push.js";
 import * as measurements from "./measurements.js";
 import * as fitnessTests from "./fitness-tests.js";
+import * as progressPhotos from "./progress-photos.js";
 import { previousOf } from "../src/lib/measures.js";
 import { seriesOf } from "../src/lib/fitness-tests.js";
 import { newId } from "./ids.js";
@@ -80,6 +81,8 @@ app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
 app.use("/api/assistant", express.json({ limit: "32mb" }));
 /* A video's still, taken in the browser, comes with the end of its upload. */
 app.use("/api/attachments", express.json({ limit: "1mb" }));
+/* A set of progress photos: four pictures, shrunk in the browser to 3 MB at most each. */
+app.use(/^\/api\/clients\/[^/]+\/progress-photos$/, express.json({ limit: "18mb" }));
 app.use("/api", express.json({ limit: "20kb" }));
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN, database: db.dialect() }));
@@ -627,6 +630,24 @@ app.post("/api/attachments/test", asSignedIn("POST /attachments/test", async (re
   }));
 }));
 
+/* A set of progress photos, or two to compare, kept as a copy to attach.
+   Two are put in date order, the earlier first. */
+app.post("/api/attachments/photos", asSignedIn("POST /attachments/photos", async (req, res, user) => {
+  const ids = [req.body?.setId, req.body?.compareId].filter(Boolean).map(String).slice(0, 2);
+  const rows = [];
+  for (const id of ids) {
+    const r = await progressPhotos.setById(id);
+    if (!r) return res.status(404).json({ error: "Those photos are no longer there.", code: "not_found" });
+    rows.push(r);
+  }
+  if (!rows.length || (rows[1] && rows[1].client_id !== rows[0].client_id) || (rows[1] && rows[1].id === rows[0].id)) return res.status(400).json({ error: "Choose the photos to send.", code: "invalid" });
+  const client = (await myClients(req, user)).find(c => c.id === rows[0].client_id);
+  if (!client || !await progressPhotos.consentOf(client.id, user.id)) return res.status(404).json({ error: "Those photos are no longer there.", code: "not_found" });
+  rows.sort((a, b) => (a.taken_on < b.taken_on ? -1 : a.taken_on > b.taken_on ? 1 : 0));
+  const sets = rows.map(row => ({ row, files: Object.fromEntries(String(row.angles).split(",").filter(Boolean).map(a => [a, progressPhotos.pathOf(row.id, a)])) }));
+  res.json(await messages.photosAttachment(user.id, { sets, clientName: `${client.firstName} ${client.lastName}`.trim() }));
+}));
+
 /* An attachment for the trainer: its details (a program's copy in full), or its file. */
 app.get("/api/attachments/:id", asSignedIn("GET /attachments", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
@@ -644,6 +665,20 @@ const sendAttachmentFile = (res, a) => {
     if (err && !res.headersSent) res.status(404).json({ error: "Not found", code: "not_found" });
   });
 };
+/* A JPEG from the files folder, kept private in the browser's cache. */
+const sendPhoto = (res, file) => {
+  res.set("Content-Type", "image/jpeg");
+  res.set("X-Content-Type-Options", "nosniff");
+  res.sendFile(file, { headers: { "Cache-Control": "private, max-age=3600" } }, (err) => {
+    if (err && !res.headersSent) res.status(404).json({ error: "Not found", code: "not_found" });
+  });
+};
+/* One of the progress photos on an attachment, for the trainer. */
+app.get("/api/attachments/:id/photo/:n/:angle", asSignedIn("GET /attachments/photo", async (req, res, user) => {
+  const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
+  if (!a || a.kind !== "photos" || !/^[01]$/.test(req.params.n) || !["front", "left", "right", "back"].includes(req.params.angle)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  sendPhoto(res, messages.attachmentPhotoPath(a.id, req.params.n, req.params.angle));
+}));
 app.get("/api/attachments/:id/file", asSignedIn("GET /attachments/file", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
   if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
@@ -674,7 +709,11 @@ const coachOrigin = (req) => process.env.APP_ORIGIN || `${req.protocol}://${req.
 const forClient = (req, thread) => ({
   ...thread,
   messages: thread.messages.map(m => ({ ...m, attachments: m.attachments.map(a => (a.kind === "picture" || a.kind === "video")
-    ? { ...a, url: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET()) } : a) })),
+    ? { ...a, url: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET()) }
+    /* Progress photos: each picture by its own signed link. */
+    : a.kind === "photos" && a.photos ? { ...a, photos: { ...a.photos, sets: a.photos.sets.map((x, n) => ({ ...x,
+      photos: Object.fromEntries((x.angles || []).map(g => [g, progressPhotos.signedUrl(`${coachOrigin(req)}/api/attachment-photo`, `${a.id}.${n}.${g}`)])) })) } }
+    : a) })),
 });
 const linkRoute = (what, fn) => async (req, res) => {
   try { await fn(req, res); } catch (err) {
@@ -718,6 +757,12 @@ app.post("/api/client-link/conversations/:id/messages", linkRoute("client-link r
     url: `/?open=messages&client=${encodeURIComponent(c.client_id)}`, tag: `msg-${c.id}`,
   }).catch(() => {});
   res.json(forClient(req, await messages.clientThread(c)));
+}));
+/* A progress photo on a sent message, for the client's browser, by its signed link. */
+app.get("/api/attachment-photo/:what", linkRoute("signed attachment photo", async (req, res) => {
+  const m = /^(att\d{3}[a-z]{3}\d{3})\.([01])\.(front|left|right|back)$/.exec(req.params.what);
+  if (!m || !progressPhotos.signedOk(req.params.what, req.query.exp, req.query.sig) || !await messages.sentAttachment(m[1])) return res.status(404).json({ error: "Not found", code: "not_found" });
+  sendPhoto(res, messages.attachmentPhotoPath(m[1], m[2], m[3]));
 }));
 /* A file for the client's browser, by a signed link from the client link. */
 app.get("/api/files/:id", linkRoute("signed file", async (req, res) => {
@@ -871,6 +916,52 @@ app.delete("/api/tests/:id", asSignedIn("DELETE /tests", async (req, res, user) 
   if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who did the test can delete it.", code: "not_yours" });
   res.json(await testsAnswer(row.client_id, user));
 }));
+
+/* A client's progress photos (server/progress-photos.js): as measurements,
+   only for a client on the trainer's own list; none kept, or shown, until a
+   trainer has recorded that the client agreed. */
+const photosAnswer = async (clientId, user) => ({
+  consent: await progressPhotos.consentOf(clientId, user.id),
+  sets: await progressPhotos.consentOf(clientId, user.id) ? await progressPhotos.setsOf(clientId, user.id) : [],
+});
+app.get("/api/clients/:client/progress-photos", asSignedIn("GET /clients/progress-photos", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  res.set("Cache-Control", "private, no-store");
+  res.json(await photosAnswer(req.params.client, user));
+}));
+app.post("/api/clients/:client/progress-photos/consent", asSignedIn("POST /clients/progress-photos/consent", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  if (req.body?.agreed !== true) return res.status(400).json({ error: "Tick the box to say they agreed.", code: "invalid" });
+  await progressPhotos.agree(req.params.client, user);
+  res.json(await photosAnswer(req.params.client, user));
+}));
+app.delete("/api/clients/:client/progress-photos/consent", asSignedIn("DELETE /clients/progress-photos/consent", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  await progressPhotos.withdraw(req.params.client);
+  res.json(await photosAnswer(req.params.client, user));
+}));
+app.post("/api/clients/:client/progress-photos", asSignedIn("POST /clients/progress-photos", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  if (!await progressPhotos.consentOf(req.params.client, user.id)) return res.status(403).json({ error: "Record that they agreed to progress photos first.", code: "no_consent" });
+  const checked = progressPhotos.check(req.body);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  await progressPhotos.add(req.params.client, user, checked);
+  res.json(await photosAnswer(req.params.client, user));
+}));
+app.delete("/api/progress-photos/:id", asSignedIn("DELETE /progress-photos", async (req, res, user) => {
+  const row = await progressPhotos.setById(req.params.id);
+  if (!row) return res.status(404).json({ error: "Not found", code: "not_found" });
+  if (!await ownClient(req, res, user, row.client_id)) return;
+  const done = await progressPhotos.remove(row.id, user.id);
+  if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who took the photos can delete them.", code: "not_yours" });
+  res.json(await photosAnswer(row.client_id, user));
+}));
+/* One picture, by the link signed for it when the list was given. */
+app.get("/api/progress-photo/:what", async (req, res) => {
+  const m = /^(pph\d{3}[a-z]{3}\d{3})-(front|left|right|back)$/.exec(req.params.what);
+  if (!m || !progressPhotos.signedOk(req.params.what, req.query.exp, req.query.sig)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  sendPhoto(res, progressPhotos.pathOf(m[1], m[2]));
+});
 
 /* A place of the trainer's own, or a 404: never another trainer's. */
 const ownPlace = async (req, res, user) => {
