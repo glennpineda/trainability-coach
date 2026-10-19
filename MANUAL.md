@@ -1449,9 +1449,12 @@ the suggestions, and talks it through; he changes nothing himself.
 - **Add a day**, at the bottom, adds the next day in the program's turn:
   Upper C after Lower B, Day D after Day C.
 - Beside a day's name: the arrows move it up or down, the pencil renames it
-  (and gives it a note), and the bin takes it out with its exercises.
+  (and gives it a note), and the bin takes it out with its exercises. A day
+  with exercises asks first: *Take Day A out of the program? Its 5 exercises
+  go with it.* Tap **Take it out**, or **Keep it**.
 - Beside each exercise: the arrows move it up or down the day, and the bin
-  takes it out.
+  takes it out, after asking: *Take Goblet squat out of Day A? Its sets,
+  reps, load and note go with it.*
 - **A superset**: in its box (**Details**), tick **Done together with the
   exercise above (a superset)**. The two then share a number, such as **2a** and
   **2b**.

@@ -7,6 +7,7 @@ import {
 import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
 import { ExerciseDialog } from "./ExerciseDialog";
+import { ConfirmDialog } from "../chrome/ConfirmDialog";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "Go"): one program, day by day,
@@ -191,6 +192,9 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
     } finally { setBusy(false); }
   };
   const askBilly = (words) => { billy?.setOpen(true); billy?.ask(words); };
+  /* Taking an exercise or a day out asks first, in Coach's own question
+     rather than the browser's (Run 1, U-7): { day, exercise? }. */
+  const [taking, setTaking] = useState(null);
   /* The exercise just added: scrolled to and lit for a moment. */
   const [flash, setFlash] = useState(null);
   useEffect(() => {
@@ -281,7 +285,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                   <button type="button" className="cx-icon-btn" disabled={busy || di === p.days.length - 1} onClick={() => call("PATCH", `/program-days/${d.id}`, { move: 1 })} aria-label={`Move ${d.name} down`} title="Move down"><ArrowDown size={16} aria-hidden="true" /></button>
                   <button type="button" className="cx-icon-btn" onClick={() => setOpen({ kind: "day", id: d.id })} aria-label={`Rename ${d.name}`} title="Rename"><Pencil size={16} aria-hidden="true" /></button>
                   <button type="button" className="cx-icon-btn" disabled={busy}
-                    onClick={() => (d.exercises.length === 0 || window.confirm(`Take ${d.name} out of the program, with its ${d.exercises.length} exercises?`)) && call("DELETE", `/program-days/${d.id}`)}
+                    onClick={() => (d.exercises.length === 0 ? call("DELETE", `/program-days/${d.id}`) : setTaking({ day: d }))}
                     aria-label={`Take ${d.name} out`} title="Take the day out"><Trash2 size={16} aria-hidden="true" /></button>
                 </div>
               </div>
@@ -317,7 +321,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                             <span className="flex-1" />
                             <button type="button" className="cx-icon-btn" disabled={busy || i === 0} onClick={() => call("PATCH", `/program-exercises/${e.id}`, { move: -1 })} aria-label={`Move ${e.name} up`} title="Move up"><ArrowUp size={15} aria-hidden="true" /></button>
                             <button type="button" className="cx-icon-btn" disabled={busy || i === d.exercises.length - 1} onClick={() => call("PATCH", `/program-exercises/${e.id}`, { move: 1 })} aria-label={`Move ${e.name} down`} title="Move down"><ArrowDown size={15} aria-hidden="true" /></button>
-                            <button type="button" className="cx-icon-btn" disabled={busy} onClick={() => call("DELETE", `/program-exercises/${e.id}`)} aria-label={`Take ${e.name} out`} title="Take it out"><Trash2 size={15} aria-hidden="true" /></button>
+                            <button type="button" className="cx-icon-btn" disabled={busy} onClick={() => setTaking({ day: d, exercise: e })} aria-label={`Take ${e.name} out`} title="Take it out"><Trash2 size={15} aria-hidden="true" /></button>
                         </div>
                       </div>
                     </div>
@@ -345,6 +349,17 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
       <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy} onClick={() => call("POST", `/programs/${p.id}/days`, {})}>
         <Plus size={15} className="inline" aria-hidden="true" /> Add a day
       </button>
+      {taking && (
+        <ConfirmDialog busy={busy} no="Keep it"
+          title={taking.exercise ? `Take ${taking.exercise.name} out of ${taking.day.name}?` : `Take ${taking.day.name} out of the program?`}
+          yes="Take it out"
+          onNo={() => setTaking(null)}
+          onYes={async () => { if (await call("DELETE", taking.exercise ? `/program-exercises/${taking.exercise.id}` : `/program-days/${taking.day.id}`)) setTaking(null); }}>
+          {taking.exercise
+            ? "Its sets, reps, load and note go with it."
+            : `${taking.day.exercises.length === 1 ? "Its one exercise goes" : `Its ${taking.day.exercises.length} exercises go`} with it.`}
+        </ConfirmDialog>
+      )}
       {dialog && (
         <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} vocab={vocab}
           remembered={lastAsk} onRemember={rememberAsk} oneRms={p.oneRms} units={units} clientName={p.clientName ? p.clientName.split(" ")[0] : ""}
