@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BodyMap, scaleOf } from "./BodyMap";
-import { loadLine, percentOf } from "../lib/one-rm";
+import { loadLine, percentOf, weightText } from "../lib/one-rm";
 import { techniqueText, groupSizes, groupName } from "../lib/techniques";
 import {
-  ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Send, Sparkles, Trash2, TriangleAlert, Info, X,
+  ArrowDown, ArrowUp, ChevronLeft, ClipboardCheck, History, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Send, Sparkles, Trash2, TriangleAlert, Info, X,
 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
@@ -11,6 +11,9 @@ import { ExerciseDialog } from "./ExerciseDialog";
 import { ConfirmDialog } from "../chrome/ConfirmDialog";
 import { aOrAn, kindsWords, plural } from "../lib/words";
 import { LoadingLine } from "../chrome/LoadingLine";
+import { LogSession } from "./LogSession";
+import { entryText, nextLoadKg } from "../lib/workout-log";
+import { Toast } from "../chrome/Toast";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "Go"): one program, day by day,
@@ -35,6 +38,8 @@ const FROM = {
 };
 
 /* "3 × 8–12 · 45 lb · RPE 7 · 3-1-1-0 · rest 75 s": what is filled in, in the reader's units. */
+const shortDay = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+
 export function doseLine(e, units) {
   const parts = [];
   if (e.sets && e.reps) parts.push(`${e.sets} × ${e.reps}`);
@@ -179,6 +184,10 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
   const [open, setOpen] = useState(null);     // { kind: "swap" | "day" | "details", id }
   /* The add-and-edit dialog: { day, editing?, suggested? } (ExerciseDialog.jsx). */
   const [dialog, setDialog] = useState(null);
+  /* A day being logged (Run 1, I-14), and the line said once it is. */
+  const [logging, setLogging] = useState(null);
+  const [toast, setToast] = useState(null);
+  const toastGone = useCallback(() => setToast(null), []);
   const [dialogError, setDialogError] = useState("");
   const openDialog = (d) => { setDialogError(""); setDialog(d); };
   /* Coach IQ's answers in the add dialog, kept for this program on this
@@ -375,6 +384,21 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
                         </button>
                         {doseLine(e, units) ? <div className="text-sm">{doseLine(e, units)}</div> : <div className="text-xs" style={muted}>No sets or reps yet.</div>}
                         {e.note && <div className="text-xs cx-wrap" style={muted}>{e.note}</div>}
+                        {/* What was done last time, from the client's logged
+                            sessions, and Coach IQ's next load when every set
+                            was done (Run 1, I-14). */}
+                        {e.lastTime && (
+                          <div className="text-xs mt-0.5" style={muted}>
+                            <History size={12} className="inline mr-1 align-[-1px]" aria-hidden="true" />
+                            Last time ({shortDay(e.lastTime.doneOn)}): {entryText(e.lastTime.entry, units)}
+                          </div>
+                        )}
+                        {e.lastTime && nextLoadKg(e.lastTime.entry, units) && (
+                          <div className="text-xs mt-0.5" style={{ color: "var(--accent)" }}>
+                            <Lightbulb size={12} className="inline mr-1 align-[-1px]" aria-hidden="true" />
+                            Coach IQ: every set was done last time; try about {weightText(nextLoadKg(e.lastTime.entry, units), units)}.
+                          </div>
+                        )}
                         {mine.length > 0 && <Points list={mine} />}
                         {is("swap", e.id) && <Swaps peId={e.id} busy={busy} placeName={p.placeName} onCancel={() => setOpen(null)} onPick={(a) => call("PATCH", `/program-exercises/${e.id}`, { exerciseId: a.id })} />}
                         <div className="flex flex-wrap items-center gap-1 mt-1.5">
@@ -395,6 +419,9 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
             {!p.frozen && <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   <button type="button" className="cx-btn-row" onClick={() => openDialog({ day: d, first: d.exercises.length === 0 })}><Plus size={15} aria-hidden="true" /> Add an exercise</button>
+                  {d.exercises.length > 0 && p.clientId && (
+                    <button type="button" className="cx-btn-row" onClick={() => setLogging(d)}><ClipboardCheck size={15} aria-hidden="true" /> Log this session</button>
+                  )}
                   {billy?.available && (
                     <button type="button" className="text-sm cx-link" onClick={() => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}), what should come next on ${d.name}?`)}>
                       <Sparkles size={15} aria-hidden="true" /> Ask Billy about {d.name}
@@ -430,6 +457,15 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
             ? "Its sets, reps, load and note go with it."
             : `${taking.day.exercises.length === 1 ? "Its one exercise goes" : `Its ${taking.day.exercises.length} exercises go`} with it.`}
         </ConfirmDialog>
+      )}
+      <Toast toast={toast} onGone={toastGone} />
+      {logging && (
+        <LogSession program={p} day={logging} units={units} onClose={() => setLogging(null)}
+          onSaved={() => {
+            setLogging(null);
+            setToast({ message: `${logging.name} logged.`, id: Date.now() });
+            apiRequest("GET", `/programs/${p.id}`).then(o => { setP(o); setVersion(v => v + 1); }).catch(() => {});
+          }} />
       )}
       {dialog && (
         <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} muscle={dialog.muscle} vocab={vocab}

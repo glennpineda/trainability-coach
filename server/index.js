@@ -22,6 +22,8 @@ import * as messages from "./messages.js";
 import * as push from "./push.js";
 import * as measurements from "./measurements.js";
 import * as fitnessTests from "./fitness-tests.js";
+import * as workoutLogs from "./workout-logs.js";
+import { entryText } from "../src/lib/workout-log.js";
 import * as progressPhotos from "./progress-photos.js";
 import { previousOf, rowsOf } from "../src/lib/measures.js";
 import { seriesOf, titleOf, describe as describeTest, changeOf as changeOfTest } from "../src/lib/fitness-tests.js";
@@ -1023,6 +1025,55 @@ app.delete("/api/measurements/:id", asSignedIn("DELETE /measurements", async (re
   res.json(await measurementsAnswer(row.client_id, user));
 }));
 
+/* A client's logged sessions (server/workout-logs.js; Run 1, I-14): only for
+   a client on the trainer's list, seen by all their trainers, changed and
+   deleted only by the one who logged them. A session is logged from one of
+   the trainer's own programs for the client, whose day it must be. */
+const sessionsAnswer = async (clientId, user) => ({
+  sessions: await workoutLogs.logsOf(clientId, user.id), units: await trainerSettings.unitsOf(user.id),
+});
+app.get("/api/clients/:client/sessions", asSignedIn("GET /clients/sessions", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  res.set("Cache-Control", "private, no-store");
+  res.json(await sessionsAnswer(req.params.client, user));
+}));
+const loggedProgram = async (user, programId, clientId) => {
+  const program = await programs.programOf(user.id, String(programId || ""));
+  return program && program.client_id === clientId ? programs.full(user.id, program, { withCheck: false }) : null;
+};
+app.post("/api/clients/:client/sessions", asSignedIn("POST /clients/sessions", async (req, res, user) => {
+  if (!await ownClient(req, res, user, req.params.client)) return;
+  const full = await loggedProgram(user, req.body?.programId, req.params.client);
+  if (!full) return res.status(404).json({ error: "That program is no longer there.", code: "not_found" });
+  const checked = workoutLogs.check(req.body, full);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  await workoutLogs.add(req.params.client, user, checked.row);
+  res.json(await sessionsAnswer(req.params.client, user));
+}));
+const ownSession = async (req, res, user) => {
+  const row = await workoutLogs.logById(req.params.id);
+  if (!row) { res.status(404).json({ error: "Not found", code: "not_found" }); return null; }
+  return await ownClient(req, res, user, row.client_id) ? row : null;
+};
+app.put("/api/sessions/:id", asSignedIn("PUT /sessions", async (req, res, user) => {
+  const row = await ownSession(req, res, user);
+  if (!row) return;
+  if (row.trainer_id !== user.id) return res.status(403).json({ error: "Only the trainer who logged a session can change it.", code: "not_yours" });
+  const full = await loggedProgram(user, row.program_id, row.client_id);
+  if (!full) return res.status(404).json({ error: "That program is no longer there.", code: "not_found" });
+  const checked = workoutLogs.check({ ...req.body, dayId: row.day_id }, full);
+  if (checked.error) return res.status(400).json({ error: checked.error, code: "invalid" });
+  await workoutLogs.update(row.id, user, checked.row);
+  res.json(await sessionsAnswer(row.client_id, user));
+}));
+app.delete("/api/sessions/:id", asSignedIn("DELETE /sessions", async (req, res, user) => {
+  const row = await ownSession(req, res, user);
+  if (!row) return;
+  const done = await workoutLogs.remove(row.id, user.id);
+  if (done === "not_yours") return res.status(403).json({ error: "Only the trainer who logged a session can delete it.", code: "not_yours" });
+  res.json(await sessionsAnswer(row.client_id, user));
+}));
+
 /* A client's fitness tests (server/fitness-tests.js), as measurements: only
    for a client on the trainer's list, seen by all their trainers, changed
    and deleted only by the one who did them. */
@@ -1916,6 +1967,11 @@ app.post("/api/assistant", async (req, res) => {
               ...(c && before ? { change: `${c} since ${before.takenOn}` } : {}), ...(t.note ? { note: t.note } : {}) };
           }),
           progressPhotos: consent ? { agreed: true, takenOn: photoSets.map(x => x.takenOn) } : { agreed: false },
+          /* Their logged sessions (Run 1, I-14; Glenn: "Billy can read them"), the latest 12. */
+          sessions: (await workoutLogs.logsOf(client.id, user.id)).slice(0, 12).map(l => ({
+            doneOn: l.doneOn, program: l.programName, day: l.dayName, loggedBy: l.mine ? "the trainer" : l.loggedBy, ...(l.note ? { note: l.note } : {}),
+            exercises: l.entries.map(e => ({ [e.name]: entryText(e, u), ...(e.note ? { note: e.note } : {}) })),
+          })),
         };
       },
       /* The library, searched in code (ideas audit, 4): their own names

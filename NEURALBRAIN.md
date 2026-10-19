@@ -371,6 +371,7 @@ put-away programs with no way back, the body drawing's dark caption), about 35
 medium, the manual's 40 points and the smaller ones, two questions and 14
 ideas — all in BRAINSTORM.md, Found in testing, Run 1.
 
+- **I-14, logging what was done in a session** (built 19 Oct 2026; Glenn, offered the run's ideas, chose "Session log (I-14)"; asked how much to write, "I can see different trainer may want to do different things, I'm torn between the 'each set' and the 'done or not' here", then offered both in one screen: "Tick, open for sets (Recommended)"; for its uses, "Last time, in the designer", "Coach IQ suggests the next load", "Estimated 1RMs from sets" and "Billy can read them"; who sees one, "Every trainer of the client (Recommended)"; its id tag "wkl"). Build 1.0.153. Studio has no workout logging, only a written note per session (its ScheduleTab.jsx, `SessionNotes`), so this is Coach's own. **Data**: `coach_workout_logs` (`server/db.js`, ids `wkl`, `server/ids.js` `workoutLog`), one row per session: the client, the trainer, the program and day (ids and names kept), the day it was done, the units it was typed in, notes, and `entries` as JSON, one per exercise: `{ peId, exerciseId, name, planned: { sets, reps, load, weightKg }, done, sets: null (as planned) or [{ reps, weightKg }], note }`; client and trainer ids follow a client moved into Studio and a linked Coach account (`coach-clients.moved`, `accounts.link`). **Shared rules** (`src/lib/workout-log.js`): `plannedOf` (a load's weight from "135 lb", "60 kg" or a 1RM's share), `setsToFill` (as many sets as planned, the first number of "3–4", at the top of the reps and the planned weight), `entryText` (*3 × 8 at 135 lb*, *5, 5, 4 at 200 lb*, *As planned: 3 × 8–12 at 135 lb*, *Not done*), `setsDone` (an entry's sets as numbers: its own, or the plan's when ticked and the plan has one number of reps and a weight) and `nextLoadKg` (the load principle's straight-line progression: every planned set done at the planned weight to the top of its reps, about 2.5% more, at least 5 lb or 2.5 kg). **Server** (`server/workout-logs.js`, routes in `server/index.js`): `GET/POST /api/clients/:client/sessions`, `PUT/DELETE /api/sessions/:id`; a session is logged from one of the trainer's own programs for the client, its entries checked against that program's day (names and plans taken from the program, not the page; reps whole, weights 0–600 kg, at most 12 sets, a day that has been); only the trainer who logged one may change or delete it (403 *Only the trainer who logged a session can change it.* / *…delete it.*). **New best 1RMs**: each library lift's best set of 10 reps or fewer, worked out by Brzycki as Fitness tests does, is kept as an estimated 1RM when it beats every 1RM the client has for it (note *From the session on 2026-10-19*, `data.fromSession`), and removed if the session is changed or deleted. **The designer** (`Designer.jsx`): **Log this session** under a day with exercises (not for a frozen program) opens `src/programs/LogSession.jsx`: the day, each exercise ticked as done as planned with its plan, untick for *Not done*, tap to open set by set (reps and weight boxes filled from the plan, **Another set**, the X to take one off), a note per exercise and for the session, **Save the session**, then the toast *Day A logged.*; under each exercise, *Last time (Oct 19): 3 × 8 at 135 lb* (`programs.full`, `lastTime` from `workoutLogs.lastByExercise`, any trainer's) and, when every set was done, *Coach IQ: every set was done last time; try about 140 lb.* **The client's page** (`ClientPrograms.jsx`, `Sessions`): **Logged sessions** under the programs, newest first, *Next block, Day A · 3 of 3 done · logged by you*, opening to each exercise as it went and the notes, with **Change** and the bin (*Delete this session?*, which says a 1RM worked out from it goes too) for one's own. **Billy**: `client_progress` adds the latest 12 sessions, each exercise in `entryText`'s words with its note. MANUAL 4.3 and a new 5.7 say so. Tested with the stand-in Studio: a session with the back squat ticked as planned (3 × 8 at 135 lb) showed *Last time (Oct 17): As planned: 3 × 8 at 135 lb*; one with it opened at 5, 5, 4 at 200 lb added an estimated 1RM of 102.06 kg (beating 94.4) *From the session on 2026-10-19*, which went when that session was deleted; a day still to come was refused; Tess deleting Glenn's session was 403; on an iPhone 13, the Log Day A box with the squat opened set by set, the save and *Day A logged.*, the designer's *Last time (Oct 19): 3 × 8 at 135 lb* and *Coach IQ: every set was done last time; try about 140 lb.*, and Avery's Logged sessions with one opened.
 - **I-13, a progress report to send** (built 19 Oct 2026; Glenn, offered the run's ideas: "Progress report (I-13)"). Build 1.0.152. Studio's client page doesn't show Coach's attachments yet (its inbox isn't built), so a new kind needed nothing of Studio. A new attachment, `report`: in a conversation, the paperclip's **Progress report** (*First to latest*) attaches at once (`attachReport`, `MessagesTab.jsx`). `POST /api/attachments/report` (`server/index.js`) gathers, for a client on the trainer's list: the latest set of measurements against the first (with the height carried, for BMI and the Navy estimate, and the client's sex from Studio's gender), each fitness test's latest result against its first (one per series, as Fitness tests groups them), and, if the client agreed to photos, their first and latest progress photos; with none of the three, 400 *There's nothing to report for Sam yet: no measurements, fitness tests or progress photos.* `messages.reportAttachment` keeps it as a copy, as the others are (the photos linked in as the photos attachment's are, `copyPhotos`, shared with it now); the trainer sees its photos by `/api/attachments/:id/photo/:n/:angle` (which now takes a report), the client by signed links (`forClient`). In a thread it is a card, *Progress report · Oct 19* with what it holds (*measurements, 2 tests, photos*), which opens `/print/sent/<id>` as `src/clients/PrintReport.jsx`: Measurements (now and since the first), Fitness tests (latest, and since the first, or *Only one so far*), Progress photos (first and latest, angle by angle), black on white. MANUAL 7.3 says so. Tested with the stand-in Studio: Avery's report held her measurements (Oct 19 against Oct 10, with BMI and the Navy estimate), two 1RMs and her Oct 10 and Oct 19 photos; sent, the client's copy carried signed photo links that answered 200 image/jpeg; Sam's answered the nothing-to-report message; the printed page and the menu at phone width.
 - **I-11, using the room in wide screen** (built 19 Oct 2026; Glenn, offered the run's ideas: "Wide screen room (I-11)"). Build 1.0.151. Studio's wide screen gives a list one more column (its theme.jsx, `.iw-more-…`); Coach's now does two things with the room, at 1100px and up with Wide screen on (`src/index.css`, `.cx-split`, `.cx-beside`). **The client list beside an open client**: the Clients page's search, filter and list became one `finder` (`ClientsTab.jsx`), drawn as the page, and, with a client open, again in a left column (`nav` *Your clients*, 16–22rem, hidden below wide screen), the open client marked (`aria-current`, pale blue) and the filter in it not closing the client; tapping another opens them in place. **A chart beside its sets**: on the Measurements tab, with **Show progress** open, the sets and their buttons on the left and the chart on the right (`Measurements.jsx`), one under the other otherwise. MANUAL 3.1's Wide screen says so. Tested with the stand-in Studio at 1440 × 900, Wide screen on: Avery's page with Active (3) · Due (2) · Archived (0) and the three clients on the left, her measurements and the weight chart side by side; Wide screen off hid the list (display none).
 - **I-10, tap a muscle to add an exercise for it** (built 19 Oct 2026; Glenn, offered the run's ideas: "Tap a muscle (I-10)"). Build 1.0.150. `BodyMap` (`src/programs/BodyMap.jsx`) takes `onPickMuscle`: each muscle on the drawing, front and back, worked that day or not, is a button (its whole shape takes the tap, `pointer-events: all`; *Add an exercise for the hamstrings* to a screen reader, a tooltip on a mouse; Enter or Space from the keyboard), and so is each line of the list beside it; a line under the list says *Tap a muscle, on the drawing or here, to add an exercise for it.* The designer passes it (not for a frozen program, nor on the printed page): it opens the exercise dialog with `muscle`, and the dialog's Coach IQ (`Pick`, `ExerciseDialog.jsx`) starts on that muscle's group with the muscle picked, instead of what was asked last time, so *Coach IQ suggests: hamstrings* and its list come up straight away. MANUAL 5.5 says so. Tested with the stand-in Studio, iPhone 13, Next block's Day A: tapping the back figure's hamstrings opened *Add an exercise to Day A* with Legs and hamstrings chosen and Romanian deadlift, Trap bar deadlift, Cable pull-through and Banded good morning suggested. (A first try threw *muscle is not defined*: the prop hadn't been passed on to `Pick`; fixed before committing.)
@@ -502,6 +503,7 @@ own chapter here as it arrives.
    - [5.4 What Coach IQ says](#54-what-coach-iq-says)
    - [5.5 Days, order and supersets](#55-days-order-and-supersets)
    - [5.6 Printing it for the client](#56-printing-it-for-the-client)
+   - [5.7 Logging a session](#57-logging-a-session)
 6. [Asking Billy](#6-asking-billy)
    - [6.1 Opening Billy](#61-opening-billy)
    - [6.2 Asking a question](#62-asking-a-question)
@@ -1377,7 +1379,7 @@ your clients…* beside a small turning circle.
      Coach, or with a Coach account.
    - **Programs**: your programs for them, each opening in the designer (5),
      and **New program for Avery**, which starts a new program (5.1) with
-     them already chosen.
+     them already chosen; then their **Logged sessions** (5.7).
    - **Measurements** (4.8).
    - **Progress photos** (4.9).
    - **Fitness tests** (4.10).
@@ -2099,6 +2101,50 @@ Trainability.
 A program sent in a message (7.3) opens the same way, with the drawing; one
 sent before the drawing came to Coach (version 1.0.81) has none, since its
 copy didn't keep the muscles.
+
+#### 5.7 Logging a session
+
+After a session, write down how it went: what was done, and, where you
+like, each set's reps and weight. Every trainer of the client sees it, with
+who logged it. Only the trainer who logged a session can change or delete
+it.
+
+1. Open the program (5.1) and find the day you trained.
+2. Under its exercises, tap **Log this session**. The **Log Day A** box
+   opens. **Day of the session** starts on today; change it if it was
+   another day.
+3. Each exercise starts ticked, done as planned, with the plan under its
+   name, such as *As planned: 3 × 8 at 135 lb*. For an exercise that wasn't
+   done, tap the tick to take it off; it shows *Not done*.
+4. To write what was actually done, tap the exercise's name. It opens set
+   by set, each filled in from the plan: change any set's **reps** or
+   weight, tap **Another set** for one more, or the **X** to take one off.
+5. **Add a note** under an exercise for anything worth remembering, such as
+   how a knee felt, and add a **Note on the session** if you like.
+6. Tap **Save the session**. It says *Day A logged.* **Cancel** leaves
+   without saving.
+
+**What it is used for.**
+
+- In the program, under each exercise, the last time it was logged, such
+  as *Last time (Oct 19): 3 × 8 at 135 lb*. When every set was done at the
+  planned weight to the top of the planned reps, Coach IQ suggests going a
+  little heavier: *Coach IQ: every set was done last time; try about 140
+  lb.* (about 2.5% more, at least 5 lb or 2.5 kg).
+- A set of 10 reps or fewer that beats the client's best 1RM for a lift
+  from the library becomes a new estimated 1RM in their **Fitness tests**
+  (4.10), with the note *From the session on* and its date. If the session
+  is changed or deleted, that 1RM goes with it.
+- Billy can read the client's sessions when you ask him how they are doing
+  (chapter 6).
+
+**Seeing them.** On the client's page, the **Programs** tab (4.3) lists
+**Logged sessions** under the programs, newest first: the day, the program
+and day, how many exercises were done (such as *3 of 3 done*) and who
+logged it. Tap one to see each exercise as it went and the notes. Yours
+have **Change** (the same box) and the bin: *Delete this session?*, then
+**Delete** or **Keep it**. With none it says *None logged yet. Open a
+program and tap Log this session under a day.*
 
 <div style="page-break-after: always;"></div>
 

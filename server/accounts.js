@@ -288,6 +288,7 @@ export async function link(account, studioUser) {
     await run(`UPDATE coach_measurements SET trainer_id = ?, trainer_name = ? WHERE trainer_id = ?`, [to, String(studioUser.name || account.name).slice(0, 120), from]);
     await run(`UPDATE coach_fitness_tests SET trainer_id = ?, trainer_name = ? WHERE trainer_id = ?`, [to, String(studioUser.name || account.name).slice(0, 120), from]);
     await run(`UPDATE coach_progress_photos SET trainer_id = ?, trainer_name = ? WHERE trainer_id = ?`, [to, String(studioUser.name || account.name).slice(0, 120), from]);
+    await run(`UPDATE coach_workout_logs SET trainer_id = ?, trainer_name = ? WHERE trainer_id = ?`, [to, String(studioUser.name || account.name).slice(0, 120), from]);
     await run(`UPDATE coach_photo_consent SET trainer_id = ?, trainer_name = ? WHERE trainer_id = ?`, [to, String(studioUser.name || account.name).slice(0, 120), from]);
   }
   await run(`UPDATE coach_accounts SET studio_user_id = ?, linked_at = ? WHERE id = ?`, [to, now(), from]);

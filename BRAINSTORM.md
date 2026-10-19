@@ -53,15 +53,9 @@ item keeps the ids of the reports that found it. How the run was done is in
 - **When a client stops agreeing, their photos stay in messages (A-14).** Any
   one of their trainers deletes every set, but copies already sent stay
   readable to trainer and client. As recorded; still right?
-- **Ideas from the run (I-1 to I-14).** Measurements due on Today and Home
-  (I-1) and as a filter (I-2); last values in the measurement form (I-3);
-  offer photos after measurements (I-4); measurements beside Compare two days
-  (I-5); "Since Jul 20: −4.2 lb over 13 weeks" under each chart (I-6); a retest
-  reminder for fitness tests (I-7); a Message button on the client page (I-9);
-  tap a muscle on the body drawing to add an exercise for it (I-10); use the
-  room in wide screen (I-11); height, BMI and a body-fat estimate (I-12); one
-  progress report to send (I-13); logging what was actually done in a session
-  (I-14, large).
+- **Ideas from the run: I-7 left.** A retest reminder for fitness tests,
+  like Measurements every, and a Coach IQ note when a 1RM is old. Glenn
+  didn't pick it on 19 Oct 2026; the rest (I-1 to I-6, I-9 to I-14) are built.
 
 ## Ideas
 

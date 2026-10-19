@@ -35,6 +35,8 @@ export const PREFIX = {
   fitnessTest: "tst",    // one fitness test result for one client
   /* Glenn's tag, 19 Oct 2026 (Progress photos). */
   progressPhotos: "pph", // one day's progress photos for one client
+  /* Glenn's tag, 19 Oct 2026 (the session log, Run 1, I-14). */
+  workoutLog: "wkl",     // one session as it was done: a program day, logged
 };
 
 const DIGITS = "0123456789";

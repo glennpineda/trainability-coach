@@ -425,6 +425,26 @@ const SCHEMA = [
     created_at VARCHAR(32) NOT NULL,
     updated_at VARCHAR(32) NOT NULL
   )`,
+  /* A logged session (server/workout-logs.js; Run 1, I-14, Glenn, 19 Oct
+     2026): one day of a program as it was actually done, `entries` its
+     exercises as JSON (done or not, and set by set where the trainer opened
+     one), weights in kg. */
+  `CREATE TABLE IF NOT EXISTS coach_workout_logs (
+    id VARCHAR(40) PRIMARY KEY,
+    client_id VARCHAR(64) NOT NULL,
+    trainer_id VARCHAR(64) NOT NULL,
+    trainer_name VARCHAR(120) NOT NULL DEFAULT '',
+    program_id VARCHAR(40) NOT NULL DEFAULT '',
+    program_name VARCHAR(120) NOT NULL DEFAULT '',
+    day_id VARCHAR(40) NOT NULL DEFAULT '',
+    day_name VARCHAR(120) NOT NULL DEFAULT '',
+    done_on VARCHAR(10) NOT NULL,
+    entries MEDIUMTEXT NOT NULL,
+    note VARCHAR(1000) NOT NULL DEFAULT '',
+    units VARCHAR(10) NOT NULL DEFAULT 'imperial',
+    created_at VARCHAR(32) NOT NULL,
+    updated_at VARCHAR(32) NOT NULL
+  )`,
   /* That a client agreed to progress photos being kept ("Trainers, with a
      client opt-in"), recorded once by one of their trainers. */
   `CREATE TABLE IF NOT EXISTS coach_photo_consent (
@@ -557,6 +577,7 @@ const INDEXES = [
   ["coach_conversations", ["trainer_id", "client_id"]],
   ["coach_conversations", ["client_id"]],
   ["coach_measurements", ["client_id"]],
+  ["coach_workout_logs", ["client_id"]],
   ["coach_fitness_tests", ["client_id"]],
   ["coach_progress_photos", ["client_id"]],
   ["coach_limitations", ["client_id"]],

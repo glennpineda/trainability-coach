@@ -4,6 +4,7 @@ import { LEVELS, measureOf } from "./coach-iq.js";
 import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
+import * as workoutLogs from "./workout-logs.js";
 import { percentOf, kgAt, maxRepsAt, weightText, oneRmText, unreadPercent, topReps } from "../src/lib/one-rm.js";
 import { TECHNIQUE_KEYS, MAX_DROPS, isPyramid, groupSizes, techniqueText } from "../src/lib/techniques.js";
 import { aOrAn, kindsWords, plural } from "../src/lib/words.js";
@@ -429,7 +430,9 @@ async function context(trainerId, program, { frozen = false } = {}) {
   const lims = frozen ? [] : await limitations.limitationsOf(program.client_id, trainerId);
   const oneRms = frozen ? new Map() : await oneRmsOf(program.client_id);
   const history = await historyOf(trainerId, program.client_id, { before: program, tested: [...oneRms.keys()] });
-  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms };
+  /* What was done last time with each exercise, from the client's logged sessions (Run 1, I-14). */
+  const lastTime = frozen ? new Map() : await workoutLogs.lastByExercise(program.client_id);
+  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms, lastTime };
 }
 
 /* The client's latest 1RM for each exercise (fitness-tests.js, kind onerm;
@@ -592,6 +595,8 @@ export async function full(trainerId, program, { withCheck = true, ctx: given = 
       ...(ctx.oneRms.get(r.exercise_id) ? { oneRm: ctx.oneRms.get(r.exercise_id) } : {}),
       ...(percentOf(r.load_text) && ctx.oneRms.get(r.exercise_id) ? { loadKg: Math.round(kgAt(ctx.oneRms.get(r.exercise_id).kg, percentOf(r.load_text)) * 100) / 100 } : {}),
       rest: r.rest_seconds == null ? null : Number(r.rest_seconds), restText: restWords(r.rest_seconds == null ? null : Number(r.rest_seconds)), note: r.note,
+      /* Its latest logged entry, by any trainer of the client: { doneOn, entry, units }. */
+      ...(ctx.lastTime?.get(r.exercise_id) ? { lastTime: ctx.lastTime.get(r.exercise_id) } : {}),
     };
   };
   const out = {

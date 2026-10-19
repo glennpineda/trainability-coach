@@ -54,6 +54,7 @@ own chapter here as it arrives.
    - [5.4 What Coach IQ says](#54-what-coach-iq-says)
    - [5.5 Days, order and supersets](#55-days-order-and-supersets)
    - [5.6 Printing it for the client](#56-printing-it-for-the-client)
+   - [5.7 Logging a session](#57-logging-a-session)
 6. [Asking Billy](#6-asking-billy)
    - [6.1 Opening Billy](#61-opening-billy)
    - [6.2 Asking a question](#62-asking-a-question)
@@ -929,7 +930,7 @@ your clients…* beside a small turning circle.
      Coach, or with a Coach account.
    - **Programs**: your programs for them, each opening in the designer (5),
      and **New program for Avery**, which starts a new program (5.1) with
-     them already chosen.
+     them already chosen; then their **Logged sessions** (5.7).
    - **Measurements** (4.8).
    - **Progress photos** (4.9).
    - **Fitness tests** (4.10).
@@ -1651,6 +1652,50 @@ Trainability.
 A program sent in a message (7.3) opens the same way, with the drawing; one
 sent before the drawing came to Coach (version 1.0.81) has none, since its
 copy didn't keep the muscles.
+
+### 5.7 Logging a session
+
+After a session, write down how it went: what was done, and, where you
+like, each set's reps and weight. Every trainer of the client sees it, with
+who logged it. Only the trainer who logged a session can change or delete
+it.
+
+1. Open the program (5.1) and find the day you trained.
+2. Under its exercises, tap **Log this session**. The **Log Day A** box
+   opens. **Day of the session** starts on today; change it if it was
+   another day.
+3. Each exercise starts ticked, done as planned, with the plan under its
+   name, such as *As planned: 3 × 8 at 135 lb*. For an exercise that wasn't
+   done, tap the tick to take it off; it shows *Not done*.
+4. To write what was actually done, tap the exercise's name. It opens set
+   by set, each filled in from the plan: change any set's **reps** or
+   weight, tap **Another set** for one more, or the **X** to take one off.
+5. **Add a note** under an exercise for anything worth remembering, such as
+   how a knee felt, and add a **Note on the session** if you like.
+6. Tap **Save the session**. It says *Day A logged.* **Cancel** leaves
+   without saving.
+
+**What it is used for.**
+
+- In the program, under each exercise, the last time it was logged, such
+  as *Last time (Oct 19): 3 × 8 at 135 lb*. When every set was done at the
+  planned weight to the top of the planned reps, Coach IQ suggests going a
+  little heavier: *Coach IQ: every set was done last time; try about 140
+  lb.* (about 2.5% more, at least 5 lb or 2.5 kg).
+- A set of 10 reps or fewer that beats the client's best 1RM for a lift
+  from the library becomes a new estimated 1RM in their **Fitness tests**
+  (4.10), with the note *From the session on* and its date. If the session
+  is changed or deleted, that 1RM goes with it.
+- Billy can read the client's sessions when you ask him how they are doing
+  (chapter 6).
+
+**Seeing them.** On the client's page, the **Programs** tab (4.3) lists
+**Logged sessions** under the programs, newest first: the day, the program
+and day, how many exercises were done (such as *3 of 3 done*) and who
+logged it. Tap one to see each exercise as it went and the notes. Yours
+have **Change** (the same box) and the bin: *Delete this session?*, then
+**Delete** or **Keep it**. With none it says *None logged yet. Open a
+program and tap Log this session under a day.*
 
 <div style="page-break-after: always;"></div>
 
