@@ -22,32 +22,12 @@ finished stays here.
 
 _Things actually ready to do._
 
-Nothing waiting.
-
-## Found in testing
-
-_Problems a test run turned up. Recorded, not yet fixed — move one into Next
-up to have it done. Each says which run found it. Once fixed, it goes straight
-to [NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes) under **Test Run Fixes**,
-in that run's write-up._
-
-### Run 1 (19 Oct 2026, build 1.0.81)
-
-Six agents, each on its own copy of the app: two feature testers (A: clients
-and their records; B: programs, sign-in, menus and Billy) and four audits
-(D: design; U: ease of use; M: the manual; O and I: speed and ideas). Each
-item keeps the ids of the reports that found it. How the run was done is in
-[NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes), Run 1.
-
-**Medium**
+Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
 - **A program keeps reading a client after they leave (B-2, privacy).** An old
   program still loads the client's newest 1RMs and limitations
   (`programs.full`), can be edited, and Billy lists it. Read them only while the
   client is still the trainer's, or freeze it.
-- **Log out on a Primary page, and the next trainer gets a blank page (B-3).**
-  `Shell.jsx` restores `coach-tab` (and `coach-program`) whatever the role;
-  logout doesn't clear them. Clear on logout; fall back to Home.
 - **Linking a Coach account doubles "Where I usually train" (B-6).**
   `accounts.link` moves places without merging; Tess now has three of the same
   name. Merge, or rename.
@@ -151,6 +131,22 @@ item keeps the ids of the reports that found it. How the run was done is in
   re-sends ~4,000 tokens of prompt and tools each round with no prompt caching;
   the program check is worked out again per call (111 queries for Billy's
   my_programs, N+1 history).
+
+
+## Found in testing
+
+_Problems a test run turned up. Recorded, not yet fixed — move one into Next
+up to have it done. Each says which run found it. Once fixed, it goes straight
+to [NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes) under **Test Run Fixes**,
+in that run's write-up._
+
+### Run 1 (19 Oct 2026, build 1.0.81)
+
+Six agents, each on its own copy of the app: two feature testers (A: clients
+and their records; B: programs, sign-in, menus and Billy) and four audits
+(D: design; U: ease of use; M: the manual; O and I: speed and ideas). Each
+item keeps the ids of the reports that found it. How the run was done is in
+[NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes), Run 1.
 
 **Low**
 

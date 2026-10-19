@@ -29,6 +29,7 @@ const TABS = [
    exercises and, for the Primary Master, Review Coach IQ and Installation,
    all from the account menu. */
 const PAGES = ["equipment", "exercises", "review", "installation"];
+const PRIMARY_PAGES = ["review", "installation"];
 const KEY = "coach-tab";
 
 /* As Studio decides it (its isPrimaryMaster); the server checks again. */
@@ -41,7 +42,11 @@ const isPrimaryMaster = (user) => !!user?.isPrimary && user?.role === "master";
    so it never sits stale. */
 export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
   const [tab, setTab] = useState(() => {
-    try { const t = sessionStorage.getItem(KEY); return TABS.some(x => x.id === t) || PAGES.includes(t) ? t : "home"; } catch { return "home"; }
+    /* Only a page this person may open: Review and Installation are the
+       Primary Master's, and somebody else signing in on the same tab was
+       left on an empty page (Run 1, B-3). */
+    const mayOpen = (t) => TABS.some(x => x.id === t) || (PAGES.includes(t) && (!PRIMARY_PAGES.includes(t) || isPrimaryMaster(user)));
+    try { const t = sessionStorage.getItem(KEY); return mayOpen(t) ? t : "home"; } catch { return "home"; }
   });
   useEffect(() => { try { sessionStorage.setItem(KEY, tab); } catch { /* not kept */ } }, [tab]);
   const clients = useClients(onSignedOut);

@@ -53,7 +53,12 @@ export function useAuth() {
 
   /* Ends Coach's session only; a Studio tab signed in separately stays in. */
   const logout = useCallback(async () => {
-    try { await apiRequest("POST", "/auth/logout"); } finally { setExpired(false); setUser(null); }
+    try { await apiRequest("POST", "/auth/logout"); } finally {
+      /* Where they were (the tab, the program, the client, the conversation)
+         goes with them, so the next person on this tab starts at Home (Run 1, B-3). */
+      try { for (const k of ["coach-tab", "coach-program", "coach-client", "coach-thread"]) sessionStorage.removeItem(k); } catch { /* not kept */ }
+      setExpired(false); setUser(null);
+    }
   }, []);
 
   /* Studio said the session has ended (a 401 from any later request): sign
