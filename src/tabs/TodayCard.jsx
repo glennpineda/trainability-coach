@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ArrowRight, CalendarDays, Check, ChevronDown, ClipboardList, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { isoDate } from "../lib/date";
 
 /*
  * Today, on Home (Glenn, 18 Oct 2026: "Let's do the Today tab"): the
@@ -15,9 +16,7 @@ import { apiRequest } from "../lib/api";
  */
 
 /* The browser's own day, so it turns at the trainer's midnight. */
-function isoDay(d = new Date()) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
+const isoDay = (d = new Date()) => isoDate(d);
 /* Studio's lib/date.js, as it writes them. */
 const at = (iso) => new Date(`${iso}T00:00:00`);
 const minutesToLabel = (m) => { const h = Math.floor(m / 60), min = m % 60; return `${h % 12 === 0 ? 12 : h % 12}:${String(min).padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}`; };

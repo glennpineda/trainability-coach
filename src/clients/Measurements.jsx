@@ -3,6 +3,7 @@ import { ChartLine, ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-reac
 import { apiRequest } from "../lib/api";
 import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip } from "../lib/measures";
 import { Trend } from "./Trend";
+import { todayIso } from "../lib/date";
 
 /*
  * A client's body measurements (Glenn, 18 Oct 2026): weight, body fat, and
@@ -13,7 +14,6 @@ import { Trend } from "./Trend";
  * (Units, in the account menu); kept in metric (src/lib/measures.js).
  */
 
-const today = () => new Date().toISOString().slice(0, 10);
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 
 /* One set's values, two to a row from sm, each with how it changed since
@@ -87,7 +87,7 @@ function Progress({ list, units }) {
 }
 
 function Form({ units, initial, busy, onSave, onCancel }) {
-  const [takenOn, setTakenOn] = useState(initial?.takenOn || today());
+  const [takenOn, setTakenOn] = useState(initial?.takenOn || todayIso());
   const [note, setNote] = useState(initial?.note || "");
   const [values, setValues] = useState(() => Object.fromEntries(MEASURES.map(m => [m.key, initial ? String(toShown(m, initial.values[m.key], units) ?? "") : ""])));
   const box = (m) => (
@@ -109,7 +109,7 @@ function Form({ units, initial, busy, onSave, onCancel }) {
   return (
     <form className="mt-2 grid gap-3" onSubmit={(e) => { e.preventDefault(); onSave({ takenOn, note, values, units }); }}>
       <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Taken on
-        <input type="date" className="cx-input" style={{ color: "var(--ink)" }} max={today()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
+        <input type="date" className="cx-input" style={{ color: "var(--ink)" }} max={todayIso()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
       </label>
       {/* In MEASURES' order: runs of single ones two to a row, and each pair
           (left and right, or blood pressure's two numbers) under its name. */}

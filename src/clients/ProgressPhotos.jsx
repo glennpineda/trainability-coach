@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Camera, ChevronDown, Columns2, Plus, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { ANGLES } from "../lib/progress-photos";
+import { isoDate } from "../lib/date";
 import { PhotoSession } from "./PhotoSession";
 import { PhotoCompare } from "./PhotoCompare";
 
@@ -126,7 +127,7 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
         </div>
       ) : (
         <>
-          <p className="text-xs" style={muted}>{first} agreed · recorded by {data.consent.mine ? "you" : data.consent.recordedBy} on {dateText(data.consent.agreedAt.slice(0, 10))}</p>
+          <p className="text-xs" style={muted}>{first} agreed · recorded by {data.consent.mine ? "you" : data.consent.recordedBy} on {dateText(isoDate(new Date(data.consent.agreedAt)))}</p>
           {sets.length === 0 && <p className="text-sm mt-1" style={muted}>None taken yet.</p>}
           {latest && card(latest, 0)}
           <div className="flex flex-wrap gap-x-4">

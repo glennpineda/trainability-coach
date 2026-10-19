@@ -1729,7 +1729,7 @@ app.post("/api/assistant", async (req, res) => {
         const every = await trainerSettings.measureEveryOf(user.id);
         const last = sets[0]?.takenOn || null;
         return {
-          client: `${client.firstName} ${client.lastName}`.trim(), today: new Date().toISOString().slice(0, 10),
+          client: `${client.firstName} ${client.lastName}`.trim(), today: new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date()),
           measurements: sets.slice(0, 12).map(m => {
             const before = previousOf(sets, m);
             return { takenOn: m.takenOn, takenBy: m.mine ? "the trainer" : m.takenBy, ...(m.note ? { note: m.note } : {}),

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Camera, Check, ChevronLeft, Ghost, RefreshCw, SwitchCamera, Timer, Upload, X } from "lucide-react";
 import { ANGLES, CHECKLIST, PHOTO_W, PHOTO_H } from "../lib/progress-photos";
+import { todayIso } from "../lib/date";
 
 /*
  * Taking a set of progress photos (Glenn, 19 Oct 2026: "Is there a way we
@@ -21,7 +22,6 @@ import { ANGLES, CHECKLIST, PHOTO_W, PHOTO_H } from "../lib/progress-photos";
  * exactly as the view shows it, so the ghost and the photo line up.
  */
 
-const today = () => new Date().toISOString().slice(0, 10);
 const RATIO = PHOTO_W / PHOTO_H;
 
 /* The middle 3:4 of a picture or a video frame, as a JPEG data URI. */
@@ -98,7 +98,7 @@ export function PhotoSession({ firstName, previous, onSave, onClose, busy, error
   const [timer, setTimer] = useState(false);
   const [count, setCount] = useState(0);
   const [camera, setCamera] = useState("off");   // "off", "starting", "on", "none"
-  const [takenOn, setTakenOn] = useState(today());
+  const [takenOn, setTakenOn] = useState(todayIso());
   const [note, setNote] = useState("");
   const [said, setSaid] = useState("");
   const [redo, setRedo] = useState(false);      // taking one again from the review
@@ -275,7 +275,7 @@ export function PhotoSession({ firstName, previous, onSave, onClose, busy, error
             ))}
           </div>
           <label className="grid gap-1 text-xs mt-4" style={{ opacity: 0.85 }}>Day taken
-            <input type="date" className="cx-input" max={today()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
+            <input type="date" className="cx-input" max={todayIso()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
           </label>
           <label className="grid gap-1 text-xs mt-3" style={{ opacity: 0.85 }}>Note (optional)
             <textarea className="cx-input text-sm" rows={2} maxLength={1000} value={note} placeholder="Such as: morning, before training" onChange={e => setNote(e.target.value)} />

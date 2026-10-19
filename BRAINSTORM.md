@@ -24,14 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **Dates start on the UTC day, not the trainer's (A-2).** "Taken on", "Day of
-  the test" and the photo date default to, and are capped at,
-  `new Date().toISOString()` (`Measurements.jsx`, `FitnessTests.jsx`,
-  `PhotoSession.jsx`), and the server checks UTC. In California after 5 pm
-  everything is dated tomorrow; east of UTC in the morning today is refused
-  ("Choose a day that has been, not one still to come."). The agreement's
-  "recorded on" date too. Use the device's date; let the server allow a day
-  ahead.
 - **Changing only a note changes the numbers (A-3).** The edit form fills its
   boxes with rounded shown values and saves them all back: 80.3 kg, waist
   80.3 cm, arm 30.1 cm became 80.29, 80.01 and 29.84 after the trainer switched

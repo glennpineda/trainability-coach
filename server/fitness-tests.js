@@ -16,7 +16,10 @@ import { MEASURES, fromShown } from "../src/lib/measures.js";
  */
 
 const now = () => new Date().toISOString();
-const today = () => now().slice(0, 10);
+/* The latest day a trainer may pick: tomorrow by UTC, since the server can't
+   know the trainer's clock and somewhere it is already tomorrow (UTC+14). The
+   page caps the date box at the device's own today (Run 1, A-2). */
+const latestDay = () => new Date(Date.now() + 86400000).toISOString().slice(0, 10);
 const parse = (s) => { try { return JSON.parse(s || "{}"); } catch { return {}; } };
 
 function shape(r, trainerId) {
@@ -46,7 +49,7 @@ export function check(body = {}) {
   if (!TESTS[kind]) return { error: "Choose which test it was." };
   const takenOn = String(body.takenOn || "");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(takenOn) || Number.isNaN(Date.parse(`${takenOn}T00:00:00Z`))) return { error: "Choose the day of the test." };
-  if (takenOn > today() || takenOn < "1990-01-01") return { error: "Choose a day that has been, not one still to come." };
+  if (takenOn > latestDay() || takenOn < "1990-01-01") return { error: "Choose a day that has been, not one still to come." };
   const note = typeof body.note === "string" ? body.note.trim().slice(0, 1000) : "";
   const age = num(body.age);
   const sex = body.sex === "female" || body.sex === "male" ? body.sex : "";

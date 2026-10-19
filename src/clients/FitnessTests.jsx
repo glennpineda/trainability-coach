@@ -6,6 +6,7 @@ import { TESTS, TEST_GROUPS, VO2_SOURCES, NEEDS_WHO, JUMP_STYLES, JUMP_TOOLS, HO
 import { LibraryPicker } from "../tabs/ExercisesTab";
 import { Trend } from "./Trend";
 import { MEASURES, toShown, unitOf } from "../lib/measures";
+import { todayIso } from "../lib/date";
 
 /*
  * A client's fitness tests (Glenn, 18 Oct 2026; src/lib/fitness-tests.js).
@@ -20,7 +21,6 @@ import { MEASURES, toShown, unitOf } from "../lib/measures";
  * delete. Every trainer of the client sees them.
  */
 
-const today = () => new Date().toISOString().slice(0, 10);
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 const WEIGHT = MEASURES.find(m => m.key === "weight");
 
@@ -50,7 +50,7 @@ function Field({ label, unit, children }) {
 
 function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) {
   const [kind, setKind] = useState(initial?.kind || null);
-  const [takenOn, setTakenOn] = useState(initial?.takenOn || today());
+  const [takenOn, setTakenOn] = useState(initial?.takenOn || todayIso());
   const [age, setAge] = useState(initial?.age != null ? String(initial.age) : "");
   const [sex, setSex] = useState(initial?.sex || sexOf(client?.gender));
   const [heartRate, setHeartRate] = useState(initial?.data?.heartRate != null ? String(initial.data.heartRate) : "");
@@ -157,7 +157,7 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
         {t.tip && <p className="text-xs mt-1.5" style={{ opacity: 0.85 }}>{t.tip}</p>}
       </div>
       <label className="grid gap-1 text-xs" style={{ color: "var(--iron)" }}>Day of the test
-        <input type="date" className="cx-input" style={{ color: "var(--ink)" }} max={today()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
+        <input type="date" className="cx-input" style={{ color: "var(--ink)" }} max={todayIso()} value={takenOn} onChange={e => setTakenOn(e.target.value)} />
       </label>
       {needsWho && (
         <>

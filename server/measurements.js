@@ -33,7 +33,10 @@ export async function measurementsOf(clientId, trainerId) {
 export const measurementById = (id) => get(`SELECT * FROM coach_measurements WHERE id = ?`, [id]);
 export const shapeOf = shape;
 
-const today = () => new Date().toISOString().slice(0, 10);
+/* The latest day a trainer may pick: tomorrow by UTC, since the server can't
+   know the trainer's clock and somewhere it is already tomorrow (UTC+14). The
+   page caps the date box at the device's own today (Run 1, A-2). */
+const latestDay = () => new Date(Date.now() + 86400000).toISOString().slice(0, 10);
 
 /**
  * What the page sent, checked and turned into metric: `{ values, takenOn,
@@ -44,7 +47,7 @@ export function check(body = {}) {
   const units = body.units === "metric" ? "metric" : "imperial";
   const takenOn = String(body.takenOn || "");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(takenOn) || Number.isNaN(Date.parse(`${takenOn}T00:00:00Z`))) return { error: "Choose the day they were taken." };
-  if (takenOn > today() || takenOn < "1990-01-01") return { error: "Choose a day that has been, not one still to come." };
+  if (takenOn > latestDay() || takenOn < "1990-01-01") return { error: "Choose a day that has been, not one still to come." };
   const values = {};
   let any = false;
   for (const m of MEASURES) {
