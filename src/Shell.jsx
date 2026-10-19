@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { scrollPageTo } from "./lib/scroll";
 import { House, Users, ClipboardList, MessageCircle } from "lucide-react";
 import { Header } from "./chrome/Header";
 import { DriftingHexes } from "./chrome/DriftingHexes";
+import { HexBackdrop } from "./auth/HexBackdrop";
 import { BottomNav } from "./chrome/BottomNav";
 import { HomeTab } from "./tabs/HomeTab";
 import { ComingSoonTab } from "./tabs/ComingSoonTab";
@@ -55,7 +57,7 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
     const t = setInterval(ask, 60 * 1000);
     return () => clearInterval(t);
   }, [tab]);
-  const open = (id) => { setTab(id); window.scrollTo({ top: 0 }); };
+  const open = (id) => { setTab(id); scrollPageTo({ top: 0 }); };
   /* A notification tapped (public/push-sw.js): its address says where, such
      as /?open=messages&client=… for a client's message. Opened from scratch
      the address is the page's own, read once and tidied away; with Coach
@@ -86,15 +88,25 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
   const openProgram = (id) => { try { sessionStorage.setItem("coach-program", id); } catch { /* not kept */ } open("programs"); };
   const openClient = (id) => { try { sessionStorage.setItem("coach-client", id); } catch { /* not kept */ } open("clients"); };
 
+  /* Studio's app shell (its App.jsx, .iw-app-shell; Glenn, 19 Oct 2026:
+     "Studio has this panel with rounded borders that encapsulates all the
+     content of the app, can we do the same here?"): from a small tablet up,
+     the whole app is one rounded card floating on the sign-in screen's field,
+     the page scrolling inside it and the tab bar at its foot. On a phone it
+     is the whole screen, as it was (src/index.css, "app shell"). */
   return (
-    <div className="min-h-dvh" style={{ background: "var(--paper)" }}>
+    <div className="cx-root">
+      <div className="cx-app-backdrop" aria-hidden="true" style={{ background: "var(--ground)" }}><HexBackdrop /></div>
+      <div className="cx-app-shell">
       {/* Studio's drifting hexagons, in Coach's blues, behind every page
-          (Glenn, 18 Oct 2026), held to the window as Studio's sign-in screen
-          holds them; at full strength behind the header and the tab bar, a
-          share of that behind the page, as Studio's are (bodyShare 0.75). */}
+          (Glenn, 18 Oct 2026), held to the window (on a phone) or the card as
+          Studio's sign-in screen holds them; at full strength behind the
+          header and the tab bar, a share of that behind the page, as Studio's
+          are (bodyShare 0.75). */}
       <div aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
         <DriftingHexes bodyShare={0.75} />
       </div>
+      <div className="cx-app-scroll">
       <Header user={user} onLogout={onLogout} billy={billy} onOpen={open} chooseLook={chooseLook} />
       {/* Room at the end for the bar floating over it; over the hexagons. */}
       <main className="pb-32 relative z-[1]">
@@ -108,7 +120,9 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook }) {
         {tab === "installation" && isPrimaryMaster(user) && <InstallationTab onSignedOut={onSignedOut} />}
         {SECTIONS[tab] && !SECTIONS[tab].built && <ComingSoonTab section={SECTIONS[tab]} />}
       </main>
+      </div>
       <BottomNav tabs={TABS.map(t => (t.id === "messages" ? { ...t, count: unread, countWord: "new" } : t))} activeTab={tab} onChange={open} />
+      </div>
     </div>
   );
 }

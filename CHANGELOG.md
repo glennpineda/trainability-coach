@@ -116,6 +116,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   any measurement taken on two days or more (blood pressure's two numbers
   together); opening a fitness test's earlier results charts that test. Tap a
   point to read its day and number.
+- **Studio's panel.** On a tablet or a computer, Coach sits in one panel
+  with rounded corners on the sign-in screen's blue field, as Studio does,
+  the page scrolling inside it. A phone is as before.
 - **A client opens on a page of their own**, as large as the screen, headed
   with their name and an arrow back to the list, with four tabs: Details &
   limitations, Measurements, Progress photos and Fitness tests. Each client's

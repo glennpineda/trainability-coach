@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { scrollPageTo } from "../lib/scroll";
 import { Check, Flag, Undo2, Download, ChevronRight, Pencil, History, Archive, Plus } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
@@ -187,7 +188,7 @@ export function ReviewTab({ onSignedOut }) {
     const after = [...list.slice(from + 1), ...list.slice(0, from + 1)];
     const todo = after.find(f => f.approved + f.flagged < f.versions);
     setFamilyId((todo || after[0]).id); open(null);
-    window.scrollTo({ top: 0 });
+    scrollPageTo({ top: 0 });
   };
 
   const families = summary?.families.map(f => ({ id: f.id, label: f.label }));
@@ -421,7 +422,7 @@ export function ReviewTab({ onSignedOut }) {
                             <h2 className="cx-display text-2xl">{p.title}</h2>
                             <div className="text-sm" style={muted}>{p.covers}</div>
                             <Standing p={p} />
-                            <div className="mt-3"><Prose text={p.body} onTopic={(k) => { setTopic(k); window.scrollTo({ top: 0 }); }} /></div>
+                            <div className="mt-3"><Prose text={p.body} onTopic={(k) => { setTopic(k); scrollPageTo({ top: 0 }); }} /></div>
                             <CardActions>
                               <button type="button" className="cx-btn-row" onClick={() => open("principle", p.key)}><Pencil size={15} aria-hidden="true" /> Edit</button>
                               <button type="button" className="text-sm cx-link" onClick={() => showHistory(p.key)}><History size={15} aria-hidden="true" /> History</button>

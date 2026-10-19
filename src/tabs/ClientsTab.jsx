@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { scrollPageTo } from "../lib/scroll";
 import { Search, ChevronLeft, ChevronRight, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
@@ -96,7 +97,7 @@ const CLIENT_TABS = [
 function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured }) {
   const [tab, setTab] = useState("details");
   const next = nextBooked(c);
-  useEffect(() => { window.scrollTo({ top: 0 }); }, [c.id]);
+  useEffect(() => { scrollPageTo({ top: 0 }); }, [c.id]);
   return (
     <div className="max-w-5xl mx-auto px-4">
       <div className="flex items-center gap-2 pt-4 pb-3">
@@ -315,7 +316,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   if (open) {
     return (
       <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh}
-        onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); window.scrollTo({ top: 0, behavior: "smooth" }); } : null}
+        onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); scrollPageTo({ top: 0, behavior: "smooth" }); } : null}
         onArchive={archive ? archiveOne : null} />
     );
   }

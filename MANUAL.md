@@ -282,6 +282,12 @@ a computer.
 
 ## 3. Finding your way around
 
+On a phone, Coach fills the screen. On a tablet or a computer, it sits in one
+panel with rounded corners, in the middle of the blue field you see when
+signing in: the bar at the top, the page, and the bar at the bottom all
+inside it. The page scrolls inside the panel, and the two bars stay where
+they are. A phone turned on its side fills the screen too.
+
 ### 3.1 The bar at the top
 
 ![The home screen, with the bar at the top and the bar at the bottom](docs/images/02-home.png)
