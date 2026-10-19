@@ -5,6 +5,7 @@ import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
 import { percentOf, kgAt, maxRepsAt, weightText, unreadPercent, topReps } from "../src/lib/one-rm.js";
+import { TECHNIQUE_KEYS, MAX_DROPS, isPyramid, groupSizes, techniqueText } from "../src/lib/techniques.js";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "We need to start creating a
@@ -351,10 +352,21 @@ export function doseFrom(body = {}) {
     out.rest = s;
   }
   if (body.superset !== undefined) out.superset = body.superset ? 1 : 0;
+  /* A drop set or a pyramid (src/lib/techniques.js); drops only for a drop set. */
+  if (body.technique !== undefined) {
+    if (!TECHNIQUE_KEYS.includes(body.technique || "")) return { error: "Choose how the sets are done from the list." };
+    out.technique = body.technique || "";
+    if (out.technique !== "drop") out.drops = null;
+  }
+  if (body.drops !== undefined && (body.technique === undefined || body.technique === "drop")) {
+    const n = body.drops === "" || body.drops === null ? null : Number(body.drops);
+    if (n !== null && !(Number.isInteger(n) && n >= 1 && n <= MAX_DROPS)) return { error: `A drop set has 1 to ${MAX_DROPS} drops.` };
+    out.drops = n;
+  }
   return out;
 }
 
-const COLUMNS = { sets: "sets", reps: "reps", load: "load_text", effort: "effort", tempo: "tempo", rest: "rest_seconds", note: "note", superset: "superset" };
+const COLUMNS = { sets: "sets", reps: "reps", load: "load_text", effort: "effort", tempo: "tempo", rest: "rest_seconds", note: "note", superset: "superset", technique: "technique", drops: "drops" };
 
 export async function addExercise(program, dayId, exerciseId, dose) {
   const top = await get(`SELECT MAX(pos) AS top FROM coach_program_exercises WHERE day_id = ?`, [dayId]);
@@ -519,6 +531,7 @@ export async function full(trainerId, program, { withCheck = true, ctx: given = 
       /* What it works, for the day's body drawing (BodyMap.jsx). */
       primary: x?.primary || p?.primary || [], secondary: x?.secondary || [],
       superset: !!Number(r.superset),
+      technique: r.technique || "", drops: r.drops == null ? null : Number(r.drops),
       sets: r.sets, reps: r.reps, load: r.load_text, effort: r.effort, tempo: r.tempo,
       /* A load as a percentage of the client's 1RM for it, worked out. */
       ...(ctx.oneRms.get(r.exercise_id) ? { oneRm: ctx.oneRms.get(r.exercise_id) } : {}),
@@ -562,13 +575,45 @@ function check(program, rows, ctx, own) {
     add({ level: "note", from: "frequency-and-variety", text: `${program.days.length} days: early on two sessions a week are enough, and three or four after the first weeks.` });
   }
 
+  /* Drop sets and giant sets, by the muscles they mainly work, across the
+     week: once or twice a week for a muscle, more risks overtraining (the
+     techniques' source, Glenn, 19 Oct 2026). */
+  const hard = new Map();
+  for (const day of program.days) {
+    const sizes = groupSizes(day.exercises);
+    for (const [i, e] of day.exercises.entries()) {
+      const way = e.technique === "drop" ? "drop" : sizes[i] >= 3 ? "giant" : null;
+      if (!way) continue;
+      for (const m of e.primary || []) hard.set(m, (hard.get(m) || 0) + 1);
+    }
+  }
+  for (const [m, n] of hard) {
+    if (n > 2) add({ level: "note", from: "technique", text: `${m[0].toUpperCase() + m.slice(1)}: ${n} drop sets or giant-set exercises a week. Once or twice a week for a muscle is the usual; more risks overtraining.` });
+  }
+
   for (const day of program.days) {
     const dayRows = rows.filter(r => r.day_id === day.id);
     let sets = 0, counted = 0;
     let sawLater = null;
-    for (const e of day.exercises) {
+    const sizes = groupSizes(day.exercises);
+    for (const [ei, e] of day.exercises.entries()) {
       const x = library.exerciseById(e.exerciseId);
       const at = { day: day.id, exercise: e.id };
+      /* The techniques (src/lib/techniques.js): drop sets and giant sets for
+         intermediate lifters and up, a pyramid's reps set by set. */
+      if (beginner && (e.technique === "drop" || (sizes[ei] >= 3 && !e.superset))) {
+        add({ ...at, level: "warn", from: "technique", text: `${e.name}: ${e.technique === "drop" ? "a drop set" : "a giant set"} suits intermediate to advanced lifters. For a beginner, a pyramid or a superset first.` });
+      }
+      if (isPyramid(e.technique)) {
+        const list = String(e.reps || "").split(/\s*[,/]\s*|\s+/).filter(Boolean).map(Number);
+        if (list.length < 2 || list.some(n => !Number.isInteger(n) || n < 1)) {
+          add({ ...at, level: "note", from: "technique", text: `${e.name}: a pyramid's reps change each set. Write them in order, such as ${e.technique === "pyramid-down" ? "6, 8, 10" : e.technique === "pyramid-double" ? "12, 10, 8, 10, 12" : "12, 10, 8, 6"}.` });
+        } else if (e.technique === "pyramid-up" && list.some((n, i) => i && n > list[i - 1])) {
+          add({ ...at, level: "note", from: "technique", text: `${e.name}: going up, the weight rises and the reps fall each set; ${e.reps} has reps rising.` });
+        } else if (e.technique === "pyramid-down" && list.some((n, i) => i && n < list[i - 1])) {
+          add({ ...at, level: "note", from: "technique", text: `${e.name}: coming down, the weight falls and the reps rise each set; ${e.reps} has reps falling.` });
+        }
+      }
       const s = range(e.sets);
       if (s) { sets += s[1]; counted++; }
       if (x) {
@@ -907,6 +952,7 @@ export async function forBilly(trainerId, program) {
         if (e.oneRm) out.clientsOneRm = { kg: e.oneRm.kg, takenOn: e.oneRm.takenOn };
         if (e.restText) out.rest = e.restText;
         if (e.superset) out.withThePrevious = true;
+        if (e.technique) out.technique = techniqueText(e);
         if (e.own) out.theirOwnExercise = true;
         return out;
       }),
@@ -921,4 +967,5 @@ export async function forBilly(trainerId, program) {
 export const FROM = {
   equipment: "the place's equipment", limitations: "the client's limitations", library: "Coach IQ's library",
   reps: "Reps", sets: "Sets", rest: "Rest", tempo: "Tempo", "starting-out": "Starting out", "frequency-and-variety": "How often, and keeping it varied",
+  technique: "Advanced sets",
 };

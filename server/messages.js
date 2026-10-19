@@ -169,7 +169,7 @@ async function sweepIncoming() {
 export async function programAttachment(owner, program, units) {
   const days = program.days.map(d => ({
     name: d.name, notes: d.notes || "",
-    exercises: d.exercises.map(e => ({ name: e.name, superset: !!e.superset, sets: e.sets, reps: e.reps, load: e.load, ...(e.loadKg ? { loadKg: e.loadKg } : {}), effort: e.effort, tempo: e.tempo, restText: e.restText, note: e.note, primary: e.primary || [], secondary: e.secondary || [] })),
+    exercises: d.exercises.map(e => ({ name: e.name, superset: !!e.superset, technique: e.technique || "", drops: e.drops ?? null, sets: e.sets, reps: e.reps, load: e.load, ...(e.loadKg ? { loadKg: e.loadKg } : {}), effort: e.effort, tempo: e.tempo, restText: e.restText, note: e.note, primary: e.primary || [], secondary: e.secondary || [] })),
   }));
   const data = { programId: program.id, name: program.name, clientName: program.clientName, goalLabel: program.goalLabel, kindLabel: program.kindLabel, notes: program.notes || "", updatedAt: program.updatedAt, units, days };
   const id = await insertWithNewId("attachment", (newId) => run(

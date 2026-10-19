@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BodyMap, scaleOf } from "./BodyMap";
 import { loadLine, percentOf } from "../lib/one-rm";
+import { techniqueText, groupSizes, groupName } from "../lib/techniques";
 import {
   ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Send, Sparkles, Trash2, TriangleAlert, Info, X,
 } from "lucide-react";
@@ -28,7 +29,7 @@ const FROM = {
   equipment: "The place's equipment", limitations: "The client's limitations", library: "Coach IQ's library",
   reps: "Principles: Reps", sets: "Principles: Sets", rest: "Principles: Rest", tempo: "Principles: Tempo",
   "starting-out": "Principles: Starting out", "frequency-and-variety": "Principles: How often",
-  progression: "The client's earlier programs", "one-rm": "The client's 1RM",
+  progression: "The client's earlier programs", "one-rm": "The client's 1RM", technique: "Advanced sets",
 };
 
 /* "3 × 8–12 · 45 lb · RPE 7 · 3-1-1-0 · rest 75 s": what is filled in, in the reader's units. */
@@ -41,6 +42,7 @@ export function doseLine(e, units) {
   if (e.effort) parts.push(e.effort);
   if (e.tempo) parts.push(`tempo ${e.tempo}`);
   if (e.restText) parts.push(`rest ${e.restText}`);
+  if (techniqueText(e)) parts.push(techniqueText(e));
   return parts.join(" · ");
 }
 
@@ -352,9 +354,13 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
             <ol className="mt-2">
               {d.exercises.map((e, i) => {
                 const { label, inPair } = labels[i];
+                /* A superset or a giant set named above its first exercise. */
+                const size = groupSizes(d.exercises)[i];
+                const starts = size > 1 && !e.superset;
                 const mine = points(c => c.exercise === e.id);
                 return (
                   <li key={e.id} id={`ex-${e.id}`} className="py-2.5 border-t first:border-t-0 rounded-lg transition-colors duration-700" style={{ ...line, ...(flash === e.id ? { background: "var(--accent-soft)" } : {}) }}>
+                    {starts && <div className="text-xs font-semibold uppercase tracking-wide mb-1 ml-9" style={{ color: "var(--accent)" }}>{groupName(size)} · {size} together, little rest between</div>}
                     <div className="flex items-start gap-2">
                       <span className="text-xs font-semibold w-7 flex-none pt-0.5" style={{ color: inPair ? "var(--accent)" : "var(--iron)" }}>
                         {e.superset && <Link2 size={11} className="inline mr-0.5" aria-label="With the one above" />}{label}

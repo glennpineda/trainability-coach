@@ -1482,9 +1482,25 @@ the suggestions, and talks it through; he changes nothing himself.
 - Beside each exercise: the arrows move it up or down the day, and the bin
   takes it out, after asking: *Take Goblet squat out of Day A? Its sets,
   reps, load and note go with it.*
-- **A superset**: in its box (**Details**), tick **Done together with the
-  exercise above (a superset)**. The two then share a number, such as **2a** and
-  **2b**.
+- **A superset or a giant set**: in its box (**Details**), tick **Done
+  together with the exercise above (a superset; three or more together are a
+  giant set)**. They then share a number, such as **2a** and **2b**, and the
+  first is headed *Superset · 2 together, little rest between* (or *Giant set*
+  for three or more).
+- **A drop set or a pyramid**: in its box, choose **How the sets go**:
+  **Straight sets** (the same each set), **Drop set** (to failure, then about
+  20–30% lighter at once and on to failure again; choose how many **Drops**,
+  1 to 3), **Pyramid, going up** (heavier each set with fewer reps),
+  **Pyramid, coming down** (lighter, more reps) or **Double pyramid** (up,
+  then down). For a pyramid, write each set's reps in **Reps**, in order, such
+  as *12, 10, 8, 6*. The day shows it after the rest, such as *3 × 10 · drop
+  set, 2 drops*, and the printed program in a **How** column, with a line
+  under the day saying what a drop set and a pyramid are.
+- Coach IQ says when a drop set or a giant set is in a beginner's program
+  (they suit intermediate to advanced lifters: a pyramid or a superset
+  first), when a muscle gets more than two drop sets or giant-set exercises a
+  week, and when a pyramid's reps aren't written set by set or run the wrong
+  way.
 
 **What a day works.** Under a day's name, a drawing of a body, from the
 front and from the back, colors the muscles that day's exercises work, from

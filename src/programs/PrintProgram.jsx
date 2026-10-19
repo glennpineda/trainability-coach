@@ -4,6 +4,7 @@ import { Printer } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
 import { labelsFor } from "./Designer";
+import { techniqueText } from "../lib/techniques";
 import { BodyMap, scaleOf } from "./BodyMap";
 import { PrintMeasurements } from "../clients/PrintMeasurements";
 import { PrintTest } from "../clients/PrintTest";
@@ -47,7 +48,7 @@ export function PrintProgram({ id, sent }) {
   const PAPER = { "--accent": "#007BA7", "--chalk": "#fff", "--ghost-fill": "#E7EEF3", "--iron-line": "#D5DEE5", "--iron": "#5b6b78", "--ink": "#172A3A",
     WebkitPrintColorAdjust: "exact", printColorAdjust: "exact" };
   const cols = [
-    ["sets", "Sets"], ["reps", "Reps"], ["load", "Load"], ["effort", "Effort"], ["tempo", "Tempo"], ["restText", "Rest"],
+    ["sets", "Sets"], ["reps", "Reps"], ["load", "Load"], ["effort", "Effort"], ["tempo", "Tempo"], ["restText", "Rest"], ["technique", "How"],
   ];
   return (
     <div className="cx-print mx-auto max-w-3xl p-6 sm:p-10" style={{ background: "#fff", color: "#172A3A", minHeight: "100dvh" }}>
@@ -87,13 +88,15 @@ export function PrintProgram({ id, sent }) {
                         <div className="font-medium">{e.name}</div>
                         {e.note && <div className="text-xs cx-wrap" style={{ color: "#5b6b78" }}>{e.note}</div>}
                       </td>
-                      {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? loadLine(e, units) : e[k]}</td>)}
+                      {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? loadLine(e, units) : k === "technique" ? techniqueText(e) : e[k]}</td>)}
                     </tr>
                   ))}
                 </tbody>
               </table>
             )}
-            {labels.some(l => l.inPair) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>Exercises sharing a number (3a, 3b) are done together, one after the other, before resting.</p>}
+            {labels.some(l => l.inPair) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>Exercises sharing a number (3a, 3b) are done together, one after the other, before resting: two are a superset, three or more a giant set.</p>}
+            {d.exercises.some(e => e.technique === "drop") && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>A drop set: lift to failure, then straight away about 20–30% lighter and on to failure again, with no rest between drops.</p>}
+            {d.exercises.some(e => String(e.technique || "").startsWith("pyramid")) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>A pyramid: the reps change each set, as written, and the weight with them, heavier for fewer reps and lighter for more.</p>}
             {/* What the day works (Glenn, 19 Oct 2026: "Go with 3"). A copy
                 sent before the muscles were kept with it has none, and no drawing. */}
             {d.exercises.some(e => e.primary?.length) && <div style={PAPER}><BodyMap exercises={d.exercises} top={bodyScale} /></div>}

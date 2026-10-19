@@ -26,6 +26,9 @@ export const unreadPercent = (load) => /%/.test(String(load || "")) && percentOf
     "12", "10-12", "8–12 reps", "12 each side"; null for a time or AMRAP,
     which a share of 1RM doesn't limit (Run 1, B-8). */
 export function topReps(text) {
+  /* A pyramid's reps, set by set ("12, 10, 8, 6"): the most of them. */
+  const list = String(text || "").trim().split(/\s*,\s*/);
+  if (list.length > 1 && list.every(x => /^\d+$/.test(x))) return Math.max(...list.map(Number));
   const m = /^(\d+)(?:\s*(?:–|-|to)\s*(\d+))?\s*(?:reps?)?\s*(?:(?:each|per|a)\s+(?:side|leg|arm)|\/\s*side)?\s*$/i.exec(String(text || "").trim());
   return m ? Number(m[2] ?? m[1]) : null;
 }

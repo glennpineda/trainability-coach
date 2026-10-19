@@ -528,6 +528,11 @@ const COLUMNS = [
   ["coach_attachments", "client_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
   /* The angles a progress photo set has a small copy of (<id>-<angle>.t.jpg; Run 1, O-8). */
   ["coach_progress_photos", "thumbs", "VARCHAR(40) NOT NULL DEFAULT ''"],
+  /* An exercise's technique beyond straight sets: drop, pyramid-up,
+     pyramid-down or pyramid-double, and a drop set's number of drops
+     (src/lib/techniques.js; Glenn, 19 Oct 2026). */
+  ["coach_program_exercises", "technique", "VARCHAR(16) NOT NULL DEFAULT ''"],
+  ["coach_program_exercises", "drops", "INTEGER NULL"],
   /* Measurements' later four (Glenn, 18 Oct 2026: "shoulder to the
      measurements too, … heart rate (optional), blood pressure (optional)"):
      cm, bpm and mmHg. */

@@ -4,6 +4,7 @@ import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleA
 import { apiRequest } from "../lib/api";
 import { percentOf, kgAt, weightText, oneRmText, unreadPercent } from "../lib/one-rm";
 import { convertText } from "../lib/units";
+import { TECHNIQUES, MAX_DROPS, isPyramid } from "../lib/techniques";
 
 /**
  * Adding an exercise to a day, or changing one, in a dialog of its own (Glenn,
@@ -31,14 +32,14 @@ const line = { borderColor: "var(--iron-line)" };
 const ICON = { stop: OctagonAlert, warn: TriangleAlert, note: Info };
 const COLOR = { stop: "var(--ember)", warn: "#B7791F", note: "var(--iron)" };
 
-const blank = { sets: "", reps: "", load: "", effort: "", tempo: "", rest: "", note: "", superset: false };
+const blank = { sets: "", reps: "", load: "", effort: "", tempo: "", rest: "", note: "", superset: false, technique: "", drops: "" };
 
 export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember, oneRms, units = "imperial", clientName }) {
   const [step, setStep] = useState(editing || suggested ? "details" : "pick");
   const [pick, setPick] = useState(editing ? { id: editing.exerciseId } : suggested ? { id: suggested.id } : null);
   const [info, setInfo] = useState(null);
   const [f, setF] = useState(() => (editing
-    ? { sets: editing.sets || "", reps: editing.reps || "", load: convertText(editing.load || "", units), effort: editing.effort || "", tempo: editing.tempo || "", rest: editing.restText || "", note: editing.note || "", superset: !!editing.superset }
+    ? { sets: editing.sets || "", reps: editing.reps || "", load: convertText(editing.load || "", units), effort: editing.effort || "", tempo: editing.tempo || "", rest: editing.restText || "", note: editing.note || "", superset: !!editing.superset, technique: editing.technique || "", drops: editing.drops ? String(editing.drops) : "" }
     : suggested ? { ...blank, sets: suggested.dose.sets || "", reps: suggested.dose.reps || "", rest: suggested.dose.restText || "" } : blank));
   const [touched, setTouched] = useState(!!editing || !!suggested);
 
@@ -73,7 +74,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
   const save = (e) => {
     e.preventDefault();
     const load = editing && f.load === convertText(editing.load || "", units) ? editing.load || "" : f.load;
-    onSave({ exerciseId: pick.id, ...f, load });
+    onSave({ exerciseId: pick.id, ...f, load, drops: f.technique === "drop" && f.drops ? Number(f.drops) : null });
   };
   const startingPoint = () => { if (info?.dose) setF(d => ({ ...d, sets: info.dose.sets || "", reps: info.dose.reps || "", rest: info.dose.restText || "" })); };
 
@@ -170,17 +171,37 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {field("sets", "Sets", "3", "Or a range, such as 1–3.", 20)}
-                  {field("reps", "Reps", "8–12, or 30 s", "Or a time, or each side.", 40)}
+                  {field("reps", "Reps", isPyramid(f.technique) ? "12, 10, 8, 6" : "8–12, or 30 s", isPyramid(f.technique) ? "Each set's, in order." : "Or a time, or each side.", 40)}
                   {field("load", "Load", orm ? "45 lb, or 75%" : "45 lb", loadHint)}
                   {field("effort", "Effort", "2 in reserve", "Or RPE 7.")}
                   {field("tempo", "Tempo", "3-1-1-0", "Down, pause, up, pause.", 20)}
                   {field("rest", "Rest", "90 s, or 2 min", "Between sets.", 20)}
                 </div>
+                {/* How the sets are done (src/lib/techniques.js; Glenn, 19 Oct 2026):
+                    straight, a drop set (with its drops) or a pyramid. */}
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="grid gap-1 text-sm">
+                    <span className="font-medium">How the sets go</span>
+                    <select className="cx-input" value={f.technique} onChange={e => { setTouched(true); setF(d => ({ ...d, technique: e.target.value })); }}>
+                      {TECHNIQUES.map(t => <option key={t.key} value={t.key}>{t.label}</option>)}
+                    </select>
+                  </label>
+                  {f.technique === "drop" && (
+                    <label className="grid gap-1 text-sm">
+                      <span className="font-medium">Drops</span>
+                      <select className="cx-input" value={f.drops} onChange={e => { setTouched(true); setF(d => ({ ...d, drops: e.target.value })); }}>
+                        <option value="">Not said</option>
+                        {Array.from({ length: MAX_DROPS }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n}</option>)}
+                      </select>
+                    </label>
+                  )}
+                  <span className="col-span-2 text-xs -mt-2" style={muted}>{TECHNIQUES.find(t => t.key === f.technique)?.how}</span>
+                </div>
                 {field("note", "Note", "Anything to remember, such as a cue", null, 300)}
                 {!first && (
                   <label className="flex items-center gap-2 text-sm">
                     <input type="checkbox" checked={f.superset} onChange={e => { setTouched(true); setF(d => ({ ...d, superset: e.target.checked })); }} />
-                    Done together with the exercise above (a superset)
+                    Done together with the exercise above (a superset; three or more together are a giant set)
                   </label>
                 )}
               </div>

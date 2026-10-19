@@ -8,6 +8,9 @@ account menu; the details of any change are in `NEURALBRAIN.md`.
 
 The first version of Trainability Coach, live at trainabilitycoach.com.
 
+- **Advanced sets in programs.** Giant sets (three or more exercises done
+  together), drop sets with their drops, and pyramids going up, coming down
+  or both, with Coach IQ saying when they don't suit the client yet.
 - **Sign in with your Studio account.** The same email and password as
   Trainability Studio; there is no separate Coach account. A forgotten
   password is reset from the sign-in screen, and the temporary one works in
