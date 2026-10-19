@@ -259,7 +259,7 @@ export function ExercisesTab({ onSignedOut }) {
                           <span className="block text-xs" style={muted}>
                             {[x.family, x.primary.join(", "), x.needs.map(k => data.kinds.find(c => c.key === k)?.label || k).join(", ")].filter(Boolean).join(" · ")}
                           </span>
-                          {x.note && <span className="block text-xs mt-0.5" style={muted}>{x.note}</span>}
+                          {x.note && <span className="block text-xs mt-0.5 cx-wrap" style={muted}>{x.note}</span>}
                         </button>
                         <button type="button" disabled={busy} onClick={() => call("DELETE", `/my-exercises/own/${x.id}`)}
                           className="cx-icon-btn" aria-label={`Remove ${x.name}`} title="Remove">

@@ -100,7 +100,7 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
     <div key={set.id} className="rounded-lg p-2.5 mt-2" style={{ background: "var(--ghost-fill)" }}>
       {header(set, i)}
       <Thumbs set={set} />
-      {set.note && <p className="text-xs mt-1.5" style={muted}>{set.note}</p>}
+      {set.note && <p className="text-xs mt-1.5 cx-wrap" style={muted}>{set.note}</p>}
       {deleting === set.id && confirm("Delete these photos? Its trainers will no longer see them.", async () => { if (await send("DELETE", `/progress-photos/${set.id}`)) setDeleting(null); })}
     </div>
   );

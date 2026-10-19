@@ -43,7 +43,7 @@ export function PrintTest({ data }) {
         </tbody>
       </table>
       <p className="text-sm mt-6" style={{ color: "#5b6b78" }}>{t.how}</p>
-      {data.note && <p className="text-sm mt-2" style={{ color: "#5b6b78" }}>{data.note}</p>}
+      {data.note && <p className="text-sm mt-2 cx-wrap" style={{ color: "#5b6b78" }}>{data.note}</p>}
     </div>
   );
 }

@@ -71,7 +71,7 @@ export function Limitations({ clientId, onSignedOut }) {
               <li key={l.id} className="text-sm rounded-lg p-2.5" style={{ background: "var(--ghost-fill)" }}>
                 <div className="flex items-start justify-between gap-2">
                   <span className="min-w-0">
-                    <span className="block">{l.text}</span>
+                    <span className="block cx-wrap">{l.text}</span>
                     {(l.conditions.length > 0 || l.facts.length > 0) && (
                       <span className="block text-xs mt-1" style={{ color: "var(--iron)" }}>
                         {[...l.conditions.map(labelOf), ...l.facts.map(f => `no ${options?.facts[f] || f}`)].join(" · ")}

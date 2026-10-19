@@ -201,7 +201,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
                 ) : (
                   <>
                     <Values set={set} previous={previous} units={units} />
-                    {set.note && <p className="text-xs mt-2" style={{ color: "var(--iron)" }}>{set.note}</p>}
+                    {set.note && <p className="text-xs mt-2 cx-wrap" style={{ color: "var(--iron)" }}>{set.note}</p>}
                   </>
                 )}
                 {/* The inline confirmation Limitations uses. */}

@@ -44,7 +44,7 @@ export function PrintMeasurements({ data }) {
           ))}
         </tbody>
       </table>
-      {data.note && <p className="text-sm mt-4" style={{ color: "#5b6b78" }}>{data.note}</p>}
+      {data.note && <p className="text-sm mt-4 cx-wrap" style={{ color: "#5b6b78" }}>{data.note}</p>}
     </div>
   );
 }

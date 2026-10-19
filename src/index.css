@@ -388,6 +388,9 @@
   .cx-billy-you { max-width: 85%; padding: 0.5rem 0.75rem; border-radius: 14px 14px 4px 14px; font-size: 0.875rem;
     background: var(--accent-soft); white-space: pre-wrap; overflow-wrap: anywhere; }
   .cx-billy-says { overflow-wrap: anywhere; }
+  /* Words a person typed (a note, a limitation): a long link or a run with
+     no spaces breaks where it must instead of widening the page (Run 1, A-8). */
+  .cx-wrap { overflow-wrap: anywhere; }
   /* Messages (MessagesTab): the trainer's own on the right in Billy's pale
      accent, the client's on the left in the ghost fill. */
   .cx-msg-mine, .cx-msg-theirs { max-width: 85%; padding: 0.5rem 0.75rem; font-size: 0.9375rem; white-space: pre-wrap; overflow-wrap: anywhere; }

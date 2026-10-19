@@ -372,7 +372,7 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
       ) : (
         <>
           <TestResult t={t} previous={before(t)} units={units} />
-          {t.note && <p className="text-xs mt-1.5" style={{ color: "var(--iron)" }}>{t.note}</p>}
+          {t.note && <p className="text-xs mt-1.5 cx-wrap" style={{ color: "var(--iron)" }}>{t.note}</p>}
         </>
       )}
       {deleting === t.id && (

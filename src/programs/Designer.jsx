@@ -208,7 +208,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
             <div className="text-sm" style={muted}>
               {[p.kindLabel, p.minutes ? `${p.minutes}-minute sessions` : null, p.focusLabels.length ? `focus: ${p.focusLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
             </div>
-            {p.notes && <p className="text-sm mt-2 whitespace-pre-wrap">{p.notes}</p>}
+            {p.notes && <p className="text-sm mt-2 whitespace-pre-wrap cx-wrap">{p.notes}</p>}
             {gym && p.placeId !== gym.placeId && (
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-sm">
                 <span className="inline-flex items-start gap-1.5"><Info size={15} className="flex-none mt-0.5" style={{ color: "var(--iron)" }} aria-hidden="true" />{gym.text}</span>
@@ -260,7 +260,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                 </div>
               </div>
             )}
-            {d.notes && !is("day", d.id) && <p className="text-sm mt-1" style={muted}>{d.notes}</p>}
+            {d.notes && !is("day", d.id) && <p className="text-sm mt-1 cx-wrap" style={muted}>{d.notes}</p>}
             {dayPoints.length > 0 && <ul className="grid gap-1 mt-2">{dayPoints.map((c, i) => <Point key={i} p={c} />)}</ul>}
             {/* What the day works (Glenn, 19 Oct 2026), shaded by its exercises. */}
             {d.exercises.length > 0 && <BodyMap exercises={d.exercises} top={bodyScale} />}
@@ -282,7 +282,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                           {e.libraryName && e.libraryName !== e.name && <span className="block text-xs" style={muted}>{e.libraryName}</span>}
                         </button>
                         {doseLine(e, units) ? <div className="text-sm">{doseLine(e, units)}</div> : <div className="text-xs" style={muted}>No sets or reps yet.</div>}
-                        {e.note && <div className="text-xs" style={muted}>{e.note}</div>}
+                        {e.note && <div className="text-xs cx-wrap" style={muted}>{e.note}</div>}
                         {mine.length > 0 && <ul className="grid gap-1 mt-1">{mine.map((c, j) => <Point key={j} p={c} />)}</ul>}
                         {is("swap", e.id) && <Swaps peId={e.id} busy={busy} onCancel={() => setOpen(null)} onPick={(a) => call("PATCH", `/program-exercises/${e.id}`, { exerciseId: a.id })} />}
                         <div className="flex flex-wrap items-center gap-1 mt-1.5">

@@ -62,14 +62,14 @@ export function PrintProgram({ id, sent }) {
       <div className="text-sm mt-1" style={{ color: "#5b6b78" }}>
         For {p.clientName} · {p.goalLabel} · {new Date(p.updatedAt).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}
       </div>
-      {p.notes && <p className="text-sm mt-3 whitespace-pre-wrap">{p.notes}</p>}
+      {p.notes && <p className="text-sm mt-3 whitespace-pre-wrap cx-wrap">{p.notes}</p>}
       {p.days.map(d => {
         const used = cols.filter(([k]) => d.exercises.some(e => e[k]));
         const labels = labelsFor(d.exercises);
         return (
           <section key={d.id} className="mt-8" style={{ breakInside: "avoid" }}>
             <h2 className="text-xl font-medium">{d.name}</h2>
-            {d.notes && <p className="text-sm" style={{ color: "#5b6b78" }}>{d.notes}</p>}
+            {d.notes && <p className="text-sm cx-wrap" style={{ color: "#5b6b78" }}>{d.notes}</p>}
             {d.exercises.length === 0 ? <p className="text-sm mt-2" style={{ color: "#5b6b78" }}>Nothing yet.</p> : (
               <table className="w-full text-sm mt-2 border-collapse">
                 <thead>
@@ -85,7 +85,7 @@ export function PrintProgram({ id, sent }) {
                       <td className="py-2 pr-2 align-top font-semibold" style={{ color: "#007BA7" }}>{labels[i].label}</td>
                       <td className="py-2 pr-3 align-top">
                         <div className="font-medium">{e.name}</div>
-                        {e.note && <div className="text-xs" style={{ color: "#5b6b78" }}>{e.note}</div>}
+                        {e.note && <div className="text-xs cx-wrap" style={{ color: "#5b6b78" }}>{e.note}</div>}
                       </td>
                       {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? loadLine(e, units) : e[k]}</td>)}
                     </tr>
