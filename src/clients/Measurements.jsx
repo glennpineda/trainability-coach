@@ -203,6 +203,10 @@ export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, s
       {!data ? (!error && <LoadingLine />) : (
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None taken yet.</p>}
+          {/* In wide screen, the chart beside the sets rather than under them
+              (Run 1, I-11; .cx-beside, index.css). */}
+          <div className={chart && rest.length > 0 ? "cx-beside" : undefined}>
+          <div className="min-w-0">
           {[latest, ...(showAll ? rest : [])].filter(Boolean).map((set, i) => {
             const previous = previousOf(list, set);
             return (
@@ -255,7 +259,9 @@ export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, s
               {showAll ? "Show only the latest" : `Earlier measurements (${rest.length})`}
             </button>
           )}
-          {chart && rest.length > 0 && <Progress list={list} units={units} />}
+          </div>
+          {chart && rest.length > 0 && <div className="min-w-0"><Progress list={list} units={units} /></div>}
+          </div>
 
           {editing === "new" ? (
             <Form units={units} error={error} busy={busy} last={latest} onCancel={() => setEditing(null)}

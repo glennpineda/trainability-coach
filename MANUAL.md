@@ -315,7 +315,10 @@ they are. A phone turned on its side fills the screen too.
 sits just outside the panel's right side, half way down (two arrows pointing
 apart; its name is **Wide screen**). Tap it and the panel spreads across the
 whole window, with the blue field showing only round its edges, and the
-pages inside use the room. The button then sits on the panel's edge, filled
+pages inside use the room: an open client keeps your client list beside it
+on the left, to go from one client to the next with a tap (4.3), and a
+measurements chart sits beside the measurements rather than under them
+(4.8). The button then sits on the panel's edge, filled
 in blue (**Leave wide screen**, two arrows pointing together); tap it to go
 back. Your choice is kept with your account, so it is the same on every
 computer you sign in on, and, with a Trainability account, in Studio too.

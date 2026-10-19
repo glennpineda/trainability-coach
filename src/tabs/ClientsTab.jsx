@@ -46,10 +46,10 @@ function Detail({ icon: Icon, label, children }) {
 /* One line on the list: the face, the name, and under it the last session
    and, when it's time, that measurements are due (Glenn, 19 Oct 2026). A tap
    opens the client's page. */
-function ClientRow({ client: c, due, onOpen }) {
+function ClientRow({ client: c, due, onOpen, on = false }) {
   return (
-    <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
-      <button type="button" onClick={onOpen}
+    <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)", ...(on ? { background: "var(--accent-soft)" } : {}) }}>
+      <button type="button" onClick={onOpen} aria-current={on ? "true" : undefined}
         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--ghost-fill)] transition-colors">
         <Face photoUrl={c.photoUrl} size={40}>
           <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
@@ -359,13 +359,67 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   }, [list, query]);
 
   /* A client open: their page, in place of the list. */
+  /* The search, the filter and the list: the page, or, in wide screen beside
+     an open client, its left column (Run 1, I-11). */
+  const finder = (beside) => (
+    <>
+      <div className="cx-card p-3 sm:p-4">
+        <div className={`flex flex-col ${beside ? "" : "sm:flex-row"} gap-3`}>
+          <label className="relative flex-1">
+            <span className="sr-only">Search clients</span>
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--iron)" }} aria-hidden="true" />
+            <input type="search" value={query} onChange={e => setQuery(e.target.value)}
+              placeholder="Search by name, email or phone" className="cx-input" style={{ paddingLeft: "2.4rem" }} />
+          </label>
+          {/* A filter of one list: Studio's grey look (SegRow; Run 1, D-3). */}
+          <SegRow className={`flex-none ${beside ? "" : measureEvery ? "sm:w-80" : "sm:w-64"}`} label="Which clients" value={showArchived ? "archived" : dueOnly && measureEvery ? "due" : "active"}
+            onPick={(k) => { setShowArchived(k === "archived"); setDueOnly(k === "due"); if (!beside) setOpenId(null); }}
+            items={[{ key: "active", label: "Active", figure: clients === undefined ? null : active.length },
+              ...(measureEvery ? [{ key: "due", label: "Due", figure: clients === undefined ? null : due.length }] : []),
+              { key: "archived", label: "Archived", figure: clients === undefined ? null : archived.length }]} />
+        </div>
+      </div>
+
+      <div className="cx-card mt-4 overflow-hidden">
+        {error ? (
+          <div className="p-6 text-center">
+            <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p>
+            <button onClick={retry} className="cx-btn-row mt-3">
+              <RefreshCw size={16} aria-hidden="true" /> Try again
+            </button>
+          </div>
+        ) : clients === undefined ? (
+          <LoadingLine className="p-6 justify-center">Loading your clients…</LoadingLine>
+        ) : shown.length === 0 ? (
+          <EmptyState>
+            {query.trim() ? `No one matches “${query.trim()}”.`
+              : showArchived ? "You have no archived clients."
+              : dueOnly && measureEvery ? "No one's measurements are due."
+              : "You have no clients yet. Tap Add a client to add your first."}
+          </EmptyState>
+        ) : (
+          <ul>
+            {shown.map(c => (
+              <ClientRow key={c.id} client={c} due={measurementsDue(c, measureEvery)} on={c.id === openId} onOpen={() => setOpenId(c.id)} />
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
+  );
+
   if (open) {
     return (
       <>
       {outcome}
+      <div className="cx-split">
+      <nav className="cx-split-list" aria-label="Your clients">{finder(true)}</nav>
+      <div className="min-w-0">
       <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} onMessage={onMessage}
         onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); scrollPageTo({ top: 0, behavior: "smooth" }); } : null}
         onArchive={archive ? archiveOne : null} />
+      </div>
+      </div>
       </>
     );
   }
@@ -403,48 +457,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
           }} />
       )}
 
-      <div className="cx-card p-3 sm:p-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <label className="relative flex-1">
-            <span className="sr-only">Search clients</span>
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--iron)" }} aria-hidden="true" />
-            <input type="search" value={query} onChange={e => setQuery(e.target.value)}
-              placeholder="Search by name, email or phone" className="cx-input" style={{ paddingLeft: "2.4rem" }} />
-          </label>
-          {/* A filter of one list: Studio's grey look (SegRow; Run 1, D-3). */}
-          <SegRow className={`flex-none ${measureEvery ? "sm:w-80" : "sm:w-64"}`} label="Which clients" value={showArchived ? "archived" : dueOnly && measureEvery ? "due" : "active"}
-            onPick={(k) => { setShowArchived(k === "archived"); setDueOnly(k === "due"); setOpenId(null); }}
-            items={[{ key: "active", label: "Active", figure: clients === undefined ? null : active.length },
-              ...(measureEvery ? [{ key: "due", label: "Due", figure: clients === undefined ? null : due.length }] : []),
-              { key: "archived", label: "Archived", figure: clients === undefined ? null : archived.length }]} />
-        </div>
-      </div>
-
-      <div className="cx-card mt-4 overflow-hidden">
-        {error ? (
-          <div className="p-6 text-center">
-            <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p>
-            <button onClick={retry} className="cx-btn-row mt-3">
-              <RefreshCw size={16} aria-hidden="true" /> Try again
-            </button>
-          </div>
-        ) : clients === undefined ? (
-          <LoadingLine className="p-6 justify-center">Loading your clients…</LoadingLine>
-        ) : shown.length === 0 ? (
-          <EmptyState>
-            {query.trim() ? `No one matches “${query.trim()}”.`
-              : showArchived ? "You have no archived clients."
-              : dueOnly && measureEvery ? "No one's measurements are due."
-              : "You have no clients yet. Tap Add a client to add your first."}
-          </EmptyState>
-        ) : (
-          <ul>
-            {shown.map(c => (
-              <ClientRow key={c.id} client={c} due={measurementsDue(c, measureEvery)} onOpen={() => setOpenId(c.id)} />
-            ))}
-          </ul>
-        )}
-      </div>
+      {finder(false)}
 
     </div>
   );
