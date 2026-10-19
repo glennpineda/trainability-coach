@@ -1725,6 +1725,17 @@ The sign-in, or your list of clients, did not get through. Check that your
 phone or computer is connected to the internet, then tap **Log in** again —
 or, on the Clients page, **Try again**.
 
+**"You've been signed out. Sign in again to carry on…"**
+Your sign-in ended while Coach was open, for example after a long time
+away. The screen you were on is still there behind the box, with whatever you
+had typed.
+
+1. Type your password (and your email, if it asks for it).
+2. Tap **Log in**. The box goes, and the screen is as you left it.
+3. If you were saving something, tap **Save** again.
+
+Tap **Log out** instead to go back to the sign-in screen.
+
 **"Your clients couldn't be loaded. Try again in a minute."**
 Studio answered, but not with your list. Wait a minute and tap **Try again**.
 If it keeps happening, tell whoever looks after the app.

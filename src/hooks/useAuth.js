@@ -13,6 +13,9 @@ import { ROUTE, CHOICES } from "../lib/look";
 export function useAuth() {
   const [user, setUser] = useState(undefined);
   const [offline, setOffline] = useState(false);
+  /* Signed in, until a later request said the session had ended: asked to
+     sign in again over the screen (auth/SignInAgain.jsx), which is kept. */
+  const [expired, setExpired] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -34,6 +37,7 @@ export function useAuth() {
     /* A Coach account just joined to its Trainability account: Home says so once. */
     if (linked) { try { sessionStorage.setItem("cx-linked", "1"); } catch { /* not kept */ } }
     setOffline(false);
+    setExpired(false);
     setUser(user);
     return user;
   }, []);
@@ -49,12 +53,13 @@ export function useAuth() {
 
   /* Ends Coach's session only; a Studio tab signed in separately stays in. */
   const logout = useCallback(async () => {
-    try { await apiRequest("POST", "/auth/logout"); } finally { setUser(null); }
+    try { await apiRequest("POST", "/auth/logout"); } finally { setExpired(false); setUser(null); }
   }, []);
 
-  /* Studio said the session has ended (a 401 from any later request): back
-     to sign-in, with nothing to tell Studio. */
-  const signedOut = useCallback(() => setUser(null), []);
+  /* Studio said the session has ended (a 401 from any later request): sign
+     in again over what they were doing, rather than back to the sign-in
+     screen with it lost (Run 1, U-3). */
+  const signedOut = useCallback(() => setExpired(true), []);
 
   /* Their own password chosen after a temporary one. */
   const passwordChosen = useCallback(() => setUser(u => (u ? { ...u, mustChangePassword: false } : u)), []);
@@ -88,5 +93,5 @@ export function useAuth() {
     }
   }, []);
 
-  return { user, offline, login, signup, logout, signedOut, passwordChosen, chooseLook, chooseWide };
+  return { user, offline, expired, login, signup, logout, signedOut, passwordChosen, chooseLook, chooseWide };
 }

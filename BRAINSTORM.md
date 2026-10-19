@@ -24,9 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **Signed out during a save loses the work (U-3).** Save drops to sign-in with
-  no message; afterwards it opens the Clients list and the typed numbers are
-  gone. Keep the screen, sign in over it and save, or at least keep the draft.
 - **"Added" and "saved" are never seen, and a same-email add swaps the person
   (U-4, A-10, M-14).** After Add client or Save, the client's page opens and
   the message is only on the list behind it. Adding "Riley Novak" with an email
