@@ -1528,6 +1528,23 @@ const liveProgramsOf = async (req, user) => {
   return (await programs.list(user.id)).filter(p => theirs.has(p.clientId));
 };
 
+/* The program Billy means, from its id or its name as the trainer says it:
+   the id, then the name exactly (with or without the client's), and only
+   then a part of one, when just one has it, so "Block" is never taken for
+   "Next block" ahead of a program called Block (Run 1, B-14). Else what to
+   say to him. */
+const programNamed = (list, said) => {
+  const want = String(said || "").trim().toLowerCase();
+  const full = (p) => `${p.name} ${p.clientName}`.toLowerCase();
+  const exact = list.filter(p => p.name.toLowerCase() === want || full(p) === want);
+  const hit = list.find(p => p.id === want) || (exact.length === 1 ? exact[0] : null);
+  if (hit) return { hit };
+  const part = exact.length ? exact : list.filter(p => full(p).includes(want));
+  if (part.length === 1) return { hit: part[0] };
+  const programs = (part.length ? part : list).map(p => ({ id: p.id, name: p.name, client: p.clientName }));
+  return { error: part.length ? "More than one program goes by that name. Ask which, or use its id." : "No program of theirs by that name.", programs };
+};
+
 /* A program whose client is no longer on the trainer's list (Archived still
    counts as on it) is frozen (Run 1, B-2; Glenn, 19 Oct 2026: "Freeze them"):
    read and printed as it stands, with nothing new of the client's read into
@@ -1837,17 +1854,16 @@ app.post("/api/assistant", async (req, res) => {
         const want = String(input?.program || "").trim().toLowerCase();
         const list = await liveProgramsOf(req, user);
         if (!want) return { programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName, goal: p.goalLabel, days: p.days, exercises: p.exercises })) };
-        const hit = list.find(p => p.id === want) || list.filter(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want))[0];
-        if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };
-        return programs.forBilly(user.id, await programs.programOf(user.id, hit.id));
+        const { hit, ...not } = programNamed(list, want);
+        if (!hit) return not;
+        return programs.forBilly(user.id, await programs.programOf(user.id, hit.id), units);
       },
       /* Narrowed suggestions for one day of one of their programs, by kind of
          movement and muscles, already passing the place, level and limitations. */
       suggest_exercises: async (input) => {
         const list = await liveProgramsOf(req, user);
-        const want = String(input?.program || "").trim().toLowerCase();
-        const hit = list.find(p => p.id === want) || list.find(p => p.name.toLowerCase() === want || `${p.name} ${p.clientName}`.toLowerCase().includes(want));
-        if (!hit) return { error: "No program of theirs by that name.", programs: list.map(p => ({ id: p.id, name: p.name, client: p.clientName })) };
+        const { hit, ...not } = programNamed(list, input?.program);
+        if (!hit) return not;
         const program = await programs.programOf(user.id, hit.id);
         const full = await programs.full(user.id, program, { withCheck: false });
         const day = full.days.find(d => d.name.toLowerCase() === String(input?.day || "").trim().toLowerCase()) || (full.days.length === 1 ? full.days[0] : null);

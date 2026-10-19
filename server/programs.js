@@ -4,7 +4,7 @@ import { LEVELS, measureOf } from "./coach-iq.js";
 import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
-import { percentOf, kgAt, maxRepsAt, weightText, unreadPercent, topReps } from "../src/lib/one-rm.js";
+import { percentOf, kgAt, maxRepsAt, weightText, oneRmText, unreadPercent, topReps } from "../src/lib/one-rm.js";
 import { TECHNIQUE_KEYS, MAX_DROPS, isPyramid, groupSizes, techniqueText } from "../src/lib/techniques.js";
 import { aOrAn, kindsWords, plural } from "../src/lib/words.js";
 
@@ -947,7 +947,7 @@ export async function swapsFor(trainerId, program, exerciseId) {
 /* ----------------------------------------------------------- for Billy */
 
 /** A program as Billy reads it: its days in words, the check, and what could come next on each day. */
-export async function forBilly(trainerId, program) {
+export async function forBilly(trainerId, program, units) {
   /* Its world read once, for the program and every day's suggestions; it
      was read again for each (Run 1, O-10). */
   const ctx = await context(trainerId, program);
@@ -962,9 +962,11 @@ export async function forBilly(trainerId, program) {
       exercises: d.exercises.map(e => {
         const out = { name: e.name };
         for (const k of ["sets", "reps", "load", "effort", "tempo", "note"]) if (e[k]) out[k] = e[k];
-        /* A percentage load worked out, and the 1RM it is of, in kg (Billy says it in the trainer's units). */
-        if (e.loadKg) out.loadWorkedOutKg = e.loadKg;
-        if (e.oneRm) out.clientsOneRm = { kg: e.oneRm.kg, takenOn: e.oneRm.takenOn };
+        /* A percentage load worked out, and the 1RM it is of, in the
+           trainer's units, as the page shows them: given in kg, Billy said
+           kg to a trainer who works in pounds (Run 1, B-13). */
+        if (e.loadKg) out.loadWorkedOut = weightText(e.loadKg, units);
+        if (e.oneRm) out.clientsOneRm = { weight: oneRmText(e.oneRm.kg, units), takenOn: e.oneRm.takenOn };
         if (e.restText) out.rest = e.restText;
         if (e.superset) out.withThePrevious = true;
         if (e.technique) out.technique = techniqueText(e);
