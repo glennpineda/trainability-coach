@@ -29,7 +29,7 @@ export function useVocabulary() {
 /* Many of a few: chips, on or off. */
 export function Chips({ options, value, onChange, label: name }) {
   const chip = (on) => on
-    ? { background: "var(--cerulean)", color: "#fff", borderColor: "var(--cerulean)" }
+    ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" }
     : { background: "var(--chalk)", color: "var(--ink)", borderColor: "var(--iron-line)" };
   return (
     <div className="flex flex-wrap gap-1.5" role="group" aria-label={name}>

@@ -385,7 +385,7 @@ function Choices({ options, value, onChange, many = false, label }) {
         <button key={k} type="button" aria-pressed={on(k)}
           onClick={() => onChange(many ? (on(k) ? value.filter(v => v !== k) : [...value, k]) : k)}
           className="px-3 py-1.5 rounded-full text-sm"
-          style={on(k) ? { background: "var(--cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
+          style={on(k) ? { background: "var(--fill-cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
           {words}
         </button>
       ))}

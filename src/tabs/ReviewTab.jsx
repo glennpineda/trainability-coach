@@ -222,7 +222,7 @@ export function ReviewTab({ onSignedOut }) {
             {SECTIONS.map(([id, label]) => (
               <button key={id} type="button" role="tab" aria-selected={section === id} onClick={() => { setSection(id); open(null); }}
                 className="px-3 py-1.5 rounded-full text-sm font-medium"
-                style={section === id ? { background: "var(--cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
+                style={section === id ? { background: "var(--fill-cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
                 {label}{id === "suggestions" && summary.suggestions.length ? ` (${summary.suggestions.length})` : ""}
               </button>
             ))}

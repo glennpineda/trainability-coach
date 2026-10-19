@@ -12,7 +12,7 @@ function Chip({ on, onClick, children }) {
     <button type="button" onClick={onClick} aria-pressed={on}
       className="text-xs px-2.5 py-1 rounded-full border transition-colors"
       style={on
-        ? { background: "var(--cerulean)", color: "#fff", borderColor: "var(--cerulean)" }
+        ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" }
         : { background: "var(--chalk)", color: "var(--ink)", borderColor: "var(--iron-line)" }}>
       {children}
     </button>

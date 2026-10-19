@@ -13,7 +13,7 @@ export function Avatar({ user, size = 32 }) {
   }
   return (
     <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white"
-      style={{ ...style, background: "var(--cerulean)", fontSize: size * 0.4 }} aria-hidden="true">
+      style={{ ...style, background: "var(--fill-cerulean)", fontSize: size * 0.4 }} aria-hidden="true">
       {initials(user.name)}
     </span>
   );

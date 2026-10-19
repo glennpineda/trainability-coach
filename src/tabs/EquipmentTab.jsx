@@ -15,7 +15,7 @@ function YesNo({ value, onChange, disabled, label }) {
             onClick={() => onChange(on ? null : v)}
             className="px-3.5 py-1 rounded-lg text-sm font-medium transition-colors"
             style={on
-              ? { background: v ? "var(--cerulean)" : "var(--chalk)", color: v ? "#fff" : "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
+              ? { background: v ? "var(--fill-cerulean)" : "var(--chalk)", color: v ? "#fff" : "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
               : { color: "var(--iron)" }}>
             {word}
           </button>
@@ -127,7 +127,7 @@ export function EquipmentTab({ onSignedOut }) {
                   <button key={p.id} type="button" role="tab" aria-selected={p.id === place.id} onClick={() => setPlaceId(p.id)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
                     style={p.id === place.id
-                      ? { background: "var(--cerulean)", color: "#fff" }
+                      ? { background: "var(--fill-cerulean)", color: "#fff" }
                       : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
                     <MapPin size={14} aria-hidden="true" /> {p.name}
                   </button>
@@ -154,7 +154,7 @@ export function EquipmentTab({ onSignedOut }) {
                     <button key={p.id} type="button" role="tab" aria-selected={p.id === place.id} onClick={() => setPlaceId(p.id)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors"
                       style={p.id === place.id
-                        ? { background: "var(--cerulean)", color: "#fff" }
+                        ? { background: "var(--fill-cerulean)", color: "#fff" }
                         : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
                       <Building2 size={14} aria-hidden="true" /> {p.name}
                     </button>

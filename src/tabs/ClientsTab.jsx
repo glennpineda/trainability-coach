@@ -55,7 +55,7 @@ function ClientRow({ client: c, due, onOpen }) {
         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--ghost-fill)] transition-colors">
         <Face photoUrl={c.photoUrl} size={40}>
           <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
-            style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">
+            style={{ background: c.archived ? "#5B6B78" : "var(--fill-cerulean)" }} aria-hidden="true">
             {clientInitials(c)}
           </span>
         </Face>
@@ -106,7 +106,7 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
         <button type="button" className="cx-icon-btn flex-none" aria-label="All clients" onClick={onBack}><ChevronLeft size={22} aria-hidden="true" /></button>
         <Face photoUrl={c.photoUrl} size={40}>
           <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
-            style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">{clientInitials(c)}</span>
+            style={{ background: c.archived ? "#5B6B78" : "var(--fill-cerulean)" }} aria-hidden="true">{clientInitials(c)}</span>
         </Face>
         <div className="min-w-0 flex-1">
           <h1 className="cx-display text-xl truncate">{fullName(c)}</h1>

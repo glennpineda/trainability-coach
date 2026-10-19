@@ -51,10 +51,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   be the accent look); Review and Equipment places use round chips that wrap on
   a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
   against its track.
-- **White on the cerulean fails in dark purple, orange and green (D-4)**,
-  3.88–4.22:1: initials, Equipment chips and Yes, Review chips, Designer and
-  ExerciseDialog chips, LibraryEditor, ExercisesTab, Limitations. Use
-  `--fill-cerulean`, as FitnessTests does.
 - **The lit tab's white icon is faint at the sky end (D-5)**, 1.75–2.64:1 where
   icons need 3.
 - **Programs and Messages are narrower than the other pages (D-6)** (`max-w-3xl`

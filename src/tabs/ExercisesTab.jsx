@@ -59,7 +59,7 @@ function OwnForm({ initial, data, busy, onSave, onCancel }) {
   const [f, setF] = useState(() => ({ name: "", familyId: "", needs: [], primary: [], note: "", ...initial }));
   const toggle = (field, key) => setF(d => ({ ...d, [field]: d[field].includes(key) ? d[field].filter(k => k !== key) : [...d[field], key] }));
   const chip = (on) => on
-    ? { background: "var(--cerulean)", color: "#fff", borderColor: "var(--cerulean)" }
+    ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" }
     : { background: "var(--chalk)", color: "var(--ink)", borderColor: "var(--iron-line)" };
   return (
     <form className="mt-2 grid gap-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
