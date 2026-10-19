@@ -48,14 +48,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   be the accent look); Review and Equipment places use round chips that wrap on
   a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
   against its track.
-- **Speed: other (O-5 to O-10).** Today asks Studio for the whole calendar
-  (pass `from`/`before`); unsent attachments and their files are never cleaned
-  (no delete, no sweep; photos copied, not linked); nothing gzipped and built
-  files not cached (542 KB → 143 KB; copy Studio's `json-gzip.js`; split the
-  Primary-only screens); photo thumbnails load full 1200×1600 pictures; Billy
-  re-sends ~4,000 tokens of prompt and tools each round with no prompt caching;
-  the program check is worked out again per call (111 queries for Billy's
-  my_programs, N+1 history).
 
 
 ## Found in testing

@@ -710,6 +710,12 @@ app.post("/api/attachments/photos", asSignedIn("POST /attachments/photos", async
   res.json(await messages.photosAttachment(user.id, { clientId: client.id, sets, clientName: `${client.firstName} ${client.lastName}`.trim() }));
 }));
 
+/* One taken off the composer before sending (Run 1, O-6). */
+app.delete("/api/attachments/:id", asSignedIn("DELETE /attachments", async (req, res, user) => {
+  if (!await messages.removeUnsent(user.id, req.params.id)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.json({ ok: true });
+}));
+
 /* An attachment for the trainer: its details (a program's copy in full), or its file. */
 app.get("/api/attachments/:id", asSignedIn("GET /attachments", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
@@ -2196,6 +2202,9 @@ try {
   await books.resume();
   await accounts.sweep();
   setInterval(() => accounts.sweep().catch(() => {}), 6 * 3600 * 1000).unref();
+  /* Attachments left in a composer and never sent (Run 1, O-6). */
+  messages.sweepUnsent().catch(err => console.warn("Unsent attachments weren't swept:", err.message));
+  setInterval(() => messages.sweepUnsent().catch(() => {}), 6 * 3600 * 1000).unref();
   console.log(`Database: ${db.describe()}`);
 } catch (err) {
   console.error(`Database not ready (${db.describe()}): ${err.message}`);

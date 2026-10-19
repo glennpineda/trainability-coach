@@ -130,6 +130,31 @@ export async function finishUpload(upload, owner, { kind, name, width, height, s
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
+/* An attachment's row and files: a picture's or video's file, or a photos
+   attachment's copies (<id>.<n>.<angle>.jpg). */
+async function dropAttachment(id) {
+  await fs.rm(attachmentPath(id), { force: true }).catch(() => {});
+  for (const n of [0, 1]) for (const a of PHOTO_ANGLES) await fs.rm(attachmentPhotoPath(id, n, a), { force: true }).catch(() => {});
+  await run(`DELETE FROM coach_attachments WHERE id = ? AND message_id = ''`, [id]);
+}
+
+/** One of this trainer's attachments taken off the composer before sending
+    (Run 1, O-6): gone, with its files. False when it isn't theirs or is sent. */
+export async function removeUnsent(owner, id) {
+  if (!ATT.test(String(id))) return false;
+  const a = await get(`SELECT owner_id, message_id FROM coach_attachments WHERE id = ?`, [id]);
+  if (!a || a.owner_id !== owner || a.message_id) return false;
+  await dropAttachment(id);
+  return true;
+}
+
+/** Attachments made and never sent, a day on (a page closed with them in
+    the composer): gone, with their files. Run with the sessions' sweep. */
+export async function sweepUnsent() {
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  for (const r of await all(`SELECT id FROM coach_attachments WHERE message_id = '' AND created_at < ?`, [cutoff])) await dropAttachment(r.id);
+}
+
 async function sweepIncoming() {
   const names = await fs.readdir(incomingDir()).catch(() => []);
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;
@@ -203,7 +228,13 @@ export async function photosAttachment(owner, { clientId, sets, clientName }) {
     [newId, owner, clientId, `Progress photos, ${sets.map(s => s.row.taken_on).join(" and ")}`, JSON.stringify(data), now()]));
   await fs.mkdir(dir(), { recursive: true });
   for (const [n, { files }] of sets.entries()) {
-    for (const [angle, from] of Object.entries(files)) await fs.copyFile(from, attachmentPhotoPath(id, n, angle));
+    /* A second name for the same file where the disk allows it, rather than
+       a copy (up to eight 3 MB pictures per attach; Run 1, O-6): deleting
+       the set later still leaves the message's. */
+    for (const [angle, from] of Object.entries(files)) {
+      const to = attachmentPhotoPath(id, n, angle);
+      await fs.link(from, to).catch(() => fs.copyFile(from, to));
+    }
   }
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }

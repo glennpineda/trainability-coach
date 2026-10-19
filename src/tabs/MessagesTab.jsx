@@ -392,7 +392,13 @@ function Composer({ clientId, first, onSent }) {
     try { update(key, { att: await apiRequest("POST", "/attachments/photos", { setId: set.id, compareId: other?.id }), progress: 1 }); }
     catch (err) { update(key, { error: err.message }); }
   }
-  const remove = (key) => setItems(xs => { const x = xs.find(y => y.key === key); if (x?.preview) URL.revokeObjectURL(x.preview); return xs.filter(y => y.key !== key); });
+  /* Taken off before sending: gone from the server too, files and all
+     (Run 1, O-6); one still uploading is swept a day on. */
+  const remove = (key) => {
+    const x = items.find(y => y.key === key);
+    if (x?.att?.id) apiRequest("DELETE", `/attachments/${x.att.id}`).catch(() => {});
+    setItems(xs => { const y = xs.find(z => z.key === key); if (y?.preview) URL.revokeObjectURL(y.preview); return xs.filter(z => z.key !== key); });
+  };
 
   async function send(e) {
     e?.preventDefault();
