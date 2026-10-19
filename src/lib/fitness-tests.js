@@ -128,7 +128,8 @@ export const VO2_SOURCES = ["Lab or gym test", "Garmin", "Apple Watch", "Fitbit"
    Excellent's 82 and Above Average's 95. */
 export const STEP_RATINGS = ["Excellent", "Good", "Above average", "Average", "Below average", "Poor", "Very poor"];
 export const STEP_AGES = [[18, 25], [26, 35], [36, 45], [46, 55], [56, 65], [66, Infinity]];
-const AGE_WORDS = ["18–25", "26–35", "36–45", "46–55", "56–65", "65+"];
+/* "Over 65", not the article's "65+": 65 itself is rated in 56–65 (Run 1, A-13). */
+const AGE_WORDS = ["18–25", "26–35", "36–45", "46–55", "56–65", "Over 65"];
 /* [sex][age band] → each rating's printed range, best first. */
 export const STEP_TABLE = {
   female: [
@@ -136,7 +137,10 @@ export const STEP_TABLE = {
     [[58, 80], [85, 92], [95, 101], [104, 110], [113, 119], [122, 129], [134, 171]],
     [[51, 84], [89, 96], [100, 104], [107, 112], [115, 120], [124, 132], [137, 169]],
     [[63, 91], [95, 101], [104, 110], [113, 118], [120, 124], [126, 132], [137, 171]],
-    [[60, 92], [97, 103], [106, 111], [116, 121], [119, 127], [129, 135], [141, 174]],
+    /* Average 113–117, the YMCA's own: the article printed 116–121, which
+       ran into Below average's 119–127 (Run 1, A-13; Glenn, 19 Oct 2026:
+       "YMCA's 113–117"). */
+    [[60, 92], [97, 103], [106, 111], [113, 117], [119, 127], [129, 135], [141, 174]],
     [[70, 92], [96, 101], [104, 111], [116, 121], [123, 126], [128, 133], [135, 155]],
   ],
   male: [

@@ -55,8 +55,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   title, Billy's errors, missing words (Coach account, Primary Master,
   Settings, Wide screen, Today, Superset, Place), and a "what each account can
   do" chapter like Studio's. Each with its corrected text in the report.
-- **Step test bands (A-13)**: 65 falls in 56–65 while "65+" starts at 66;
-  women 56–65 Average and Below average overlap (a misprint?).
 - **Coach IQ ignores the client's tests (U-15)**: a 1.26 × body weight squat
   still gets Bodyweight squat at beginner.
 - **The printed program is written for the trainer (U-18)**: "75% (155 lb)",
