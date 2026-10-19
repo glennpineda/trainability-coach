@@ -55,8 +55,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   title, Billy's errors, missing words (Coach account, Primary Master,
   Settings, Wide screen, Today, Superset, Place), and a "what each account can
   do" chapter like Studio's. Each with its corrected text in the report.
-- **Odd entries go through (B-16, B-17)**: tempo "3-1-1", reps "-5", a carry
-  suggested at "1–3 × 8–12".
 - **Billy's my_programs gives kg to a pounds trainer (B-13)**; a program by
   name can find the wrong one ("Block" → "Next block", B-14).
 - **Today shows "Client" with no name** for someone not on your list (B-18).

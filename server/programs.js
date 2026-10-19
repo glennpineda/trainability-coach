@@ -1,6 +1,6 @@
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
-import { LEVELS } from "./coach-iq.js";
+import { LEVELS, measureOf } from "./coach-iq.js";
 import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
@@ -343,9 +343,16 @@ export function doseFrom(body = {}) {
   const out = {};
   const field = (key, max) => { if (body[key] !== undefined) out[key] = text(String(body[key] ?? ""), max); };
   field("sets", 20); field("reps", 40); field("load", 60); field("effort", 60); field("tempo", 20); field("note", 300);
+  /* Sets and reps are written freely ("8–12", "12, 10, 8", "AMRAP"), but
+     never below one (Run 1, B-17). */
+  const below = (v) => v && (/^[-–—]/.test(v) || /^0+(\D|$)/.test(v));
+  if (below(out.sets)) return { error: "Sets start at 1. Write a number, or a range such as 3–4." };
+  if (below(out.reps)) return { error: "Reps start at 1. Write a number, a range such as 8–12, or a list such as 12, 10, 8." };
   if (out.tempo) {
     const t = out.tempo.replace(/\s+/g, "").replace(/[–—]/g, "-");
-    out.tempo = TEMPO.test(t) ? t.toUpperCase() : out.tempo;
+    /* Read in three numbers or four, written in four (coach-iq/principles/tempo.md,
+       "Read both, write four"): "3-1-1" is saved as "3-1-1-0" (Run 1, B-16). */
+    out.tempo = TEMPO.test(t) ? (t.split("-").length === 3 ? `${t}-0` : t).toUpperCase() : out.tempo;
   }
   if (body.rest !== undefined) {
     const s = parseRest(body.rest);
@@ -698,18 +705,25 @@ function check(program, rows, ctx, own) {
 
 /* A starting dose from the principles, for the goal and the client's level;
    lighter for an accessory. Rest in seconds. */
-export function doseFor(goalKey, level, { accessory = false } = {}) {
+export function doseFor(goalKey, level, { accessory = false, measure = "reps" } = {}) {
   const g = GOALS[goalKey] || GOALS.general;
   let sets = g.sets, reps = g.reps;
+  /* Held or carried for a time, not counted in reps: a plank or a carry
+     isn't "8–12" (Run 1, B-17). Carries by time too, which needs no units. */
+  if (measure === "time" || measure === "distance") reps = level === "beginner" ? "20–30 s" : "30–45 s";
+  else if (measure === "calories") reps = level === "beginner" ? "8–10 cal" : "10–15 cal";
   if (level === "beginner") {
     sets = goalKey === "mobility" ? "1–2" : "1–3";
-    if (reps) { const r = range(reps); reps = r && r[0] < 8 ? "8–12" : reps; }
+    if (reps && measure === "reps") { const r = range(reps); reps = r && r[0] < 8 ? "8–12" : reps; }
   } else if (accessory && g.sets) {
     const s = range(g.sets);
     if (s) sets = `${Math.max(1, s[0] - 1)}–${Math.max(1, s[1] - 1)}`;
   }
   return { sets, reps, rest: g.rest };
 }
+
+/* How an exercise is counted first: reps, time, distance or calories. */
+const firstMeasure = (x) => measureOf(x, library.familyOf(x))[0];
 
 /* The versions that could go in, judged as the check would: never one that
    fails the place, the level or the limitations. */
@@ -801,7 +815,7 @@ export async function suggestFor(trainerId, program, dayId, { workOn = null, mus
     const works = h.main.length ? `Works the ${and(h.main)}${h.other.length ? `, and some ${and(h.other)}` : ""}.`
       : h.other.length ? `Works some ${and(h.other)}.` : `Works the ${and(x.primary || [])}.`;
     const accessory = !(library.familyOf(x).roles || []).includes("main");
-    return suggestion(x, ctx, works, doseFor(program.goal, program.level, { accessory }));
+    return suggestion(x, ctx, works, doseFor(program.goal, program.level, { accessory, measure: firstMeasure(x) }));
   });
   return {
     suggestions: out,
@@ -860,7 +874,7 @@ export async function suggestNext(trainerId, program, dayId, limit = 4, given = 
     const accessory = !(library.familyOf(best).roles || []).includes("main");
     const why = focusOf.has(pattern) ? `A focus of this program: ${FOCUS[focusOf.get(pattern)].label.toLowerCase()}.`
       : !inProgram.has(pattern) ? `Nothing in this program for ${patternWords(pattern)} yet.` : `Nothing on this day for ${patternWords(pattern)} yet.`;
-    out.push(suggestion(best, ctx, why, doseFor(program.goal, program.level, { accessory })));
+    out.push(suggestion(best, ctx, why, doseFor(program.goal, program.level, { accessory, measure: firstMeasure(best) })));
   }
   const holds = MINUTES[program.minutes];
   return {
@@ -918,7 +932,7 @@ export async function preview(trainerId, program, exerciseId) {
   return {
     exercise: { ...b, name: names.get(x.id) || x.name, libraryName: x.name, secondary: x.secondary || [] },
     points,
-    dose: doseFor(program.goal, program.level, { accessory }),
+    dose: doseFor(program.goal, program.level, { accessory, measure: firstMeasure(x) }),
   };
 }
 

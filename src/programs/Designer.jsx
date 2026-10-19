@@ -38,7 +38,7 @@ export function doseLine(e, units) {
   const parts = [];
   if (e.sets && e.reps) parts.push(`${e.sets} × ${e.reps}`);
   else if (e.sets) parts.push(`${e.sets} sets`);
-  else if (e.reps) parts.push(plural(e.reps, "rep"));
+  else if (e.reps) parts.push(/[a-z]/i.test(e.reps) ? e.reps : plural(e.reps, "rep"));
   if (e.load) parts.push(loadLine(e, units));
   if (e.effort) parts.push(e.effort);
   if (e.tempo) parts.push(`tempo ${e.tempo}`);
