@@ -1414,7 +1414,7 @@ the suggestions, and talks it through; he changes nothing himself.
 
 **What a day works.** Under a day's name, a drawing of a body, from the
 front and from the back, shades the muscles that day's exercises work, from
-light to dark: the darker, the more exercises work it. Beside it,
+light to dark (the muscles it doesn't work are only outlined): the darker, the more exercises work it. Beside it,
 **Exercises this day, by muscle** lists each one with its count, the most
 first. An exercise counts one for the muscles it mainly works and a half for
 those it also works, as Coach IQ's library has them, whatever its sets. The
