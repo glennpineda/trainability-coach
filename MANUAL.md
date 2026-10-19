@@ -1547,7 +1547,7 @@ page clears it too: Coach does not keep your conversations with Billy.
   place, he asks which. If you had given a different answer yourself, he
   tells you what you had said and changes it only if you say so. Otherwise he cannot add or
   change a client, book or cancel a session, send a message or charge anybody.
-  Clients are added and changed in Studio (4.6).
+  You add and change clients yourself, on the Clients page (4.6).
 - **He only knows your own clients**, the same people as on your Clients page,
   and only what designing training needs: not their email, phone number or
   birthday. He reads their limitations (4.7) before suggesting anything, and

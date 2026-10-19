@@ -127,7 +127,7 @@ export function BillyPanel({ billy }) {
       <div className="cx-billy-thread" aria-live="polite">
         {turns.length === 0 && !asking && (
           <p className="text-sm px-1 py-2" style={{ color: "var(--iron)" }}>
-            I can tell you about the clients on your list, and read what you send me — a food log, a form, a program. I can&apos;t change anything; that is Studio&apos;s job.
+            I can tell you about the clients on your list, and read what you send me — a food log, a form, a program. I don&apos;t change your clients or their programs: you do that on their pages.
           </p>
         )}
         {turns.map((t, i) => t.who === "you" ? (

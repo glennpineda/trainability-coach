@@ -43,9 +43,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   linked" forever; Home advertises Messages; the app switcher's Studio goes to
   the live trainabilitystudio.com (hard-coded, even in a test copy). Hide or
   label them for Coach accounts.
-- **Billy still says clients are Studio's (U-11, M-22).** His opening ("that is
-  Studio's job") and his prompt's rule ("Coach does not keep clients…") are out
-  of date; manual 6.5 too.
 - **Coach IQ's check is noisy on one exercise (U-13).** Five lines on one
   squat; "Ask first: Resistance bands" vs the dialog's "Nobody has said whether
   … has resistance bands." Group by exercise; word it as the dialog does.
