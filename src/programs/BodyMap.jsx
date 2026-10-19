@@ -143,7 +143,11 @@ export function BodyMap({ exercises, top }) {
             </li>
           ))}
         </ul>
-        <div className="mt-1.5">Darker is more. Also works counts half.</div>
+        {/* What the numbers are (Glenn, 19 Oct 2026: "Explain more what the
+            numbers by the muscle groups mean"). */}
+        <p className="mt-1.5" style={{ maxWidth: 300 }}>
+          Each number is how many of this day&apos;s exercises work that muscle: 1 for each that mainly works it, ½ for each that also works it. Darker means a higher number.
+        </p>
       </div>
     </div>
   );
