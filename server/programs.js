@@ -500,6 +500,8 @@ export async function full(trainerId, program, { withCheck = true } = {}) {
       name: names.get(r.exercise_id) || x?.name || p?.name || "An exercise no longer in the library",
       ...(x ? { libraryName: x.name, master: library.masterOf(x), level: x.level, retired: x.status === "retired" } : {}),
       ...(p ? { own: true } : {}),
+      /* What it works, for the day's body drawing (BodyMap.jsx). */
+      primary: x?.primary || p?.primary || [], secondary: x?.secondary || [],
       superset: !!Number(r.superset),
       sets: r.sets, reps: r.reps, load: r.load_text, effort: r.effort, tempo: r.tempo,
       /* A load as a percentage of the client's 1RM for it, worked out. */
