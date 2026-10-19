@@ -53,7 +53,7 @@ export function InstallationTab({ onSignedOut }) {
       <TabHeading>Installation</TabHeading>
       <p className="text-sm -mt-2 mb-4" style={muted}>Settings for this copy of Coach on its server.</p>
 
-      <section className="cx-card p-4 max-w-2xl">
+      <section className="cx-card p-4">
         <h2 className="font-semibold flex items-center gap-2">
           <FolderOpen size={18} style={{ color: "var(--accent)" }} aria-hidden="true" /> Where files are saved
         </h2>

@@ -79,7 +79,7 @@ export function MessagesTab({ clients, onSignedOut, onUnread }) {
   if (open) return <Thread clientId={open} clients={clients} onBack={() => setOpen(null)} onSignedOut={onSignedOut} onRead={load} />;
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
+    <div className="max-w-5xl mx-auto px-4">
       <div className="flex items-center justify-between gap-3">
         <TabHeading>Messages</TabHeading>
         {list?.available && (
@@ -285,7 +285,7 @@ function Thread({ clientId, clients, onBack, onSignedOut, onRead }) {
   const lastMine = t ? [...t.messages].reverse().find(m => m.authorKind === "trainer") : null;
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
+    <div className="max-w-5xl mx-auto px-4">
       <div className="flex items-center gap-2 pt-4 pb-3">
         <button type="button" className="cx-icon-btn" aria-label="All messages" onClick={onBack}><ChevronLeft size={22} aria-hidden="true" /></button>
         {name && <Initials who={t?.client || fromList || {}} size={36} />}

@@ -56,7 +56,7 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
   const active = (clients || []).filter(c => !c.archived);
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
+    <div className="max-w-5xl mx-auto px-4">
       <Toast toast={toast} onGone={toastGone} />
       <TabHeading>Programs</TabHeading>
       {openId && data ? (
@@ -87,7 +87,7 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
             </button>
           )}
           {data && (
-            <div className="flex rounded-[10px] p-1 gap-1 mb-3 w-full sm:w-auto sm:inline-flex" style={{ background: "var(--ghost-fill)" }} role="tablist">
+            <div className="flex rounded-[10px] p-1 gap-1 mb-3 w-full sm:w-fit" style={{ background: "var(--ghost-fill)" }} role="tablist">
               {[[false, "Active", data.programs.length], [true, "Put away", (data.putAway || []).length]].map(([value, label, n]) => (
                 <button key={label} type="button" role="tab" aria-selected={showPutAway === value}
                   onClick={() => { setShowPutAway(value); setAsking(null); }}

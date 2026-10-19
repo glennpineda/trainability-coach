@@ -51,9 +51,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   be the accent look); Review and Equipment places use round chips that wrap on
   a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
   against its track.
-- **Programs and Messages are narrower than the other pages (D-6)** (`max-w-3xl`
-  against `5xl`), so the left edge jumps between tabs and wide screen doesn't
-  widen them; Installation is `max-w-2xl`, left-aligned.
 - **Archive is a link and acts at once (D-7).** Studio's is a quiet icon that
   opens a confirmation. "{first} no longer agrees", which deletes every photo,
   is a small accent link right under Take progress photos (also U-21).
