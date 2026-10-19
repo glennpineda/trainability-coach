@@ -222,6 +222,9 @@ function systemPrompt(user) {
  * `tools` runs a tool as the person asking (the same session), so nothing it
  * returns is more than they could see on their own screen.
  */
+/* The tools as sent, the last marked so all of them are cached together. */
+const CACHED_TOOLS = TOOLS.map((t, i) => (i === TOOLS.length - 1 ? { ...t, cache_control: { type: "ephemeral" } } : t));
+
 export async function answer(user, history, tools) {
   const messages = history.map(m => ({ role: m.role, content: m.content }));
   let usage = { input_tokens: 0, output_tokens: 0 };
@@ -236,8 +239,15 @@ export async function answer(user, history, tools) {
          question about a client's injury still gets an answer. */
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      system: systemPrompt(user),
-      tools: TOOLS,
+      /* Prompt caching (Run 1, O-9): his tools are the same for everybody and
+         his prompt the same for one person all day, so both are marked to be
+         kept, the tools apart so they are shared across trainers; and the
+         conversation so far is kept by the automatic marker, so each round of
+         a question with tools, and each follow-up, reads it back at a tenth of
+         the price instead of sending it all again. */
+      system: [{ type: "text", text: systemPrompt(user), cache_control: { type: "ephemeral" } }],
+      tools: CACHED_TOOLS,
+      cache_control: { type: "ephemeral" },
       messages,
     });
     usage = {
