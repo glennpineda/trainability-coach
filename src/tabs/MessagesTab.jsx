@@ -190,8 +190,8 @@ function Attachment({ a }) {
   }
   if (a.kind === "measurements") {
     const d = a.measurements || {};
-    /* Weight, body fat and waist first, the ones a client looks for. */
-    const shown = rowsOf(d.values, null, d.units).slice(0, 3).map(r => `${r.label} ${r.text}`);
+    /* The first three a client looks for, after the height: weight, BMI, body fat. */
+    const shown = rowsOf(d.values, null, d.units, { heightCm: d.heightCm ?? null, sex: d.sex ?? null }).filter(r => r.key !== "height").slice(0, 3).map(r => `${r.label} ${r.text}`);
     return (
       <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
         className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>

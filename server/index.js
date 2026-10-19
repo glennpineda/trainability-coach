@@ -25,7 +25,10 @@ import * as fitnessTests from "./fitness-tests.js";
 import * as workoutLogs from "./workout-logs.js";
 import { entryText } from "../src/lib/workout-log.js";
 import * as progressPhotos from "./progress-photos.js";
-import { previousOf, rowsOf } from "../src/lib/measures.js";
+import { previousOf, rowsOf, heightBy } from "../src/lib/measures.js";
+
+/* "female" or "male" from Studio's gender, or null (the Navy body-fat estimate needs it). */
+const sexOf = (client) => ({ female: "female", male: "male" })[String(client?.gender || "").toLowerCase()] || null;
 import { seriesOf, titleOf, describe as describeTest, changeOf as changeOfTest } from "../src/lib/fitness-tests.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
@@ -683,9 +686,14 @@ app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurem
   if (!client) return res.status(404).json({ error: "Those measurements are no longer there.", code: "not_found" });
   const list = await measurements.measurementsOf(row.client_id, user.id);
   const at = list.findIndex(m => m.id === row.id);
+  const previous = previousOf(list, list[at]);
+  /* With the height carried and the client's sex, for BMI and the Navy
+     estimate on the copy too (Glenn, 19 Oct 2026: "Everywhere"). */
+  const heights = heightBy(list);
   res.json(await messages.measurementsAttachment(user.id, {
-    clientId: client.id, set: list[at], previous: previousOf(list, list[at]), clientName: `${client.firstName} ${client.lastName}`.trim(),
+    clientId: client.id, set: list[at], previous, clientName: `${client.firstName} ${client.lastName}`.trim(),
     units: await trainerSettings.unitsOf(user.id),
+    extra: { heightCm: heights.get(list[at].id) ?? null, previousHeightCm: previous ? heights.get(previous.id) ?? null : null, sex: sexOf(client) },
   }));
 }));
 
@@ -750,7 +758,7 @@ app.post("/api/attachments/report", asSignedIn("POST /attachments/report", async
     const row = await progressPhotos.setById(p.id);
     photoSets.push({ row, files: Object.fromEntries(String(row.angles).split(",").filter(Boolean).map(a => [a, progressPhotos.pathOf(row.id, a)])) });
   }
-  const sex = { female: "female", male: "male" }[String(client.gender || "").toLowerCase()] || null;
+  const sex = sexOf(client);
   const strip = (t) => ({ kind: t.kind, takenOn: t.takenOn, takenBy: t.takenBy, age: t.age, sex: t.sex, data: t.data, result: t.result, rating: t.rating, ratingAges: t.ratingAges });
   res.json(await messages.reportAttachment(user.id, {
     clientId: client.id, clientName: name, sets: photoSets,
@@ -962,7 +970,7 @@ app.get("/api/clients/:client/level", asSignedIn("GET /clients/level", async (re
   const { level, why, programs: count, trend } = await programs.historyOf(user.id, req.params.client);
   /* And what their lifts say, by the gender Studio has for them (Run 1, U-15). */
   const client = (await myClients(req, user)).find(c => c.id === req.params.client);
-  const sex = { female: "female", male: "male" }[String(client?.gender || "").toLowerCase()];
+  const sex = sexOf(client);
   res.json({ level, why: why || null, programs: count, trend, fromTests: await programs.levelFromTests(req.params.client, sex) });
 }));
 
@@ -1949,6 +1957,7 @@ app.post("/api/assistant", async (req, res) => {
         if (client.error) return client;
         const u = units || "imperial";
         const sets = await measurements.measurementsOf(client.id, user.id);
+        const heights = heightBy(sets);
         const tests = await fitnessTests.testsOf(client.id, user.id);
         const consent = await progressPhotos.consentOf(client.id, user.id);
         const photoSets = consent ? await progressPhotos.setsOf(client.id, user.id) : [];
@@ -1960,7 +1969,8 @@ app.post("/api/assistant", async (req, res) => {
             const before = previousOf(sets, m);
             return { takenOn: m.takenOn, takenBy: m.mine ? "the trainer" : m.takenBy, ...(m.note ? { note: m.note } : {}),
               ...(before ? { changesSince: before.takenOn } : {}),
-              values: rowsOf(m.values, before?.values, u).map(r => ({ [r.label]: r.text, ...(r.change ? { change: r.change } : {}) })) };
+              values: rowsOf(m.values, before?.values, u, { heightCm: heights.get(m.id) ?? null, previousHeightCm: before ? heights.get(before.id) ?? null : null, sex: sexOf(client) })
+                .map(r => ({ [r.label]: r.text, ...(r.change ? { change: r.change } : {}) })) };
           }),
           measurementsDue: every ? (!last || (Date.now() - Date.parse(`${last}T00:00:00Z`)) / 864e5 >= every * 7) : "the trainer has turned this off",
           measureEveryWeeks: every || null,

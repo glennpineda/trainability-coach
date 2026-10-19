@@ -12,7 +12,8 @@ const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefin
 
 export function PrintMeasurements({ data }) {
   const units = data.units || "imperial";
-  const rows = rowsOf(data.values, data.previous?.values, units);
+  /* BMI and the Navy estimate too, where the copy kept a height (from build 1.0.159). */
+  const rows = rowsOf(data.values, data.previous?.values, units, { heightCm: data.heightCm ?? null, previousHeightCm: data.previousHeightCm ?? null, sex: data.sex ?? null });
   return (
     <div className="cx-print mx-auto max-w-3xl p-6 sm:p-10" style={{ background: "#fff", color: "#172A3A", minHeight: "100dvh" }}>
       <div className="cx-noprint flex items-center justify-between gap-3 mb-6">

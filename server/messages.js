@@ -192,9 +192,10 @@ export async function programAttachment(owner, program, units) {
  * the set before it for how each has changed, so what the client reads stays
  * as it was sent.
  */
-export async function measurementsAttachment(owner, { clientId, set, previous, clientName, units }) {
+export async function measurementsAttachment(owner, { clientId, set, previous, clientName, units, extra = {} }) {
   const data = { measurementId: set.id, clientName, takenOn: set.takenOn, takenBy: set.takenBy, note: set.note, values: set.values,
-    previous: previous ? { takenOn: previous.takenOn, values: previous.values } : null, units };
+    previous: previous ? { takenOn: previous.takenOn, values: previous.values } : null, units,
+    heightCm: extra.heightCm ?? null, previousHeightCm: extra.previousHeightCm ?? null, sex: extra.sex ?? null };
   const id = await insertWithNewId("attachment", (newId) => run(
     `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
      VALUES (?, '', ?, ?, 'measurements', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,

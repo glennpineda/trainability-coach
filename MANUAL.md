@@ -1085,7 +1085,8 @@ are two more, once a **Height** has been taken (it is carried on to later
 sets, so you needn't take it each time): **BMI**, under the weight, and
 **Body fat, Navy estimate**, the US Navy's body-fat estimate from the
 height, neck and waist (and hips for a woman), under the body fat. The Navy
-estimate needs the client's gender in Studio to be Female or Male.
+estimate needs the client's gender in Studio to be Female or Male. Both go wherever the measurements go: in a message and its printed page
+(7.3), in a progress report, and to Billy.
 **Blood pressure** shows as one line, such as *121/79 mmHg*. The set before
 is the latest one taken on an earlier day, so two sets on one day aren't
 compared with each other. Up or down is shown as it is,
