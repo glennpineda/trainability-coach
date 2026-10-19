@@ -6,6 +6,7 @@ import {
 import * as reviews from "./reviews.js";
 import * as store from "./iq-store.js";
 import { CATEGORIES, IMPLIES, isCategory } from "./equipment.js";
+import { anthropic, model as billyModel, configured as billyHere } from "./billy.js";
 
 /**
  * Coach IQ's exercise library as the server uses it (ideas audit, 3 and 4),
@@ -205,6 +206,59 @@ export async function updatePrivate(trainerId, id, { name, familyId = "", needs 
 export async function archivePrivate(trainerId, id) {
   await run(`UPDATE coach_private_exercises SET archived = 1 WHERE id = ? AND trainer_id = ?`, [id, trainerId]);
   await run(`UPDATE coach_own_names SET exercise_id = '' WHERE exercise_id = ? AND trainer_id = ?`, [id, trainerId]);
+}
+
+/**
+ * Billy fills in a new exercise from its name (Glenn, 19 Oct 2026: "type an
+ * exercise name, and Billy will find information about it and fill out the
+ * rest of the form"). Studio's way of asking him for current prices
+ * (server/costs.js, suggestRates): one request with web search, a JSON
+ * answer read out of his reply, and only what fits kept: the movement from
+ * the library's list, kinds of equipment and muscles from Coach's own. The
+ * page fills the form and saves nothing. When the library already has an
+ * exercise by that name, it says which, so the trainer can use that instead.
+ */
+export async function fillPrivate(name) {
+  if (!billyHere()) { const e = new Error("Billy is not set up on this server."); e.code = "not_configured"; throw e; }
+  const families = Object.entries(FAMILIES).map(([id, f]) => ({ id, label: f.label }));
+  const reply = await anthropic().messages.create({
+    model: billyModel(),
+    max_tokens: 2048,
+    tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 4 }],
+    messages: [{
+      role: "user",
+      content: [
+        `A personal trainer is adding an exercise called "${name}" to their own list. Find out what it is (search the web if you need to), then fill in its details for them.`,
+        "",
+        "family: the id of the movement below it is closest to, or \"\" if none is close.",
+        ...families.map(f => `  ${f.id}: ${f.label}`),
+        "needs: the kinds of equipment it needs, as keys from this list (none for bodyweight).",
+        ...CATEGORIES.map(c => `  ${c.key}: ${c.label}`),
+        `primary: the one to three muscles it mainly works, from this list only: ${MUSCLES.join(", ")}.`,
+        "note: how it's done, for a trainer, in one or two short plain sentences, at most 280 characters, British spelling.",
+        "",
+        "Answer with only a JSON object, no prose, shaped exactly:",
+        '{"family":"…","needs":["…"],"primary":["…"],"note":"…"}',
+        'If you can\'t tell what the exercise is, answer {"unknown":true}.',
+      ].join("\n"),
+    }],
+  });
+  const text = (reply.content || []).filter(c => c.type === "text").map(c => c.text).join("\n");
+  let parsed;
+  try { parsed = JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || ""); } catch { parsed = null; }
+  if (!parsed || parsed.unknown) {
+    const e = new Error(parsed?.unknown ? `Billy couldn't find an exercise called "${name}". Check the name, or fill it in yourself.` : "Billy didn't come back with an answer this time. Try again.");
+    e.code = "no_answer"; throw e;
+  }
+  const list = (v) => (Array.isArray(v) ? [...new Set(v.map(String))] : []);
+  const same = searchLibrary(name, 1).find(x => KEYS.get(x.id).includes(loose(name)));
+  return {
+    familyId: FAMILIES[parsed.family] ? parsed.family : "",
+    needs: list(parsed.needs).filter(isCategory),
+    primary: list(parsed.primary).filter(m => MUSCLES.includes(m)).slice(0, 3),
+    note: String(parsed.note || "").trim().slice(0, 300),
+    ...(same ? { library: same.name } : {}),
+  };
 }
 
 /** Suggested to Glenn for the shared library, with a word on why; or taken back. */

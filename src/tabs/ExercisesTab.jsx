@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Plus, Trash2, Sparkles, Search, Send, Undo2, Link2, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
+import { AssistantMark } from "../billy/AssistantMark";
 import { fmtDay } from "../lib/date";
 
 const ByBilly = () => (
@@ -55,9 +56,27 @@ export function LibraryPicker({ onPick, onCancel, busy, lifted = false }) {
 }
 
 /* A private exercise's details: what it's called, its movement, what it
-   needs and works. */
-function OwnForm({ initial, data, busy, onSave, onCancel }) {
+   needs and works. With Billy here, he can fill in the rest from its name
+   (Glenn, 19 Oct 2026), as he looks up prices in Studio (ActivityStats.jsx,
+   CostRates): the form is filled, nothing is saved, and the trainer checks
+   it first. */
+function OwnForm({ initial, data, busy, billy = false, onSave, onCancel }) {
   const [f, setF] = useState(() => ({ name: "", familyId: "", needs: [], primary: [], note: "", ...initial }));
+  const [asking, setAsking] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  async function askBilly() {
+    setAsking(true); setError(""); setMessage("");
+    try {
+      const got = await apiRequest("POST", "/my-exercises/fill", { name: f.name.trim() });
+      setF(d => ({ ...d, familyId: got.familyId || "", needs: got.needs || [], primary: got.primary || [], note: got.note || "" }));
+      setMessage(`Billy filled in what he found. Check it, then Save.${got.library ? ` The library already has ${got.library}: you could find it there instead.` : ""}`);
+    } catch (err) {
+      setError(err.message || "Billy couldn't look that up. Try again.");
+    } finally {
+      setAsking(false);
+    }
+  }
   const toggle = (field, key) => setF(d => ({ ...d, [field]: d[field].includes(key) ? d[field].filter(k => k !== key) : [...d[field], key] }));
   const chip = (on) => on
     ? { background: "var(--fill-cerulean)", color: "#fff", borderColor: "var(--fill-cerulean)" }
@@ -66,6 +85,13 @@ function OwnForm({ initial, data, busy, onSave, onCancel }) {
     <form className="mt-2 grid gap-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
       <input className="cx-input" value={f.name} maxLength={120} placeholder="Its name" aria-label="Its name"
         onChange={e => setF(d => ({ ...d, name: e.target.value }))} />
+      {billy && (
+        <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={asking || busy || !f.name.trim()} aria-busy={asking} onClick={askBilly}>
+          {asking ? "Billy is looking…" : <><AssistantMark size={18} id="fill-billy" still mood="normal" /> Ask Billy to fill it in</>}
+        </button>
+      )}
+      {message && <p className="text-sm" role="status" style={{ color: "var(--moss)" }}>{message}</p>}
+      {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
       <select className="cx-input" value={f.familyId} aria-label="The movement it is closest to" onChange={e => setF(d => ({ ...d, familyId: e.target.value }))}>
         <option value="">The movement it is closest to (optional)</option>
         {data.families.map(m => <option key={m.id} value={m.id}>{m.label}</option>)}
@@ -84,7 +110,7 @@ function OwnForm({ initial, data, busy, onSave, onCancel }) {
             className="text-xs px-2.5 py-1 rounded-full border" style={chip(f.primary.includes(m))}>{m}</button>
         ))}
       </div>
-      <textarea className="cx-input text-sm" rows={2} maxLength={300} value={f.note} placeholder="How it's done (optional)"
+      <textarea className="cx-input text-sm" rows={3} maxLength={300} value={f.note} placeholder="How it's done (optional)"
         aria-label="How it's done" onChange={e => setF(d => ({ ...d, note: e.target.value }))} />
       <div className="flex gap-2">
         <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy || !f.name.trim()} aria-busy={busy}>{busy ? "Saving…" : "Save"}</button>
@@ -126,6 +152,13 @@ export function ExercisesTab({ onSignedOut }) {
   }, [onSignedOut]);
 
   useEffect(() => { call("GET", "/my-exercises"); }, [call]);
+  /* Billy's button only where there is a Billy (Studio's CostRates). */
+  const [billy, setBilly] = useState(false);
+  useEffect(() => {
+    let live = true;
+    apiRequest("GET", "/assistant").then(r => { if (live) setBilly(!!r.available); }).catch(() => {});
+    return () => { live = false; };
+  }, []);
 
   const done = (out) => { if (out) setOpen(null); };
   const is = (id, mode) => open?.id === id && open?.mode === mode;
@@ -166,7 +199,7 @@ export function ExercisesTab({ onSignedOut }) {
                         <LibraryPicker busy={busy} onCancel={() => setOpen(null)}
                           onPick={async (x) => done(await call("PATCH", `/my-exercises/names/${n.id}`, { exerciseId: x.id }))} />
                       ) : is(n.id, "own") ? (
-                        <OwnForm initial={{ name: n.name }} data={data} busy={busy} onCancel={() => setOpen(null)}
+                        <OwnForm initial={{ name: n.name }} data={data} busy={busy} billy={billy} onCancel={() => setOpen(null)}
                           onSave={async (f) => done(await call("POST", "/my-exercises/own", { ...f, fromName: n.id }))} />
                       ) : (
                         <div className="flex flex-wrap gap-4 mt-1 text-sm">
@@ -299,7 +332,7 @@ export function ExercisesTab({ onSignedOut }) {
               ))}
             </ul>
             {is("new", "own") ? (
-              <OwnForm data={data} busy={busy} onCancel={() => setOpen(null)}
+              <OwnForm data={data} busy={busy} billy={billy} onCancel={() => setOpen(null)}
                 onSave={async (f) => done(await call("POST", "/my-exercises/own", f))} />
             ) : (
               <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => setOpen({ id: "new", mode: "own" })}>

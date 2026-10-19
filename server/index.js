@@ -1325,6 +1325,21 @@ app.post("/api/my-exercises/own", asSignedIn("POST /my-exercises/own", async (re
   res.json(await library.exercisesOf(user.id));
 }));
 
+/* Billy fills in a new exercise from its name (library.fillPrivate). What
+   he found goes back to the form; nothing is saved. */
+app.post("/api/my-exercises/fill", asSignedIn("POST /my-exercises/fill", async (req, res) => {
+  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  if (!name || name.length > 120) return res.status(400).json({ error: "Write the exercise's name first.", code: "invalid" });
+  try {
+    res.json(await library.fillPrivate(name));
+  } catch (err) {
+    if (err.code === "not_configured") return res.status(503).json({ error: err.message, code: err.code });
+    if (err.code === "no_answer") return res.status(502).json({ error: err.message, code: err.code });
+    console.error("POST /my-exercises/fill:", err.message);
+    res.status(502).json({ error: "Billy couldn't look that up just now. Try again in a minute.", code: "assistant_failed" });
+  }
+}));
+
 const ownExercise = async (res, user, id) => {
   const mine = await library.privateOf(user.id, id);
   if (!mine) res.status(404).json({ error: "Not found", code: "not_found" });

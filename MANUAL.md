@@ -699,6 +699,15 @@ names when he talks to you. Like your equipment, it is yours alone.
    an exercise of my own**, then give it a name, the movement it is closest to
    if there is one, what it needs, what it mainly works and how it's done.
    Tap **Save**. To change one, tap its name; to remove it, tap the **bin**.
+   - To let Billy do the rest, write the name and tap **Ask Billy to fill it
+     in**. While he looks, the button says **Billy is looking…**. When he is
+     done, it says **Billy filled in what he found. Check it, then Save.**
+     Nothing is saved until you tap **Save**, so change anything he got wrong
+     first. If the library already has an exercise by that name, he says so:
+     you could find it there instead. If he can't tell what the exercise is,
+     he says so, and you can check the name or fill it in yourself. The button
+     is there only when Billy is set up, and also when you tap **Keep it as my
+     own**.
 5. If one of your own exercises belongs in everybody's library, tap **Suggest
    for the library**, say why if you like, and tap **Suggest it**. It then says
    **Suggested for the library on** the day. To change your mind, tap **Take
