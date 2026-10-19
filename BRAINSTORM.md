@@ -48,10 +48,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   be the accent look); Review and Equipment places use round chips that wrap on
   a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
   against its track.
-- **Speed: Studio is asked again on every request, often twice or more
-  (O-3).** `/auth/me` and `/clients` each time; adding a client is six Studio
-  calls; a master downloads the whole business list. Remember per request,
-  cache briefly with Studio's ETag.
 - **Speed: other (O-5 to O-10).** Today asks Studio for the whole calendar
   (pass `from`/`before`); unsent attachments and their files are never cleaned
   (no delete, no sweep; photos copied, not linked); nothing gzipped and built

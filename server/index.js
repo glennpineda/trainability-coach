@@ -99,6 +99,9 @@ function studioCookie(header = "") {
 /* One request to Studio's API, carrying only Studio's session cookie and the
    visitor's address. */
 function studio(req, route, { method = "GET", body } = {}) {
+  /* A change at Studio: this request's remembered client list is out of
+     date (clientsFromStudio, below). */
+  if (method !== "GET") req._clients = null;
   const cookie = studioCookie(req.headers.cookie);
   return fetch(`${STUDIO_ORIGIN}/api${route}`, {
     method,
@@ -148,7 +151,12 @@ async function coachAccount(req) {
 
 /* Who is signed in: a Coach account (its own session cookie, checked here),
    else whoever Studio says, asked with this request's Studio session. */
-async function signedIn(req) {
+/* Asked once per request, however many routes and checks ask it (Run 1, O-3). */
+function signedIn(req) {
+  req._who ||= whoIsSignedIn(req).catch(err => { req._who = null; throw err; });
+  return req._who;
+}
+async function whoIsSignedIn(req) {
   const own = await coachAccount(req);
   const user = own ? accounts.asUser(own) : await (async () => {
     const r = await studio(req, "/auth/me");
@@ -203,7 +211,15 @@ async function withLastMeasured(clients) {
   return clients.map(c => ({ ...c, lastMeasuredOn: last.get(c.id) || null }));
 }
 
-async function clientsFromStudio(req, user) {
+/* Asked of Studio once per request (Run 1, O-3): adding a client asked six
+   times, an ownership check and the route behind it twice. Any change sent to
+   Studio in the same request forgets it (studio(), above), so a list read
+   after adding or archiving is Studio's new one. */
+function clientsFromStudio(req, user) {
+  req._clients ||= readClients(req, user).catch(err => { req._clients = null; throw err; });
+  return req._clients;
+}
+async function readClients(req, user) {
   /* A Coach account's clients are kept in Coach (coach-clients.js), in the
      same shape. */
   if (user?.coachAccount) return coachClients.clientsOf(user.id);
@@ -326,6 +342,7 @@ app.post("/api/clients", async (req, res) => {
     /* A Coach account's client is kept in Coach (coach-clients.js). */
     if (user.coachAccount) {
       const out = await coachClients.addClient(user.id, clientFields(b));
+      req._clients = null;
       if (out.error) return res.status(out.code === "phone_taken" ? 409 : 400).json(out);
       res.set("Cache-Control", "private, no-store");
       return res.json({ ...out, clients: await myClients(req, user) });
@@ -371,6 +388,7 @@ async function onClient(req, res, what, send, own) {
        moved) is changed in Coach (coach-clients.js). */
     if (user.coachAccount || await coachClients.isKept(user.id, req.params.id)) {
       const wrong = await own(user);
+      req._clients = null;
       if (wrong) return res.status(wrong.code === "duplicate_client" ? 409 : 400).json(wrong);
     } else {
       const r = await send(user);
@@ -419,6 +437,7 @@ app.post("/api/clients/move", async (req, res) => {
           await studio(req, `/clients/${encodeURIComponent(out.clientId)}/archive`, { method: "POST", body: { trainerId: user.id, archived: true } });
         }
         await coachClients.moved(user.id, r.id, out.clientId, name);
+        req._clients = null;
         moved++;
       } catch (err) {
         if (!(err instanceof StudioRefused)) throw err;
