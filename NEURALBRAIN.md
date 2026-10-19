@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Run 1, Coach's first full test run** (19 Oct 2026; Glenn, asked "What's next?": "Go with 3 first, then 2 (follow the Studio's way of doing a test run)"). Build 1.0.82. Not from Next up (empty). Done the Studio way (its Runs 1, 22, 24): six agents on six copies of build 1.0.81 against stand-in Studio, Claude and push servers, two feature testers and four audits (design, ease of use, manual, speed and ideas). Nothing was fixed; the merged findings are in BRAINSTORM.md under Found in testing, Run 1, and the method, set-up notes and what went untested under # Test Run Fixes, Run 1. Files: BRAINSTORM.md, NEURALBRAIN.md, package.json, package-lock.json.
 - **The body drawing on the printed program** (19 Oct 2026; Glenn, asked "What's next?", chose "Go with 3 first, then 2", 3 being the drawing on the printed program). Build 1.0.81. Not from Next up (empty). `src/programs/PrintProgram.jsx`: under each day's table, the day's `BodyMap` on the program's one scale (`scaleOf`), wrapped in the print page's own light colours (the CSS variables `--accent` #007BA7, `--chalk` white, `--ghost-fill`, `--iron-line`, `--iron`, `--ink` set on the wrapper, which the drawing reads), so it is the same on paper whether the screen is light or dark, with print-color-adjust exact so the browser keeps its colour when printing (Print pages are otherwise printed without backgrounds). A sent program's copy (`server/messages.js` `programAttachment`) now keeps each exercise's `primary` and `secondary`, so the drawing shows on a program opened from a message; a copy sent before this has none and shows no drawing (it is drawn only where some exercise has a primary muscle). MANUAL 5.6 and CHANGELOG. **Checked** in Chromium with the screen in dark mode: Avery's program printed and sent (two drawings each), and printed to an A4 PDF (pdftoppm), the drawing in colour on white under each day; no page errors.
 - **The body drawing says primary and secondary** (19 Oct 2026; Glenn, after asking whether \"mainly works it\" is the primary muscle and \"also works it\" the secondary: \"Yeah change it to that\"). Build 1.0.80. Straight after build 1.0.79. The line under the list (`src/programs/BodyMap.jsx`) now says \"1 for each where it is a primary muscle, ½ for each where it is a secondary one\", the library's own words (`primary`, `secondary`). MANUAL 5.5 explains them (primary: what the exercise is chosen for and mostly works; secondary: what helps or steadies the movement). **Checked**: build, check-ui, check-docs.
 - **What the body drawing's numbers mean, said on screen** (19 Oct 2026; Glenn: "Explain more what the numbers by the muscle groups mean", then, offered a wording, "Yes, change it"). Build 1.0.79. Straight after build 1.0.78. Under the list beside the body drawing (`src/programs/BodyMap.jsx`), \"Darker is more. Also works counts half.\" became \"Each number is how many of this day's exercises work that muscle: 1 for each that mainly works it, ½ for each that also works it. Darker means a higher number.\" (kept to 300px wide). MANUAL 5.5 says the same, with an example (Glutes 2.5: two that mainly work them, one that also does). **Checked**: the build and check-ui; the words were read on the page in the session's Chromium.
@@ -235,9 +236,127 @@ as soon as it is made. Problems not yet fixed wait in BRAINSTORM.md under
 **Found in testing**. There are no separate test-run documents; this is the
 one place they live.
 
-No runs yet. The first one should write its method in full under its own
-heading (how the app was tested, and how to run another), as Studio's run 1
-does, so later runs can point back to it.
+## Run 1 — 19 October 2026
+
+(Glenn: "Go with 3 first, then 2 (follow the Studio's way of doing a test
+run)", 2 being Coach's first full test run.) Build 1.0.81, in a cloud session.
+Recorded as build 1.0.82. Nothing was fixed in this run: every finding waits in
+BRAINSTORM.md under **Found in testing**, Run 1, for Glenn to move into Next
+up. Fixes will be written up here, under this run, as they are made.
+
+### How the app was tested
+
+Copied from Studio's way (its NEURALBRAIN, Runs 1, 22 and 24): several agents
+at once, each on its own copy of the app and its own database, split between
+feature testers that work through what a trainer does and audits that look at
+the whole app from one side, each reporting back without changing either repo,
+and one write-up that merges what they found.
+
+1. **The stand-ins.** A cloud session has only Coach's repository, and the live
+   Studio is never touched, so three small servers stood in for the outside
+   world, written in the session's scratch folder:
+   - **Studio** on port 4242 (`studio.mjs`): `/api/auth/door`, `login`, `me`,
+     `logout`, the six look routes and `wide-screen`, `/api/clients` (Avery c1,
+     Jordan c2, Sam c3 and others, plus Riley Hart x1 of another trainer and an
+     archived Morgan Hart x2), `/api/appointments` (a week of sessions around
+     today, one cancelled), `/api/locations`, `/api/photos/…` and the
+     client-page routes. Two users: glenn@trainabilitystudio.com / pw (master,
+     Primary) and, with `TESS_TEAM=1`, tess@studio.test / pw2 (trainer). Every
+     client comes back with `trainerIds: [the signed-in user]`, so the "Also
+     trains with" wording can't be tested with it.
+   - **Claude** on 4243 (`claude.mjs`): answers Billy by echoing his prompt;
+     a message "TOOL name {json}" makes it call that tool, so the tools could be
+     tested without the real model.
+   - **Push** on 4244 (`fakepush.mjs`): accepts web-push deliveries.
+2. **Six copies of Coach**, on ports 4801–4806, each from the same build with
+   its own sqlite file and files folder (`COACH_SQLITE_PATH`,
+   `COACH_FILES_DIR`), seeded from one database that already held programs,
+   messages, a Coach account (casey@coach.test / goodpassword) and its client.
+   Started together by `start-all.sh` with `DB_HOST` empty, `STUDIO_ORIGIN`
+   set to the stand-in Studio, `ASSISTANT_API_BASE` to the stand-in Claude,
+   `PUSH_FAKE_ORIGIN` to the fake push, test VAPID keys and `APP_ORIGIN` per
+   port; each checked healthy at version 1.0.81 before the agents began.
+3. **Six agents**, started together in the background, each told its port,
+   its area, the manual chapters that cover it, the accounts, that nothing in
+   either repo may be changed, and to report every finding with an id, a
+   severity (high, medium, low), where in the code, what was done, what
+   happened and what should happen, and then what worked and what went
+   untested:
+   - **A, clients** (4801): the client list, adding and archiving, a client's
+     page and its four tabs, measurements and charts, progress photos with the
+     guided camera (a fake camera in Chromium), fitness tests and their
+     ratings, attaching them to messages and the printed pages; by API and in
+     the browser, as Glenn, Tess and Casey, including each one's access to the
+     others' records.
+   - **B, programs, sign-in, menus and Billy** (4802): sign-in and sign-up,
+     forgotten and temporary passwords, linking a Coach account, the account
+     menu and Primary-only pages, the program designer, Coach IQ's check and
+     suggestions, loads from a 1RM, the body drawing, printing and sending a
+     program, wide screen, and Billy's tools as each user.
+   - **D, design** (4803): every screen at phone (390), tablet (820), desktop
+     (1280) and wide (1600), light and dark, the four tones, high contrast,
+     reduced colour and X Large text; a contrast sweep of every text against
+     its real ground; checked against Studio's design rules (its
+     CONTRIBUTING.md) and `npm run check-ui`.
+   - **U, ease of use** (4804): whole tasks end to end as a trainer would do
+     them, phone and desktop — a new client from first measurements to a
+     printed and sent program — plus a session ending mid-task, a slow network
+     and offline.
+   - **M, the manual** (4805): MANUAL.md line by line against the code and
+     the running app, with corrected text for each mismatch.
+   - **O and I, speed and ideas** (4806): queries counted by wrapping sqlite's
+     `prepare`, a copy of the database filled with 12,000 messages to time the
+     slow ones, Studio calls counted from the code, page and payload sizes;
+     and ideas for what a trainer would want next, built on what is there.
+4. **The write-up.** The six reports were merged (the same problem found by
+   two or three agents became one item with all their ids), sorted into high,
+   medium and low, and written into BRAINSTORM.md, Found in testing, Run 1,
+   with the questions for Glenn and the ideas at the end. Then the servers were
+   stopped.
+
+**What went untested in this run**: anything needing the real Studio (its
+sign-in, forgotten and temporary passwords for Trainability accounts, the
+email in the menu, shared clients' "Also trains with", "Last session" lines,
+moving clients), the real Billy, a real phone's camera and level, real push
+and email, MySQL, landscape phones, the Notifications dialog, waiting out a
+photo link's expiry, and the client's /me page in Studio (not built).
+
+### Running another one
+
+Do it the same way, with the run's number in every heading and id. The
+stand-ins were written in the session's scratch folder, so a later cloud
+session writes them again from the description above (or Glenn asks for them
+to be kept in the repo). On Glenn's Mac, run against Studio's throwaway fixture
+(`npm run fixture` in Studio, port 4700) instead of the stand-in Studio, never
+against trainabilitystudio.com. A smaller run (one area after a change) can use
+one or two agents. Start from the items in Found in testing: a run should say
+which earlier findings it saw fixed.
+
+### Set-up notes for the next run
+
+- The stand-in Studio gives every client to whoever is signed in, so shared
+  clients and "Also trains with" need the fixture, or a stand-in that knows
+  other trainers.
+- The six copies share one stand-in Studio; a change to a user there (wide
+  screen, the look) shows on every copy, so agents changing them should put
+  them back.
+- The seeded database had no measurements, tests or photos for Avery; each
+  agent made its own. Seed some next time.
+- The app switcher's Studio link is hard-coded to the live site (U-10), so no
+  agent should follow it.
+- Most of a report is in its own words in the agents' notes; the scripts and
+  screenshots each agent made were kept only in the session's scratch folder.
+
+### What was found, and how it was fixed
+
+Nothing fixed yet. Found: 10 high (a temporary password opening the whole API,
+a client's records sendable to another client, UTC dates, numbers changed by
+editing a note, the exercise dialog under the tab bar, the camera's X, a lost
+save when signed out, the unseen "added" message and same-email swap,
+put-away programs with no way back, the body drawing's dark caption), about 35
+medium, the manual's 40 points and the smaller ones, two questions and 14
+ideas — all in BRAINSTORM.md, Found in testing, Run 1.
+
 
 ---
 
