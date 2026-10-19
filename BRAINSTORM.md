@@ -71,10 +71,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   placeholder cut on a phone; a sent picture's print page says "This page is
   for ." and "Invalid Date"; measurement labels 450 px from their values on
   desktop; the browser's square focus ring round the tab pill.
-- **Speed, smaller (O-11 to O-14).** Signed message file links change every
-  call, so nothing is cached (round the expiry as photos do); the client
-  page refetches each tab; Shell refetches clients and messages on every tab
-  change; video stills kept as base64 in the database.
 
 **Questions for Glenn**
 

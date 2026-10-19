@@ -760,6 +760,19 @@ app.get("/api/attachments/:id/file", asSignedIn("GET /attachments/file", async (
   if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
   sendAttachmentFile(res, a);
 }));
+/* A video's still, kept as a file (Run 1, O-14). */
+const sendStill = (res, a) => {
+  const type = a?.kind === "video" && /^file:(image\/(jpeg|png|webp))$/.exec(a.still || "");
+  if (!type) return res.status(404).json({ error: "Not found", code: "not_found" });
+  res.set("Content-Type", type[1]);
+  res.set("X-Content-Type-Options", "nosniff");
+  res.sendFile(messages.stillPath(a.id), { headers: { "Cache-Control": "private, max-age=3600" } }, (err) => {
+    if (err && !res.headersSent) res.status(404).json({ error: "Not found", code: "not_found" });
+  });
+};
+app.get("/api/attachments/:id/still", asSignedIn("GET /attachments/still", async (req, res, user) => {
+  sendStill(res, await messages.attachmentFor(req.params.id, { trainerId: user.id }));
+}));
 
 /*
  * The client link: Studio's client page asking for a client's messages,
@@ -785,7 +798,8 @@ const coachOrigin = (req) => process.env.APP_ORIGIN || `${req.protocol}://${req.
 const forClient = (req, thread) => ({
   ...thread,
   messages: thread.messages.map(m => ({ ...m, attachments: m.attachments.map(a => (a.kind === "picture" || a.kind === "video")
-    ? { ...a, url: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET()) }
+    ? { ...a, url: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET()),
+      ...(a.still?.startsWith("/api/") ? { still: messages.signedFileUrl(coachOrigin(req), a.id, LINK_SECRET(), undefined, { still: true }) } : {}) }
     /* Progress photos: each picture by its own signed link. */
     : a.kind === "photos" && a.photos ? { ...a, photos: { ...a.photos, sets: a.photos.sets.map((x, n) => ({ ...x,
       photos: Object.fromEntries((x.angles || []).map(g => [g, progressPhotos.signedUrl(`${coachOrigin(req)}/api/attachment-photo`, `${a.id}.${n}.${g}`)])) })) } }
@@ -847,6 +861,10 @@ app.get("/api/files/:id", linkRoute("signed file", async (req, res) => {
   if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
   sendAttachmentFile(res, a);
 }));
+app.get("/api/files/:id/still", linkRoute("signed still", async (req, res) => {
+  if (!messages.checkSignature(req.params.id, req.query.exp, req.query.sig, LINK_SECRET())) return res.status(404).json({ error: "Not found", code: "not_found" });
+  sendStill(res, await messages.sentAttachment(req.params.id));
+}));
 
 app.get("/api/equipment", asSignedIn("GET /equipment", async (req, res, user) => {
   await syncStudioPlace(req, user);
@@ -867,8 +885,8 @@ app.get("/api/coach-iq/conditions", asSignedIn("GET /coach-iq/conditions", async
   res.json({ conditions: limitations.conditionsList(), facts: FLAGS, joints: JOINTS });
 }));
 
-/* Where a client trains, from Studio: their gym there, read from Studio each
-   time so a change there shows at once, as the trainer's place linked to it
+/* Where a client trains, from Studio: their gym there (from the client list,
+   read from Studio each time, so a change there shows at once), as the trainer's place linked to it
    (with the equipment the Primary Master set for it), for a new program's
    form. null when Studio has none. */
 app.get("/api/clients/:client/place", asSignedIn("GET /clients/place", async (req, res, user) => {
@@ -876,8 +894,15 @@ app.get("/api/clients/:client/place", asSignedIn("GET /clients/place", async (re
   if (!client) return res.status(404).json({ error: "Not found", code: "not_found" });
   res.set("Cache-Control", "private, no-store");
   if (!client.studioPlaceId) return res.json({ place: null });
-  await syncStudioPlace(req, user, { force: true });
-  res.json({ place: await equipment.placeForStudio(user.id, client.studioPlaceId) });
+  /* Studio's places as last read (every 10 minutes), and read again only
+     when their gym isn't among them yet: it was read on every look (Run 1, O-12). */
+  await syncStudioPlace(req, user);
+  let place = await equipment.placeForStudio(user.id, client.studioPlaceId);
+  if (!place) {
+    await syncStudioPlace(req, user, { force: true });
+    place = await equipment.placeForStudio(user.id, client.studioPlaceId);
+  }
+  res.json({ place });
 }));
 
 /* What the trainer's programs for a client say about their level, for a new
@@ -958,6 +983,7 @@ app.delete("/api/measurements/:id", asSignedIn("DELETE /measurements", async (re
    and deleted only by the one who did them. */
 const testsAnswer = async (clientId, user) => ({
   tests: await fitnessTests.testsOf(clientId, user.id), units: await trainerSettings.unitsOf(user.id),
+  latestWeightKg: await measurements.latestWeight(clientId),
 });
 app.get("/api/clients/:client/tests", asSignedIn("GET /clients/tests", async (req, res, user) => {
   if (!await ownClient(req, res, user, req.params.client)) return;
@@ -996,10 +1022,11 @@ app.delete("/api/tests/:id", asSignedIn("DELETE /tests", async (req, res, user) 
 /* A client's progress photos (server/progress-photos.js): as measurements,
    only for a client on the trainer's own list; none kept, or shown, until a
    trainer has recorded that the client agreed. */
-const photosAnswer = async (clientId, user) => ({
-  consent: await progressPhotos.consentOf(clientId, user.id),
-  sets: await progressPhotos.consentOf(clientId, user.id) ? await progressPhotos.setsOf(clientId, user.id) : [],
-});
+const photosAnswer = async (clientId, user) => {
+  /* Asked once: it was asked twice (Run 1, O-12). */
+  const consent = await progressPhotos.consentOf(clientId, user.id);
+  return { consent, sets: consent ? await progressPhotos.setsOf(clientId, user.id) : [] };
+};
 app.get("/api/clients/:client/progress-photos", asSignedIn("GET /clients/progress-photos", async (req, res, user) => {
   if (!await ownClient(req, res, user, req.params.client)) return;
   res.set("Cache-Control", "private, no-store");

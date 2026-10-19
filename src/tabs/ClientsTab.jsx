@@ -105,6 +105,13 @@ const CLIENT_TABS = [
  */
 function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured, onOpenProgram, onNewProgram }) {
   const [tab, setTab] = useState("details");
+  /* Each part, once opened, stays as it is behind the others, rather than
+     being read again on every tap of the band (Run 1, O-12). Fitness tests
+     starts again after a measurement changes, for the latest weight it fills in. */
+  const [seen, setSeen] = useState(() => new Set(["details"]));
+  const [measured, setMeasured] = useState(0);
+  const pick = (key) => { setTab(key); setSeen(s => (s.has(key) ? s : new Set([...s, key]))); };
+  const part = (key, el) => seen.has(key) && <div hidden={tab !== key}>{el}</div>;
   const [asking, setAsking] = useState(false);   // the Archive question open
   const next = nextBooked(c);
   useEffect(() => { scrollPageTo({ top: 0 }); }, [c.id]);
@@ -139,10 +146,10 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
       )}
       {/* The record's parts: tabs that switch between things, Studio's
           picking look (SegRow; Run 1, D-3). The phone's names below 640px. */}
-      <SegRow pick fit className="cx-seg-small" label={`${c.firstName || "Client"}'s record`} value={tab} onPick={setTab} panelId="client-panel" idOf={(key) => `client-tab-${key}`}
+      <SegRow pick fit className="cx-seg-small" label={`${c.firstName || "Client"}'s record`} value={tab} onPick={pick} panelId="client-panel" idOf={(key) => `client-tab-${key}`}
         items={CLIENT_TABS.map(([key, long, short]) => ({ key, label: <><span className="sm:hidden">{short}</span><span className="hidden sm:inline">{long}</span></> }))} />
       <div id="client-panel" role="tabpanel" aria-labelledby={`client-tab-${tab}`} className="cx-card mt-3 p-4 sm:p-5">
-        {tab === "details" && (
+        {part("details", (
           <div className="grid sm:grid-cols-2 gap-x-6">
             <Detail icon={Mail} label="Email">
               {c.email ? <a href={`mailto:${c.email}`} className="cx-link">{c.email}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
@@ -175,11 +182,11 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
               </div>
             )}
           </div>
-        )}
-        {tab === "measurements" && <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={onMeasured} inTab />}
-        {tab === "photos" && <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />}
-        {tab === "tests" && <FitnessTests client={c} onSignedOut={onSignedOut} inTab />}
-        {tab === "programs" && <ClientPrograms client={c} onSignedOut={onSignedOut} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} />}
+        ))}
+        {part("measurements", <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={(...a) => { setMeasured(n => n + 1); onMeasured?.(...a); }} inTab />)}
+        {part("photos", <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />)}
+        {part("tests", <FitnessTests key={measured} client={c} onSignedOut={onSignedOut} inTab />)}
+        {part("programs", <ClientPrograms client={c} onSignedOut={onSignedOut} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} />)}
       </div>
     </div>
   );

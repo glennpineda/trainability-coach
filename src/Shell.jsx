@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { scrollPageTo } from "./lib/scroll";
 import { House, Users, ClipboardList, MessageCircle, FoldHorizontal, UnfoldHorizontal } from "lucide-react";
 import { Header } from "./chrome/Header";
@@ -42,8 +42,9 @@ const isPrimaryMaster = (user) => !!user?.isPrimary && user?.role === "master";
 /* Signed in: the header, the tab on screen, and the bar along the bottom.
    The tab is remembered for this browser tab only, so a reload stays put.
    The client list is held here, so Home can count it and the Clients tab
-   opens on it without waiting, and asked for again on every change of tab
-   so it never sits stale. */
+   opens on it without waiting, and asked for again on a change of tab
+   so it never sits stale, but not more than every 30 seconds: it was asked
+   for on every tap of the bar (Run 1, O-13). */
 export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
   const [tab, setTab] = useState(() => {
     /* Only a page this person may open: Review and Installation are the
@@ -55,13 +56,22 @@ export function Shell({ user, onLogout, onSignedOut, chooseLook, chooseWide }) {
   useEffect(() => { try { sessionStorage.setItem(KEY, tab); } catch { /* not kept */ } }, [tab]);
   const clients = useClients(onSignedOut);
   const { refresh } = clients;
-  useEffect(() => refresh(), [tab, refresh]);
+  /* When each was last asked for on a change of tab. */
+  const asked = useRef({ clients: 0, unread: 0 });
+  const due = (what) => {
+    if (Date.now() - asked.current[what] < 30 * 1000) return false;
+    asked.current[what] = Date.now();
+    return true;
+  };
+  useEffect(() => { if (due("clients")) refresh(); }, [tab, refresh]);
   const billy = useBilly(onSignedOut);
   /* Messages from clients not yet read, on the Messages button (Studio's
-     count on a tab), asked on every change of tab and every minute. */
+     count on a tab), asked on a change of tab (at most every 30 seconds) and
+     every minute. Not on opening Messages, which asks for them itself and
+     says the count (onUnread): it was asked twice (O-13). */
   const [unread, setUnread] = useState(0);
   const askUnread = useCallback(() => apiRequest("GET", "/messages").then(d => setUnread(d.unread || 0)).catch(() => {}), []);
-  useEffect(() => { if (!user.coachAccount) askUnread(); }, [tab, askUnread, user.coachAccount]);
+  useEffect(() => { if (!user.coachAccount && tab !== "messages" && due("unread")) askUnread(); }, [tab, askUnread, user.coachAccount]);
   /* Every minute while Coach is in sight (hooks/usePoll.js; Run 1, O-4). */
   usePoll(askUnread, 60 * 1000, !user.coachAccount);
   const open = (id) => { setTab(id); scrollPageTo({ top: 0 }); };

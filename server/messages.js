@@ -50,6 +50,10 @@ export const attachmentPath = (id) => {
   if (!ATT.test(String(id))) throw new Error("Bad attachment id");
   return path.join(dir(), id);
 };
+/* A video's still, beside it as a file (<id>.still): it was kept in the
+   database as a data URI of up to 400 KB and sent with every list of
+   messages (Run 1, O-14). Its row's `still` says "file:" and its type. */
+export const stillPath = (id) => `${attachmentPath(id)}.still`;
 
 /* ------------------------------------------------------------ uploads */
 
@@ -122,11 +126,13 @@ export async function finishUpload(upload, owner, { kind, name, width, height, s
     throw failure(413, "too_large", "That picture is too large.");
   }
   await fs.mkdir(dir(), { recursive: true });
+  const poster = kind === "video" && goodStill(still) ? /^data:(image\/\w+);base64,(.*)$/.exec(still) : null;
   const id = await insertWithNewId("attachment", (newId) => run(
     `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
      VALUES (?, '', ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)`,
-    [newId, owner, kind, String(name || "").slice(0, 200), what.mime, size, dimension(width), dimension(height), kind === "video" && goodStill(still) ? still : null, now()]));
+    [newId, owner, kind, String(name || "").slice(0, 200), what.mime, size, dimension(width), dimension(height), poster ? `file:${poster[1]}` : null, now()]));
   await fs.rename(file, attachmentPath(id));
+  if (poster) await fs.writeFile(stillPath(id), Buffer.from(poster[2], "base64"));
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
@@ -134,6 +140,7 @@ export async function finishUpload(upload, owner, { kind, name, width, height, s
    attachment's copies (<id>.<n>.<angle>.jpg). */
 async function dropAttachment(id) {
   await fs.rm(attachmentPath(id), { force: true }).catch(() => {});
+  await fs.rm(stillPath(id), { force: true }).catch(() => {});
   for (const n of [0, 1]) for (const a of PHOTO_ANGLES) await fs.rm(attachmentPhotoPath(id, n, a), { force: true }).catch(() => {});
   await run(`DELETE FROM coach_attachments WHERE id = ? AND message_id = ''`, [id]);
 }
@@ -242,7 +249,9 @@ export async function photosAttachment(owner, { clientId, sets, clientName }) {
 function shapeAttachment(r, { full = false } = {}) {
   const out = { id: r.id, kind: r.kind, name: r.name, mime: r.mime, bytes: Number(r.bytes) || 0,
     width: r.width == null ? null : Number(r.width), height: r.height == null ? null : Number(r.height) };
-  if (r.kind === "video" && r.still) out.still = r.still;
+  /* Its still by a link (the trainer's; forClient signs one for the client),
+     or, saved before build 1.0.138, as the data URI it was kept as. */
+  if (r.kind === "video" && r.still) out.still = String(r.still).startsWith("file:") ? `/api/attachments/${r.id}/still` : r.still;
   if (r.kind === "program") {
     const d = parse(r.data);
     out.program = full ? d : { name: d.name, goalLabel: d.goalLabel, kindLabel: d.kindLabel, days: d.days?.length || 0, programId: d.programId };
@@ -447,12 +456,15 @@ export async function notifyClient(conversationId, { email, clientFirst, trainer
 /**
  * A link to an attachment's file that Studio's client page can put in an
  * <img> or <video>: signed with the client link's secret, and good for an
- * hour, so it can be handed to a browser without a Coach session.
+ * hour or more, so it can be handed to a browser without a Coach session.
+ * It ends on the hour, an hour or two ahead, as a progress photo's link does
+ * (progress-photos.js, signedUrl): the same link for a while, so the
+ * browser's copy is used rather than the file fetched on every look (Run 1, O-11).
  */
-export function signedFileUrl(origin, id, secret, ttlMs = 60 * 60 * 1000) {
-  const exp = Date.now() + ttlMs;
+export function signedFileUrl(origin, id, secret, ttlMs = 60 * 60 * 1000, { still = false } = {}) {
+  const exp = (Math.floor(Date.now() / ttlMs) + 2) * ttlMs;
   const sig = crypto.createHmac("sha256", secret).update(`${id}.${exp}`).digest("base64url");
-  return `${String(origin || "").replace(/\/$/, "")}/api/files/${id}?exp=${exp}&sig=${sig}`;
+  return `${String(origin || "").replace(/\/$/, "")}/api/files/${id}${still ? "/still" : ""}?exp=${exp}&sig=${sig}`;
 }
 export function checkSignature(id, exp, sig, secret) {
   if (!secret || !(Number(exp) > Date.now())) return false;

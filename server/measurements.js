@@ -31,6 +31,13 @@ export async function measurementsOf(clientId, trainerId) {
   return rows.map(r => shape(r, trainerId));
 }
 
+/** Their latest weight in kg, or null: what Fitness tests fills in for a walk
+    or a 1RM, without the whole list (Run 1, O-12). */
+export async function latestWeight(clientId) {
+  const r = await get(`SELECT weight FROM coach_measurements WHERE client_id = ? AND weight IS NOT NULL ORDER BY taken_on DESC, created_at DESC LIMIT 1`, [clientId]);
+  return r ? Number(r.weight) : null;
+}
+
 export const measurementById = (id) => get(`SELECT * FROM coach_measurements WHERE id = ?`, [id]);
 export const shapeOf = shape;
 

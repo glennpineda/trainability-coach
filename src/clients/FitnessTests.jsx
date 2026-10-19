@@ -333,9 +333,9 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
   }, [onSignedOut]);
   useEffect(() => {
     let alive = true;
-    apiRequest("GET", `/clients/${clientId}/tests`).then(d => { if (alive) setData(d); }).catch(err => { if (alive) fail(err); });
-    apiRequest("GET", `/clients/${clientId}/measurements`)
-      .then(d => { if (alive) setLatestWeight((d.measurements || []).find(m => m.values.weight != null)?.values.weight ?? null); }).catch(() => {});
+    /* Their latest weight comes with the tests, not by reading every
+       measurement (Run 1, O-12). */
+    apiRequest("GET", `/clients/${clientId}/tests`).then(d => { if (alive) { setData(d); setLatestWeight(d.latestWeightKg ?? null); } }).catch(err => { if (alive) fail(err); });
     return () => { alive = false; };
   }, [clientId, fail]);
 
