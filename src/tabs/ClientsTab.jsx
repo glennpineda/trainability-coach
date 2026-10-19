@@ -81,11 +81,12 @@ function ClientRow({ client: c, due, onOpen }) {
 /* The client's tabs, the long name and the one a phone shows. */
 const CLIENT_TABS = [
   ["details", "Details & limitations", "Details"],
+  /* Their programs (Run 1, U-9; Glenn, 19 Oct 2026: "Fifth tab: Programs",
+     then "Programs should be ordered right after details"). */
+  ["programs", "Programs", "Programs"],
   ["measurements", "Measurements", "Measurements"],
   ["photos", "Progress photos", "Photos"],
   ["tests", "Fitness tests", "Tests"],
-  /* Their programs (Run 1, U-9; Glenn, 19 Oct 2026: "Fifth tab: Programs"). */
-  ["programs", "Programs", "Programs"],
 ];
 
 /*

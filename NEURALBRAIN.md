@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Programs right after Details on a client's page** (19 Oct 2026; Glenn: "Programs should be ordered right after details"). Build 1.0.128. Straight after build 1.0.127. The client's page tabs (`CLIENT_TABS`, `src/tabs/ClientsTab.jsx`) are now Details & limitations, Programs, Measurements, Progress photos, Fitness tests (on a phone Details, Programs, Measurements, Photos, Tests); Programs was the fifth since build 1.0.124. MANUAL 4.3 lists them in the new order. Checked with a build; the row is the same SegRow, only its order changed.
 - **Run 1, Coach's first full test run** (19 Oct 2026; Glenn, asked "What's next?": "Go with 3 first, then 2 (follow the Studio's way of doing a test run)"). Build 1.0.82. Not from Next up (empty). Done the Studio way (its Runs 1, 22, 24): six agents on six copies of build 1.0.81 against stand-in Studio, Claude and push servers, two feature testers and four audits (design, ease of use, manual, speed and ideas). Nothing was fixed; the merged findings are in BRAINSTORM.md under Found in testing, Run 1, and the method, set-up notes and what went untested under # Test Run Fixes, Run 1. Files: BRAINSTORM.md, NEURALBRAIN.md, package.json, package-lock.json.
 - **The body drawing on the printed program** (19 Oct 2026; Glenn, asked "What's next?", chose "Go with 3 first, then 2", 3 being the drawing on the printed program). Build 1.0.81. Not from Next up (empty). `src/programs/PrintProgram.jsx`: under each day's table, the day's `BodyMap` on the program's one scale (`scaleOf`), wrapped in the print page's own light colours (the CSS variables `--accent` #007BA7, `--chalk` white, `--ghost-fill`, `--iron-line`, `--iron`, `--ink` set on the wrapper, which the drawing reads), so it is the same on paper whether the screen is light or dark, with print-color-adjust exact so the browser keeps its colour when printing (Print pages are otherwise printed without backgrounds). A sent program's copy (`server/messages.js` `programAttachment`) now keeps each exercise's `primary` and `secondary`, so the drawing shows on a program opened from a message; a copy sent before this has none and shows no drawing (it is drawn only where some exercise has a primary muscle). MANUAL 5.6 and CHANGELOG. **Checked** in Chromium with the screen in dark mode: Avery's program printed and sent (two drawings each), and printed to an A4 PDF (pdftoppm), the drawing in colour on white under each day; no page errors.
 - **The body drawing says primary and secondary** (19 Oct 2026; Glenn, after asking whether \"mainly works it\" is the primary muscle and \"also works it\" the secondary: \"Yeah change it to that\"). Build 1.0.80. Straight after build 1.0.79. The line under the list (`src/programs/BodyMap.jsx`) now says \"1 for each where it is a primary muscle, ½ for each where it is a secondary one\", the library's own words (`primary`, `secondary`). MANUAL 5.5 explains them (primary: what the exercise is chosen for and mostly works; secondary: what helps or steadies the movement). **Checked**: build, check-ui, check-docs.
@@ -1290,15 +1291,15 @@ a client, or add them in Studio.*
    - **Details & limitations**: who they are (below), their limitations
      (4.7), and **Edit details**. **Archive** is the box button at the top
      right (4.5).
-   - **Measurements** (4.8).
-   - **Progress photos** (4.9).
-   - **Fitness tests** (4.10).
    - **Programs**: your programs for them, each opening in the designer (5),
      and **New program for Avery**, which starts a new program (5.1) with
      them already chosen.
+   - **Measurements** (4.8).
+   - **Progress photos** (4.9).
+   - **Fitness tests** (4.10).
 
-   On a phone the tabs say **Details**, **Measurements**, **Photos**,
-   **Tests** and **Programs**. Tap one to see it. The page opens on **Details & limitations**,
+   On a phone the tabs say **Details**, **Programs**, **Measurements**,
+   **Photos** and **Tests**. Tap one to see it. The page opens on **Details & limitations**,
    which shows:
 
 | Detail | What it shows |
