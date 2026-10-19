@@ -274,7 +274,8 @@ async function copyPhotos(id, sets) {
  * Whether a client's progress photos on sent messages are hidden: they are
  * while the client doesn't agree to photos (Run 1, A-14; Glenn, 19 Oct 2026:
  * "it should be hidden"), from trainer and client alike. The files are kept,
- * so they show again if the client agrees again.
+ * so they show again if the client agrees again (Glenn: "Keep them hidden,
+ * they come back if they agree again").
  */
 export async function photosHidden(clientId) {
   return !clientId || !(await get(`SELECT 1 AS x FROM coach_photo_consent WHERE client_id = ?`, [clientId]));
