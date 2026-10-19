@@ -179,12 +179,27 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
       const out = editing
         ? await apiRequest("PATCH", `/program-exercises/${editing.id}`, { ...dose, ...(exerciseId !== editing.exerciseId ? { exerciseId } : {}) })
         : await apiRequest("POST", `/program-days/${day.id}/exercises`, { exerciseId, ...dose });
+      /* A new one is shown where it went (Run 1, U-14): the one on that day
+         that wasn't there before. */
+      if (!editing) {
+        const before = new Set(day.exercises.map(e => e.id));
+        setFlash(out.days.find(d => d.id === day.id)?.exercises.find(e => !before.has(e.id))?.id || null);
+      }
       setP(out); setVersion(v => v + 1); setDialog(null);
     } catch (err) {
       if (err.status === 401) onSignedOut?.(); else setDialogError(err.message);
     } finally { setBusy(false); }
   };
   const askBilly = (words) => { billy?.setOpen(true); billy?.ask(words); };
+  /* The exercise just added: scrolled to and lit for a moment. */
+  const [flash, setFlash] = useState(null);
+  useEffect(() => {
+    if (!flash) return undefined;
+    const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    document.getElementById(`ex-${flash}`)?.scrollIntoView({ block: "center", behavior: still ? "auto" : "smooth" });
+    const t = setTimeout(() => setFlash(null), 2400);
+    return () => clearTimeout(t);
+  }, [flash]);
 
   if (!p) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <p className="text-sm" style={muted}>Loading…</p>;
   const points = (filter) => p.check.filter(filter);
@@ -282,7 +297,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                 const { label, inPair } = labels[i];
                 const mine = points(c => c.exercise === e.id);
                 return (
-                  <li key={e.id} className="py-2.5 border-t first:border-t-0" style={line}>
+                  <li key={e.id} id={`ex-${e.id}`} className="py-2.5 border-t first:border-t-0 rounded-lg transition-colors duration-700" style={{ ...line, ...(flash === e.id ? { background: "var(--accent-soft)" } : {}) }}>
                     <div className="flex items-start gap-2">
                       <span className="text-xs font-semibold w-7 flex-none pt-0.5" style={{ color: inPair ? "var(--accent)" : "var(--iron)" }}>
                         {e.superset && <Link2 size={11} className="inline mr-0.5" aria-label="With the one above" />}{label}

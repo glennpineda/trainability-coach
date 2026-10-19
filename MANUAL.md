@@ -1346,8 +1346,8 @@ then **Put back** beside it; a note says *Next block is back on your list.*
    filled in, such as **1–3** sets of **8–12** with **3 min** rest. Change
    anything, or fill in more (5.3). **Coach IQ's starting point** puts its
    numbers back.
-6. Tap **Add to Day A**. The exercise appears on the day with what you filled
-   in. If something can't be saved (a rest written oddly, say), the box stays
+6. Tap **Add to Day A**. The page moves to the exercise on the day, with what
+   you filled in, and lights it pale blue for a moment. If something can't be saved (a rest written oddly, say), the box stays
    open and says why in red.
 
 **From a suggestion.** Under each day, **Could come next** lists exercises

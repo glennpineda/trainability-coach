@@ -46,8 +46,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 - **Coach IQ's check is noisy on one exercise (U-13).** Five lines on one
   squat; "Ask first: Resistance bands" vs the dialog's "Nobody has said whether
   … has resistance bands." Group by exercise; word it as the dialog does.
-- **Nothing shows where an added exercise went (U-14).** Scroll to it and
-  highlight it.
 - **Tab rows are built four ways, none Studio's (D-3).** The client record,
   Today and Active/Archived use Studio's filter look (the record's tabs should
   be the accent look); Review and Equipment places use round chips that wrap on
