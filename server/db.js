@@ -526,6 +526,8 @@ const COLUMNS = [
      it can only be sent to that client (Run 1, A-1); empty on a picture or a
      video, which may go to anybody. */
   ["coach_attachments", "client_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
+  /* The angles a progress photo set has a small copy of (<id>-<angle>.t.jpg; Run 1, O-8). */
+  ["coach_progress_photos", "thumbs", "VARCHAR(40) NOT NULL DEFAULT ''"],
   /* Measurements' later four (Glenn, 18 Oct 2026: "shoulder to the
      measurements too, … heart rate (optional), blood pressure (optional)"):
      cm, bpm and mmHg. */

@@ -27,7 +27,7 @@ function Thumbs({ set }) {
         <figure key={a.key} className="min-w-0">
           {set.photos[a.key] ? (
             <a href={set.photos[a.key]} target="_blank" rel="noreferrer" aria-label={`${a.label}, ${dateText(set.takenOn)}, full size`}>
-              <img src={set.photos[a.key]} alt="" loading="lazy" className="w-full rounded-md object-cover" style={{ aspectRatio: "3 / 4", background: "var(--ghost-fill)" }} />
+              <img src={set.thumbs?.[a.key] || set.photos[a.key]} alt="" loading="lazy" className="w-full rounded-md object-cover" style={{ aspectRatio: "3 / 4", background: "var(--ghost-fill)" }} />
             </a>
           ) : <div className="w-full rounded-md" style={{ aspectRatio: "3 / 4", background: "var(--ghost-fill)" }} />}
           <figcaption className="text-[11px] mt-0.5 text-center truncate" style={muted}>{a.label}</figcaption>

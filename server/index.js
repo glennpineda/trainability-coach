@@ -84,8 +84,8 @@ app.set("trust proxy", Number(process.env.TRUST_PROXY || 0) || false);
 app.use("/api/assistant", express.json({ limit: "32mb" }));
 /* A video's still, taken in the browser, comes with the end of its upload. */
 app.use("/api/attachments", express.json({ limit: "1mb" }));
-/* A set of progress photos: four pictures, shrunk in the browser to 3 MB at most each. */
-app.use(/^\/api\/clients\/[^/]+\/progress-photos$/, express.json({ limit: "18mb" }));
+/* A set of progress photos: four pictures, shrunk in the browser to 3 MB at most each, and their small copies. */
+app.use(/^\/api\/clients\/[^/]+\/progress-photos$/, express.json({ limit: "20mb" }));
 app.use("/api", express.json({ limit: "20kb" }));
 /* Big answers gzipped, as Studio's are (json-gzip.js; Run 1, O-7): the
    library's export, Review's principles and a conversation with pictures
@@ -1031,9 +1031,9 @@ app.delete("/api/progress-photos/:id", asSignedIn("DELETE /progress-photos", asy
 }));
 /* One picture, by the link signed for it when the list was given. */
 app.get("/api/progress-photo/:what", async (req, res) => {
-  const m = /^(pph\d{3}[a-z]{3}\d{3})-(front|left|right|back)$/.exec(req.params.what);
+  const m = /^(pph\d{3}[a-z]{3}\d{3})-(front|left|right|back)(\.t)?$/.exec(req.params.what);
   if (!m || !progressPhotos.signedOk(req.params.what, req.query.exp, req.query.sig)) return res.status(404).json({ error: "Not found", code: "not_found" });
-  sendPhoto(res, progressPhotos.pathOf(m[1], m[2]));
+  sendPhoto(res, progressPhotos.pathOf(m[1], m[2], { thumb: !!m[3] }));
 });
 
 /* A place of the trainer's own, or a 404: never another trainer's. */

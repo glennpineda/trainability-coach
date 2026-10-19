@@ -28,10 +28,12 @@ const now = () => new Date().toISOString();
    page caps the date box at the device's own today (Run 1, A-2). */
 const latestDay = () => new Date(Date.now() + 86400000).toISOString().slice(0, 10);
 const dir = () => filePath("progress");
-const fileOf = (id, angle) => {
+const fileOf = (id, angle, { thumb = false } = {}) => {
   if (!isId("progressPhotos", id) || !ANGLE_KEYS.includes(angle)) throw new Error("Bad progress photo");
-  return path.join(dir(), `${id}-${angle}.jpg`);
+  return path.join(dir(), `${id}-${angle}${thumb ? ".t" : ""}.jpg`);
 };
+/* The small copy (300 × 400) a set's thumbnails show (Run 1, O-8). */
+const THUMB_MAX_BYTES = 200 * 1024;
 export const pathOf = fileOf;
 
 /* The signing key for the links: from the client link's secret where it is
@@ -58,6 +60,8 @@ function shape(r, trainerId) {
   return {
     id: r.id, clientId: r.client_id, takenOn: r.taken_on, note: r.note || "", takenBy: r.trainer_name, mine: r.trainer_id === trainerId,
     photos: Object.fromEntries(angles.map(a => [a, signedUrl("/api/progress-photo", `${r.id}-${a}`)])),
+    /* Small copies, where the set was saved with them (from build 1.0.120). */
+    thumbs: Object.fromEntries(String(r.thumbs || "").split(",").filter(a => angles.includes(a)).map(a => [a, signedUrl("/api/progress-photo", `${r.id}-${a}.t`)])),
     createdAt: r.created_at,
   };
 }
@@ -79,11 +83,11 @@ export async function agree(clientId, trainer) {
 }
 
 /* A picture as sent: a JPEG data URI, small enough, and a JPEG inside. */
-function pictureOf(dataUri) {
+function pictureOf(dataUri, max = PHOTO_MAX_BYTES) {
   const m = /^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/.exec(String(dataUri || ""));
   if (!m) return null;
   const bytes = Buffer.from(m[1], "base64");
-  if (bytes.length < 100 || bytes.length > PHOTO_MAX_BYTES || bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes[2] !== 0xff) return null;
+  if (bytes.length < 100 || bytes.length > max || bytes[0] !== 0xff || bytes[1] !== 0xd8 || bytes[2] !== 0xff) return null;
   return bytes;
 }
 
@@ -101,27 +105,36 @@ export function check(body = {}) {
     pictures[a] = bytes;
   }
   if (!Object.keys(pictures).length) return { error: "Take at least one photo." };
-  return { takenOn, note, pictures };
+  /* Small copies are a help, not a must: one that can't be read is left out
+     and its thumbnail shows the picture itself. */
+  const thumbs = {};
+  for (const a of Object.keys(pictures)) {
+    const bytes = body.thumbs?.[a] == null ? null : pictureOf(body.thumbs[a], THUMB_MAX_BYTES);
+    if (bytes) thumbs[a] = bytes;
+  }
+  return { takenOn, note, pictures, thumbs };
 }
 
-export async function add(clientId, trainer, { takenOn, note, pictures }) {
+export async function add(clientId, trainer, { takenOn, note, pictures, thumbs = {} }) {
   await fs.mkdir(dir(), { recursive: true });
   const at = now();
   const angles = ANGLE_KEYS.filter(a => pictures[a]);
+  const small = angles.filter(a => thumbs[a]);
   return insertWithNewId("progressPhotos", async (id) => {
     try {
       for (const a of angles) await fs.writeFile(fileOf(id, a), pictures[a]);
+      for (const a of small) await fs.writeFile(fileOf(id, a, { thumb: true }), thumbs[a]);
     } catch (err) {
-      for (const a of angles) await fs.rm(fileOf(id, a), { force: true });
+      for (const a of angles) { await fs.rm(fileOf(id, a), { force: true }); await fs.rm(fileOf(id, a, { thumb: true }), { force: true }); }
       throw err;
     }
-    await run(`INSERT INTO coach_progress_photos (id, client_id, trainer_id, trainer_name, taken_on, angles, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, clientId, trainer.id, String(trainer.name || "").slice(0, 120), takenOn, angles.join(","), note, at, at]);
+    await run(`INSERT INTO coach_progress_photos (id, client_id, trainer_id, trainer_name, taken_on, angles, thumbs, note, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, clientId, trainer.id, String(trainer.name || "").slice(0, 120), takenOn, angles.join(","), small.join(","), note, at, at]);
   });
 }
 
 async function removeRow(r) {
-  for (const a of ANGLE_KEYS) await fs.rm(fileOf(r.id, a), { force: true });
+  for (const a of ANGLE_KEYS) { await fs.rm(fileOf(r.id, a), { force: true }); await fs.rm(fileOf(r.id, a, { thumb: true }), { force: true }); }
   await run(`DELETE FROM coach_progress_photos WHERE id = ?`, [r.id]);
 }
 export async function remove(id, trainerId) {

@@ -37,6 +37,27 @@ function crop(source, sw, sh) {
   return canvas.toDataURL("image/jpeg", 0.82);
 }
 
+/* A small copy of a picture, 300 × 400, for the list's thumbnails, which
+   loaded the 1200 × 1600 pictures (up to 3 MB each; Run 1, O-8). */
+function small(dataUri) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = PHOTO_W / 4; canvas.height = PHOTO_H / 4;
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.8));
+    };
+    img.onerror = () => resolve(null);
+    img.src = dataUri;
+  });
+}
+async function smallOnes(shots) {
+  const out = {};
+  for (const [angle, uri] of Object.entries(shots)) { const t = await small(uri); if (t) out[angle] = t; }
+  return out;
+}
+
 /* A body to stand in: lines for the top of the head and the feet, and a
    figure facing the camera or side on. In the photo's own 300 by 400. */
 function Outline({ side }) {
@@ -299,7 +320,7 @@ export function PhotoSession({ firstName, previous, onSave, onClose, busy, error
           </label>
           {error && <p className="text-sm mt-3" role="alert" style={{ color: "#ffb4a8" }}>{error}</p>}
           <button type="button" className="cx-btn-primary w-full mt-4 py-3 text-base" disabled={busy || !Object.keys(shots).length} aria-busy={busy}
-            onClick={() => onSave({ takenOn, note, photos: shots })}>{busy ? "Saving…" : "Save"}</button>
+            onClick={async () => onSave({ takenOn, note, photos: shots, thumbs: await smallOnes(shots) })}>{busy ? "Saving…" : "Save"}</button>
           <p className="text-xs mt-2 text-center" style={{ opacity: 0.7 }}>Every trainer of {firstName} will see these.</p>
         </div>
       )}

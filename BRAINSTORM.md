@@ -52,10 +52,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 
 
 
-- **Speed: O-8.** Photo thumbnails load the full 1200×1600 pictures (up to
-  3 MB each, four a set). O-5 checked; O-6, O-7, O-9 and O-10 done (builds
-  1.0.116 to 1.0.119).
-
 ## Found in testing
 
 _Problems a test run turned up. Recorded, not yet fixed — move one into Next
