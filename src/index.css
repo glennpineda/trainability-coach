@@ -335,7 +335,10 @@
   .cx-navbtn-on, .cx-navbtn-on:hover { color: #fff; transform: none; }
   /* The lit circle, one piece that slides to the tab tapped. */
   .cx-nav-lit { position: absolute; z-index: 0; left: 0; top: 0; pointer-events: none; border-radius: 999px;
-    background: linear-gradient(135deg, var(--cerulean), var(--sky));
+    /* The fills that carry white, deep to cerulean: running out to sky, the
+       white icon fell to 1.75–2.6:1 at that end (Run 1, D-5); now 4.8:1 at
+       its lightest, in every look. */
+    background: linear-gradient(135deg, var(--fill-deep), var(--fill-cerulean));
     box-shadow: 0 3px 10px var(--accent-glow);
     transition: transform .3s cubic-bezier(.3, .7, .2, 1), width .3s cubic-bezier(.3, .7, .2, 1); }
 
