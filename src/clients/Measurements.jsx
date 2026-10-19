@@ -134,7 +134,7 @@ function Form({ units, initial, busy, onSave, onCancel }) {
   );
 }
 
-export function Measurements({ clientId, onSignedOut }) {
+export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }) {
   const [data, setData] = useState(null);   // { measurements, units }
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -155,7 +155,7 @@ export function Measurements({ clientId, onSignedOut }) {
 
   const send = async (method, path, body) => {
     setBusy(true); setError("");
-    try { setData(await apiRequest(method, path, body)); return true; }
+    try { setData(await apiRequest(method, path, body)); onChanged?.(); return true; }
     catch (err) { fail(err); return false; }
     finally { setBusy(false); }
   };
@@ -166,8 +166,10 @@ export function Measurements({ clientId, onSignedOut }) {
   const rest = list.slice(1);
 
   return (
-    <div className="sm:col-span-2 mt-2 pt-3 border-t" style={{ borderColor: "var(--iron-line)" }}>
-      <div className="flex items-center gap-2 mb-1">
+    /* In its own tab of the client's dialog (ClientsTab), the tab names it:
+       no heading or rule of its own. */
+    <div className={inTab ? "" : "sm:col-span-2 mt-2 pt-3 border-t"} style={inTab ? undefined : { borderColor: "var(--iron-line)" }}>
+      <div className={inTab ? "hidden" : "flex items-center gap-2 mb-1"}>
         <Ruler size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
         <span className="text-sm font-semibold">Measurements</span>
       </div>

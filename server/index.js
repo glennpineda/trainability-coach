@@ -165,6 +165,20 @@ async function signedIn(req) {
  * no card, notes, address or message settings, to the browser or to Billy.
  */
 async function myClients(req, user) {
+  return withLastMeasured(await clientsFromStudio(req, user));
+}
+
+/* Each client's last day measured (server/measurements.js), for the Clients
+   list to say when measurements are due (Glenn, 19 Oct 2026). One question
+   for the whole list. */
+async function withLastMeasured(clients) {
+  if (!clients.length) return clients;
+  const last = new Map((await db.all(`SELECT client_id, MAX(taken_on) AS last FROM coach_measurements WHERE client_id IN (${clients.map(() => "?").join(",")}) GROUP BY client_id`,
+    clients.map(c => c.id))).map(r => [r.client_id, r.last]));
+  return clients.map(c => ({ ...c, lastMeasuredOn: last.get(c.id) || null }));
+}
+
+async function clientsFromStudio(req, user) {
   /* A Coach account's clients are kept in Coach (coach-clients.js), in the
      same shape. */
   if (user?.coachAccount) return coachClients.clientsOf(user.id);
@@ -410,7 +424,8 @@ const asSignedIn = (what, fn) => async (req, res) => {
   }
 };
 
-/* The signed-in trainer's own settings (trainer-settings.js): their units. */
+/* The signed-in trainer's own settings (trainer-settings.js): their units,
+   and how often their clients' measurements are due. */
 app.get("/api/my-settings", asSignedIn("GET /my-settings", async (_req, res, user) => {
   res.set("Cache-Control", "private, no-store");
   res.json(await trainerSettings.settingsOf(user.id));
@@ -419,6 +434,9 @@ app.get("/api/my-settings", asSignedIn("GET /my-settings", async (_req, res, use
 app.put("/api/my-settings", asSignedIn("PUT /my-settings", async (req, res, user) => {
   if (req.body?.units !== undefined && !await trainerSettings.setUnits(user.id, req.body.units)) {
     return res.status(400).json({ error: "Choose imperial or metric.", code: "invalid" });
+  }
+  if (req.body?.measureEvery !== undefined && !await trainerSettings.setMeasureEvery(user.id, req.body.measureEvery)) {
+    return res.status(400).json({ error: "Choose how many weeks, from 1 to 12, or Off.", code: "invalid" });
   }
   res.json(await trainerSettings.settingsOf(user.id));
 }));

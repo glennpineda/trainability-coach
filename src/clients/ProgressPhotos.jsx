@@ -36,7 +36,7 @@ function Thumbs({ set }) {
   );
 }
 
-export function ProgressPhotos({ client, onSignedOut }) {
+export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
   const clientId = client.id;
   const first = client.firstName || "This client";
   const [data, setData] = useState(null);     // { consent, sets }
@@ -105,8 +105,10 @@ export function ProgressPhotos({ client, onSignedOut }) {
   );
 
   return (
-    <div className="sm:col-span-2 mt-2 pt-3 border-t" style={{ borderColor: "var(--iron-line)" }}>
-      <div className="flex items-center gap-2 mb-1">
+    /* In its own tab of the client's dialog (ClientsTab), the tab names it:
+       no heading or rule of its own. */
+    <div className={inTab ? "" : "sm:col-span-2 mt-2 pt-3 border-t"} style={inTab ? undefined : { borderColor: "var(--iron-line)" }}>
+      <div className={inTab ? "hidden" : "flex items-center gap-2 mb-1"}>
         <Camera size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
         <span className="text-sm font-semibold">Progress photos</span>
       </div>

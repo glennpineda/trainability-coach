@@ -432,6 +432,11 @@ your Trainability account.* (3.5).
      Weights and distances in Coach IQ, and in Billy's answers, are then
      shown in your units only, rounded to what a gym has: loads to 5 lb or
      2.5 kg. It is your own choice; other trainers keep theirs.
+   - **Measurements every** — how many weeks apart you measure your clients:
+     **1 week** to **12 weeks**, or **Off**. It starts at **5 weeks**. When a
+     client's last measurements are that old, or they have none, their line
+     on the Clients list says **Measurements due** (4.2). **Off** never says
+     it. It is your own choice; other trainers keep theirs.
    - **Link your Trainability account** — only with a Coach account (2.1):
      connects it to a Trainability account with another email.
    - **Accessibility** — light or dark, the app's colors, contrast, motion and
@@ -820,6 +825,12 @@ Each client has one line, in order of first name:
 | **First session booked for October 18** | They have not had a session yet, but one is booked. |
 | **No sessions yet** | Nothing has happened and nothing is booked. |
 
+- **Measurements due**, in blue after it, when it is time to measure them
+  again: their last measurements (4.8) were taken at least as many weeks ago
+  as you have chosen, or none have been taken yet. How many weeks is yours
+  to choose in your account menu, **Measurements every** (3.5); it starts at
+  5 weeks. Once you add their measurements, it goes.
+
 If you have no clients yet, the list says *You have no clients yet. Tap Add
 a client, or add them in Studio.*
 
@@ -827,9 +838,20 @@ a client, or add them in Studio.*
 
 ![A client's details](docs/images/06-client-details.png)
 
-*A client's details, opened*
+*A client, opened*
 
-1. Tap the client's line. It opens underneath to show:
+1. Tap the client's line. They open in a box of their own, over the list:
+   their photo, their name and their last session at the top, and under it
+   four tabs:
+   - **Details & limitations**: who they are (below), their limitations
+     (4.7), and **Edit details** and **Archive**.
+   - **Measurements** (4.8).
+   - **Progress photos** (4.9).
+   - **Fitness tests** (4.10).
+
+   On a phone the tabs say **Details**, **Measurements**, **Photos** and
+   **Tests**. Tap one to see it. The box opens on **Details & limitations**,
+   which shows:
 
 | Detail | What it shows |
 |---|---|
@@ -843,7 +865,8 @@ a client, or add them in Studio.*
 
    Anything Studio does not have says **Not given**, **Not known**,
    **None yet** or **Nothing booked**.
-2. Tap the line again to close it. Opening another client closes the first.
+2. To close it, tap the **X** in its top right corner, tap outside it, or
+   press **Esc** on a keyboard.
 
 ### 4.4 Finding a client
 
@@ -857,8 +880,8 @@ If nobody matches, the list says *No one matches* and what you typed.
 ### 4.5 Archived clients
 
 Clients you have archived — people you no longer train — are kept apart from
-the rest. To archive one, open them (4.3) and tap **Archive** at the bottom;
-it says *Jamie Ortiz archived. They're under Archived.*
+the rest. To archive one, open them (4.3) and tap **Archive** at the bottom
+of **Details & limitations**; the box closes and it says *Jamie Ortiz archived. They're under Archived.*
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.
@@ -897,7 +920,8 @@ If something is missing, it says what, such as *Last name and Email are
 required*.
 
 **To change a client's details**, open them (4.3) and tap **Edit details**
-at the bottom. The same form opens, headed *Edit Jamie's details*, with what
+at the bottom of **Details & limitations**. The box closes and the same form
+opens, headed *Edit Jamie's details*, with what
 is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
 details saved.*
 
@@ -923,7 +947,8 @@ A limitation is something a client should not do, or should do with care: a
 new knee, a sore shoulder, a pregnancy. Billy reads them before he suggests
 anything for that client.
 
-1. Open the client's details (4.3). At the bottom is **Limitations**.
+1. Open the client (4.3). Under their details, on **Details & limitations**,
+   is **Limitations**.
 2. Tap **+ Add a limitation**.
 3. Write it in plain words, such as *No kneeling, new knee in March*.
 4. If you like, tap what it means under **What it means**, such as **A knee
@@ -939,7 +964,7 @@ leave it.
 
 ### 4.8 A client's measurements
 
-Under **Limitations**, a client's details show their **Measurements**: one set
+A client's **Measurements** tab (4.3) shows their measurements: one set
 for each day they were taken. Every trainer of the client sees them, with who
 took each set.
 
@@ -971,7 +996,8 @@ nearest quarter, as a tape reads them.
 
 **Adding a set:**
 
-1. Open the client (4.3) and tap **Add measurements**.
+1. Open the client (4.3), tap the **Measurements** tab, and tap **Add
+   measurements**.
 2. **Taken on** starts on today; change it if they were taken on another day.
 3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
    (%), **Neck**, **Shoulders**, **Chest**, **Waist**, **Hips**; **Arm**,
@@ -997,7 +1023,7 @@ To send a set to the client, attach it to a message (7.3).
 
 ### 4.9 A client's progress photos
 
-Under **Measurements**, a client's details show their **Progress photos**:
+A client's **Progress photos** tab (4.3; **Photos** on a phone) shows them:
 the front, the left side, the right side and the back, one set for each day
 they were taken. Coach guides each photo so that one day's can be put beside
 the next.
@@ -1012,7 +1038,8 @@ recorded it and when, such as *Avery agreed · recorded by you on Oct 19,
 
 **Taking a set:**
 
-1. Open the client (4.3) and tap **Take progress photos**. The screen turns
+1. Open the client (4.3), tap the **Progress photos** tab, and tap **Take
+   progress photos**. The screen turns
    dark and fills the whole phone.
 2. A short list says how to take them the same way every time: the same spot
    with a plain wall behind and even light, the camera about 3 m (10 ft)
@@ -1065,7 +1092,7 @@ To send photos to the client, attach them to a message (7.3).
 
 ### 4.10 A client's fitness tests
 
-Under **Measurements**, a client's details show their **Fitness tests**, in
+A client's **Fitness tests** tab (4.3; **Tests** on a phone) shows them, in
 two groups: **Heart and lungs** and **Strength**. Every trainer of the client
 sees the results, with who recorded each one.
 
@@ -1116,7 +1143,8 @@ rated: the tables start at 18.
 
 **Adding a result:**
 
-1. Open the client (4.3) and tap **Add a test result**.
+1. Open the client (4.3), tap the **Fitness tests** tab, and tap **Add a test
+   result**.
 2. Under **Which test?**, tap the test. Each says how it is done.
 3. The form shows again how it is done. **Day of the test** starts on today.
 4. For the step test and the walk, **Age on the day** is filled in from their
@@ -1585,6 +1613,7 @@ can write to them here.*
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
+| **Measurements due** | On the Clients list: it is time to measure this client again, by your **Measurements every** (3.5, 4.2). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
 | **Progress photos** | Photos of a client from the front, both sides and the back, taken the same way each time to see change; kept only once the client has agreed (4.9). |
 | **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.10). |

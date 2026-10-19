@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { Search, ChevronDown, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { Search, ChevronRight, X, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
@@ -7,6 +8,7 @@ import { Measurements } from "../clients/Measurements";
 import { ProgressPhotos } from "../clients/ProgressPhotos";
 import { FitnessTests } from "../clients/FitnessTests";
 import { Face } from "../clients/Face";
+import { useMySettings } from "../hooks/useUnits";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
@@ -32,11 +34,22 @@ function Detail({ icon: Icon, label, children }) {
   );
 }
 
-function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, busy }) {
-  const next = nextBooked(c);
+/* Whether a client's measurements are due: never taken, or last taken at
+   least `weeks` weeks ago (the trainer's setting; 0 is off). */
+function measurementsDue(c, weeks) {
+  if (!weeks || c.archived) return false;
+  if (!c.lastMeasuredOn) return true;
+  const days = (Date.now() - Date.parse(`${c.lastMeasuredOn}T00:00:00`)) / 864e5;
+  return days >= weeks * 7;
+}
+
+/* One line on the list: the face, the name, and under it the last session
+   and, when it's time, that measurements are due (Glenn, 19 Oct 2026). A tap
+   opens the client's dialog. */
+function ClientRow({ client: c, due, onOpen }) {
   return (
     <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
-      <button onClick={onToggle} aria-expanded={open}
+      <button type="button" onClick={onOpen} aria-haspopup="dialog"
         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--ghost-fill)] transition-colors">
         <Face photoUrl={c.photoUrl} size={40}>
           <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
@@ -49,50 +62,120 @@ function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, 
             {fullName(c)}
             {c.pronouns && <span className="font-normal text-xs ml-1.5" style={{ color: "var(--iron)" }}>({c.pronouns})</span>}
           </span>
-          <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>{lastLine(c)}</span>
+          <span className="block text-xs truncate" style={{ color: "var(--iron)" }}>
+            {lastLine(c)}
+            {due && <> · <span className="font-medium" style={{ color: "var(--accent)" }}>Measurements due</span></>}
+          </span>
         </span>
-        <ChevronDown size={18} className={`flex-none transition-transform ${open ? "rotate-180" : ""}`} style={{ color: "var(--iron)" }} aria-hidden="true" />
+        <ChevronRight size={18} className="flex-none" style={{ color: "var(--iron)" }} aria-hidden="true" />
       </button>
-      {open && (
-        <div className="px-4 pb-3 pl-[4.25rem] grid sm:grid-cols-2 gap-x-6">
-          <Detail icon={Mail} label="Email">
-            {c.email ? <a href={`mailto:${c.email}`} className="cx-link">{c.email}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
-          </Detail>
-          <Detail icon={Phone} label="Phone">
-            {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="cx-link">{c.phone}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
-          </Detail>
-          <Detail icon={Cake} label="Birthday">
-            {birthday(c.dateOfBirth) || <span style={{ color: "var(--iron)" }}>Not given</span>}
-          </Detail>
-          <Detail icon={UserPlus} label="Your client since">
-            {c.since ? longDate(c.since, true) : <span style={{ color: "var(--iron)" }}>Not known</span>}
-          </Detail>
-          <Detail icon={CalendarCheck} label="Last session">
-            {c.lastSessionOn ? longDate(c.lastSessionOn, true) : <span style={{ color: "var(--iron)" }}>None yet</span>}
-          </Detail>
-          <Detail icon={CalendarClock} label="Next booked">
-            {next ? longDate(next, true) : <span style={{ color: "var(--iron)" }}>Nothing booked</span>}
-          </Detail>
-          {c.sharedWith > 0 && (
-            <Detail icon={Users} label="Shared">
-              Also trains with {plural(c.sharedWith, "other trainer")}
-            </Detail>
-          )}
-          <Limitations clientId={c.id} onSignedOut={onSignedOut} />
-          <Measurements clientId={c.id} onSignedOut={onSignedOut} />
-          <ProgressPhotos client={c} onSignedOut={onSignedOut} />
-          <FitnessTests client={c} onSignedOut={onSignedOut} />
-          {(onEdit || onArchive) && (
-            <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
-              {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}
-              {onArchive && (c.archived
-                ? <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>
-                : <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, true)} disabled={busy}><Archive size={15} aria-hidden="true" /> Archive</button>)}
+    </li>
+  );
+}
+
+/* The dialog's tabs, the long name and the one a phone shows. */
+const CLIENT_TABS = [
+  ["details", "Details & limitations", "Details"],
+  ["measurements", "Measurements", "Measurements"],
+  ["photos", "Progress photos", "Photos"],
+  ["tests", "Fitness tests", "Tests"],
+];
+
+/*
+ * A client, opened from the list (Glenn, 19 Oct 2026: "each client item on
+ * client tab, when clicked, should open its own dialog containing all the
+ * content sections in its own tab in a tab band"). Studio's client dialog
+ * (its ClientsTab.jsx, ClientDetailDialog): the person at the top, then a
+ * tab band (its TabbedCard), each tab one part of their record. Here: their
+ * details and limitations, measurements, progress photos, fitness tests. The
+ * band is Coach's own segmented row (the list's Active · Archived), in a
+ * portal so it sits over the app's bars, as Coach's other dialogs do.
+ */
+function ClientDialog({ client: c, onClose, onSignedOut, onEdit, onArchive, busy, onMeasured }) {
+  const [tab, setTab] = useState("details");
+  const next = nextBooked(c);
+  /* Focus in the dialog once, as it opens, for the keyboard and a screen reader. */
+  const box = useRef(null);
+  useEffect(() => { box.current?.focus({ preventScroll: true }); }, []);
+  useEffect(() => {
+    const key = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, [onClose]);
+  return createPortal(
+    <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ zIndex: 50, background: "rgba(0,0,0,0.4)" }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      {/* One height whichever tab is open, so the sheet doesn't jump as the tabs change. */}
+      <div role="dialog" aria-modal="true" aria-label={fullName(c)} tabIndex={-1} ref={box}
+        className="cx-card w-full sm:max-w-2xl flex flex-col outline-none" style={{ borderRadius: 16, height: "min(88dvh, 820px)" }}>
+        <div className="flex items-center gap-3 px-4 pt-4">
+          <Face photoUrl={c.photoUrl} size={48}>
+            <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-12 h-12"
+              style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">{clientInitials(c)}</span>
+          </Face>
+          <div className="min-w-0 flex-1">
+            <h2 className="cx-display text-xl truncate">{fullName(c)}</h2>
+            <div className="text-xs truncate" style={{ color: "var(--iron)" }}>
+              {[c.pronouns && `(${c.pronouns})`, lastLine(c), c.archived && "Archived"].filter(Boolean).join(" · ")}
+            </div>
+          </div>
+          <button type="button" className="cx-icon-btn flex-none" onClick={onClose} aria-label="Close"><X size={18} aria-hidden="true" /></button>
+        </div>
+        <div className="px-4 pt-3">
+          <div className="flex rounded-[10px] p-1 gap-1" style={{ background: "var(--ghost-fill)" }} role="tablist" aria-label={`${c.firstName || "Client"}'s record`}>
+            {CLIENT_TABS.map(([key, long, short]) => (
+              <button key={key} type="button" role="tab" id={`client-tab-${key}`} aria-selected={tab === key} aria-controls="client-panel" onClick={() => setTab(key)}
+                className="flex-auto px-1.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
+                style={tab === key ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" } : { color: "var(--iron)" }}>
+                <span className="sm:hidden">{short}</span><span className="hidden sm:inline">{long}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div id="client-panel" role="tabpanel" aria-labelledby={`client-tab-${tab}`} className="px-4 pb-4 pt-2 overflow-y-auto flex-1 min-h-0">
+          {tab === "details" && (
+            <div className="grid sm:grid-cols-2 gap-x-6">
+              <Detail icon={Mail} label="Email">
+                {c.email ? <a href={`mailto:${c.email}`} className="cx-link">{c.email}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
+              </Detail>
+              <Detail icon={Phone} label="Phone">
+                {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="cx-link">{c.phone}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
+              </Detail>
+              <Detail icon={Cake} label="Birthday">
+                {birthday(c.dateOfBirth) || <span style={{ color: "var(--iron)" }}>Not given</span>}
+              </Detail>
+              <Detail icon={UserPlus} label="Your client since">
+                {c.since ? longDate(c.since, true) : <span style={{ color: "var(--iron)" }}>Not known</span>}
+              </Detail>
+              <Detail icon={CalendarCheck} label="Last session">
+                {c.lastSessionOn ? longDate(c.lastSessionOn, true) : <span style={{ color: "var(--iron)" }}>None yet</span>}
+              </Detail>
+              <Detail icon={CalendarClock} label="Next booked">
+                {next ? longDate(next, true) : <span style={{ color: "var(--iron)" }}>Nothing booked</span>}
+              </Detail>
+              {c.sharedWith > 0 && (
+                <Detail icon={Users} label="Shared">
+                  Also trains with {plural(c.sharedWith, "other trainer")}
+                </Detail>
+              )}
+              <Limitations clientId={c.id} onSignedOut={onSignedOut} />
+              {(onEdit || onArchive) && (
+                <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
+                  {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}
+                  {onArchive && (c.archived
+                    ? <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>
+                    : <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, true)} disabled={busy}><Archive size={15} aria-hidden="true" /> Archive</button>)}
+                </div>
+              )}
             </div>
           )}
+          {tab === "measurements" && <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={onMeasured} inTab />}
+          {tab === "photos" && <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />}
+          {tab === "tests" && <FitnessTests client={c} onSignedOut={onSignedOut} inTab />}
         </div>
-      )}
-    </li>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -206,10 +289,11 @@ function MoveOffer({ count, move }) {
   );
 }
 
-export function ClientsTab({ clients, error, retry, add, edit, archive, toMove, move, onSignedOut }) {
+export function ClientsTab({ clients, error, retry, refresh, add, edit, archive, toMove, move, onSignedOut }) {
+  const [{ measureEvery }] = useMySettings();
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
-  /* Opened out already when Today sent the trainer here. */
+  /* The client whose dialog is open: already, when Today sent the trainer here. */
   const [openId, setOpenId] = useState(() => { try { const id = sessionStorage.getItem("coach-client"); sessionStorage.removeItem("coach-client"); return id || null; } catch { return null; } });
   const [adding, setAdding] = useState(false);   // true, or the client whose details are being changed
   const [said, setSaid] = useState("");
@@ -219,7 +303,7 @@ export function ClientsTab({ clients, error, retry, add, edit, archive, toMove, 
     try {
       await archive(c.id, on);
       setSaid(on ? `${fullName(c)} archived. They're under Archived.` : `${fullName(c)} is back on your list.`);
-      setShowArchived(!on); setOpenId(c.id);
+      setShowArchived(!on); setOpenId(null);
     } catch (err) {
       setSaid(err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message);
     } finally { setBusy(false); }
@@ -228,6 +312,8 @@ export function ClientsTab({ clients, error, retry, add, edit, archive, toMove, 
   const active = useMemo(() => (clients || []).filter(c => !c.archived), [clients]);
   const archived = useMemo(() => (clients || []).filter(c => c.archived), [clients]);
   const list = showArchived ? archived : active;
+  /* The client whose dialog is open, from the list as it now stands. */
+  const open = (clients || []).find(c => c.id === openId) || null;
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return list;
@@ -305,12 +391,16 @@ export function ClientsTab({ clients, error, retry, add, edit, archive, toMove, 
         ) : (
           <ul>
             {shown.map(c => (
-              <ClientRow key={c.id} client={c} open={openId === c.id} onSignedOut={onSignedOut} onToggle={() => setOpenId(id => (id === c.id ? null : c.id))}
-                busy={busy} onEdit={edit ? (x) => { setAdding(x); setSaid(""); window.scrollTo({ top: 0, behavior: "smooth" }); } : null} onArchive={archive ? archiveOne : null} />
+              <ClientRow key={c.id} client={c} due={measurementsDue(c, measureEvery)} onOpen={() => setOpenId(c.id)} />
             ))}
           </ul>
         )}
       </div>
+      {open && (
+        <ClientDialog key={open.id} client={open} onClose={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh}
+          onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); window.scrollTo({ top: 0, behavior: "smooth" }); } : null}
+          onArchive={archive ? archiveOne : null} />
+      )}
 
     </div>
   );

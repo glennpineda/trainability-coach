@@ -3,36 +3,44 @@ import { apiRequest } from "../lib/api";
 import { DEFAULT_UNITS } from "../lib/units";
 
 /**
- * The signed-in trainer's units (src/lib/units.js), asked for once and shared
- * by every screen that shows a weight or a distance, so changing them in the
- * account menu redraws the rest at once. Imperial until the answer comes.
+ * The signed-in trainer's own settings (server/trainer-settings.js), asked
+ * for once and shared by every screen that uses them, so a change in the
+ * account menu redraws the rest at once: their units (src/lib/units.js),
+ * imperial until the answer comes, and how many weeks apart their clients'
+ * measurements are due (0 for off), 5 until it comes.
  */
-let units = DEFAULT_UNITS;
+let settings = { units: DEFAULT_UNITS, measureEvery: 5 };
 let asked = null;
 const listeners = new Set();
-const tell = () => { for (const fn of listeners) fn(units); };
+const tell = () => { for (const fn of listeners) fn(settings); };
 
 function ask() {
   asked ||= apiRequest("GET", "/my-settings")
-    .then(s => { units = s.units || DEFAULT_UNITS; tell(); })
+    .then(s => { settings = { ...settings, ...s }; tell(); })
     .catch(() => { asked = null; });
   return asked;
 }
 
-export function useUnits() {
-  const [now, setNow] = useState(units);
+/** `[settings, change]`: `change({ name: value })` shows it at once and keeps it, or puts it back. */
+export function useMySettings() {
+  const [now, setNow] = useState(settings);
   useEffect(() => {
     listeners.add(setNow);
     ask();
-    setNow(units);
+    setNow(settings);
     return () => listeners.delete(setNow);
   }, []);
-  const choose = async (next) => {
-    const before = units;
-    units = next; tell();
-    try { units = (await apiRequest("PUT", "/my-settings", { units: next })).units; }
-    catch { units = before; }
+  const change = async (next) => {
+    const before = settings;
+    settings = { ...settings, ...next }; tell();
+    try { settings = { ...settings, ...await apiRequest("PUT", "/my-settings", next) }; }
+    catch { settings = before; }
     tell();
   };
-  return [now, choose];
+  return [now, change];
+}
+
+export function useUnits() {
+  const [s, change] = useMySettings();
+  return [s.units || DEFAULT_UNITS, (units) => change({ units })];
 }

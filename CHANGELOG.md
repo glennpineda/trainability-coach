@@ -116,6 +116,11 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   any measurement taken on two days or more (blood pressure's two numbers
   together); opening a fitness test's earlier results charts that test. Tap a
   point to read its day and number.
+- **A client opens in a box of their own**, with four tabs: Details &
+  limitations, Measurements, Progress photos and Fitness tests. Each client's
+  line on the list says their last session and, when it's time, Measurements
+  due: after as many weeks as you choose under Measurements every in your
+  account menu (5 to begin with, or Off).
 - **Progress photos.** On a client's details, under Measurements: the
   front, both sides and the back, once a trainer has recorded that the client
   agrees. Coach guides each photo: a checklist for the setup, then each angle

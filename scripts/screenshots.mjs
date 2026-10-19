@@ -78,7 +78,9 @@ try {
   await page.waitForSelector("main ul li button");
   await page.mouse.move(10, 10);
   await shot("05-clients");
+  /* A client opens as a dialog with its tabs (19 Oct 2026). */
   await page.click("main ul li button");
+  await page.waitForSelector('[role="dialog"] [role="tab"]');
   await page.mouse.move(10, 10);
   await shot("06-client-details");
 

@@ -7,7 +7,7 @@ import { apiRequest } from "../lib/api";
 import { lookOf, lookSummary } from "../lib/look";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
-import { useUnits } from "../hooks/useUnits";
+import { useUnits, useMySettings } from "../hooks/useUnits";
 
 const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "Trainer" };
 
@@ -62,6 +62,7 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
 
   const role = user.isPrimary ? "Primary Master" : ROLE[user.role];
   const [units, setUnits] = useUnits();
+  const [mine, changeMine] = useMySettings();
   return (
     <div className="relative cx-account" ref={ref}>
       {linking && <LinkDialog onClose={() => setLinking(false)} />}
@@ -137,6 +138,17 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
               ))}
             </div>
           </div>
+          {/* How often each client's measurements are due (Glenn, 19 Oct
+              2026: "about every 5 weeks, this should be a setting"): the
+              Clients list says "Measurements due" once it has been as long. */}
+          <label className="px-3 py-2 flex items-center justify-between gap-2 text-sm">
+            <span className="text-xs" style={{ color: "var(--iron)" }}>Measurements every</span>
+            <select className="cx-input text-sm" style={{ width: "auto", padding: "0.3rem 2rem 0.3rem 0.6rem", color: "var(--ink)" }}
+              value={mine.measureEvery} onChange={e => changeMine({ measureEvery: Number(e.target.value) })}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => <option key={n} value={n}>{n === 1 ? "1 week" : `${n} weeks`}</option>)}
+              <option value={0}>Off</option>
+            </select>
+          </label>
           {/* Studio's Accessibility (its Profile → Accessibility): the line
               says light, dark or matching the device, and what else differs. */}
           {chooseLook && (

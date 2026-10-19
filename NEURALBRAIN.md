@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **A client opens in a dialog with tabs; Measurements due on the list** (19 Oct 2026; Glenn: "I think each client item on client tab, when clicked, should open its own dialog containing all the content sections in its own tab in a tab band (details & limitations, measurements, progress pictures, fitness tests). The description text on each client item should just show last session and if a measurement is due (about every 5 weeks, this should be a setting on the profile settings)"). Build 1.0.71. Not from Next up. **Copied from Studio**: its client dialog (`src/tabs/ClientsTab.jsx`, `ClientDetailDialog`): the person at the top, then a tab band (its `TabbedCard` with `SegRow`), each tab one part of their record. The band here is Coach's own segmented row, the list's Active · Archived, rather than Studio's sliding lilac pills, in Coach's colours. **The dialog** (`ClientDialog` in `src/tabs/ClientsTab.jsx`): a portal over the app (z-index 50, as Coach's Accessibility and Notifications dialogs), a bottom sheet on a phone and centred from sm, one fixed height (min(88dvh, 820px)) so it doesn't jump between tabs (it did, in the first screenshots), the content scrolling under the band; the client's face (48), name, and pronouns, last session and Archived under it; Close (X), a tap outside, or Esc. Focus goes into the dialog once as it opens: first with autoFocus on Close, which drew its focus ring at once, then with a ref callback, which would have pulled focus back on every redraw (out of a form being typed in), so a ref and an effect run once. Tabs: **Details & limitations** (email, phone, birthday, client since, last session, next booked, shared; Limitations; Edit details and Archive), **Measurements**, **Progress photos**, **Fitness tests**; on a phone **Details**, **Measurements**, **Photos**, **Tests** (text-xs, each as wide as its word). Measurements, ProgressPhotos and FitnessTests take `inTab`: no heading or rule of their own, since the tab names them. Edit details and Archive close the dialog (the form and the \"archived\" line are on the page behind). Today's link to a client opens the dialog. **The list's line**: the last session (unchanged words) and, when due, \"· Measurements due\" in the accent colour: never measured, or the last set at least the setting's weeks ago; never for an archived client, never when Off. The chevron is now a right arrow. **The setting**: `measure_every` in `coach_trainer_settings` (`server/trainer-settings.js`: `measureEveryOf`, `setMeasureEvery`, 0 to 12, 0 off, 5 until set), on `/api/my-settings` with the units; **Measurements every** in the account menu under Units, a select of 1 week to 12 weeks and Off. `src/hooks/useUnits.js` now keeps all the trainer's settings (`useMySettings`), `useUnits` on top of it, so the list redraws when the setting changes. **Server**: `myClients` adds each client's `lastMeasuredOn` (one GROUP BY over `coach_measurements` for the list); the Measurements tab tells the list to load again (`onChanged` → `refresh`) when a set is added, changed or deleted, so the line updates. MANUAL 3.5 (Measurements every), 4.2 (Measurements due), 4.3 (the dialog and its tabs, closing it), 4.5 and 4.6 (Archive and Edit details close it), 4.7 to 4.10 (each opens from its tab), Words; CHANGELOG; `scripts/screenshots.mjs` waits for the dialog for 06-client-details. **Checked** on the stand-in Studio: the setting at the API (13 refused, 8 and 5 kept); `lastMeasuredOn` on the list; in Chromium at phone width, the list (Jordan, never measured, and Sam, last measured Aug 1, \"Measurements due\"; Avery, measured Oct 18, not), each tab, Esc closing, a measurement added to Sam from his Measurements tab taking \"Measurements due\" off his line, the account menu's Measurements every; a desktop dialog on Progress photos; no page errors. **Untested**: the manual's pictures 04 to 06 are older than this (they come from Studio's fixture on Glenn's Mac, `npm run screenshots`; not retaken in the cloud); sign-in against the fixture.
 - **Progress photos, guided** (19 Oct 2026; Glenn: "Part of the measurements, let's add \"progress photos\" as well. Pictures from front, sides and back side. Is there a way we can help guide to create similar pictures?"). Build 1.0.70. Not from Next up. **Glenn's decisions** (one at a time): the guidance, all four offered ("Ghost of last photo, Outline and level, Checklist and steps, Compare afterwards"); who sees them, "Trainers, with a client opt-in" (every trainer of the client, once one of them has recorded the client's agreement); the id tag, "pph"; Messages, "Yes, compare view" (one day, or two compared, sent as a copy). **Copied from Studio**: its in-page camera (`public/JoinPage.jsx`, `PhotoPart`, and the kiosk's `Register.jsx`): getUserMedia drawn in the page, a picture chosen instead where there is no camera, `createImageBitmap(..., { imageOrientation: \"from-image\" })` for a chosen one. Differences: the back camera first (a trainer holds the phone), a switch to the front one, never mirrored (left stays left in every photo), and 3:4 upright (1200 by 1600 JPEG at 0.82) rather than Studio's square. Studio has no progress photos. **The guidance** (`src/clients/PhotoSession.jsx`): a checklist (`CHECKLIST` in `src/lib/progress-photos.js`: same spot, plain wall and even light, about 3 m / 10 ft at hip height, same fitted clothes, standing tall with arms a little out, same time of day), then Front, Left side, Right side, Back (`ANGLES`), each with: last set's photo of that angle at 35% over the live view (**Last time**, on by default, to toggle); dashed lines for the top of the head and the feet, with a figure facing or side on (an SVG in the photo's own 300 by 400); a level from `deviceorientation` (beta 90 and gamma 0 upright, 4 degrees either way; it says which way to tilt, \"Level\" when right; iOS asks permission, so Start requests it on the tap; nothing shows on a computer); a 10-second count; Take it again or Use it, next; Skip; Back; then all four together to retake any, the day and a note, Save. The photo is cropped from the middle of the camera's frame exactly as the view shows it (object-fit cover in a 3:4 box), so the ghost and the new photo line up. **What turned out differently**: the camera screen first opened inside the page and Coach's own top and bottom bars covered its title and shutter: the page's main area is its own layer (`z-[1]` in Shell.jsx), so a fixed child can't rise above the bars; it is now in a portal on the body at z-index 60. The review's Take again was first an underlined button, which check-ui refused (links are accent words after an icon); it is a small outlined button. The compare panel's date pickers were cut off side by side on a phone; they stack there now. **Server** (`server/progress-photos.js`, new): table `coach_progress_photos` (id pph, client, trainer and name, day, the angles taken, note) and `coach_photo_consent` (one row per client: who recorded it and when); the pictures are files, `progress/<id>-<angle>.jpg` in the files folder, never in the database. A set is sent as JPEG data URIs in one request (its own JSON limit, 18 MB, for that one route), each checked to be a JPEG (data URI, FF D8 FF) of at most 3 MB; at least one angle; a day not still to come; no agreement, refused (\"Record that they agreed to progress photos first.\"). Pictures are shown through links signed for an hour or two (HMAC on the client link's secret, or a key made at start), rounded to the hour so the browser's cached copy is used, handed out only with the list, which only the client's trainers get: so each picture isn't another question to Studio about the client's trainers. Only the trainer who took a set may delete it (\"not_yours\"). \"… no longer agrees\", open to any of their trainers, deletes every set (files too) and the agreement; copies already sent in messages stay. A Coach account's client moved to Studio, and a linked Coach account, re-key both tables. **Messages** (`server/messages.js` `photosAttachment`, kind `photos`): one set or two (earlier first), the pictures copied into `messages/<att>.<n>.<angle>.jpg`; the trainer reads them at `/api/attachments/<att>/photo/<n>/<angle>`, the client link hands out signed `/api/attachment-photo/<att>.<n>.<angle>` links. The paperclip's **Progress photos** lists the days; with more than one, *Compare … with…* offers **Just this day** or another day. The card shows a front photo of each day; it opens `PrintPhotos` (`src/clients/PrintPhotos.jsx`): one day's four, or the comparison with **Every angle** below, side by side, which is what prints. **Page**: `src/clients/ProgressPhotos.jsx` (the section under Measurements: the agreement, the latest set's four thumbnails, Earlier photos, Compare two days with Earlier and Later pickers, Take progress photos, … no longer agrees), `src/clients/PhotoCompare.jsx` (angle chips, Side by side or Slider, the earlier on the left). MANUAL: new 4.9, Fitness tests renumbered 4.10 (contents, chapter 7's intro and Words updated), 7.3's Progress photos, Words; CHANGELOG. **Checked** in Chromium at phone width with a fake camera playing a drawn figure (`--use-file-for-fake-video-capture`), two sets: the agreement box, the checklist, the front with the level saying \"Tilt the top of the phone toward you\" (a dispatched deviceorientation of beta 81), the second set with the first set's wider figure faint behind the slimmer one, the review, the section, Compare side by side and with the slider, the paperclip's compare step, the message card and the sent page (10 of 10 pictures loaded); no page errors. At the API: no agreement refused; a non-JPEG and an empty set refused; a future day refused; the signed link loads with no session, a changed signature or another angle with the same signature doesn't; another trainer (Tess) sees the set but can't delete it; withdrawing deleted Sam's two files and kept the eight copied into messages; the client link's signed link to a sent photo loads. **Untested**: a real phone's camera, its level and iOS's motion permission (a fake camera and a dispatched event only); the shutter's timing on a slow phone; Studio's /me showing sent photos (not built).
 - **Client photos from Studio, and the trainer's own** (19 Oct 2026; Glenn: "Are we able to sync profile pictures of clients from studio?", then "Yes"). Build 1.0.69. Not from Next up. **What Studio already had** (read in its code, no change to Studio): its `/api/clients` gives each client `photoUrl: photoLink("client", id, photo_url)` (`server/people.js`), a link `/api/photos/client/<id>?v=<hash of the picture>` (`server/photos.js`); its `GET /api/photos/:kind/:id` (`server/index.js`) answers only a signed-in session, a client's face only to someone who may see the client (`canEditClient`, or front-desk staff for a member) and as a 404 to anyone else, and caches "private, max-age=31536000, immutable" with an ETag, since a new picture comes with a new link. Its `/auth/me` gives the trainer's own `photoUrl` the same way. **Why it didn't show**: those links are relative to Studio, so in Coach they asked Coach's own `/api/photos/…`, which the relay refused (not in `RELAYED`) with a JSON 404; the account menu's `Avatar` then fell back to initials. So the trainer's own photo had never shown in Coach either. **How**: a route at the same address in Coach (`app.get("/api/photos/:kind/:id")`, before the relay) fetches the picture from Studio with the trainer's Studio session cookie, passing If-None-Match and the ?v=, and sends it with Studio's caching (304 passed through; anything not an image, any refusal or failure answered as a plain 404, so a missing picture falls back to initials). Only kinds trainer and client and ids of letters, digits, _ and - are asked for; with no Studio session (a Coach account) it answers 404 without asking. Who may see whose face is left to Studio's own rule rather than checked again in Coach, which would cost a client-list call per picture. `studioShape` now keeps `photoUrl`; `/api/messages` adds each conversation's client's `photoUrl`, and `/api/messages/:client` the client's. On screen, `src/clients/Face.jsx` (new) shows the photo round at the disc's size, lazily loaded, and the screen's own initials disc when there is none or it fails: the Clients list (`ClientsTab.jsx`), and in Messages the conversations list, the New message list and the conversation's header (`MessagesTab.jsx`, `Initials`). Today's rows have no initials or faces, so none were added there. Coach accounts' clients (kept in Coach) have no photos and keep their initials. MANUAL 3.1 (the corner), 4.2 (each client's line: their photo, or initials; photos are changed in Studio), 7.1; CHANGELOG. **Checked** against the session's stand-in Studio, given portraits for Avery, Sam and the trainer and none for Jordan: the photo route 200 image/png with the immutable caching, 304 on If-None-Match, 404 for no photo, signed out, a kind not trainer or client and an id with ../ in it; the client list and conversations carrying the links; in Chromium at phone width, the faces on the Clients list (Jordan's initials kept), the account menu's corner, Messages' list, New message and the conversation header; no page errors. **Untested**: against the real Studio (its permission check on a client's photo was read, not run); a trainer seeing a colleague's client's photo is refused by Studio, not by Coach.
 - **Progress charts for measurements and fitness tests** (18 Oct 2026; Glenn, asked "What's next?", chose "Go with 2" from: Studio's client inbox, progress charts, 1RM in programs, Billy reading the numbers, a first test run). Build 1.0.68 (first committed as 1.0.67; renumbered when merged with the 1.0.67 build bump made on Glenn's Mac, so the two don't share a number). Not from Next up (it was empty). **Copied from Studio**: its Events card's chart (`src/components/EventsChart.jsx` in Studio, on the Business tab): drawn as SVG polylines and gridlines rather than with a chart library (its own comment: a library for a line chart is a large dependency that brings its own palette), ticks on numbers people count in, the read-out line above the chart that opens on the latest point, and a real button over each point (keyboard focus, a screen reader's label, pressable on a phone) rather than hover. **Differences from Studio's**: the days are spaced by time, not evenly, since sets are taken weeks apart; the gridlines sit around the values, not from zero (`niceRange`: about four steps of 1, 2, 2.5 or 5 × a power of ten), or a weight would be a flat line; each point's button reaches halfway to its neighbours; the axis names only the first and last days and the one being read. **Colour** (the dataviz checklist): one line in `--accent` (Cerulean in light, Sky in dark); the palette validator passes its contrast on both surfaces (its dark lightness-band FAIL is a check for categorical sets of hues and doesn't apply to one line). A second line (blood pressure's bottom number) is dashed with hollow points and both are named at their ends, so colour never tells them apart; no legend needed for one line, the chip names it. Up and down are drawn without good or bad. **Where**: `src/clients/Trend.jsx` (new; `Trend`, `niceRange`; `.cx-chart-hit` in `src/index.css` shows focus), kept no wider than 520 px, since drawn to scale a desktop-wide chart only made its lettering huge (seen in the first desktop screenshot). Measurements (`src/clients/Measurements.jsx`): **Show progress** / **Hide progress** beside Earlier measurements whenever there is more than one set, opening chips of the measurements taken on two days or more (Weight first, in the sets' order, Waist to hip after Hips, Blood pressure last as one chart of both numbers) and the chart; with none on two days, "A chart needs measurements taken on two days or more." Several sets on one day are merged, the later one winning for what it has and the earlier keeping what the later left empty (my first version let a later set's empty fields wipe the earlier's). Fitness tests (`src/clients/FitnessTests.jsx`, `TestTrend`): opening Earlier results shows the chart of that series above them, in the trainer's units, a hold in minutes and seconds, RSI to two places. MANUAL 4.8 (Seeing progress) and 4.9, CHANGELOG. **Checked** in Chromium at phone width, in dark mode and on a desktop, with history added for Avery (weight Jul 20 to Oct 18, blood pressure, squat 1RM, plank): the weight chart reading "Oct 18, 2026: 183.2 lb", tapping the first blood pressure point reading "Jul 20, 2026: Top 128 mmHg · Bottom 84 mmHg", waist to hip, the squat 1RM and the plank (ticks 0:40 to 2:00); no page errors. **Untested**: sign-in against Studio's fixture (cloud session); a screen reader reading the point buttons (their labels were set, not heard).
@@ -666,6 +667,11 @@ your Trainability account.* (3.5).
      Weights and distances in Coach IQ, and in Billy's answers, are then
      shown in your units only, rounded to what a gym has: loads to 5 lb or
      2.5 kg. It is your own choice; other trainers keep theirs.
+   - **Measurements every** — how many weeks apart you measure your clients:
+     **1 week** to **12 weeks**, or **Off**. It starts at **5 weeks**. When a
+     client's last measurements are that old, or they have none, their line
+     on the Clients list says **Measurements due** (4.2). **Off** never says
+     it. It is your own choice; other trainers keep theirs.
    - **Link your Trainability account** — only with a Coach account (2.1):
      connects it to a Trainability account with another email.
    - **Accessibility** — light or dark, the app's colors, contrast, motion and
@@ -1054,6 +1060,12 @@ Each client has one line, in order of first name:
 | **First session booked for October 18** | They have not had a session yet, but one is booked. |
 | **No sessions yet** | Nothing has happened and nothing is booked. |
 
+- **Measurements due**, in blue after it, when it is time to measure them
+  again: their last measurements (4.8) were taken at least as many weeks ago
+  as you have chosen, or none have been taken yet. How many weeks is yours
+  to choose in your account menu, **Measurements every** (3.5); it starts at
+  5 weeks. Once you add their measurements, it goes.
+
 If you have no clients yet, the list says *You have no clients yet. Tap Add
 a client, or add them in Studio.*
 
@@ -1061,9 +1073,20 @@ a client, or add them in Studio.*
 
 ![A client's details](docs/images/06-client-details.png)
 
-*A client's details, opened*
+*A client, opened*
 
-1. Tap the client's line. It opens underneath to show:
+1. Tap the client's line. They open in a box of their own, over the list:
+   their photo, their name and their last session at the top, and under it
+   four tabs:
+   - **Details & limitations**: who they are (below), their limitations
+     (4.7), and **Edit details** and **Archive**.
+   - **Measurements** (4.8).
+   - **Progress photos** (4.9).
+   - **Fitness tests** (4.10).
+
+   On a phone the tabs say **Details**, **Measurements**, **Photos** and
+   **Tests**. Tap one to see it. The box opens on **Details & limitations**,
+   which shows:
 
 | Detail | What it shows |
 |---|---|
@@ -1077,7 +1100,8 @@ a client, or add them in Studio.*
 
    Anything Studio does not have says **Not given**, **Not known**,
    **None yet** or **Nothing booked**.
-2. Tap the line again to close it. Opening another client closes the first.
+2. To close it, tap the **X** in its top right corner, tap outside it, or
+   press **Esc** on a keyboard.
 
 #### 4.4 Finding a client
 
@@ -1091,8 +1115,8 @@ If nobody matches, the list says *No one matches* and what you typed.
 #### 4.5 Archived clients
 
 Clients you have archived — people you no longer train — are kept apart from
-the rest. To archive one, open them (4.3) and tap **Archive** at the bottom;
-it says *Jamie Ortiz archived. They're under Archived.*
+the rest. To archive one, open them (4.3) and tap **Archive** at the bottom
+of **Details & limitations**; the box closes and it says *Jamie Ortiz archived. They're under Archived.*
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.
@@ -1131,7 +1155,8 @@ If something is missing, it says what, such as *Last name and Email are
 required*.
 
 **To change a client's details**, open them (4.3) and tap **Edit details**
-at the bottom. The same form opens, headed *Edit Jamie's details*, with what
+at the bottom of **Details & limitations**. The box closes and the same form
+opens, headed *Edit Jamie's details*, with what
 is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
 details saved.*
 
@@ -1157,7 +1182,8 @@ A limitation is something a client should not do, or should do with care: a
 new knee, a sore shoulder, a pregnancy. Billy reads them before he suggests
 anything for that client.
 
-1. Open the client's details (4.3). At the bottom is **Limitations**.
+1. Open the client (4.3). Under their details, on **Details & limitations**,
+   is **Limitations**.
 2. Tap **+ Add a limitation**.
 3. Write it in plain words, such as *No kneeling, new knee in March*.
 4. If you like, tap what it means under **What it means**, such as **A knee
@@ -1173,7 +1199,7 @@ leave it.
 
 #### 4.8 A client's measurements
 
-Under **Limitations**, a client's details show their **Measurements**: one set
+A client's **Measurements** tab (4.3) shows their measurements: one set
 for each day they were taken. Every trainer of the client sees them, with who
 took each set.
 
@@ -1205,7 +1231,8 @@ nearest quarter, as a tape reads them.
 
 **Adding a set:**
 
-1. Open the client (4.3) and tap **Add measurements**.
+1. Open the client (4.3), tap the **Measurements** tab, and tap **Add
+   measurements**.
 2. **Taken on** starts on today; change it if they were taken on another day.
 3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
    (%), **Neck**, **Shoulders**, **Chest**, **Waist**, **Hips**; **Arm**,
@@ -1231,7 +1258,7 @@ To send a set to the client, attach it to a message (7.3).
 
 #### 4.9 A client's progress photos
 
-Under **Measurements**, a client's details show their **Progress photos**:
+A client's **Progress photos** tab (4.3; **Photos** on a phone) shows them:
 the front, the left side, the right side and the back, one set for each day
 they were taken. Coach guides each photo so that one day's can be put beside
 the next.
@@ -1246,7 +1273,8 @@ recorded it and when, such as *Avery agreed · recorded by you on Oct 19,
 
 **Taking a set:**
 
-1. Open the client (4.3) and tap **Take progress photos**. The screen turns
+1. Open the client (4.3), tap the **Progress photos** tab, and tap **Take
+   progress photos**. The screen turns
    dark and fills the whole phone.
 2. A short list says how to take them the same way every time: the same spot
    with a plain wall behind and even light, the camera about 3 m (10 ft)
@@ -1299,7 +1327,7 @@ To send photos to the client, attach them to a message (7.3).
 
 #### 4.10 A client's fitness tests
 
-Under **Measurements**, a client's details show their **Fitness tests**, in
+A client's **Fitness tests** tab (4.3; **Tests** on a phone) shows them, in
 two groups: **Heart and lungs** and **Strength**. Every trainer of the client
 sees the results, with who recorded each one.
 
@@ -1350,7 +1378,8 @@ rated: the tables start at 18.
 
 **Adding a result:**
 
-1. Open the client (4.3) and tap **Add a test result**.
+1. Open the client (4.3), tap the **Fitness tests** tab, and tap **Add a test
+   result**.
 2. Under **Which test?**, tap the test. Each says how it is done.
 3. The form shows again how it is done. **Day of the test** starts on today.
 4. For the step test and the walk, **Age on the day** is filled in from their
@@ -1819,6 +1848,7 @@ can write to them here.*
 | **Billy** | The assistant in Coach and in Studio. In Coach he knows your clients and reads photos and PDFs (chapter 6). |
 | **Library** | Coach's own list of exercises, each with a full name that says exactly what it is (3.8). |
 | **Coach IQ** | Trainability's own know-how for designing training: the library, the conditions table, and the principles read from books. The Primary Master reviews and edits it (3.9). |
+| **Measurements due** | On the Clients list: it is time to measure this client again, by your **Measurements every** (3.5, 4.2). |
 | **Measurements** | A client's weight, body fat, tape measurements, resting heart rate and blood pressure, one set for each day taken (4.8). |
 | **Progress photos** | Photos of a client from the front, both sides and the back, taken the same way each time to see change; kept only once the client has agreed (4.9). |
 | **Fitness test** | A test of how fit a client's heart and lungs are (the 3-minute step test, the Rockport 1-mile walk, a VO2 max) or how strong they are (a 1RM, a jump, a hold, velocity loss) (4.10). |
