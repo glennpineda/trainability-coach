@@ -242,7 +242,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
+  position: relative;
   &:disabled { opacity: .45; cursor: not-allowed; }
+  /* A small text link that still takes a finger (Studio's .iw-tap): on a
+     touch screen an invisible 44px square around it takes the tap, and
+     nothing it sits in moves (Run 1, D-10). */
+  @media (pointer: coarse) {
+    &::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+  }
 }
 
 @utility cx-quiet {
@@ -278,6 +285,13 @@
    page's own background, a hairline under it, and everything in the row the
    height of one 36px badge. */
 @layer components {
+  /* A finger's worth to press (Studio's .iw-hit): tabs and small buttons
+     get an invisible pad at least 44px each way on a touch screen, so the
+     target grows and nothing drawn does (Run 1, D-10). */
+  @media (pointer: coarse) {
+    .cx-hit, [role="tab"] { position: relative; }
+    .cx-hit::before, [role="tab"]::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+  }
   .cx-headbar {
     position: sticky; top: 0; z-index: 30;
     background: color-mix(in srgb, var(--paper) 88%, transparent);

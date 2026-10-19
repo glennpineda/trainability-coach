@@ -52,9 +52,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   labels 8 px), 16 px on desktop; wide screen leaves half the card empty; the
   ten measure chips wrap to three lines on a phone. The body drawing's
   Front/Back labels the same.
-- **Touch targets under 44 px (D-10)**: client record tabs (28), Swap (48×16),
-  Equipment Yes/No (50×28), the 20 px text links (All programs, Print for the
-  client, Ask Billy about it…), "no longer agrees".
 - **Speed: the message list scans whole tables (O-1, O-2).** Two queries per
   conversation with no index: 1.3–2.2 s at 12,000 messages, 7 ms with an index
   on `coach_messages(conversation_id, created_at)` and

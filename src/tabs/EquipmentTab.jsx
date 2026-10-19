@@ -13,7 +13,7 @@ function YesNo({ value, onChange, disabled, label }) {
         return (
           <button key={word} type="button" disabled={disabled} aria-pressed={on}
             onClick={() => onChange(on ? null : v)}
-            className="px-3.5 py-1 rounded-lg text-sm font-medium transition-colors"
+            className="cx-hit px-3.5 py-1 rounded-lg text-sm font-medium transition-colors"
             style={on
               ? { background: v ? "var(--fill-cerulean)" : "var(--chalk)", color: v ? "#fff" : "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
               : { color: "var(--iron)" }}>

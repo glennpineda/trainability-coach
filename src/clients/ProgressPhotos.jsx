@@ -174,7 +174,7 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
           </button>
           {deleting === "all" ? confirm(`Delete all of ${first}'s progress photos, taken by any of their trainers? Photos already sent in a message stay there.`,
             async () => { if (await send("DELETE", `/clients/${clientId}/progress-photos/consent`)) { setDeleting(null); setAgreed(false); } }, "Delete them all")
-            : <button type="button" className="text-xs mt-3 block" style={{ color: "var(--iron)" }} onClick={() => setDeleting("all")}>{first} no longer agrees</button>}
+            : <button type="button" className="cx-hit text-xs mt-3 block" style={{ color: "var(--iron)" }} onClick={() => setDeleting("all")}>{first} no longer agrees</button>}
         </>
       )}
       {session && (
