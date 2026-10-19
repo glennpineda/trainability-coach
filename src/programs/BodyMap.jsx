@@ -86,12 +86,15 @@ const MIRROR = "translate(120 0) scale(-1 1)";
 function Figure({ spots, sets, top, label, x }) {
   /* A worked muscle in the accent, with a thin edge of the card's colour so
      neighbours stay apart; one that isn't, only its faint outline, so the
-     body still reads as muscles on a light day. */
+     body still reads as muscles on a light day. The accent grows stronger
+     with the number: darker on a light ground, brighter on a dark one, so
+     the line under the list says "stronger" rather than "darker" (Run 1,
+     B-5/D-2). */
   const tone = (m) => {
     const v = sets[m] || 0;
     return v
       ? { fill: "var(--accent)", fillOpacity: 0.22 + 0.78 * Math.min(1, v / top), stroke: "var(--chalk)", strokeWidth: 0.9 }
-      : { fill: "none", stroke: "var(--iron-line)", strokeWidth: 0.7 };
+      : { fill: "none", stroke: "var(--iron)", strokeOpacity: 0.3, strokeWidth: 0.7 };
   };
   return (
     <g transform={`translate(${x} 0)`}>
@@ -102,7 +105,9 @@ function Figure({ spots, sets, top, label, x }) {
         <path d={`${BODY} Z`} />
         <path d={`${BODY} Z`} transform={MIRROR} />
       </g>
-      <g fill="none" stroke="var(--iron-line)" strokeWidth="1.2" strokeLinejoin="round">
+      {/* In the iron grey, half seen, so the body holds its shape on a dark
+          ground too, where the line grey all but vanished (Run 1, D-2). */}
+      <g fill="none" stroke="var(--iron)" strokeOpacity="0.5" strokeWidth="1.2" strokeLinejoin="round">
         <path d={BODY} />
         <path d={BODY} transform={MIRROR} />
       </g>
@@ -147,7 +152,7 @@ export function BodyMap({ exercises, top }) {
             numbers by the muscle groups mean"; then primary and secondary,
             the library's own words). */}
         <p className="mt-1.5" style={{ maxWidth: 300 }}>
-          Each number is how many of this day&apos;s exercises work that muscle: 1 for each where it is a primary muscle, ½ for each where it is a secondary one. Darker means a higher number.
+          Each number is how many of this day&apos;s exercises work that muscle: 1 for each where it is a primary muscle, ½ for each where it is a secondary one. The stronger the color, the higher the number.
         </p>
       </div>
     </div>

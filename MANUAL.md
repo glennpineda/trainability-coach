@@ -1296,7 +1296,7 @@ tap **Edit the details**.
 are kept, not deleted.
 
 1. Tap the box button beside the program in the list (**Put away**).
-2. It asks *Put "Next block" away? It goes under Put away, where you can put
+2. It asks *Put “Next block” away? It goes under Put away, where you can put
    it back.* Tap **Put away**, or **Keep it** to leave it.
 3. A note says *Next block put away.*
 
@@ -1433,8 +1433,10 @@ the suggestions, and talks it through; he changes nothing himself.
   **2b**.
 
 **What a day works.** Under a day's name, a drawing of a body, from the
-front and from the back, shades the muscles that day's exercises work, from
-light to dark (the muscles it doesn't work are only outlined): the darker, the more exercises work it. Beside it,
+front and from the back, colors the muscles that day's exercises work, from
+faint to strong (the muscles it doesn't work are only outlined): the stronger
+the color, the more exercises work it. In light mode the strongest is the
+darkest; in dark mode, the brightest. Beside it,
 **Exercises this day, by muscle** lists each one with its count, the most
 first. Each number is how many of the day's exercises work that muscle: 1
 for each where it is a primary muscle (what the exercise is chosen for and
@@ -1443,7 +1445,7 @@ steadies the movement), as Coach IQ's library has them, whatever its sets.
 So *Glutes 2.5* is two exercises with the glutes as a primary muscle and one
 with them as a secondary one. The same words are
 under the list on screen. The shades are on one scale across the whole
-program, so a lighter day looks lighter. The pelvic floor is in the list but
+program, so a lighter day looks fainter. The pelvic floor is in the list but
 not drawn. A day with no exercises has no
 drawing.
 
