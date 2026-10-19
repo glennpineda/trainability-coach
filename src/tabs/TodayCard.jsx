@@ -4,6 +4,8 @@ import { apiRequest } from "../lib/api";
 import { isoDate } from "../lib/date";
 import { SegRow } from "../chrome/SegRow";
 import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
+import { measurementsDue } from "../lib/measures";
+import { useMySettings } from "../hooks/useUnits";
 
 /*
  * Today, on Home (Glenn, 18 Oct 2026: "Let's do the Today tab"): the
@@ -37,21 +39,23 @@ function isOver(a) {
 
 /* What each client's row has to say about them, in Studio's order and colours
    (its magenta, for what can be tapped, is Coach's accent). */
-function flags(a) {
+function flags(a, weeks) {
   const out = [];
   if (!a.client || a.status === "cancelled") return out;
   if (a.firstSession) out.push({ text: "First session", color: "var(--ink)", strong: true });
   else if (a.newClient) out.push({ text: "New client", color: "var(--ink)" });
   if (a.nothingAfter && !isOver(a)) out.push({ text: "Nothing booked after this", color: "var(--amber)", strong: true });
+  /* Coach's own: time to measure them, by the trainer's setting (Run 1, I-1). */
+  if (!isOver(a) && a.status !== "completed" && measurementsDue(a.client, weeks)) out.push({ text: "Measurements due", color: "var(--accent)", strong: true });
   return out;
 }
 
-function Row({ a, onOpen }) {
+function Row({ a, onOpen, weeks }) {
   const cancelled = a.status === "cancelled";
   const done = !cancelled && a.status === "completed";
   const who = a.client || a.name;
   const name = who ? `${who.firstName} ${who.lastName}`.trim() : a.private ? "Private" : "Client";
-  const f = flags(a);
+  const f = flags(a, weeks);
   const tappable = !!a.client;
   const Tag = tappable ? "button" : "div";
   return (
@@ -107,6 +111,7 @@ function Row({ a, onOpen }) {
 }
 
 export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
+  const [{ measureEvery }] = useMySettings();
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [panel, setPanel] = useState("today");
@@ -158,7 +163,7 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
     body = <EmptyState>Your sessions show here once your Coach account is linked to your Trainability account.</EmptyState>;
   } else if (panel === "today") {
     const todays = data.days[0]?.appointments || [];
-    body = todays.length ? <div className="-mb-px">{todays.map(a => <Row key={a.id} a={a} onOpen={open} />)}</div> : (
+    body = todays.length ? <div className="-mb-px">{todays.map(a => <Row key={a.id} a={a} onOpen={open} weeks={measureEvery} />)}</div> : (
       <EmptyState>
         Nothing booked today.
         {data.next && <div className="text-sm pt-1">Next: {fmtDateShort(data.next.date)} at {minutesToLabel(data.next.start)}
@@ -186,7 +191,7 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
             </span>
             <ChevronDown size={16} className="flex-none" style={{ transform: isOpen ? "rotate(180deg)" : undefined }} aria-hidden="true" />
           </button>
-          {isOpen && d.appointments.map(a => <Row key={a.id} a={a} onOpen={open} />)}
+          {isOpen && d.appointments.map(a => <Row key={a.id} a={a} onOpen={open} weeks={measureEvery} />)}
         </div>
       );
     }) : <EmptyState>Nothing booked in the next 7 days.</EmptyState>;

@@ -61,7 +61,7 @@ export function todayOf({ today, trainerId, appointments = [], locations, client
     const out = {
       id: a.id, date: a.date, start: a.start, duration: a.duration, status: a.status,
       isAssessment: !!a.isAssessment, where: where(a.studioId),
-      client: c ? { id: c.id, firstName: c.firstName, lastName: c.lastName } : null,
+      client: c ? { id: c.id, firstName: c.firstName, lastName: c.lastName, lastMeasuredOn: c.lastMeasuredOn || null } : null,
       ...(!c && names.get(a.clientId) ? { name: names.get(a.clientId) } : {}),
       /* Booked with somebody not on this trainer's list (or not a client). */
       private: !a.clientId,

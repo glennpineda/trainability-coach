@@ -144,3 +144,15 @@ export const measureOf = (key) => BY_KEY[key];
 /** The set a change is counted from: the newest taken on an earlier day
     (`list` newest first), so two sets on one day aren't compared. */
 export const previousOf = (list, set) => list.find(m => m.takenOn < set.takenOn) || null;
+
+/**
+ * Whether a client's measurements are due: never taken, or last taken at
+ * least `weeks` weeks ago (the trainer's setting; 0 is off). The Clients
+ * list, its Due filter, Home and Today all ask it (Run 1, I-1, I-2).
+ */
+export function measurementsDue(c, weeks) {
+  if (!weeks || !c || c.archived) return false;
+  if (!c.lastMeasuredOn) return true;
+  const days = (Date.now() - Date.parse(`${c.lastMeasuredOn}T00:00:00`)) / 864e5;
+  return days >= weeks * 7;
+}

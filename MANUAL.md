@@ -437,6 +437,9 @@ Each session shows, from the left:
    - **New client**: one of their first three sessions with you.
    - **Nothing booked after this** (in amber): they have nothing booked with
      you after this one. It goes once the session is over.
+   - **Measurements due** (in blue): it is time to measure them again, by
+     your **Measurements every** (3.5, 4.2). It goes once the session is
+     over.
 4. Their program in blue, or **No program yet**, and how many limitations
    are written for them, such as **2 limitations** (4.7).
 
@@ -894,7 +897,14 @@ Each client has one line, in order of first name:
   again: their last measurements (4.8) were taken at least as many weeks ago
   as you have chosen, or none have been taken yet. How many weeks is yours
   to choose in your account menu, **Settings**, **Measurements every** (3.5); it starts at
-  5 weeks. Once you add their measurements, it goes.
+  5 weeks. Once you add their measurements, it goes. The **Clients** card on
+  the home screen says how many are due too, such as *3 active clients · 2
+  due for measurements*.
+
+To see only the clients whose measurements are due, tap **Due** beside
+**Active** next to the search box; the number in brackets is how many. If
+none are, it says *No one's measurements are due.* **Due** isn't there when
+**Measurements every** is **Off**.
 
 If you have no clients yet, the list says *You have no clients yet. Tap Add
 a client to add your first.* While the list is being read it says *Loading

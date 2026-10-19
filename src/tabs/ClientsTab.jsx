@@ -17,6 +17,7 @@ import { SegRow } from "../chrome/SegRow";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 import { formatPhone } from "../lib/people";
 import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
+import { measurementsDue } from "../lib/measures";
 
 /* What "Last session" says under a name: the date, or that there has not been
    one. */
@@ -41,14 +42,6 @@ function Detail({ icon: Icon, label, children }) {
   );
 }
 
-/* Whether a client's measurements are due: never taken, or last taken at
-   least `weeks` weeks ago (the trainer's setting; 0 is off). */
-function measurementsDue(c, weeks) {
-  if (!weeks || c.archived) return false;
-  if (!c.lastMeasuredOn) return true;
-  const days = (Date.now() - Date.parse(`${c.lastMeasuredOn}T00:00:00`)) / 864e5;
-  return days >= weeks * 7;
-}
 
 /* One line on the list: the face, the name, and under it the last session
    and, when it's time, that measurements are due (Glenn, 19 Oct 2026). A tap
@@ -317,6 +310,8 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   const [{ measureEvery }] = useMySettings();
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  /* Only those whose measurements are due (Run 1, I-2). */
+  const [dueOnly, setDueOnly] = useState(false);
   /* The client open: already, when Today sent the trainer here. */
   const [openId, setOpenId] = useState(() => { try { const id = sessionStorage.getItem("coach-client"); sessionStorage.removeItem("coach-client"); return id || null; } catch { return null; } });
   const [adding, setAdding] = useState(false);   // true, or the client whose details are being changed
@@ -338,7 +333,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
     try {
       await archive(c.id, on);
       setSaid(on ? `${fullName(c)} archived. They're under Archived.` : `${fullName(c)} is back on your list.`);
-      setShowArchived(!on); setOpenId(null);
+      setShowArchived(!on); setDueOnly(false); setOpenId(null);
     } catch (err) {
       setSaid(err.code === "studio_unreachable" || !err.status ? "Couldn't reach Trainability. Check your connection and try again." : err.message);
     } finally { setBusy(false); }
@@ -346,7 +341,8 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
 
   const active = useMemo(() => (clients || []).filter(c => !c.archived), [clients]);
   const archived = useMemo(() => (clients || []).filter(c => c.archived), [clients]);
-  const list = showArchived ? archived : active;
+  const due = useMemo(() => active.filter(c => measurementsDue(c, measureEvery)), [active, measureEvery]);
+  const list = showArchived ? archived : dueOnly && measureEvery ? due : active;
   /* The client whose dialog is open, from the list as it now stands. */
   const open = (clients || []).find(c => c.id === openId) || null;
   const shown = useMemo(() => {
@@ -400,7 +396,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
               const other = typed && name.toLowerCase() !== typed.toLowerCase();
               setNotice({ title: said.title, lines: [said.text, ...(other ? [`The name you typed, ${typed}, wasn't used: that email is ${name}'s.`] : [])] });
             }
-            setAdding(false); setQuery(""); setShowArchived(!!c?.archived); setOpenId(out.clientId);
+            setAdding(false); setQuery(""); setShowArchived(!!c?.archived); setDueOnly(false); setOpenId(out.clientId);
           }} />
       )}
 
@@ -413,9 +409,11 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
               placeholder="Search by name, email or phone" className="cx-input" style={{ paddingLeft: "2.4rem" }} />
           </label>
           {/* A filter of one list: Studio's grey look (SegRow; Run 1, D-3). */}
-          <SegRow className="flex-none sm:w-64" label="Which clients" value={showArchived ? "archived" : "active"}
-            onPick={(k) => { setShowArchived(k === "archived"); setOpenId(null); }}
-            items={[{ key: "active", label: "Active", figure: clients === undefined ? null : active.length }, { key: "archived", label: "Archived", figure: clients === undefined ? null : archived.length }]} />
+          <SegRow className={`flex-none ${measureEvery ? "sm:w-80" : "sm:w-64"}`} label="Which clients" value={showArchived ? "archived" : dueOnly && measureEvery ? "due" : "active"}
+            onPick={(k) => { setShowArchived(k === "archived"); setDueOnly(k === "due"); setOpenId(null); }}
+            items={[{ key: "active", label: "Active", figure: clients === undefined ? null : active.length },
+              ...(measureEvery ? [{ key: "due", label: "Due", figure: clients === undefined ? null : due.length }] : []),
+              { key: "archived", label: "Archived", figure: clients === undefined ? null : archived.length }]} />
         </div>
       </div>
 
@@ -433,6 +431,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
           <EmptyState>
             {query.trim() ? `No one matches “${query.trim()}”.`
               : showArchived ? "You have no archived clients."
+              : dueOnly && measureEvery ? "No one's measurements are due."
               : "You have no clients yet. Tap Add a client to add your first."}
           </EmptyState>
         ) : (

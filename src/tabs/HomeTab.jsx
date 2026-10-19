@@ -4,6 +4,8 @@ import { SECTIONS } from "./sections";
 import { ComingSoonCard } from "./ComingSoonCard";
 import { TodayCard } from "./TodayCard";
 import { SamePlaces } from "../chrome/SamePlaces";
+import { measurementsDue } from "../lib/measures";
+import { useMySettings } from "../hooks/useUnits";
 
 function greeting(now = new Date()) {
   const h = now.getHours();
@@ -11,11 +13,13 @@ function greeting(now = new Date()) {
 }
 const firstName = (name = "") => name.trim().split(/\s+/)[0] || "there";
 
-/* On the Clients card: how many, once the list has come. */
-function clientCount(clients) {
+/* On the Clients card: how many, once the list has come, and how many are
+   due for measurements (Run 1, I-1). */
+function clientCount(clients, weeks) {
   if (clients === undefined) return "Loading…";
   const n = clients.filter(c => !c.archived).length;
-  return `${n} active client${n === 1 ? "" : "s"}`;
+  const due = clients.filter(c => measurementsDue(c, weeks)).length;
+  return `${n} active client${n === 1 ? "" : "s"}${due ? ` · ${due} due for measurements` : ""}`;
 }
 
 /* Where Coach opens: the date, a greeting by name, the day's sessions
@@ -24,6 +28,7 @@ function clientCount(clients) {
 export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOpenClient, onSignedOut }) {
   const [linked, setLinked] = useState(() => { try { const v = sessionStorage.getItem("cx-linked"); sessionStorage.removeItem("cx-linked"); return !!v; } catch { return false; } });
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  const [{ measureEvery }] = useMySettings();
   return (
     <>
       <SamePlaces />
@@ -65,7 +70,7 @@ export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOp
         <div className="grid gap-4 sm:grid-cols-2">
           {Object.entries(SECTIONS).filter(([id]) => id !== "today" && !(user.coachAccount && id === "messages")).map(([id, section]) => (
             <ComingSoonCard key={id} section={section} onOpen={() => onOpen(id)}
-              badge={id === "clients" ? clientCount(clients) : id === "messages" && unread ? `${unread} new` : undefined} />
+              badge={id === "clients" ? clientCount(clients, measureEvery) : id === "messages" && unread ? `${unread} new` : undefined} />
           ))}
         </div>
       </div>
