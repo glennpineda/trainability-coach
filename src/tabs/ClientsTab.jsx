@@ -187,7 +187,8 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
           </div>
         ))}
         {part("measurements", <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={(...a) => { setMeasured(n => n + 1); onMeasured?.(...a); }}
-          onTakePhotos={() => { setPhotosNow(n => n + 1); pick("photos"); }} inTab />)}
+          onTakePhotos={() => { setPhotosNow(n => n + 1); pick("photos"); }}
+          sex={{ female: "female", male: "male" }[String(c.gender || "").toLowerCase()] || null} inTab />)}
         {part("photos", <ProgressPhotos client={c} onSignedOut={onSignedOut} start={photosNow} inTab />)}
         {part("tests", <FitnessTests key={measured} client={c} onSignedOut={onSignedOut} inTab />)}
         {part("programs", <ClientPrograms client={c} onSignedOut={onSignedOut} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} />)}

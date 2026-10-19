@@ -1073,7 +1073,12 @@ took each set.
 **Reading them.** The newest set comes first, headed **Latest:** and its date.
 Each measurement shows its value and, under it, how it has changed since the
 set before, such as *−3.1 lb* or *+0.25 in*. **Waist to hip** is worked out
-for you, from the waist divided by the hips, whenever both were taken.
+for you, from the waist divided by the hips, whenever both were taken. So
+are two more, once a **Height** has been taken (it is carried on to later
+sets, so you needn't take it each time): **BMI**, under the weight, and
+**Body fat, Navy estimate**, the US Navy's body-fat estimate from the
+height, neck and waist (and hips for a woman), under the body fat. The Navy
+estimate needs the client's gender in Studio to be Female or Male.
 **Blood pressure** shows as one line, such as *121/79 mmHg*. The set before
 is the latest one taken on an earlier day, so two sets on one day aren't
 compared with each other. Up or down is shown as it is,
@@ -1106,7 +1111,7 @@ nearest quarter, as a tape reads them.
 1. Open the client (4.3), tap the **Measurements** tab, and tap **Add
    measurements**.
 2. **Taken on** starts on today; change it if they were taken on another day.
-3. Fill in what you took, and leave the rest empty: **Weight**, **Body fat**
+3. Fill in what you took, and leave the rest empty: **Height**, **Weight**, **Body fat**
    (%), **Neck**, **Shoulders**, **Chest**, **Waist**, **Hips**; **Arm**,
    **Thigh** and **Calf**, each **Left** and **Right**; **Resting heart rate**
    (bpm); and **Blood pressure**, its **Top (systolic)** and **Bottom

@@ -540,6 +540,8 @@ const COLUMNS = [
   ["coach_measurements", "heart_rate", "REAL NULL"],
   ["coach_measurements", "bp_sys", "REAL NULL"],
   ["coach_measurements", "bp_dia", "REAL NULL"],
+  /* Height, for BMI and the US Navy body-fat estimate (Run 1, I-12). */
+  ["coach_measurements", "height", "REAL NULL"],
 ];
 
 /*

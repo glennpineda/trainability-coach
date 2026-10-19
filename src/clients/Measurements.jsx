@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Camera, ChartLine, ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip, exactIfSame } from "../lib/measures";
+import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip, exactIfSame, heightBy } from "../lib/measures";
 import { Trend } from "./Trend";
 import { todayIso } from "../lib/date";
 import { LoadingLine } from "../chrome/LoadingLine";
@@ -23,10 +23,11 @@ const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefin
    the set before in grey: up or down is a fact, not good or bad
    (measures.js, rowsOf, which adds the waist-to-hip ratio and puts blood
    pressure on one row). */
-function Values({ set, previous, units }) {
+function Values({ set, previous, units, heights, sex }) {
+  const extra = { heightCm: heights?.get(set.id) ?? null, previousHeightCm: previous ? heights?.get(previous.id) ?? null : null, sex };
   return (
     <dl className="grid grid-cols-[repeat(auto-fill,minmax(13rem,1fr))] gap-x-6 gap-y-1 text-sm">
-      {rowsOf(set.values, previous?.values, units).map(r => (
+      {rowsOf(set.values, previous?.values, units, extra).map(r => (
         <div key={r.key} className="flex items-baseline justify-between gap-2 min-w-0">
           <dt className="truncate" style={{ color: "var(--iron)" }}>{r.label}</dt>
           <dd className="text-right whitespace-nowrap tabular-nums">
@@ -153,7 +154,9 @@ function Form({ units, initial, last = null, busy, error, onSave, onCancel }) {
 
 /* `onTakePhotos`: after a new set is saved, progress photos are offered,
    on the client's Photos tab (Run 1, I-4). */
-export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, inTab = false }) {
+/* `sex`, "female" or "male" from Studio's gender, for the Navy's body-fat
+   estimate, which differs between them (Run 1, I-12). */
+export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, sex = null, inTab = false }) {
   const [data, setData] = useState(null);   // { measurements, units }
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -185,6 +188,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, i
   const list = data?.measurements || [];
   const units = data?.units || "imperial";
   const latest = list[0];
+  const heights = heightBy(list);
   const rest = list.slice(1);
 
   return (
@@ -222,7 +226,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, i
                     onSave={async (body) => { if (await send("PUT", `/measurements/${set.id}`, body)) setEditing(null); }} />
                 ) : (
                   <>
-                    <Values set={set} previous={previous} units={units} />
+                    <Values set={set} previous={previous} units={units} heights={heights} sex={sex} />
                     {set.note && <p className="text-xs mt-2 cx-wrap" style={{ color: "var(--iron)" }}>{set.note}</p>}
                   </>
                 )}

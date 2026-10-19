@@ -18,6 +18,9 @@
    a real person's falls in (in metric), for catching a slip, and for a pair
    the group and the side's word. */
 export const MEASURES = [
+  /* Height (Run 1, I-12; Glenn, 19 Oct 2026: "Height, BMI, body fat"): taken
+     once in a while; a set without it uses the last one taken (heightBy). */
+  { key: "height", label: "Height", kind: "length", min: 100, max: 250 },
   { key: "weight", label: "Weight", kind: "mass", min: 20, max: 400 },
   { key: "bodyFat", label: "Body fat", kind: "percent", min: 2, max: 75 },
   { key: "neck", label: "Neck", kind: "length", min: 15, max: 80 },
@@ -96,6 +99,40 @@ export function waistToHip(values) {
   return w != null && h ? round(w / h, 2) : null;
 }
 
+/**
+ * Body mass index: kg over metres squared, to one place, where there is a
+ * weight and a height.
+ */
+export function bmiOf(values, heightCm) {
+  const w = values?.weight, h = values?.height ?? heightCm;
+  return w != null && h ? round(w / (h / 100) ** 2, 1) : null;
+}
+
+/**
+ * The US Navy's body-fat estimate (Hodgdon and Beckett, 1984), metric:
+ * men 495 / (1.0324 − 0.19077 log10(waist − neck) + 0.15456 log10(height)) − 450;
+ * women 495 / (1.29579 − 0.35004 log10(waist + hips − neck) + 0.22100 log10(height)) − 450.
+ * A percentage to one place, or null without the tape measures, a height or
+ * the client's sex, or where the numbers make no sense.
+ */
+export function navyBodyFat(values, heightCm, sex) {
+  const h = values?.height ?? heightCm, n = values?.neck, w = values?.waist, hip = values?.hips;
+  if (!h || n == null || w == null) return null;
+  let v;
+  if (sex === "male" && w > n) v = 495 / (1.0324 - 0.19077 * Math.log10(w - n) + 0.15456 * Math.log10(h)) - 450;
+  else if (sex === "female" && hip != null && w + hip > n) v = 495 / (1.29579 - 0.35004 * Math.log10(w + hip - n) + 0.221 * Math.log10(h)) - 450;
+  else return null;
+  return v > 2 && v < 75 ? round(v, 1) : null;
+}
+
+/** Each set's height, its own or the last one taken before it: sets newest first. */
+export function heightBy(sets) {
+  const out = new Map();
+  let h = null;
+  for (const s of [...sets].reverse()) { if (s.values?.height != null) h = s.values.height; out.set(s.id, h); }
+  return out;
+}
+
 /* "−3.1 lb", "+0.25 in", "no change". */
 function difference(d, unit) {
   if (!d) return "no change";
@@ -109,7 +146,7 @@ function difference(d, unit) {
  * measurement, else null. For the client's details, a message's card and
  * the printed sheet alike.
  */
-export function rowsOf(values, previous, units) {
+export function rowsOf(values, previous, units, { heightCm = null, previousHeightCm = null, sex = null } = {}) {
   const rows = [];
   const before = previous || null;
   for (const m of MEASURES) {
@@ -119,6 +156,17 @@ export function rowsOf(values, previous, units) {
       const p = before?.[m.key];
       const d = p == null ? null : round(toShown(m, v, units) - toShown(m, p, units), 2);
       rows.push({ key: m.key, label: m.label, text: shownText(m, v, units), change: d == null ? null : difference(d, unitOf(m, units)) });
+    }
+    /* Worked out, never typed (Run 1, I-12): BMI after the weight, and the
+       Navy's body-fat estimate after the body fat, with the height carried
+       from an earlier set when this one has none. */
+    if (m.key === "weight") {
+      const b = bmiOf(values, heightCm), pb = bmiOf(before, previousHeightCm ?? heightCm);
+      if (b != null) rows.push({ key: "bmi", label: "BMI", text: String(b), change: pb == null ? null : difference(round(b - pb, 1), "") });
+    }
+    if (m.key === "bodyFat") {
+      const f = navyBodyFat(values, heightCm, sex), pf = navyBodyFat(before, previousHeightCm ?? heightCm, sex);
+      if (f != null) rows.push({ key: "navyFat", label: "Body fat, Navy estimate", text: `${f}%`, change: pf == null ? null : difference(round(f - pf, 1), "%") });
     }
     if (m.key === "hips") {
       const r = waistToHip(values);
