@@ -36,7 +36,7 @@ const COLOR = { stop: "var(--ember)", warn: "#B7791F", note: "var(--iron)" };
 
 const blank = { sets: "", reps: "", load: "", effort: "", tempo: "", rest: "", note: "", superset: false, technique: "", drops: "" };
 
-export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember, oneRms, units = "imperial", clientName }) {
+export function ExerciseDialog({ dayId, dayName, first, editing, suggested, muscle = null, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember, oneRms, units = "imperial", clientName }) {
   const [step, setStep] = useState(editing || suggested ? "details" : "pick");
   const [pick, setPick] = useState(editing ? { id: editing.exerciseId } : suggested ? { id: suggested.id } : null);
   const [info, setInfo] = useState(null);
@@ -121,7 +121,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
         </div>
 
         {step === "pick" ? (
-          <Pick dayId={dayId} dayName={dayName} vocab={vocab} remembered={remembered} onRemember={onRemember} onPick={choose} onBack={pick ? () => setStep("details") : null}
+          <Pick dayId={dayId} dayName={dayName} vocab={vocab} muscle={muscle} remembered={remembered} onRemember={onRemember} onPick={choose} onBack={pick ? () => setStep("details") : null}
             onAskBilly={onAskBilly ? (words) => { onClose(); onAskBilly(words); } : null} />
         ) : (
           <form onSubmit={save} className="flex flex-col min-h-0">
@@ -242,18 +242,21 @@ function Chips({ options, value, onChange, many = false, label, iq = false }) {
 
 /* Step 1: what we are working on (optional), then by name, or from what
    Coach IQ suggests, narrowed to it. */
-function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, onRemember }) {
+function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, onRemember, muscle = null }) {
   const [q, setQ] = useState("");
   const [found, setFound] = useState(null);
   const [next, setNext] = useState(null);
   /* Coach IQ's answers start as they were left last time in this program
      (Glenn, 18 Oct 2026: "Next exercise they add, remember this setting so
      it opens to the next add exercise with it"), and are kept as they change. */
-  const [workOn, setWorkOn] = useState(() => (vocab?.workOn?.some(w => w.key === remembered?.workOn) ? remembered.workOn : null));
+  /* Opened from a muscle on the day's drawing (Run 1, I-10), it starts on
+     that muscle alone, whatever was asked last time. */
+  const fromMuscle = muscle ? vocab?.muscleGroups?.find(g => g.muscles.includes(muscle)) : null;
+  const [workOn, setWorkOn] = useState(() => (fromMuscle ? null : vocab?.workOn?.some(w => w.key === remembered?.workOn) ? remembered.workOn : null));
   /* Muscle groups chosen, and within them any muscles picked to narrow: a
      group with none picked means all of its muscles. */
-  const [groups, setGroups] = useState(() => (remembered?.groups || []).filter(k => vocab?.muscleGroups?.some(g => g.key === k)));
-  const [picked, setPicked] = useState(() => remembered?.picked || []);
+  const [groups, setGroups] = useState(() => (fromMuscle ? [fromMuscle.key] : (remembered?.groups || []).filter(k => vocab?.muscleGroups?.some(g => g.key === k))));
+  const [picked, setPicked] = useState(() => (fromMuscle ? [muscle] : remembered?.picked || []));
   useEffect(() => { onRemember?.({ workOn, groups, picked }); }, [workOn, groups, picked]); // eslint-disable-line react-hooks/exhaustive-deps
   const muscles = useMemo(() => (vocab?.muscleGroups || []).filter(g => groups.includes(g.key))
     .flatMap(g => { const mine = g.muscles.filter(m => picked.includes(m)); return mine.length ? mine : g.muscles; }), [vocab, groups, picked]);

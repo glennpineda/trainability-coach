@@ -350,7 +350,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
             {d.notes && !is("day", d.id) && <p className="text-sm mt-1 cx-wrap" style={muted}>{d.notes}</p>}
             {dayPoints.length > 0 && <ul className="grid gap-1 mt-2">{dayPoints.map((c, i) => <Point key={i} p={c} />)}</ul>}
             {/* What the day works (Glenn, 19 Oct 2026), shaded by its exercises. */}
-            {d.exercises.length > 0 && <BodyMap exercises={d.exercises} top={bodyScale} />}
+            {d.exercises.length > 0 && <BodyMap exercises={d.exercises} top={bodyScale}
+              onPickMuscle={p.frozen ? null : (m) => openDialog({ day: d, first: d.exercises.length === 0, muscle: m })} />}
 
             {d.exercises.length === 0 && <p className="text-sm mt-2" style={muted}>No exercises yet. Add one, or take one of Coach IQ's suggestions below.</p>}
             <ol className="mt-2">
@@ -431,7 +432,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
         </ConfirmDialog>
       )}
       {dialog && (
-        <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} vocab={vocab}
+        <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} muscle={dialog.muscle} vocab={vocab}
           remembered={lastAsk} onRemember={rememberAsk} oneRms={p.oneRms} units={units} clientName={p.clientName ? p.clientName.split(" ")[0] : ""}
           onAskBilly={billy?.available ? (words) => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}): ${words}`) : null}
           busy={busy} error={dialogError} onSave={saveDialog} onClose={() => setDialog(null)} />

@@ -1615,6 +1615,13 @@ program, so a lighter day looks fainter. The pelvic floor is in the list but
 not drawn. A day with no exercises has no
 drawing.
 
+**Adding an exercise from the drawing.** Tap a muscle on the drawing, or a
+line in the list beside it, to add an exercise for it: the **Add an
+exercise** box opens with Coach IQ already narrowed to that muscle (its
+group chosen and the muscle picked), such as *Coach IQ suggests: hamstrings*,
+and its suggestions below. Any muscle on the drawing can be tapped, worked
+that day or not, which helps when one is missing.
+
 **Sending it to the client.** Tap **Send to Avery** at the top of the
 program. Their conversation in Messages opens with the program already
 attached (7.3); write a few words if you like and tap send. If a day has no

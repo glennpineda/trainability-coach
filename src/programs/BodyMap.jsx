@@ -83,7 +83,7 @@ const BACK = {
 const shape = ({ el, ...a }, props, key) => React.createElement(el, { key, ...a, ...props });
 const MIRROR = "translate(120 0) scale(-1 1)";
 
-function Figure({ spots, sets, top, label, x }) {
+function Figure({ spots, sets, top, label, x, onPick }) {
   /* A worked muscle in the accent, with a thin edge of the card's colour so
      neighbours stay apart; one that isn't, only its faint outline, so the
      body still reads as muscles on a light day. The accent grows stronger
@@ -111,8 +111,12 @@ function Figure({ spots, sets, top, label, x }) {
         <path d={BODY} />
         <path d={BODY} transform={MIRROR} />
       </g>
+      {/* With `onPick`, each muscle is a button: its whole shape, painted
+          or not, takes the tap (Run 1, I-10). */}
       {Object.entries(spots).map(([m, list]) => (
-        <g key={m} {...tone(m)}>
+        <g key={m} {...tone(m)} {...(onPick ? { role: "button", tabIndex: 0, "aria-label": `Add an exercise for the ${m}`, pointerEvents: "all", style: { cursor: "pointer" },
+          onClick: () => onPick(m), onKeyDown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(m); } } } : {})}>
+          {onPick && <title>{`Add an exercise for the ${m}`}</title>}
           {list.map((s, i) => shape(s, {}, `l${i}`))}
           <g transform={MIRROR}>{list.map((s, i) => shape(s, {}, `r${i}`))}</g>
         </g>
@@ -126,25 +130,32 @@ const nice = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 const cap = (m) => m[0].toUpperCase() + m.slice(1);
 
 /** One day's drawing and its numbers. `top` is the scale (exercises for the darkest spot). */
-export function BodyMap({ exercises, top, forClient = false }) {
+/* `onPickMuscle(muscle)`: a muscle tapped, on the drawing or in the list, to
+   add an exercise for it (Run 1, I-10). Not on the printed page. */
+export function BodyMap({ exercises, top, forClient = false, onPickMuscle = null }) {
   const sets = setsByMuscle(exercises);
   const list = Object.entries(sets).sort((a, b) => b[1] - a[1]);
   if (!list.length) return null;
   const said = list.map(([m, v]) => `${cap(m)} ${nice(v)}`).join(", ");
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 rounded-lg p-2.5" style={{ background: "var(--chalk)", border: "1px solid var(--iron-line)" }}>
-      <svg viewBox="0 0 250 280" role="img" style={{ width: "100%", maxWidth: 220, height: "auto" }} aria-label={`Exercises this day by muscle: ${said}`} className="flex-none mx-auto sm:mx-0">
-        <Figure spots={FRONT} sets={sets} top={top} label="Front" x={0} />
-        <Figure spots={BACK} sets={sets} top={top} label="Back" x={130} />
+      <svg viewBox="0 0 250 280" role={onPickMuscle ? "group" : "img"} style={{ width: "100%", maxWidth: 220, height: "auto" }} aria-label={`Exercises this day by muscle: ${said}`} className="flex-none mx-auto sm:mx-0">
+        <Figure spots={FRONT} sets={sets} top={top} label="Front" x={0} onPick={onPickMuscle} />
+        <Figure spots={BACK} sets={sets} top={top} label="Back" x={130} onPick={onPickMuscle} />
       </svg>
       <div className="flex-1 text-xs" style={{ color: "var(--iron)", minWidth: "14rem" }}>
         <div className="font-medium mb-1" style={{ color: "var(--ink)" }}>Exercises this day, by muscle</div>
         <ul className="grid grid-cols-2 gap-x-3 gap-y-0.5" style={{ maxWidth: 280 }}>
           {list.map(([m, v]) => (
-            <li key={m} className="flex items-center gap-1.5 min-w-0">
-              <span className="w-2.5 h-2.5 rounded-sm flex-none" style={{ background: "var(--accent)", opacity: 0.22 + 0.78 * Math.min(1, v / top) }} aria-hidden="true" />
-              <span className="truncate" style={{ color: "var(--ink)" }}>{cap(m)}</span>
-              <span className="ml-auto tabular-nums">{nice(v)}</span>
+            <li key={m} className="min-w-0">
+              {React.createElement(onPickMuscle ? "button" : "span", {
+                className: "w-full flex items-center gap-1.5 min-w-0 text-left",
+                ...(onPickMuscle ? { type: "button", onClick: () => onPickMuscle(m), "aria-label": `${cap(m)} ${nice(v)}: add an exercise for it` } : {}),
+              }, <>
+                <span className="w-2.5 h-2.5 rounded-sm flex-none" style={{ background: "var(--accent)", opacity: 0.22 + 0.78 * Math.min(1, v / top) }} aria-hidden="true" />
+                <span className="truncate" style={{ color: "var(--ink)" }}>{cap(m)}</span>
+                <span className="ml-auto tabular-nums">{nice(v)}</span>
+              </>)}
             </li>
           ))}
         </ul>
@@ -157,6 +168,7 @@ export function BodyMap({ exercises, top, forClient = false }) {
             ? <>Each number is how many of this day&apos;s exercises work that muscle: 1 where it does most of the work, ½ where it helps. The stronger the color, the more it works.</>
             : <>Each number is how many of this day&apos;s exercises work that muscle: 1 for each where it is a primary muscle, ½ for each where it is a secondary one. The stronger the color, the higher the number.</>}
         </p>
+        {onPickMuscle && <p className="mt-1" style={{ maxWidth: 300 }}>Tap a muscle, on the drawing or here, to add an exercise for it.</p>}
       </div>
     </div>
   );
