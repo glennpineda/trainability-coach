@@ -22,6 +22,7 @@ downwards means going backwards in time.
 
 # Completed brainstorm
 
+- **Logging a session from Today** (19 Oct 2026; Glenn, asked which of two additions to the session log he wanted: "Log from Today, A chart for each lift"; this is the first). Build 1.0.157. Today's rows (`TodayCard.jsx`): for a client with a program, once the session's day has come and it isn't cancelled, a line under the row, **Log this session**, or, once logged, **Logged** in green. It fetches the client's program (the one Today names, changed last) and opens the log (`LogSession.jsx`), which, given no day, now asks *Which day was it?*, listing the program's days that have exercises with their exercises' names, and goes straight on when there is only one; the log takes `appointmentId` and the session's `date` for its day. A log keeps the Studio session it came from (`coach_workout_logs.appointment_id`, added by `COLUMNS` in `server/db.js`; `check` takes `appointmentId`), and the Today route asks which of the trainer's sessions have one (`workoutLogs.loggedAppointments`), which `today.todayOf` puts on each row as `logged`. MANUAL 3.4 and 5.7 say so. Tested with the stand-in Studio, iPhone 13: Avery's 6:00 AM session (Next block, one day with exercises) opened the log on Day A, dated Oct 19, and after saving showed *Logged*, the log keeping appointment `a1`; with a second day given an exercise, the same line asked *Which day was it?* with Day A and Day B.
 - **Strength levels, kept and written up as a principle** (19 Oct 2026; Glenn, asked whether the strength bands U-15 uses are right: "Keep them (Recommended)", the choice put as "I'd also write them up as a Coach IQ principle for you to review"). Build 1.0.156. A new Coach IQ principle, `coach-iq/principles/strength-levels.md`, *Strength levels*, status draft: what the bands are for (a guide for a new program's level, the trainer's word wins), the table (men and women, the four barbell lifts, beginner / intermediate / advanced), and how they are used (the lowest of the lifts, a 1RM from 10 reps or fewer, barbell versions only, no level without the client's sex); listed in the principles' README. The numbers stay in `STANDARDS` (server/programs.js), whose comment now points to the principle: change both together. Principles go into the app's database from their files only the first time (build 1.0.16), so a topic added since was never loaded: `iq-store.js` now loads any principle in the files that the app doesn't have yet, as the file has it (a draft), never over one already there, with a history line *Added from the files: Strength levels*. It waits under Review, Principles, marked Draft, for the Primary Master: Billy doesn't read it until it is reviewed. `npm run check-iq`: 12 principles, all consistent. Tested with the stand-in Studio: the topic loaded once as a draft (and not again on a second start); Review's Principles listed *Strength levels Draft*, iPhone 13.
 **The gym equipment guide's pieces, known by name** (19 Oct 2026; Glenn: "On our knowledge base, let's add these equipment (if not in there already) to help trainers add new exercise equipment to the places." with BUGE's "Gym Equipment Names & Pictures: Complete Guide", 72 pieces). Build 1.0.130.
 
@@ -897,6 +898,9 @@ Each session shows, from the left:
      over.
 4. Their program in blue, or **No program yet**, and how many limitations
    are written for them, such as **2 limitations** (4.7).
+5. For a client with a program, once the day of the session has come,
+   **Log this session**, to write down how it went (5.7); once logged, it
+   says **Logged** in green.
 
 A green tick on the right means the session was trained. A cancelled one is
 greyed out and crossed through, with **Cancelled** on the right.
@@ -2114,7 +2118,11 @@ like, each set's reps and weight. Every trainer of the client sees it, with
 who logged it. Only the trainer who logged a session can change or delete
 it.
 
-1. Open the program (5.1) and find the day you trained.
+1. Open the program (5.1) and find the day you trained. Or, on the home
+   screen's Today (3.4), tap **Log this session** under the session: it opens
+   their program and asks *Which day was it?* (when the program has more
+   than one day with exercises); tap the day. The session's day is filled
+   in, and Today then shows it as **Logged**.
 2. Under its exercises, tap **Log this session**. The **Log Day A** box
    opens. **Day of the session** starts on today; change it if it was
    another day.

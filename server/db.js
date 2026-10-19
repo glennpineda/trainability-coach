@@ -562,6 +562,8 @@ const COLUMNS = [
   ["coach_measurements", "bp_dia", "REAL NULL"],
   /* Height, for BMI and the US Navy body-fat estimate (Run 1, I-12). */
   ["coach_measurements", "height", "REAL NULL"],
+  /* The Studio session a log was made from, on Today (Glenn, 19 Oct 2026: "Log from Today"). */
+  ["coach_workout_logs", "appointment_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
 ];
 
 /*

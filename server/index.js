@@ -561,7 +561,9 @@ app.get("/api/today", asSignedIn("GET /today", async (req, res, user) => {
     const rows = await db.all(`SELECT client_id, COUNT(*) AS n FROM coach_limitations WHERE client_id IN (${ids.map(() => "?").join(", ")}) GROUP BY client_id`, ids);
     for (const r of rows) limits.set(r.client_id, Number(r.n));
   }
-  res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, names: req._names || new Map(), programs: mine, limits }) });
+  /* Which have been logged (Glenn, 19 Oct 2026: "Log from Today"). */
+  const logged = await workoutLogs.loggedAppointments(appointments.filter(a => a.trainerId === user.id).map(a => String(a.id)));
+  res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, names: req._names || new Map(), programs: mine, limits, logged }) });
 }));
 
 /* ------------------------------------------------------------ notifications

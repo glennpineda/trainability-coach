@@ -12,14 +12,44 @@ import { plannedOf, setsToFill, kgFrom, shownWeight, entryText, MAX_SETS } from 
  * write each set as it went (filled in from the plan). A note on any
  * exercise and on the session. Every trainer of the client sees it.
  *
- *   program   the program, as the designer has it (programs.full)
- *   day       one of its days
- *   existing  a logged session being changed, or null for a new one
+ *   program        the program, as the designer has it (programs.full)
+ *   day            one of its days, or null to ask which (from Today)
+ *   existing       a logged session being changed, or null for a new one
+ *   appointmentId  the Studio session it was opened from on Today, and
+ *   date           that session's day (Glenn, 19 Oct 2026: "Log from Today")
  */
-export function LogSession({ program, day, existing = null, units = "imperial", onClose, onSaved }) {
+export function LogSession(props) {
+  const { program, onClose } = props;
+  const days = program.days.filter(d => d.exercises.length > 0);
+  const [day, setDay] = useState(props.day || (days.length === 1 ? days[0] : null));
+  if (day) return <LogForm {...props} day={day} />;
+  return createPortal(
+    <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ zIndex: 50, background: "rgba(0,0,0,0.4)" }}>
+      <div role="dialog" aria-modal="true" aria-label="Which day was it?" className="cx-card w-full sm:max-w-lg flex flex-col" style={{ maxHeight: "92dvh", color: "var(--ink)" }}>
+        <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-2">
+          <h2 className="cx-display text-lg">Which day was it?</h2>
+          <button type="button" className="cx-icon-btn" onClick={onClose} aria-label="Close" title="Close"><X size={18} aria-hidden="true" /></button>
+        </div>
+        <div className="overflow-y-auto px-4 pb-4 grid gap-2">
+          <p className="text-sm" style={{ color: "var(--iron)" }}>{program.name}: choose the day of the program you trained.</p>
+          {days.length === 0 ? <p className="text-sm" style={{ color: "var(--iron)" }}>This program has no exercises yet.</p>
+            : days.map(d => (
+              <button key={d.id} type="button" className="w-full text-left rounded-lg p-3" style={{ background: "var(--ghost-fill)" }} onClick={() => setDay(d)}>
+                <span className="block text-sm font-medium">{d.name}</span>
+                <span className="block text-xs" style={{ color: "var(--iron)" }}>{d.exercises.map(e => e.name).join(", ")}</span>
+              </button>
+            ))}
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+function LogForm({ program, day, existing = null, units = "imperial", appointmentId = null, date = null, onClose, onSaved }) {
   const first = (program.clientName || "").split(" ")[0] || "the client";
   const was = new Map((existing?.entries || []).map(e => [e.peId, e]));
-  const [doneOn, setDoneOn] = useState(existing?.doneOn || todayIso());
+  const [doneOn, setDoneOn] = useState(existing?.doneOn || date || todayIso());
   const [note, setNote] = useState(existing?.note || "");
   const [rows, setRows] = useState(() => day.exercises.map(e => {
     const old = was.get(e.id);
@@ -44,7 +74,7 @@ export function LogSession({ program, day, existing = null, units = "imperial", 
       sets: r.done && r.open ? r.sets.map(s => ({ reps: s.reps === "" ? null : Number(s.reps), weightKg: kgFrom(s.weight, units) })) : null,
     }));
     try {
-      const body = { programId: program.id, dayId: day.id, doneOn, note, units, entries };
+      const body = { programId: program.id, dayId: day.id, doneOn, note, units, entries, ...(appointmentId ? { appointmentId } : {}) };
       const out = existing ? await apiRequest("PUT", `/sessions/${existing.id}`, body) : await apiRequest("POST", `/clients/${program.clientId}/sessions`, body);
       onSaved?.(out);
     } catch (err) {

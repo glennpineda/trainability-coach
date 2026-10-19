@@ -446,6 +446,9 @@ Each session shows, from the left:
      over.
 4. Their program in blue, or **No program yet**, and how many limitations
    are written for them, such as **2 limitations** (4.7).
+5. For a client with a program, once the day of the session has come,
+   **Log this session**, to write down how it went (5.7); once logged, it
+   says **Logged** in green.
 
 A green tick on the right means the session was trained. A cancelled one is
 greyed out and crossed through, with **Cancelled** on the right.
@@ -1663,7 +1666,11 @@ like, each set's reps and weight. Every trainer of the client sees it, with
 who logged it. Only the trainer who logged a session can change or delete
 it.
 
-1. Open the program (5.1) and find the day you trained.
+1. Open the program (5.1) and find the day you trained. Or, on the home
+   screen's Today (3.4), tap **Log this session** under the session: it opens
+   their program and asks *Which day was it?* (when the program has more
+   than one day with exercises); tap the day. The session's day is filled
+   in, and Today then shows it as **Logged**.
 2. Under its exercises, tap **Log this session**. The **Log Day A** box
    opens. **Day of the session** starts on today; change it if it was
    another day.

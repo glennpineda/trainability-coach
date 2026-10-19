@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, Check, ChevronDown, ClipboardList, RefreshCw, ShieldAlert } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, ChevronDown, ClipboardCheck, ClipboardList, RefreshCw, ShieldAlert } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { isoDate } from "../lib/date";
 import { SegRow } from "../chrome/SegRow";
+import { LogSession } from "../programs/LogSession";
 import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 import { measurementsDue } from "../lib/measures";
 import { useMySettings } from "../hooks/useUnits";
@@ -50,7 +51,7 @@ function flags(a, weeks) {
   return out;
 }
 
-function Row({ a, onOpen, weeks }) {
+function Row({ a, onOpen, weeks, onLog }) {
   const cancelled = a.status === "cancelled";
   const done = !cancelled && a.status === "completed";
   const who = a.client || a.name;
@@ -59,6 +60,7 @@ function Row({ a, onOpen, weeks }) {
   const tappable = !!a.client;
   const Tag = tappable ? "button" : "div";
   return (
+    <>
     <Tag type={tappable ? "button" : undefined} onClick={tappable ? () => onOpen(a) : undefined}
       className="w-full text-left border-t px-4 py-2.5 flex items-center gap-3"
       style={{ borderColor: "var(--iron-line)" }}>
@@ -107,11 +109,29 @@ function Row({ a, onOpen, weeks }) {
           </span>
         )}
     </Tag>
+    {/* Log it, for a client with a program, once the day has come (Glenn,
+        19 Oct 2026: "Log from Today"); then, that it is logged. */}
+    {onLog && !cancelled && a.client && a.program && a.date <= isoDay() && (
+      <div className="px-4 pb-2.5 -mt-1 pl-[5.65rem] text-sm">
+        {a.logged
+          ? <span className="inline-flex items-center gap-1" style={{ color: "var(--moss)" }}><ClipboardCheck size={14} aria-hidden="true" /> Logged</span>
+          : <button type="button" className="cx-link" onClick={() => onLog(a)}><ClipboardCheck size={14} aria-hidden="true" /> Log this session</button>}
+      </div>
+    )}
+    </>
   );
 }
 
 export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
-  const [{ measureEvery }] = useMySettings();
+  const [{ measureEvery, units }] = useMySettings();
+  /* A session being logged: { a, program }. */
+  const [logging, setLogging] = useState(null);
+  const [logError, setLogError] = useState("");
+  const startLog = async (a) => {
+    setLogError("");
+    try { setLogging({ a, program: await apiRequest("GET", `/programs/${a.program.id}`) }); }
+    catch (err) { if (err.status === 401) onSignedOut?.(); else setLogError("That program couldn't be opened. Try again in a minute."); }
+  };
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [panel, setPanel] = useState("today");
@@ -163,7 +183,7 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
     body = <EmptyState>Your sessions show here once your Coach account is linked to your Trainability account.</EmptyState>;
   } else if (panel === "today") {
     const todays = data.days[0]?.appointments || [];
-    body = todays.length ? <div className="-mb-px">{todays.map(a => <Row key={a.id} a={a} onOpen={open} weeks={measureEvery} />)}</div> : (
+    body = todays.length ? <div className="-mb-px">{todays.map(a => <Row key={a.id} a={a} onOpen={open} weeks={measureEvery} onLog={startLog} />)}</div> : (
       <EmptyState>
         Nothing booked today.
         {data.next && <div className="text-sm pt-1">Next: {fmtDateShort(data.next.date)} at {minutesToLabel(data.next.start)}
@@ -191,7 +211,7 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
             </span>
             <ChevronDown size={16} className="flex-none" style={{ transform: isOpen ? "rotate(180deg)" : undefined }} aria-hidden="true" />
           </button>
-          {isOpen && d.appointments.map(a => <Row key={a.id} a={a} onOpen={open} weeks={measureEvery} />)}
+          {isOpen && d.appointments.map(a => <Row key={a.id} a={a} onOpen={open} weeks={measureEvery} onLog={startLog} />)}
         </div>
       );
     }) : <EmptyState>Nothing booked in the next 7 days.</EmptyState>;
@@ -217,7 +237,12 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
           <span className="font-semibold text-base" aria-hidden="true">Today</span>
         </div>
       )}
+      {logError && <p className="px-4 pb-3 text-sm" role="alert" style={{ color: "var(--ember)" }}>{logError}</p>}
       {body}
+      {logging && (
+        <LogSession program={logging.program} day={null} units={units} appointmentId={String(logging.a.id)} date={logging.a.date}
+          onClose={() => setLogging(null)} onSaved={() => { setLogging(null); load(); }} />
+      )}
     </section>
   );
 }

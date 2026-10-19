@@ -24,7 +24,7 @@ const parse = (s) => { try { return JSON.parse(s || "[]"); } catch { return []; 
 function shape(r, trainerId) {
   return {
     id: r.id, clientId: r.client_id, programId: r.program_id, programName: r.program_name, dayId: r.day_id, dayName: r.day_name,
-    doneOn: r.done_on, entries: parse(r.entries), note: r.note || "", units: r.units, loggedBy: r.trainer_name,
+    doneOn: r.done_on, entries: parse(r.entries), note: r.note || "", units: r.units, loggedBy: r.trainer_name, appointmentId: r.appointment_id || null,
     mine: r.trainer_id === trainerId, createdAt: r.created_at,
   };
 }
@@ -34,6 +34,13 @@ export async function logsOf(clientId, trainerId) {
   return (await all(`SELECT * FROM coach_workout_logs WHERE client_id = ? ORDER BY done_on DESC, created_at DESC`, [clientId])).map(r => shape(r, trainerId));
 }
 export const logById = (id) => (isId("workoutLog", id) ? get(`SELECT * FROM coach_workout_logs WHERE id = ?`, [id]) : null);
+
+/** Which of these Studio sessions have a log, by appointment id: Map id → log id. */
+export async function loggedAppointments(ids) {
+  if (!ids.length) return new Map();
+  const rows = await all(`SELECT id, appointment_id FROM coach_workout_logs WHERE appointment_id IN (${ids.map(() => "?").join(", ")})`, ids);
+  return new Map(rows.map(r => [r.appointment_id, r.id]));
+}
 
 /** Each exercise's latest logged entry for a client: exerciseId → { doneOn, entry, units }. */
 export async function lastByExercise(clientId) {
@@ -82,6 +89,7 @@ export function check(body = {}, program) {
   if (!entries.length) return { error: "This day has no exercises to log." };
   return { row: {
     programId: program.id, programName: program.name, dayId: day.id, dayName: day.name, doneOn, entries,
+    appointmentId: typeof body.appointmentId === "string" ? body.appointmentId.slice(0, 64) : "",
     note: typeof body.note === "string" ? body.note.trim().slice(0, 1000) : "", units: body.units === "metric" ? "metric" : "imperial",
   } };
 }
@@ -89,10 +97,10 @@ export function check(body = {}, program) {
 export async function add(clientId, trainer, row) {
   const at = now();
   const id = await insertWithNewId("workoutLog", (newId) => run(
-    `INSERT INTO coach_workout_logs (id, client_id, trainer_id, trainer_name, program_id, program_name, day_id, day_name, done_on, entries, note, units, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO coach_workout_logs (id, client_id, trainer_id, trainer_name, program_id, program_name, day_id, day_name, done_on, entries, note, units, appointment_id, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [newId, clientId, trainer.id, String(trainer.name || "").slice(0, 120), row.programId, row.programName.slice(0, 120), row.dayId, row.dayName.slice(0, 120),
-      row.doneOn, JSON.stringify(row.entries), row.note, row.units, at, at]));
+      row.doneOn, JSON.stringify(row.entries), row.note, row.units, row.appointmentId || "", at, at]));
   await newBests(id, clientId, trainer, row);
   return id;
 }

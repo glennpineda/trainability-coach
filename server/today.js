@@ -46,7 +46,7 @@ function whereOf(locations = {}) {
  * is named from it, as Studio's Today names them, rather than "Client"
  * (Run 1, B-18), though their record, program and limitations aren't opened.
  */
-export function todayOf({ today, trainerId, appointments = [], locations, clients = [], names = new Map(), programs = [], limits = new Map() }) {
+export function todayOf({ today, trainerId, appointments = [], locations, clients = [], names = new Map(), programs = [], limits = new Map(), logged = new Map() }) {
   const mine = appointments.filter(a => a.trainerId === trainerId && a.date).sort(byTime);
   const until = addDays(today, DAYS - 1);
   const where = whereOf(locations);
@@ -77,6 +77,8 @@ export function todayOf({ today, trainerId, appointments = [], locations, client
       /* Shown until the session is over, which the browser's clock decides. */
       nothingAfter: !theirs.some(x => byTime(x, a) > 0),
       program: programOf.get(c.id) || null,
+      /* Logged in Coach from this session (workout-logs.js). */
+      logged: logged.has(String(a.id)),
       limitations: limits.get(c.id) || 0,
     };
   };
