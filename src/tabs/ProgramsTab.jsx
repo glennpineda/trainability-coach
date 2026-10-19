@@ -4,6 +4,7 @@ import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { Designer, DetailsForm, KindForm } from "../programs/Designer";
 import { Toast } from "../chrome/Toast";
+import { SegRow } from "../chrome/SegRow";
 
 /**
  * Programs (Glenn, 17 Oct 2026: "We need to start creating a workout program
@@ -89,18 +90,9 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
             </button>
           )}
           {data && (
-            <div className="flex rounded-[10px] p-1 gap-1 mb-3 w-full sm:w-fit" style={{ background: "var(--ghost-fill)" }} role="tablist">
-              {[[false, "Active", data.programs.length], [true, "Put away", (data.putAway || []).length]].map(([value, label, n]) => (
-                <button key={label} type="button" role="tab" aria-selected={showPutAway === value}
-                  onClick={() => { setShowPutAway(value); setAsking(null); }}
-                  className="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-sm font-medium transition-colors"
-                  style={showPutAway === value
-                    ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
-                    : { color: "var(--iron)" }}>
-                  {label} ({n})
-                </button>
-              ))}
-            </div>
+            <SegRow className="mb-3 sm:w-64" label="Which programs" value={showPutAway ? "away" : "active"}
+              onPick={(k) => { setShowPutAway(k === "away"); setAsking(null); }}
+              items={[{ key: "active", label: "Active", figure: data.programs.length }, { key: "away", label: "Put away", figure: (data.putAway || []).length }]} />
           )}
           {!data ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : showPutAway ? (
             (data.putAway || []).length === 0 ? <p className="text-sm" style={muted}>You have no programs put away.</p> : (

@@ -285,6 +285,31 @@
    page's own background, a hairline under it, and everything in the row the
    height of one 36px badge. */
 @layer components {
+  /* Studio's SegRow (its theme.jsx, .iw-seg), in Coach's colours (Run 1,
+     D-3): src/chrome/SegRow.jsx. A grey track and a white chip for tabs that
+     filter one list; `.cx-seg-pick`, a pale cerulean track and the picked one
+     filled like the main button, for tabs that switch between things. */
+  .cx-seg { position: relative; display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--ghost-fill);
+    touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .cx-seg-dragging .cx-seg-thumb { transition: none; }
+  .cx-seg-dragging .cx-seg-on { cursor: grabbing; }
+  .cx-seg-btn { position: relative; z-index: 1; flex: 1 1 0; min-width: 0; border-radius: 9px; padding: 0.375rem 0.5rem;
+    color: var(--iron); font-weight: 500; transition: color .2s ease; }
+  .cx-seg-btn:hover { color: var(--ink); }
+  .cx-seg-on { color: var(--ink); }
+  .cx-seg-fit > .cx-seg-btn { flex: 1 1 auto; }
+  /* Many tabs on a phone (a client's record): smaller words below 640px. */
+  @media (max-width: 639px) { .cx-seg-small .cx-seg-btn { font-size: 0.75rem; padding: 0.375rem 0.25rem; } }
+  .cx-seg-short { display: none; }
+  @container (max-width: 5rem) { .cx-seg-long { display: none; } .cx-seg-short { display: inline; } }
+  .cx-seg-thumb { position: absolute; z-index: 0; left: 0; top: 0; border-radius: 9px; pointer-events: none;
+    background: var(--chalk); box-shadow: 0 1px 3px rgba(23, 42, 58, 0.16), 0 0 0 1px var(--iron-line);
+    transition: transform .28s cubic-bezier(.3,.7,.2,1), width .28s cubic-bezier(.3,.7,.2,1), height .28s cubic-bezier(.3,.7,.2,1); }
+  .cx-seg-pick { background: var(--accent-soft); }
+  .cx-seg-pick .cx-seg-btn { color: var(--accent); }
+  .cx-seg-pick .cx-seg-btn:hover { color: var(--ink); }
+  .cx-seg-pick .cx-seg-on, .cx-seg-pick .cx-seg-on:hover { color: #fff; }
+  .cx-seg-pick .cx-seg-thumb { background: linear-gradient(135deg, var(--fill-cerulean), var(--fill-deep)); box-shadow: 0 2px 8px var(--accent-glow); }
   /* A finger's worth to press (Studio's .iw-hit): tabs and small buttons
      get an invisible pad at least 44px each way on a touch screen, so the
      target grows and nothing drawn does (Run 1, D-10). */

@@ -192,11 +192,14 @@ html:root:root[data-hc][data-color="reduced"][data-scheme="dark"] {
 :root[data-hc] .cx-billy-button { background: var(--chalk); box-shadow: inset 0 0 0 2px var(--iron-line); }
 :root[data-hc] .cx-chip[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink) !important; }
 :root[data-hc] .cx-nav-lit { box-shadow: none; }
+:root[data-hc] .cx-seg { box-shadow: inset 0 0 0 2px var(--iron-line); }
+:root[data-hc] .cx-seg-thumb { box-shadow: inset 0 0 0 2px var(--ink); }
 :root[data-hc] :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
 /* ------------------------------------------------------------ reduced motion
    Studio's still(): nothing slides, sways or drifts where Motion is Reduced,
    or left to a device that asks for less (data-still). */
+:root[data-still] .cx-seg-thumb, :root[data-still] .cx-seg-btn,
 :root[data-still] .cx-appdrawer, :root[data-still] .cx-nav-lit, :root[data-still] .cx-navbtn,
 :root[data-still] .cx-card-press, :root[data-still] .cx-billy-button { transition: none; }
 :root[data-still] .cx-navbtn:hover, :root[data-still] .cx-card-press:hover { transform: none; }

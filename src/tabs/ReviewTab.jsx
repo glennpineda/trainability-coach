@@ -6,6 +6,7 @@ import { TabHeading } from "./TabHeading";
 import { VersionForm, FamilyForm, ConditionForm, PrincipleForm, ChangeList, AddButton } from "../review/LibraryEditor";
 import { Prose, Standing } from "../review/Prose";
 import { BooksSection } from "../review/Books";
+import { SegRow } from "../chrome/SegRow";
 
 const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
@@ -218,14 +219,11 @@ export function ReviewTab({ onSignedOut }) {
             </a>
           </section>
 
-          <div className="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="What to review">
-            {SECTIONS.map(([id, label]) => (
-              <button key={id} type="button" role="tab" aria-selected={section === id} onClick={() => { setSection(id); open(null); }}
-                className="px-3 py-1.5 rounded-full text-sm font-medium"
-                style={section === id ? { background: "var(--fill-cerulean)", color: "#fff" } : { background: "var(--ghost-fill)", color: "var(--ink)" }}>
-                {label}{id === "suggestions" && summary.suggestions.length ? ` (${summary.suggestions.length})` : ""}
-              </button>
-            ))}
+          {/* The sections: Studio's picking look (SegRow; Run 1, D-3), sized
+              by their words and scrolling sideways on a narrow screen. */}
+          <div className="mb-4 overflow-x-auto">
+            <SegRow pick fit className="min-w-max" label="What to review" value={section} onPick={(id) => { setSection(id); open(null); }}
+              items={SECTIONS.map(([id, label]) => ({ key: id, label, figure: id === "suggestions" && summary.suggestions.length ? summary.suggestions.length : null }))} />
           </div>
 
           {section === "exercises" && (

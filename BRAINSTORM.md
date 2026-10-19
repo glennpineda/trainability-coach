@@ -22,16 +22,7 @@ finished stays here.
 
 _Things actually ready to do._
 
-Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
-
-- **Tab rows are built four ways, none Studio's (D-3).** The client record,
-  Today and Active/Archived use Studio's filter look (the record's tabs should
-  be the accent look); Review and Equipment places use round chips that wrap on
-  a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
-  against its track.
-
-
-
+Nothing waiting.
 
 ## Found in testing
 

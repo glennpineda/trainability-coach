@@ -13,6 +13,7 @@ import { useMySettings } from "../hooks/useUnits";
 import { Toast } from "../chrome/Toast";
 import { NoticeDialog } from "../chrome/NoticeDialog";
 import { ConfirmDialog } from "../chrome/ConfirmDialog";
+import { SegRow } from "../chrome/SegRow";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
@@ -134,15 +135,10 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
           They go under Archived, with everything kept, and you can put them back on your list from there.
         </ConfirmDialog>
       )}
-      <div className="flex rounded-[10px] p-1 gap-1" style={{ background: "var(--ghost-fill)" }} role="tablist" aria-label={`${c.firstName || "Client"}'s record`}>
-        {CLIENT_TABS.map(([key, long, short]) => (
-          <button key={key} type="button" role="tab" id={`client-tab-${key}`} aria-selected={tab === key} aria-controls="client-panel" onClick={() => setTab(key)}
-            className="flex-auto px-1.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
-            style={tab === key ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" } : { color: "var(--iron)" }}>
-            <span className="sm:hidden">{short}</span><span className="hidden sm:inline">{long}</span>
-          </button>
-        ))}
-      </div>
+      {/* The record's parts: tabs that switch between things, Studio's
+          picking look (SegRow; Run 1, D-3). The phone's names below 640px. */}
+      <SegRow pick fit className="cx-seg-small" label={`${c.firstName || "Client"}'s record`} value={tab} onPick={setTab} panelId="client-panel" idOf={(key) => `client-tab-${key}`}
+        items={CLIENT_TABS.map(([key, long, short]) => ({ key, label: <><span className="sm:hidden">{short}</span><span className="hidden sm:inline">{long}</span></> }))} />
       <div id="client-panel" role="tabpanel" aria-labelledby={`client-tab-${tab}`} className="cx-card mt-3 p-4 sm:p-5">
         {tab === "details" && (
           <div className="grid sm:grid-cols-2 gap-x-6">
@@ -396,18 +392,10 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
             <input type="search" value={query} onChange={e => setQuery(e.target.value)}
               placeholder="Search by name, email or phone" className="cx-input" style={{ paddingLeft: "2.4rem" }} />
           </label>
-          <div className="flex rounded-[10px] p-1 gap-1 flex-none" style={{ background: "var(--ghost-fill)" }} role="tablist">
-            {[[false, "Active", active.length], [true, "Archived", archived.length]].map(([value, label, n]) => (
-              <button key={label} role="tab" aria-selected={showArchived === value}
-                onClick={() => { setShowArchived(value); setOpenId(null); }}
-                className="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-sm font-medium transition-colors"
-                style={showArchived === value
-                  ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
-                  : { color: "var(--iron)" }}>
-                {label}{clients !== undefined && ` (${n})`}
-              </button>
-            ))}
-          </div>
+          {/* A filter of one list: Studio's grey look (SegRow; Run 1, D-3). */}
+          <SegRow className="flex-none sm:w-64" label="Which clients" value={showArchived ? "archived" : "active"}
+            onPick={(k) => { setShowArchived(k === "archived"); setOpenId(null); }}
+            items={[{ key: "active", label: "Active", figure: clients === undefined ? null : active.length }, { key: "archived", label: "Archived", figure: clients === undefined ? null : archived.length }]} />
         </div>
       </div>
 

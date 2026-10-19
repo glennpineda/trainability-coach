@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ArrowRight, CalendarDays, Check, ChevronDown, ClipboardList, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { isoDate } from "../lib/date";
+import { SegRow } from "../chrome/SegRow";
 
 /*
  * Today, on Home (Glenn, 18 Oct 2026: "Let's do the Today tab"): the
@@ -202,17 +203,9 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
       {data?.schedule ? (
         /* Studio's two, Today and → 7 days, in the Clients page's switch. */
         <div className="p-3">
-          <div className="flex rounded-[10px] p-1 gap-1" style={{ background: "var(--ghost-fill)" }} role="tablist" aria-label="Your sessions">
-            {[["today", "Today"], ["week", <><ArrowRight key="a" size="1em" strokeWidth={2.25} aria-hidden="true" style={{ display: "inline", verticalAlign: "-0.12em" }} /><span key="s" className="sr-only">Next</span> 7 days</>]].map(([key, label]) => (
-              <button key={key} type="button" role="tab" aria-selected={panel === key} onClick={() => setPanel(key)}
-                className="flex-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
-                style={panel === key
-                  ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
-                  : { color: "var(--iron)" }}>
-                {label}
-              </button>
-            ))}
-          </div>
+          {/* Two views, not a filter: Studio's picking look, as its Today · This week (SegRow; Run 1, D-3). */}
+          <SegRow pick label="Your sessions" value={panel} onPick={setPanel}
+            items={[{ key: "today", label: "Today" }, { key: "week", label: <><ArrowRight size="1em" strokeWidth={2.25} aria-hidden="true" style={{ display: "inline", verticalAlign: "-0.12em" }} /><span className="sr-only">Next</span> 7 days</> }]} />
         </div>
       ) : (
         <div className="px-4 pt-4 flex items-center gap-3">
