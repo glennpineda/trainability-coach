@@ -145,8 +145,8 @@ function strength(kind, body, units) {
   if (kind === "hold") {
     const hold = HOLDS.some(([k]) => k === body.hold) ? body.hold : "";
     if (!hold) return { error: "Choose which hold it was." };
-    /* "1:30", or a bare number of seconds, "45". */
-    const seconds = /^\s*\d{1,4}\s*$/.test(String(body.time ?? "")) ? Number(body.time) : secondsOf(body.time);
+    /* "1:30", or a bare number of seconds, "45" or "45.5" (to the nearest second). */
+    const seconds = /^\s*\d{1,4}([.,]\d+)?\s*$/.test(String(body.time ?? "")) ? Math.round(Number(String(body.time).trim().replace(",", "."))) : secondsOf(body.time);
     if (seconds == null) return { error: "Fill in the time held as minutes and seconds, such as 1:30." };
     if (seconds < 5 || seconds > 60 * 60) return { error: "A hold of that time doesn't look right. Check it and try again." };
     return { data: { hold, seconds }, result: seconds };

@@ -1205,7 +1205,8 @@ rated: the tables start at 18.
    - Drop jump: **Height jumped**, **Time on the ground** (milliseconds), and
      the **Box** height if you like.
    - Hold: **Which hold**, and the **Time held**, such as 1:30 (or just the
-     seconds, such as 45).
+     seconds, such as 45 or 45.5, kept to the nearest second). Minutes and
+     seconds always have a colon between them: 14.5 is not read as 14:05.
    - Velocity loss: the **Exercise**, **Weight, % of 1RM**, **Reps in the
      set**, the **Velocity loss** the sensor showed (%), and the weight if
      you like.

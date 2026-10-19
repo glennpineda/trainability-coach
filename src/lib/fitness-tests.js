@@ -171,8 +171,11 @@ export function rockportVo2({ weightKg, age, sex, seconds, heartRate }) {
 
 /** "14:32" from seconds, and seconds from "14:32" (or null). */
 export const clockOf = (s) => (s == null ? "" : `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`);
+/* Only a colon: "45.5" is more likely seconds and a half than 45:05, and
+   "14.5" minutes and a half than 14:05 (Run 1, A-5), so a point is not read
+   as one; the hold takes a decimal as seconds itself (server/fitness-tests.js). */
 export function secondsOf(text) {
-  const m = /^\s*(\d{1,2})\s*[:.]\s*(\d{1,2})\s*$/.exec(String(text || ""));
+  const m = /^\s*(\d{1,2})\s*:\s*(\d{1,2})\s*$/.exec(String(text || ""));
   if (!m || Number(m[2]) > 59) return null;
   return Number(m[1]) * 60 + Number(m[2]);
 }
