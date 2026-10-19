@@ -54,8 +54,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 - **Archive is a link and acts at once (D-7).** Studio's is a quiet icon that
   opens a confirmation. "{first} no longer agrees", which deletes every photo,
   is a small accent link right under Take progress photos (also U-21).
-- **A cancelled session's words fail contrast (D-8)**: the row is faded to 0.6
-  (2.47:1). Studio uses iron words.
 - **Chart text grows with the window (D-9)**: about 9.5 px on a phone (series
   labels 8 px), 16 px on desktop; wide screen leaves half the card empty; the
   ten measure chips wrap to three lines on a phone. The body drawing's

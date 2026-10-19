@@ -57,13 +57,15 @@ function Row({ a, onOpen }) {
   return (
     <Tag type={tappable ? "button" : undefined} onClick={tappable ? () => onOpen(a) : undefined}
       className="w-full text-left border-t px-4 py-2.5 flex items-center gap-3"
-      style={{ borderColor: "var(--iron-line)", ...(cancelled ? { opacity: 0.6 } : {}) }}>
-      <div className="w-[3.9rem] flex-none text-sm tabular-nums whitespace-nowrap" style={{ color: "var(--ink-soft)" }}>
+      style={{ borderColor: "var(--iron-line)" }}>
+      {/* A cancelled one in iron words, as Studio greys one, rather than the
+          whole row faded below what can be read (Run 1, D-8). */}
+      <div className="w-[3.9rem] flex-none text-sm tabular-nums whitespace-nowrap" style={{ color: cancelled ? "var(--iron)" : "var(--ink-soft)" }}>
         {minutesToLabel(a.start)}
         <div className="text-xs" style={{ color: "var(--iron)" }}>{a.duration} min</div>
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-base font-medium break-words" style={cancelled ? { textDecoration: "line-through" } : undefined}>
+        <div className="text-base font-medium break-words" style={cancelled ? { textDecoration: "line-through", color: "var(--iron)" } : undefined}>
           {name}{a.isAssessment && <span style={{ color: "var(--iron)", fontWeight: 400 }}> · Assessment</span>}
         </div>
         {a.where && <div className="text-sm break-words" style={{ color: "var(--iron)" }}>{a.where}</div>}
