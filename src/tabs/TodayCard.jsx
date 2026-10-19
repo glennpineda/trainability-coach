@@ -51,7 +51,8 @@ function flags(a) {
 function Row({ a, onOpen }) {
   const cancelled = a.status === "cancelled";
   const done = !cancelled && a.status === "completed";
-  const name = a.client ? `${a.client.firstName} ${a.client.lastName}`.trim() : a.private ? "Private" : "Client";
+  const who = a.client || a.name;
+  const name = who ? `${who.firstName} ${who.lastName}`.trim() : a.private ? "Private" : "Client";
   const f = flags(a);
   const tappable = !!a.client;
   const Tag = tappable ? "button" : "div";

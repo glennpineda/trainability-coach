@@ -41,9 +41,12 @@ function whereOf(locations = {}) {
  * `appointments` is Studio's whole schedule as this account sees it; only the
  * trainer's own are kept. `clients` is their list (myClients), `programs`
  * their programs (programs.list), `limits` a Map of client id → how many
- * limitations are written for them.
+ * limitations are written for them. `names` is every client Studio shows this
+ * account, by id: somebody booked with the trainer who isn't on their own list
+ * is named from it, as Studio's Today names them, rather than "Client"
+ * (Run 1, B-18), though their record, program and limitations aren't opened.
  */
-export function todayOf({ today, trainerId, appointments = [], locations, clients = [], programs = [], limits = new Map() }) {
+export function todayOf({ today, trainerId, appointments = [], locations, clients = [], names = new Map(), programs = [], limits = new Map() }) {
   const mine = appointments.filter(a => a.trainerId === trainerId && a.date).sort(byTime);
   const until = addDays(today, DAYS - 1);
   const where = whereOf(locations);
@@ -59,6 +62,7 @@ export function todayOf({ today, trainerId, appointments = [], locations, client
       id: a.id, date: a.date, start: a.start, duration: a.duration, status: a.status,
       isAssessment: !!a.isAssessment, where: where(a.studioId),
       client: c ? { id: c.id, firstName: c.firstName, lastName: c.lastName } : null,
+      ...(!c && names.get(a.clientId) ? { name: names.get(a.clientId) } : {}),
       /* Booked with somebody not on this trainer's list (or not a client). */
       private: !a.clientId,
     };
@@ -81,7 +85,7 @@ export function todayOf({ today, trainerId, appointments = [], locations, client
   }));
   /* The next one after today, for a day with nothing in it. */
   const next = mine.find(a => a.date > today && going(a)) || null;
-  const nc = next?.clientId ? clientOf.get(next.clientId) : null;
+  const nc = next?.clientId ? clientOf.get(next.clientId) || names.get(next.clientId) : null;
   return {
     days,
     next: next ? { date: next.date, start: next.start, firstName: nc?.firstName || "" } : null,

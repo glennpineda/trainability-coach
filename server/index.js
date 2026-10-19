@@ -231,6 +231,9 @@ async function readClients(req, user) {
   const r = await studio(req, "/clients");
   if (!r.ok) throw new StudioRefused(r.status, await r.text());
   const { clients = [] } = await r.json();
+  /* Everybody Studio shows this account, by id, for Today to name somebody
+     booked with them who isn't on their own list (Run 1, B-18). */
+  req._names = new Map(clients.filter(c => c.id).map(c => [c.id, { firstName: c.firstName || "", lastName: c.lastName || "" }]));
   /* A linked Coach account's clients not yet moved into Studio (stage
      three) are still theirs, kept here: listed with the rest. */
   const kept = await coachClients.clientsOf(user.id);
@@ -556,7 +559,7 @@ app.get("/api/today", asSignedIn("GET /today", async (req, res, user) => {
     const rows = await db.all(`SELECT client_id, COUNT(*) AS n FROM coach_limitations WHERE client_id IN (${ids.map(() => "?").join(", ")}) GROUP BY client_id`, ids);
     for (const r of rows) limits.set(r.client_id, Number(r.n));
   }
-  res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, programs: mine, limits }) });
+  res.json({ schedule: true, ...today.todayOf({ today: date, trainerId: user.id, appointments, locations, clients, names: req._names || new Map(), programs: mine, limits }) });
 }));
 
 /* ------------------------------------------------------------ notifications
