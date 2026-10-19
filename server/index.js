@@ -653,7 +653,7 @@ app.post("/api/attachments/measurements", asSignedIn("POST /attachments/measurem
   const list = await measurements.measurementsOf(row.client_id, user.id);
   const at = list.findIndex(m => m.id === row.id);
   res.json(await messages.measurementsAttachment(user.id, {
-    set: list[at], previous: previousOf(list, list[at]), clientName: `${client.firstName} ${client.lastName}`.trim(),
+    clientId: client.id, set: list[at], previous: previousOf(list, list[at]), clientName: `${client.firstName} ${client.lastName}`.trim(),
     units: await trainerSettings.unitsOf(user.id),
   }));
 }));
@@ -668,7 +668,7 @@ app.post("/api/attachments/test", asSignedIn("POST /attachments/test", async (re
   const test = all.find(t => t.id === row.id);
   const list = all.filter(t => seriesOf(t) === seriesOf(test));
   res.json(await messages.testAttachment(user.id, {
-    test, previous: list.find(t => t.takenOn < test.takenOn) || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
+    clientId: client.id, test, previous: list.find(t => t.takenOn < test.takenOn) || null, clientName: `${client.firstName} ${client.lastName}`.trim(),
     units: await trainerSettings.unitsOf(user.id),
   }));
 }));
@@ -688,7 +688,7 @@ app.post("/api/attachments/photos", asSignedIn("POST /attachments/photos", async
   if (!client || !await progressPhotos.consentOf(client.id, user.id)) return res.status(404).json({ error: "Those photos are no longer there.", code: "not_found" });
   rows.sort((a, b) => (a.taken_on < b.taken_on ? -1 : a.taken_on > b.taken_on ? 1 : 0));
   const sets = rows.map(row => ({ row, files: Object.fromEntries(String(row.angles).split(",").filter(Boolean).map(a => [a, progressPhotos.pathOf(row.id, a)])) }));
-  res.json(await messages.photosAttachment(user.id, { sets, clientName: `${client.firstName} ${client.lastName}`.trim() }));
+  res.json(await messages.photosAttachment(user.id, { clientId: client.id, sets, clientName: `${client.firstName} ${client.lastName}`.trim() }));
 }));
 
 /* An attachment for the trainer: its details (a program's copy in full), or its file. */

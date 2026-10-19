@@ -522,6 +522,10 @@ const COLUMNS = [
   ["coach_accounts", "text_size", "VARCHAR(8) NOT NULL DEFAULT 'medium'"],
   /* Wide screen, as Studio's users.wide_screen (Glenn, 19 Oct 2026). */
   ["coach_accounts", "wide_screen", "INTEGER NOT NULL DEFAULT 0"],
+  /* Whose a program, measurements, a test or photos on an attachment are, so
+     it can only be sent to that client (Run 1, A-1); empty on a picture or a
+     video, which may go to anybody. */
+  ["coach_attachments", "client_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
   /* Measurements' later four (Glenn, 18 Oct 2026: "shoulder to the
      measurements too, … heart rate (optional), blood pressure (optional)"):
      cm, bpm and mmHg. */

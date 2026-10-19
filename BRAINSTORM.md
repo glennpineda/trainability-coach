@@ -24,14 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **A client's records can be sent to a different client (A-1, B-4, privacy).**
-  `sendFromTrainer` (`server/messages.js`) checks only that an attachment is
-  the trainer's and unsent; the attachment routes (`/api/attachments/program`,
-  `measurements`, `test`, `photos`) don't tie it to a client. Through the API,
-  Avery's measurements and her program were sent to Jordan, and Jordan's link
-  shows them. The screen only offers the open client's own, so it takes the
-  API or a leftover attachment. Keep `client_id` on the attachment and refuse
-  one that isn't the conversation's client.
 - **Dates start on the UTC day, not the trainer's (A-2).** "Taken on", "Day of
   the test" and the photo date default to, and are capped at,
   `new Date().toISOString()` (`Measurements.jsx`, `FitnessTests.jsx`,

@@ -148,9 +148,9 @@ export async function programAttachment(owner, program, units) {
   }));
   const data = { programId: program.id, name: program.name, clientName: program.clientName, goalLabel: program.goalLabel, kindLabel: program.kindLabel, notes: program.notes || "", updatedAt: program.updatedAt, units, days };
   const id = await insertWithNewId("attachment", (newId) => run(
-    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
-     VALUES (?, '', ?, 'program', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
-    [newId, owner, String(program.name).slice(0, 200), JSON.stringify(data), now()]));
+    `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, ?, 'program', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, program.clientId, String(program.name).slice(0, 200), JSON.stringify(data), now()]));
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
@@ -160,25 +160,25 @@ export async function programAttachment(owner, program, units) {
  * the set before it for how each has changed, so what the client reads stays
  * as it was sent.
  */
-export async function measurementsAttachment(owner, { set, previous, clientName, units }) {
+export async function measurementsAttachment(owner, { clientId, set, previous, clientName, units }) {
   const data = { measurementId: set.id, clientName, takenOn: set.takenOn, takenBy: set.takenBy, note: set.note, values: set.values,
     previous: previous ? { takenOn: previous.takenOn, values: previous.values } : null, units };
   const id = await insertWithNewId("attachment", (newId) => run(
-    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
-     VALUES (?, '', ?, 'measurements', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
-    [newId, owner, `Measurements, ${set.takenOn}`, JSON.stringify(data), now()]));
+    `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, ?, 'measurements', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, clientId, `Measurements, ${set.takenOn}`, JSON.stringify(data), now()]));
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
 /** A fitness test result kept as a copy, waiting to be sent, with the one before it of the same test. */
-export async function testAttachment(owner, { test, previous, clientName, units }) {
+export async function testAttachment(owner, { clientId, test, previous, clientName, units }) {
   const data = { testId: test.id, clientName, units, kind: test.kind, takenOn: test.takenOn, takenBy: test.takenBy, age: test.age, sex: test.sex,
     data: test.data, result: test.result, rating: test.rating, ratingAges: test.ratingAges, note: test.note,
     previous: previous ? { takenOn: previous.takenOn, result: previous.result, rating: previous.rating } : null };
   const id = await insertWithNewId("attachment", (newId) => run(
-    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
-     VALUES (?, '', ?, 'test', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
-    [newId, owner, `Test, ${test.takenOn}`, JSON.stringify(data), now()]));
+    `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, ?, 'test', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, clientId, `Test, ${test.takenOn}`, JSON.stringify(data), now()]));
   return shapeAttachment(await get(`SELECT * FROM coach_attachments WHERE id = ?`, [id]));
 }
 
@@ -195,12 +195,12 @@ export const attachmentPhotoPath = (id, n, angle) => {
  * later doesn't take them from the message. `sets`: [{ row, files: { angle:
  * path } }].
  */
-export async function photosAttachment(owner, { sets, clientName }) {
+export async function photosAttachment(owner, { clientId, sets, clientName }) {
   const data = { clientName, sets: sets.map(({ row, files }) => ({ setId: row.id, takenOn: row.taken_on, takenBy: row.trainer_name, angles: Object.keys(files) })) };
   const id = await insertWithNewId("attachment", (newId) => run(
-    `INSERT INTO coach_attachments (id, message_id, owner_id, kind, name, mime, bytes, width, height, still, data, created_at)
-     VALUES (?, '', ?, 'photos', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
-    [newId, owner, `Progress photos, ${sets.map(s => s.row.taken_on).join(" and ")}`, JSON.stringify(data), now()]));
+    `INSERT INTO coach_attachments (id, message_id, owner_id, client_id, kind, name, mime, bytes, width, height, still, data, created_at)
+     VALUES (?, '', ?, ?, 'photos', ?, 'application/json', 0, NULL, NULL, NULL, ?, ?)`,
+    [newId, owner, clientId, `Progress photos, ${sets.map(s => s.row.taken_on).join(" and ")}`, JSON.stringify(data), now()]));
   await fs.mkdir(dir(), { recursive: true });
   for (const [n, { files }] of sets.entries()) {
     for (const [angle, from] of Object.entries(files)) await fs.copyFile(from, attachmentPhotoPath(id, n, angle));
@@ -328,11 +328,18 @@ export function checkMessage({ text, attachments = [] }) {
  * the first. `attachmentIds` must be this trainer's, still waiting. Returns
  * the conversation and whether the client should be emailed about it.
  */
+/* The kinds of attachment that are one client's own. */
+const OF_A_CLIENT = new Set(["program", "measurements", "test", "photos"]);
+
 export async function sendFromTrainer(trainer, client, { text, attachmentIds = [] }) {
   const ids = [...new Set(attachmentIds.map(String))];
   for (const id of ids) {
-    const a = await get(`SELECT owner_id, message_id FROM coach_attachments WHERE id = ?`, [id]);
+    const a = await get(`SELECT owner_id, message_id, kind, client_id FROM coach_attachments WHERE id = ?`, [id]);
     if (!a || a.owner_id !== trainer.id || a.message_id) throw failure(400, "invalid", "That attachment is no longer there. Attach it again.");
+    /* A client's program, measurements, test or photos go only to that
+       client (Run 1, A-1): the composer offers only theirs, and this makes
+       sure. One kept before attachments knew their client is attached again. */
+    if (OF_A_CLIENT.has(a.kind) && a.client_id !== client.id) throw failure(400, "other_client", "That attachment is another client's. Attach it again from this conversation.");
   }
   const at = now();
   const clientName = `${client.firstName || ""} ${client.lastName || ""}`.trim();

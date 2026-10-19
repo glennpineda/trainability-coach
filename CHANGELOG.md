@@ -26,6 +26,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   reads and answers it on their page in Trainability. A red number on the
   Messages button counts the replies you haven't read. Messages from Coach
   are kept in Coach.
+  A client's own program, measurements, tests and photos can only be sent
+  to that client.
 - **Today, on Home.** Your own sessions from Trainability's schedule, today
   and over the next 7 days, laid out as Studio's Today: the time and length,
   the client, where, and First session, New client or Nothing booked after
