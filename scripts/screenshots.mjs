@@ -55,7 +55,10 @@ try {
   await page.waitForSelector('input[type="email"]');
   await shot("01-login");
 
+  /* Email first, then the password (Studio's sign-in, 18 Oct 2026). */
   await page.type('input[type="email"]', SHOT_EMAIL);
+  await page.click('button[type="submit"]');
+  await page.waitForSelector('input[type="password"]');
   await page.type('input[type="password"]', SHOT_PASSWORD);
   await page.click('button[type="submit"]');
   await page.waitForSelector("h1", { timeout: 10000 });
@@ -73,14 +76,14 @@ try {
   await page.keyboard.press("Escape");
 
   /* The Clients tab, then its first client opened. Waits for the list
-     itself, not the "Loading…" line. */
+     itself, not the loading line. */
   await page.click('button[data-tab="clients"]');
   await page.waitForSelector("main ul li button");
   await page.mouse.move(10, 10);
   await shot("05-clients");
-  /* A client opens as a dialog with its tabs (19 Oct 2026). */
+  /* A client opens in the Clients tab's place, with its tabs (19 Oct 2026). */
   await page.click("main ul li button");
-  await page.waitForSelector('[role="dialog"] [role="tab"]');
+  await page.waitForSelector('#client-panel');
   await page.mouse.move(10, 10);
   await shot("06-client-details");
 

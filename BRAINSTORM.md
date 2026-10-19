@@ -41,20 +41,10 @@ item keeps the ids of the reports that found it. How the run was done is in
 
 **Low**
 
-- **Manual (M-1 to M-37, A-11, A-12).** All six pictures are build 1.0.0
-  (retake with `npm run screenshots`; `check-docs` only checks they exist).
-  Not updated for Coach accounts: the opening, chapter 1, 2.1, 2.3, 3.2, 6.5,
-  the Words table (Temporary password, Version, Archived client, Studio,
-  Account menu; "Coming soon" never shows) and chapter 9 (the email message,
-  the Coach lock-out, a missing client). Wrong or missing words: 3.4 (Today's
-  line, cancelled not counted, load error), 3.5 (order, the list, "measurements
-  due off"), 3.6 (print not black on white), 4.2 (empty-list words, no archived
-  clients), 4.5, 4.6 (browser's "Please fill out this field."; the "already a
-  client" line), 4.8, 4.10 ("Which table"), 5.1, 5.2/5.3 ("Change the
-  exercise"), 5.4 (a Billy paragraph split by the gym one), 5.5, 6.3, 7.2, 7.3's
-  title, Billy's errors, missing words (Coach account, Primary Master,
-  Settings, Wide screen, Today, Superset, Place), and a "what each account can
-  do" chapter like Studio's. Each with its corrected text in the report.
+- **The manual's pictures (M-1), Glenn's to do.** All six are build 1.0.0.
+  `npm run screenshots` works again (build 1.0.144); run it on the Mac against
+  Studio's fixture with SHOT_EMAIL and SHOT_PASSWORD in server/.env, then
+  `npm run check-docs`. The rest of the manual points are done.
 - **"No sessions yet" on the client while Home shows them trained today (U-22,
   D-16)**: maybe the stand-in Studio; check against the fixture.
 
