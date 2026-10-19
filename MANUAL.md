@@ -1090,8 +1090,9 @@ spaced by the time between them. It opens on the latest, written above the
 chart, such as *Oct 18, 2026: 183.2 lb*; tap any point to read its day and
 number instead. **Blood pressure** draws both numbers: the top as a solid
 line and the bottom as a dashed one, each named at its end. Where two sets
-were taken on one day, the later one counts. Tap **Hide progress** to put the
-chart away.
+were taken on one day, the later one counts. Under the chart, one line says
+the whole change, such as *Since Jul 20: −4.2 lb over 13 weeks* (not for
+blood pressure). Tap **Hide progress** to put the chart away.
 
 On a phone each measurement has a line of its own; on a wider screen they sit
 side by side in as many columns as fit.
@@ -1194,7 +1195,10 @@ photos** to see the older sets.
 the **Later** day; they start as the first and the latest. Tap an angle
 (**Front**, **Left side**, **Right side** or **Back**), then **Side by side**
 to see them next to each other, or **Slider** to see one over the other and
-slide between them.
+slide between them. Under the photos, if they were measured by then, is how
+their measurements changed between the two days, such as *Measurements, Oct
+10, 2026 to Oct 19, 2026* and *Weight −3.5 lb*: from the latest measurements
+taken on or before each photo day (4.8).
 
 **Deleting.** Only the trainer who took a set can delete it (the bin): *Delete
 these photos? Its trainers will no longer see them.*; tap **Delete**, or
@@ -1261,7 +1265,8 @@ test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
 test a lower heart rate is fitter, as is less velocity loss; for the rest a
 higher number is. Tap
 **Earlier results** to see the older ones, with a chart of them all above
-them (tap a point to read its day and result), and **Show only the latest**
+them (tap a point to read its day and result, and read the whole change
+under it, such as *Since Aug 3: +20 lb over 11 weeks*), and **Show only the latest**
 to fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
 rated: the tables start at 18.
 

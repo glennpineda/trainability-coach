@@ -46,6 +46,7 @@ export function niceRange(min, max) {
 export function Trend({ series, format, tick = (v) => String(v), label }) {
   const days = [...new Set(series.flatMap(s => s.points.map(p => p.date)))].sort();
   const [picked, setPicked] = useState(days.length - 1);
+  const since = sinceLine(series, format);
   useEffect(() => { setPicked(days.length - 1); }, [days.length, days[days.length - 1]]);
   const box = useRef(null);
   const [W, setW] = useState(360);
@@ -118,6 +119,22 @@ export function Trend({ series, format, tick = (v) => String(v), label }) {
             style={{ left: `${(edges[i][0] / W) * 100}%`, width: `${((edges[i][1] - edges[i][0]) / W) * 100}%`, top: `${(PAD.top / H) * 100}%`, height: `${(PLOT.h / H) * 100}%`, background: "transparent" }} />
         ))}
       </div>
+      {since && <p className="text-xs mt-1 tabular-nums" style={{ color: "var(--iron)" }}>{since}</p>}
     </div>
   );
+}
+
+/* Under a chart of one line, the whole change in a sentence: "Since Jul 20:
+   −4.2 lb over 13 weeks" (Run 1, I-6). A chart of two lines (blood
+   pressure) has none. The change is written with the chart's own format, to
+   the chart's own precision. */
+function sinceLine(series, format) {
+  if (series.length !== 1 || series[0].points.length < 2) return null;
+  const pts = series[0].points, first = pts[0], last = pts[pts.length - 1];
+  const places = Math.max(...pts.map(p => (String(p.value).split(".")[1] || "").length));
+  const d = Number((last.value - first.value).toFixed(Math.min(places, 2)));
+  const days = Math.round((Date.parse(last.date) - Date.parse(first.date)) / 864e5);
+  const span = days >= 14 ? `${Math.round(days / 7)} weeks` : `${days} day${days === 1 ? "" : "s"}`;
+  const change = d === 0 ? "no change" : `${d > 0 ? "+" : "−"}${format(Math.abs(d))}`;
+  return `Since ${shortDate(first.date)}: ${change} over ${span}`;
 }

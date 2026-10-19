@@ -371,6 +371,7 @@ put-away programs with no way back, the body drawing's dark caption), about 35
 medium, the manual's 40 points and the smaller ones, two questions and 14
 ideas — all in BRAINSTORM.md, Found in testing, Run 1.
 
+- **I-5 and I-6, progress at a glance** (built 19 Oct 2026; Glenn, offered the run's ideas: "Progress at a glance (I-5, I-6)"). Build 1.0.148. **I-6** (`src/clients/Trend.jsx`, `sinceLine`): under every chart of one line (a measurement, waist to hip, a fitness test's results), the whole change in a sentence, *Since Oct 10: −3.5 lb over 9 days* (weeks from 14 days on, *no change* when there is none), in the chart's own format and to its own precision; none under blood pressure's two lines. **I-5** (`src/clients/ProgressPhotos.jsx`, `MeasuredBetween`): under Compare two days, the client's measurements between the two photo days: the latest set taken on or before each day, and each measurement that changed (`rowsOf`), headed *Measurements, Oct 10, 2026 to Oct 19, 2026*; nothing when either day has no measurements yet, or both come to the same set. MANUAL 4.8, 4.9 and 4.10 say so. Tested with the stand-in Studio, iPhone 13, Avery (measured Oct 10 at 180 lb and Oct 19 at 176.5, with progress photos both days): Compare two days showed *Weight −3.5 lb* under the photos; the weight chart read *Since Oct 10: −3.5 lb over 9 days*.
 - **I-3 and I-4, easier measuring: the last numbers in the form, and photos after** (built 19 Oct 2026; Glenn, offered the run's ideas: "Easier measuring (I-3, I-4)"). Build 1.0.147. **I-3** (`src/clients/Measurements.jsx`, `Form`): a new set's form is given the latest set (`last`); each box shows its last number faintly (the placeholder, in the trainer's units), and once something is typed, the change under it, *−3.5 lb since Oct 10, 2026*, or *Same as last time*; the line under the boxes adds *The faint numbers are from Oct 10, 2026.* Changing an old set shows none of this. **I-4**: after a new set is saved, *Measurements saved. Take progress photos too?* with **Take progress photos** and **Not now**; the first switches the client's page to its Photos tab and opens the camera (`ProgressPhotos start`, a counter `ClientView` bumps, opening it once per offer, not again when the photos are read again), or the agreement first if there is none yet. MANUAL 4.8 says so. Tested with the stand-in Studio, iPhone 13, Avery (last measured Oct 10 at 180 lb, waist 34, hips 40, chest 42, body fat 20): the boxes showed those faintly; typing 176.5 showed *−3.5 lb since Oct 10, 2026*; saving showed the offer; **Take progress photos** opened the Photos tab with the camera.
 - **I-1 and I-2, measurements due on Today, Home and as a filter** (built 19 Oct 2026; Glenn, offered the run's ideas: "Measurements due (I-1, I-2)"). Build 1.0.146. `measurementsDue` moved from ClientsTab to `src/lib/measures.js`, shared by four places, all by the trainer's **Measurements every**. **Today** (`TodayCard.jsx`): a session's row adds *Measurements due* in blue after its other flags, until the session is over or trained (`server/today.js` sends the client's `lastMeasuredOn` with the row). **Home**: the Clients card says *3 active clients · 2 due for measurements*. **Clients**: a third choice in the list's filter, *Active · Due · Archived*, each with its count, showing only the active clients who are due; *No one's measurements are due.* when none are; not there when Measurements every is Off; archiving or adding a client goes back to Active. MANUAL 3.4 and 4.2 say so. Tested with the stand-in Studio, iPhone 13 (Avery measured on Oct 10, Jordan and Sam never): Home's card read *3 active clients · 2 due for measurements*; Today's Sam Park at 12:00 PM read *New client · Measurements due* (Jordan's 9:30 session was over); Clients' **Due (2)** listed Jordan and Sam.
 - **I-9, a Message button on the client's page** (built 19 Oct 2026; Glenn, offered the run's ideas, chose this with I-1 to I-6 and I-10 to I-14). Build 1.0.145. Studio's client page reaches a client from a speech bubble at the top (its `ReachOut`, MessageCircle, "a speech bubble, not a paper plane", Glenn, 5 Oct 2026); Coach's opens the conversation. `ClientView` (`ClientsTab.jsx`) has a speech-bubble button beside Archive, named *Message Avery*, which the Shell's new `messageClient` turns into the client's conversation in Messages (`coach-thread`, the tab started afresh, as sending a program does). Not shown for an archived client, a client kept only in Coach (`cli…`, whom messages can't reach yet), or a Coach account (no Messages). MANUAL 4.3 says so. Tested with the stand-in Studio, iPhone 13: the bubble beside Archive on Avery's page opened Messages on Avery's conversation.
@@ -1533,8 +1534,9 @@ spaced by the time between them. It opens on the latest, written above the
 chart, such as *Oct 18, 2026: 183.2 lb*; tap any point to read its day and
 number instead. **Blood pressure** draws both numbers: the top as a solid
 line and the bottom as a dashed one, each named at its end. Where two sets
-were taken on one day, the later one counts. Tap **Hide progress** to put the
-chart away.
+were taken on one day, the later one counts. Under the chart, one line says
+the whole change, such as *Since Jul 20: −4.2 lb over 13 weeks* (not for
+blood pressure). Tap **Hide progress** to put the chart away.
 
 On a phone each measurement has a line of its own; on a wider screen they sit
 side by side in as many columns as fit.
@@ -1637,7 +1639,10 @@ photos** to see the older sets.
 the **Later** day; they start as the first and the latest. Tap an angle
 (**Front**, **Left side**, **Right side** or **Back**), then **Side by side**
 to see them next to each other, or **Slider** to see one over the other and
-slide between them.
+slide between them. Under the photos, if they were measured by then, is how
+their measurements changed between the two days, such as *Measurements, Oct
+10, 2026 to Oct 19, 2026* and *Weight −3.5 lb*: from the latest measurements
+taken on or before each photo day (4.8).
 
 **Deleting.** Only the trainer who took a set can delete it (the bin): *Delete
 these photos? Its trainers will no longer see them.*; tap **Delete**, or
@@ -1704,7 +1709,8 @@ test on an earlier day, such as *−11 bpm since Sep 20, 2026*. For the step
 test a lower heart rate is fitter, as is less velocity loss; for the rest a
 higher number is. Tap
 **Earlier results** to see the older ones, with a chart of them all above
-them (tap a point to read its day and result), and **Show only the latest**
+them (tap a point to read its day and result, and read the whole change
+under it, such as *Since Aug 3: +20 lb over 11 weeks*), and **Show only the latest**
 to fold them away. With none yet, it says *None done yet.* Someone under 18 isn't
 rated: the tables start at 18.
 

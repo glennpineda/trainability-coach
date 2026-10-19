@@ -6,6 +6,34 @@ import { isoDate } from "../lib/date";
 import { PhotoSession } from "./PhotoSession";
 import { PhotoCompare } from "./PhotoCompare";
 import { LoadingLine } from "../chrome/LoadingLine";
+import { rowsOf } from "../lib/measures";
+
+/* The client's measurements between two photo days, beside Compare two days
+   (Run 1, I-5): the latest set taken on or before each day, and how each
+   measurement changed from one to the other. Nothing when either day has
+   none, or both have the same set. */
+function MeasuredBetween({ clientId, from, to }) {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    let live = true;
+    apiRequest("GET", `/clients/${clientId}/measurements`).then(d => { if (live) setData(d); }).catch(() => {});
+    return () => { live = false; };
+  }, [clientId]);
+  if (!data) return null;
+  const onOrBefore = (day) => (data.measurements || []).find(m => m.takenOn <= day);
+  const a = onOrBefore(from), b = onOrBefore(to);
+  if (!a || !b || a.id === b.id) return null;
+  const rows = rowsOf(b.values, a.values, data.units).filter(r => r.change);
+  if (!rows.length) return null;
+  return (
+    <div className="mt-2 text-sm">
+      <div className="text-xs mb-1" style={{ color: "var(--iron)" }}>Measurements, {dateText(a.takenOn)} to {dateText(b.takenOn)}</div>
+      <div className="flex flex-wrap gap-x-4 gap-y-0.5">
+        {rows.map(r => <span key={r.key} className="tabular-nums"><span style={{ color: "var(--iron)" }}>{r.label}</span> {r.change}</span>)}
+      </div>
+    </div>
+  );
+}
 
 /*
  * A client's progress photos (Glenn, 19 Oct 2026): front, sides and back,
@@ -177,7 +205,10 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false, start = 0 }
                   </label>
                 ))}
               </div>
-              {earlier.id === later.id ? <p className="text-sm" style={muted}>Choose two different days.</p> : <PhotoCompare key={`${earlier.id}-${later.id}`} a={earlier} b={later} />}
+              {earlier.id === later.id ? <p className="text-sm" style={muted}>Choose two different days.</p> : <>
+                <PhotoCompare key={`${earlier.id}-${later.id}`} a={earlier} b={later} />
+                <MeasuredBetween clientId={clientId} from={earlier.takenOn < later.takenOn ? earlier.takenOn : later.takenOn} to={earlier.takenOn < later.takenOn ? later.takenOn : earlier.takenOn} />
+              </>}
             </div>
           )}
           {showAll && rest.map((s, i) => card(s, i + 1))}
