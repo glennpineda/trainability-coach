@@ -24,9 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **The camera's X throws away the photos taken (U-2).** After 3 of 4, X closed
-  with no question. Ask first ("Keep taking" / "Stop"), and guard the back
-  gesture.
 - **Signed out during a save loses the work (U-3).** Save drops to sign-in with
   no message; afterwards it opens the Clients list and the typed numbers are
   gone. Keep the screen, sign in over it and save, or at least keep the draft.

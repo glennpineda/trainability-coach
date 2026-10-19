@@ -106,6 +106,23 @@ export function PhotoSession({ firstName, previous, onSave, onClose, busy, error
   const file = useRef(null);
   const angle = typeof step === "number" ? ANGLES[step] : null;
   const tilt = useLevel(typeof step === "number");
+  /* Closing with photos taken asks first (Run 1, U-2), as Studio's
+     DiscardDialog does: the X used to lose them at once. Escape asks the same,
+     and leaving the page asks the browser's own question. */
+  const [asking, setAsking] = useState(false);
+  const taken = Object.keys(shots).length + (shown ? 1 : 0);
+  const close = () => (taken ? setAsking(true) : onClose());
+  useEffect(() => {
+    if (!taken) return undefined;
+    const stay = (e) => { e.preventDefault(); e.returnValue = ""; };
+    window.addEventListener("beforeunload", stay);
+    return () => window.removeEventListener("beforeunload", stay);
+  }, [taken]);
+  useEffect(() => {
+    const key = (e) => { if (e.key === "Escape") { if (asking) setAsking(false); else close(); } };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  });
 
   /* The camera, while an angle is being taken. */
   const live = typeof step === "number" && !shown;
@@ -172,7 +189,7 @@ export function PhotoSession({ firstName, previous, onSave, onClose, busy, error
   return createPortal(
     <div className="fixed inset-0 flex flex-col" style={{ zIndex: 60, background: "#0B141C", color: "#fff" }} role="dialog" aria-modal="true" aria-label="Progress photos">
       <div className="flex items-center gap-2 px-3 py-2">
-        <button type="button" className="p-2 rounded-lg" aria-label="Close" onClick={onClose}><X size={22} aria-hidden="true" /></button>
+        <button type="button" className="p-2 rounded-lg" aria-label="Close" onClick={close}><X size={22} aria-hidden="true" /></button>
         <div className="flex-1 min-w-0 text-center">
           <div className="font-medium truncate">{step === "check" ? `Progress photos of ${firstName}` : step === "review" ? "Look them over" : `${angle.label} · ${step + 1} of ${ANGLES.length}`}</div>
           {angle && <div className="text-xs" style={{ opacity: 0.75 }}>{angle.say}</div>}
@@ -284,6 +301,21 @@ export function PhotoSession({ firstName, previous, onSave, onClose, busy, error
           <button type="button" className="cx-btn-primary w-full mt-4 py-3 text-base" disabled={busy || !Object.keys(shots).length} aria-busy={busy}
             onClick={() => onSave({ takenOn, note, photos: shots })}>{busy ? "Saving…" : "Save"}</button>
           <p className="text-xs mt-2 text-center" style={{ opacity: 0.7 }}>Every trainer of {firstName} will see these.</p>
+        </div>
+      )}
+      {asking && (
+        /* Studio's DiscardDialog, in Coach's colors; keeping them is the safe answer. */
+        <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ zIndex: 70, background: "rgba(0,0,0,0.5)" }}>
+          <div role="alertdialog" aria-modal="true" aria-labelledby="cx-discard-title" className="cx-card w-full sm:max-w-sm" style={{ color: "var(--ink)" }}>
+            <div className="p-4 grid gap-1">
+              <h2 id="cx-discard-title" className="cx-display text-lg">Discard the photos taken?</h2>
+              <p className="text-sm" style={{ color: "var(--iron)" }}>{taken === 1 ? "The photo taken hasn't" : `The ${taken} photos taken haven't`} been saved, so closing now loses {taken === 1 ? "it" : "them"}.</p>
+            </div>
+            <div className="p-4 border-t flex gap-2" style={{ borderColor: "var(--iron-line)" }}>
+              <button type="button" autoFocus className="flex-1 py-2 text-sm" style={{ color: "var(--iron)" }} onClick={() => setAsking(false)}>Keep taking</button>
+              <button type="button" className="cx-btn-ember flex-1 py-2 text-sm" onClick={onClose}>Discard</button>
+            </div>
+          </div>
         </div>
       )}
     </div>,

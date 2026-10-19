@@ -1084,6 +1084,10 @@ recorded it and when, such as *Avery agreed · recorded by you on Oct 19,
    any of them. Check **Day taken**, add a **Note** if you like, and tap
    **Save**.
 
+To stop, tap **X** at the top left. Once a photo is taken, it asks first:
+*Discard the photos taken?* Tap **Keep taking** to go on, or **Discard** to
+close without them.
+
 If Coach can't use the camera, it says *Coach couldn't use the camera here.
 Choose a photo instead.* Photos are kept upright, 3 by 4, and not mirrored.
 
