@@ -1109,9 +1109,16 @@ nearest quarter, as a tape reads them.
    (%), **Neck**, **Shoulders**, **Chest**, **Waist**, **Hips**; **Arm**,
    **Thigh** and **Calf**, each **Left** and **Right**; **Resting heart rate**
    (bpm); and **Blood pressure**, its **Top (systolic)** and **Bottom
-   (diastolic)** numbers (mmHg). Each box shows its unit.
+   (diastolic)** numbers (mmHg). Each box shows its unit. If they have been
+   measured before, each box shows the last number faintly, and once you
+   type, the change shows under it, such as *−3.5 lb since Oct 10, 2026*
+   (or *Same as last time*).
 4. Add a **Note** if it helps, such as where the tape went.
 5. Tap **Save**. **Cancel** leaves without saving.
+6. It says *Measurements saved. Take progress photos too?* Tap **Take
+   progress photos** to go to their **Photos** tab with the camera open
+   (4.9; if they haven't agreed to photos yet, it asks for that first), or
+   **Not now**.
 
 If nothing is filled in it says *Fill in at least one measurement.* Blood
 pressure needs both its numbers (*Fill in both blood pressure numbers, or

@@ -104,6 +104,7 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
      starts again after a measurement changes, for the latest weight it fills in. */
   const [seen, setSeen] = useState(() => new Set(["details"]));
   const [measured, setMeasured] = useState(0);
+  const [photosNow, setPhotosNow] = useState(0);
   const pick = (key) => { setTab(key); setSeen(s => (s.has(key) ? s : new Set([...s, key]))); };
   const part = (key, el) => seen.has(key) && <div hidden={tab !== key}>{el}</div>;
   const [asking, setAsking] = useState(false);   // the Archive question open
@@ -185,8 +186,9 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
             )}
           </div>
         ))}
-        {part("measurements", <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={(...a) => { setMeasured(n => n + 1); onMeasured?.(...a); }} inTab />)}
-        {part("photos", <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />)}
+        {part("measurements", <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={(...a) => { setMeasured(n => n + 1); onMeasured?.(...a); }}
+          onTakePhotos={() => { setPhotosNow(n => n + 1); pick("photos"); }} inTab />)}
+        {part("photos", <ProgressPhotos client={c} onSignedOut={onSignedOut} start={photosNow} inTab />)}
         {part("tests", <FitnessTests key={measured} client={c} onSignedOut={onSignedOut} inTab />)}
         {part("programs", <ClientPrograms client={c} onSignedOut={onSignedOut} onOpenProgram={onOpenProgram} onNewProgram={onNewProgram} />)}
       </div>

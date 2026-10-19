@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ChartLine, ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
+import { Camera, ChartLine, ChevronDown, Pencil, Plus, Ruler, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip, exactIfSame } from "../lib/measures";
 import { Trend } from "./Trend";
@@ -89,18 +89,29 @@ function Progress({ list, units }) {
   );
 }
 
-function Form({ units, initial, busy, error, onSave, onCancel }) {
+/* A new set shows the last one's values faintly in each box, and under a
+   box, once something is typed, the change since then (Run 1, I-3). */
+function Form({ units, initial, last = null, busy, error, onSave, onCancel }) {
   const [takenOn, setTakenOn] = useState(initial?.takenOn || todayIso());
   const [note, setNote] = useState(initial?.note || "");
   const [values, setValues] = useState(() => Object.fromEntries(MEASURES.map(m => [m.key, initial ? String(toShown(m, initial.values[m.key], units) ?? "") : ""])));
+  const was = (m) => (initial || !last || last.values[m.key] == null ? null : toShown(m, last.values[m.key], units));
+  const change = (m) => {
+    const before = was(m), now = Number(String(values[m.key]).replace(",", "."));
+    if (before == null || !String(values[m.key]).trim() || !Number.isFinite(now)) return null;
+    const d = Math.round((now - before) * 10) / 10;
+    return d === 0 ? "Same as last time" : `${d > 0 ? "+" : "−"}${Math.abs(d)} ${unitOf(m, units)} since ${dateText(last.takenOn)}`;
+  };
   const box = (m) => (
     <label key={m.key} className="grid gap-1 text-xs min-w-0" style={{ color: "var(--iron)" }}>
       {m.pair ? m.side : m.label}
       <span className="relative">
         <input type="text" inputMode="decimal" className="cx-input" style={{ color: "var(--ink)", paddingRight: "2.4rem" }}
-          value={values[m.key]} onChange={e => setValues(v => ({ ...v, [m.key]: e.target.value }))} aria-label={`${m.label}, ${unitOf(m, units)}`} />
+          value={values[m.key]} placeholder={was(m) == null ? undefined : String(was(m))}
+          onChange={e => setValues(v => ({ ...v, [m.key]: e.target.value }))} aria-label={`${m.label}, ${unitOf(m, units)}`} />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: "var(--iron)" }} aria-hidden="true">{unitOf(m, units)}</span>
       </span>
+      {change(m) && <span className="tabular-nums">{change(m)}</span>}
     </label>
   );
   const groups = [];
@@ -128,7 +139,7 @@ function Form({ units, initial, busy, error, onSave, onCancel }) {
         <textarea className="cx-input text-sm" rows={2} maxLength={1000} style={{ color: "var(--ink)" }} value={note}
           placeholder="Such as: taken before breakfast, tape at the navel" onChange={e => setNote(e.target.value)} />
       </label>
-      <p className="text-xs" style={{ color: "var(--iron)" }}>Fill in only what you took. Every trainer of this client sees these.</p>
+      <p className="text-xs" style={{ color: "var(--iron)" }}>Fill in only what you took. Every trainer of this client sees these.{!initial && last ? ` The faint numbers are from ${dateText(last.takenOn)}.` : ""}</p>
       {/* By the Save button, where the trainer is looking: at the top of
           the section it was off a phone's screen (Run 1, A-6). */}
       {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
@@ -140,11 +151,14 @@ function Form({ units, initial, busy, error, onSave, onCancel }) {
   );
 }
 
-export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }) {
+/* `onTakePhotos`: after a new set is saved, progress photos are offered,
+   on the client's Photos tab (Run 1, I-4). */
+export function Measurements({ clientId, onSignedOut, onChanged, onTakePhotos, inTab = false }) {
   const [data, setData] = useState(null);   // { measurements, units }
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(null);   // "new", or a set's id
+  const [saved, setSaved] = useState(false);       // a new set just saved
   /* A form opened or closed starts without the last one's words. */
   useEffect(() => { setError(""); }, [editing]);
   const [deleting, setDeleting] = useState(null);
@@ -240,12 +254,23 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
           {chart && rest.length > 0 && <Progress list={list} units={units} />}
 
           {editing === "new" ? (
-            <Form units={units} error={error} busy={busy} onCancel={() => setEditing(null)}
-              onSave={async (body) => { if (await send("POST", `/clients/${clientId}/measurements`, body)) setEditing(null); }} />
+            <Form units={units} error={error} busy={busy} last={latest} onCancel={() => setEditing(null)}
+              onSave={async (body) => { if (await send("POST", `/clients/${clientId}/measurements`, body)) { setEditing(null); setSaved(true); } }} />
           ) : (
-            <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => setEditing("new")}>
-              <Plus size={14} aria-hidden="true" /> Add measurements
-            </button>
+            <>
+              {saved && onTakePhotos && (
+                <div className="mt-3 rounded-lg p-3 flex flex-wrap items-center justify-between gap-2 text-sm" role="status" style={{ background: "var(--accent-soft)" }}>
+                  <span>Measurements saved. Take progress photos too?</span>
+                  <span className="flex items-center gap-2">
+                    <button type="button" className="cx-btn-row" onClick={() => { setSaved(false); onTakePhotos(); }}><Camera size={15} aria-hidden="true" /> Take progress photos</button>
+                    <button type="button" className="cx-quiet px-2 py-1 text-sm" onClick={() => setSaved(false)}>Not now</button>
+                  </span>
+                </div>
+              )}
+              <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => { setSaved(false); setEditing("new"); }}>
+                <Plus size={14} aria-hidden="true" /> Add measurements
+              </button>
+            </>
           )}
         </>
       )}

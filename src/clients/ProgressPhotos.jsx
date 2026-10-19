@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, ChevronDown, Columns2, Plus, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { ANGLES } from "../lib/progress-photos";
@@ -38,7 +38,9 @@ function Thumbs({ set }) {
   );
 }
 
-export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
+/* `start`: a number that, changed, opens the camera (or the agreement, when
+   there is none yet): Measurements' Take progress photos too (Run 1, I-4). */
+export function ProgressPhotos({ client, onSignedOut, inTab = false, start = 0 }) {
   const clientId = client.id;
   const first = client.firstName || "This client";
   const [data, setData] = useState(null);     // { consent, sets }
@@ -54,6 +56,11 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
   const [comparing, setComparing] = useState(false);
   const [pair, setPair] = useState([null, null]);   // the earlier and the later set's ids
   const [deleting, setDeleting] = useState(null);   // a set's id, or "all" when they stop agreeing
+  /* Each offer opens it once, not again when the photos are read again. */
+  const started = useRef(0);
+  useEffect(() => {
+    if (start && start !== started.current && data?.consent) { started.current = start; setSessionError(""); setSession(true); }
+  }, [start, data?.consent]);
 
   const fail = useCallback((err, set = setError) => {
     if (err.status === 401) onSignedOut?.();
