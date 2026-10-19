@@ -50,13 +50,16 @@ item keeps the ids of the reports that found it. How the run was done is in
 
 **Questions for Glenn**
 
-- **Ideas from the run: I-7 left.** A retest reminder for fitness tests,
-  like Measurements every, and a Coach IQ note when a 1RM is old. Glenn
-  didn't pick it on 19 Oct 2026; the rest (I-1 to I-6, I-9 to I-14) are built.
+None open: A-14 is decided, and the run's ideas built or moved to Ideas.
 
 ## Ideas
 
 _Not thought through yet._
+
+- **Retest reminders for fitness tests (Run 1, I-7).** (19 Oct 2026; Glenn:
+  "Keep it in Ideas") A **Retest every** setting, off by default, like
+  Measurements every: "Tests due" on the client as measurements due works,
+  and a Coach IQ note on a load worked out from a 1RM older than that.
 
 - **What goes on the home screen.** (16 Oct 2026) The four cards are
   placeholders, each marked Coming soon, so the shape could be judged before
