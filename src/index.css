@@ -26,7 +26,12 @@
     --paper: #F3F7FA;
     --chalk: #FFFFFF;
     --ghost-fill: #E7EEF3;
-    --accent: #007BA7;          /* links and icons; 4.9:1 on white */
+    /* Links, icons and the words on pale buttons: a shade deeper than
+       Cerulean, which was 4.44:1 on the page and 4.15:1 on its pale blue,
+       under the 4.5:1 small words need (Run 1, D-11; Glenn, 19 Oct 2026:
+       "A deeper shade for words"). 5.15:1 on the page, 4.81:1 on pale blue.
+       Filled buttons, the logo and the wordmark keep Cerulean (--fill-cerulean). */
+    --accent: #00709A;
     --accent-soft: #E3F1F8;
     --ember: #C2412D;
     --ember-soft: #FBEAE7;

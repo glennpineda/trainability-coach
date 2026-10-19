@@ -59,9 +59,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   still gets Bodyweight squat at beginner.
 - **"No sessions yet" on the client while Home shows them trained today (U-22,
   D-16)**: maybe the stand-in Studio; check against the fixture.
-- **Accent contrast (D-11).** Accent 4.44:1 on the page and 4.15 on its
-  pale ground, just under 4.5:1 for small words. (The rest of D-12 to D-16
-  is fixed; D-15 kept as Studio has it.)
 
 **Questions for Glenn**
 
