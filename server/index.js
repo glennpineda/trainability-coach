@@ -28,6 +28,7 @@ import { seriesOf, titleOf, describe as describeTest, changeOf as changeOfTest }
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
+import { jsonGzip } from "./json-gzip.js";
 
 /**
  * Coach's server: the built page, and a relay to Studio for signing in and
@@ -86,6 +87,10 @@ app.use("/api/attachments", express.json({ limit: "1mb" }));
 /* A set of progress photos: four pictures, shrunk in the browser to 3 MB at most each. */
 app.use(/^\/api\/clients\/[^/]+\/progress-photos$/, express.json({ limit: "18mb" }));
 app.use("/api", express.json({ limit: "20kb" }));
+/* Big answers gzipped, as Studio's are (json-gzip.js; Run 1, O-7): the
+   library's export, Review's principles and a conversation with pictures
+   run to tens or hundreds of kilobytes. */
+app.use("/api", jsonGzip());
 
 app.get("/api/health", (_req, res) => res.json({ ok: true, app: "coach", version: PKG.version || "unknown", ...(PKG.codename ? { codename: PKG.codename } : {}), node: process.versions.node, studio: STUDIO_ORIGIN, database: db.dialect() }));
 
@@ -2184,7 +2189,12 @@ app.all(/^\/api\/.*/, async (req, res) => {
    fallback refuses /api so an unknown endpoint stays a JSON 404. */
 const DIST = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "dist");
 if (existsSync(DIST)) {
-  app.use(express.static(DIST));
+  /* The built scripts and styles have their content's hash in their names,
+     so a browser may keep them for good; index.html, which names them, is
+     asked for each time (Run 1, O-7). */
+  app.use(express.static(DIST, {
+    setHeaders: (res, file) => { if (file.includes(`${path.sep}assets${path.sep}`)) res.set("Cache-Control", "public, max-age=31536000, immutable"); },
+  }));
   app.get(/^\/(?!api\/).*/, (_req, res) => res.sendFile(path.join(DIST, "index.html")));
 } else {
   console.warn(`No dist/ at ${DIST} — serving the API relay only. Run "npm run build" to serve the page too.`);
