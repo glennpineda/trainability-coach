@@ -1135,7 +1135,10 @@ sees the results, with who recorded each one.
 - **Rockport 1-mile walk**: they walk one mile as fast as they can. From the
   time, the heart rate at the end, their age, weight and the table for women
   or men, Coach works out their **VO2 max** (ml/kg/min), with the formula from
-  the original Rockport study.
+  the original Rockport study. For a very slow walk with a high heart rate
+  the formula stops making sense; then it says *The walk's formula doesn't
+  fit these numbers: it gives a VO2 max below 10. Check the time, the heart
+  rate and the weight.*
 - **VO2 max from a lab or watch**: a VO2 max from a gym or lab treadmill test,
   or reported by a watch such as a Garmin.
 

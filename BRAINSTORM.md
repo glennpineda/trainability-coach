@@ -48,9 +48,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   (B-11)**, with no reminder to the trainer.
 - **"Start designing" does nothing with no level chosen (B-12).** No message,
   no highlight.
-- **Rockport walk can save a negative VO2 max (A-4)**: 60, women, 25:00, HR
-  150, 220 lb gives −12.4, and the next reads "+52.6 since". Refuse below about
-  10, as the VO2 test does.
 - **"45.5" as a time is read as 45:05 (A-5).** `secondsOf` treats "." as ":"
   (a 14.5 walk became 14:05). Refuse a decimal or read it as seconds/minutes.
 - **Save errors appear off screen (A-6, U-6).** The alert is at the top of the

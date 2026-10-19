@@ -76,6 +76,10 @@ export function check(body = {}) {
     if (weightKg == null) return { error: "Fill in their weight: the formula needs it." };
     if (weightKg < weight.min || weightKg > weight.max) return { error: `A weight of ${w} doesn't look right. Check it and try again.` };
     const vo2 = rockportVo2({ weightKg, age, sex, seconds, heartRate: Math.round(hr) });
+    /* The formula runs out of sense for a slow walk with a high heart rate
+       and heavy weight, down to below zero (Run 1, A-4); the same floor as a
+       VO2 max typed in. */
+    if (!(vo2 >= 10)) return { error: "The walk's formula doesn't fit these numbers: it gives a VO2 max below 10. Check the time, the heart rate and the weight." };
     return { row: { kind, takenOn, age, sex, data: { seconds, heartRate: Math.round(hr), weightKg }, result: vo2, rating: null, ratingAges: null, note } };
   }
   if (kind !== "vo2") {
