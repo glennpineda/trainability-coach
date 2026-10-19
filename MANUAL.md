@@ -616,8 +616,11 @@ nobody else sees it.
    or the bin to remove it.
 5. To add a piece yourself, fill in **Add a piece** at the bottom: its name,
    **What kind is it?**, a note if you like, and **Do you have it?** Then tap
-   **Add**. Coach knows many pieces by name, whatever you call them — a
-   "gravitron" is the assisted pull-up machine — and fills in the kind for you.
+   **Add**. As you type, Coach suggests the pieces it knows, from a leg press
+   to a punching bag. It knows them by name, whatever you call them — a
+   "gravitron" is the assisted pull-up machine, a "butt blaster" the glute
+   kickback machine — and then shows the piece and its kind under the name
+   instead of asking **What kind is it?**
 
 At your place in Studio, answers marked **Set for everyone** were given by
 the Primary Master for every trainer there. They can't be changed here, by

@@ -209,7 +209,8 @@ async function setForEveryone() {
   return new Map(places.map(p => [p.studio_place_id, { place: p, rows: rows.filter(r => r.place_id === p.id) }]));
 }
 
-const PIECE_LIST = () => Object.entries(PIECES).map(([key, p]) => ({ key, label: p.label, kind: p.kind }));
+/* With its other names, so the page knows "gravitron" as the piece it is. */
+const PIECE_LIST = () => Object.entries(PIECES).map(([key, p]) => ({ key, label: p.label, kind: p.kind, aliases: p.aliases }));
 
 /** Everything this trainer has told Coach: each place with its checklist and pieces, with what is set for everybody at a place in Studio. */
 export async function equipmentOf(trainerId) {

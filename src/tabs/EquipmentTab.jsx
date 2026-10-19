@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Plus, Trash2, Sparkles, Pencil, MapPin, Check, X, Lock, Building2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { nameKey } from "../lib/name-key";
 import { TabHeading } from "./TabHeading";
 
 /* Yes and No side by side; the chosen one filled. Tapping the chosen one
@@ -94,7 +95,10 @@ export function EquipmentTab({ onSignedOut }) {
   const place = shared || data?.places.find(p => p.id === placeId) || data?.places[0];
   const base = shared ? `/everyone/places/${place.id}` : `/places/${place?.id}`;
   const itemPath = (id) => (shared ? `/everyone/items/${id}` : `/equipment/items/${id}`);
-  const known = data ? data.pieces.find(p => p.label.toLowerCase() === draft.name.trim().toLowerCase()) : null;
+  /* A piece Coach knows, by its name or any other it goes by, as the server
+     knows it (pieceFor), so "Butt blaster" needs no kind chosen. */
+  const draftKey = nameKey(draft.name);
+  const known = data && draftKey ? data.pieces.find(p => [p.label, ...(p.aliases || [])].some(n => nameKey(n) === draftKey)) : null;
 
   const add = async (e) => {
     e.preventDefault();
@@ -248,10 +252,13 @@ export function EquipmentTab({ onSignedOut }) {
                 <input className="cx-input" placeholder="Name, such as Low row machine" value={draft.name} maxLength={120}
                   list="cx-known-pieces" onChange={e => setDraft(d => ({ ...d, name: e.target.value }))} aria-label="Name" />
                 <datalist id="cx-known-pieces">
-                  {data.pieces.map(p => <option key={p.key} value={p.label} />)}
+                  {/* Its other names under it, which the browser also searches. */}
+                  {data.pieces.map(p => <option key={p.key} value={p.label}>{p.aliases?.length ? `Also ${p.aliases.join(", ")}` : undefined}</option>)}
                 </datalist>
                 {known ? (
-                  <p className="text-xs" style={{ color: "var(--iron)" }}>{labelOf(known.kind)}</p>
+                  <p className="text-xs" style={{ color: "var(--iron)" }}>
+                    {nameKey(known.label) === draftKey ? labelOf(known.kind) : `${known.label} · ${labelOf(known.kind)}`}
+                  </p>
                 ) : (
                   <select className="cx-input" value={draft.category} onChange={e => setDraft(d => ({ ...d, category: e.target.value }))} aria-label="Kind">
                     <option value="">What kind is it?</option>

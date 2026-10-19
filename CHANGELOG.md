@@ -8,6 +8,9 @@ account menu; the details of any change are in `NEURALBRAIN.md`.
 
 The first version of Trainability Coach, live at trainabilitycoach.com.
 
+- **More equipment Coach knows by name.** The pieces in BUGE's guide to gym
+  equipment, from an arm curl machine to a punching bag, are suggested as you
+  add a piece to a place, and known by their other names too.
 - **Advanced sets in programs.** Giant sets (three or more exercises done
   together), drop sets with their drops, and pyramids going up, coming down
   or both, with Coach IQ saying when they don't suit the client yet.

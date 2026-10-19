@@ -30,6 +30,7 @@
  * Every id is permanent (ids.js): exr… for a version, exf… for a family.
  * Names may change; ids never do.
  */
+import { nameKey } from "../src/lib/name-key.js";
 
 export const ORDER = ["direction", "position", "support", "limbs", "implement", "attachment", "load", "grip", "velocity", "plane"];
 
@@ -146,25 +147,25 @@ export const STATUSES = ["draft", "reviewed", "retired"];
  * grow.
  */
 export const PIECES = {
-  "low-row-machine": { label: "Low row machine", kind: "machines", aliases: ["seated row machine", "seated row"] },
+  "low-row-machine": { label: "Low row machine", kind: "machines", aliases: ["seated row machine", "seated row", "cable row machine"] },
   "leg-press-machine": { label: "Leg press machine", kind: "machines", aliases: ["leg press", "leg sled"] },
   "hack-squat-machine": { label: "Hack squat machine", kind: "machines", aliases: ["hack squat"] },
   "smith-machine": { label: "Smith machine", kind: "machines", aliases: ["smith rack"] },
-  "chest-press-machine": { label: "Chest press machine", kind: "machines", aliases: ["chest press"] },
-  "pec-deck": { label: "Pec deck", kind: "machines", aliases: ["pec deck machine", "pec fly machine", "fly machine", "rear delt machine"] },
-  "shoulder-press-machine": { label: "Shoulder press machine", kind: "machines", aliases: ["shoulder press"] },
-  "lat-pulldown": { label: "Lat pulldown", kind: "machines", aliases: ["lat pulldown machine", "pulldown machine", "lat machine"] },
+  "chest-press-machine": { label: "Chest press machine", kind: "machines", aliases: ["chest press", "seated chest press"] },
+  "pec-deck": { label: "Pec deck", kind: "machines", aliases: ["pec deck machine", "pec fly machine", "fly machine", "rear delt machine", "chest fly machine", "chest fly"] },
+  "shoulder-press-machine": { label: "Shoulder press machine", kind: "machines", aliases: ["shoulder press", "overhead press machine"] },
+  "lat-pulldown": { label: "Lat pulldown", kind: "machines", aliases: ["lat pulldown machine", "pulldown machine", "lat machine", "lat pull down machine", "lat pull down", "front pulldown machine", "front pull down machine"] },
   "assisted-pull-up-machine": { label: "Assisted pull-up machine", kind: "machines", aliases: ["gravitron", "assisted pull-up", "assisted dip machine"] },
   "lateral-raise-machine": { label: "Lateral raise machine", kind: "machines", aliases: ["side raise machine"] },
   "leg-extension-machine": { label: "Leg extension machine", kind: "machines", aliases: ["leg extension"] },
   "lying-leg-curl-machine": { label: "Lying leg curl machine", kind: "machines", aliases: ["lying leg curl", "prone leg curl"] },
   "seated-leg-curl-machine": { label: "Seated leg curl machine", kind: "machines", aliases: ["seated leg curl"] },
   "seated-calf-machine": { label: "Seated calf machine", kind: "machines", aliases: ["seated calf raise", "calf machine"] },
-  "hip-abduction-machine": { label: "Hip abduction machine", kind: "machines", aliases: ["abductor machine", "outer thigh machine"] },
+  "hip-abduction-machine": { label: "Hip abduction machine", kind: "machines", aliases: ["abductor machine", "outer thigh machine", "leg abduction machine"] },
   "hip-adduction-machine": { label: "Hip adduction machine", kind: "machines", aliases: ["adductor machine", "inner thigh machine"] },
-  "cable-station": { label: "Cable station", kind: "cables", aliases: ["cable machine", "cable crossover", "functional trainer", "cable row station", "cable tower"] },
-  "preacher-bench": { label: "Preacher curl bench", kind: "stations", aliases: ["preacher bench", "preacher curl"] },
-  "back-extension-bench": { label: "Back extension bench", kind: "stations", aliases: ["hyperextension bench", "45 degree back extension", "roman chair", "back extension"] },
+  "cable-station": { label: "Cable station", kind: "cables", aliases: ["cable machine", "cable crossover", "functional trainer", "cable row station", "cable tower", "cable crossover machine"] },
+  "preacher-bench": { label: "Preacher curl bench", kind: "stations", aliases: ["preacher bench", "preacher curl", "bicep curl bench"] },
+  "back-extension-bench": { label: "Back extension bench", kind: "stations", aliases: ["hyperextension bench", "45 degree back extension", "roman chair", "back extension", "back extension machine", "hyperextension machine"] },
   "dip-station": { label: "Dip station", kind: "stations", aliases: ["dip bars", "parallel bars", "dip stand"] },
   "landmine": { label: "Landmine", kind: "barbells", aliases: ["landmine attachment"] },
   "trap-bar": { label: "Trap bar", kind: "barbells", aliases: ["hex bar"] },
@@ -173,12 +174,40 @@ export const PIECES = {
   "jump-rope": { label: "Jump rope", kind: "smalltools", aliases: ["skipping rope"] },
   "foam-roller": { label: "Foam roller", kind: "smalltools", aliases: [] },
   "treadmill": { label: "Treadmill", kind: "cardio", aliases: [] },
-  "stationary-bike": { label: "Stationary bike", kind: "cardio", aliases: ["exercise bike", "spin bike", "upright bike", "recumbent bike"] },
+  "stationary-bike": { label: "Stationary bike", kind: "cardio", aliases: ["exercise bike", "spin bike", "upright bike", "recumbent bike", "indoor exercise bike", "indoor bike", "upright exercise bike", "recumbent exercise bike", "under desk bike", "mini exercise bike"] },
   "air-bike": { label: "Air bike", kind: "cardio", aliases: ["assault bike", "fan bike", "echo bike"] },
-  "elliptical": { label: "Elliptical", kind: "cardio", aliases: ["cross trainer"] },
+  "elliptical": { label: "Elliptical", kind: "cardio", aliases: ["cross trainer", "elliptical trainer"] },
   "rowing-machine": { label: "Rowing machine", kind: "cardio", aliases: ["rower", "erg", "rowing ergometer", "concept2"] },
-  "stair-climber": { label: "Stair climber", kind: "cardio", aliases: ["stairmaster", "stepmill"] },
+  "stair-climber": { label: "Stair climber", kind: "cardio", aliases: ["stairmaster", "stepmill", "stair stepper", "stair master"] },
   "ski-erg": { label: "Ski erg", kind: "cardio", aliases: ["skierg"] },
+  /* From BUGE's guide to gym equipment (Glenn, 19 Oct 2026): the pieces it
+     names that Coach didn't know. Its kinds of thing (kettlebells, bands, a
+     pull-up bar and so on) are the checklist's own. */
+  "seated-dip-machine": { label: "Seated dip machine", kind: "machines", aliases: ["dip machine", "triceps dip machine"] },
+  "arm-curl-machine": { label: "Arm curl machine", kind: "machines", aliases: ["bicep curl machine", "preacher curl machine"] },
+  "triceps-extension-machine": { label: "Triceps extension machine", kind: "machines", aliases: ["arm extension machine", "triceps press machine"] },
+  "ab-crunch-machine": { label: "Ab crunch machine", kind: "machines", aliases: ["abdominal crunch machine", "crunch machine", "ab machine"] },
+  "rotary-torso-machine": { label: "Rotary torso machine", kind: "machines", aliases: ["torso rotation machine", "rotary torso"] },
+  "standing-calf-machine": { label: "Standing calf machine", kind: "machines", aliases: ["standing calf raise machine", "standing calf raise"] },
+  "calf-press-machine": { label: "Calf press machine", kind: "machines", aliases: ["calf press"] },
+  "glute-kickback-machine": { label: "Glute kickback machine", kind: "machines", aliases: ["butt blaster", "butt blaster machine", "donkey kick machine", "glute machine"] },
+  "reverse-hyper-machine": { label: "Reverse hyper machine", kind: "machines", aliases: ["reverse hyper", "reverse hyperextension machine"] },
+  "bench-press-station": { label: "Bench press station", kind: "barbells", aliases: ["bench press", "flat bench press", "olympic weight bench", "olympic bench"] },
+  "incline-bench-press-station": { label: "Incline bench press station", kind: "barbells", aliases: ["incline bench press", "incline olympic bench"] },
+  "decline-bench-press-station": { label: "Decline bench press station", kind: "barbells", aliases: ["decline bench press", "decline olympic bench"] },
+  "glute-ham-developer": { label: "Glute ham developer (GHD)", kind: "stations", aliases: ["ghd", "ghd machine", "glute ham developer", "glute ham bench", "glute ham raise bench"] },
+  "ab-bench": { label: "Ab bench", kind: "stations", aliases: ["abdominal bench", "sit-up bench", "decline sit-up bench"] },
+  "leg-raise-tower": { label: "Leg raise tower", kind: "stations", aliases: ["captain's chair", "dip tower", "power tower", "knee raise station"] },
+  "punching-bag": { label: "Punching bag", kind: "stations", aliases: ["heavy bag", "boxing bag", "punch bag"] },
+  "climbing-rope": { label: "Climbing rope", kind: "stations", aliases: ["rope climb"] },
+  "gymnastic-rings": { label: "Gymnastic rings", kind: "suspension", aliases: ["rings", "gym rings"] },
+  "wall-ball": { label: "Wall ball", kind: "medball", aliases: ["wallball", "wall ball target"] },
+  "aerobic-step": { label: "Aerobic step", kind: "box", aliases: ["step platform", "step bench"] },
+  "push-up-bars": { label: "Push-up bars", kind: "smalltools", aliases: ["push-up handles", "pushup bars"] },
+  "agility-ladder": { label: "Agility ladder", kind: "smalltools", aliases: ["speed ladder"] },
+  "hand-grip": { label: "Hand grip exerciser", kind: "smalltools", aliases: ["hand gripper", "grip trainer", "hand grip"] },
+  "vertical-climber": { label: "Vertical climber", kind: "cardio", aliases: ["versaclimber", "climbing machine", "climber machine"] },
+  "stepper": { label: "Stepper", kind: "cardio", aliases: ["mini stepper", "step machine"] },
 };
 
 /** The piece a name means, by its label or any of its other names; or null. */
@@ -261,10 +290,5 @@ export function masterName(x, movements, bodyweightOnly) {
   return details.length ? `${family.label} — ${details.join(", ")}` : family.label;
 }
 
-/**
- * A name as it is compared: lowercase, no hyphens or punctuation, plurals
- * made singular, so "Band-assisted pull-ups" and "band assisted pull up"
- * are the same name (ideas audit, 13).
- */
-export const nameKey = (name) => String(name).toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, " ").trim()
-  .split(" ").map(w => (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w)).join(" ");
+/* A name as it is compared (ideas audit, 13): src/lib/name-key.js. */
+export { nameKey };
