@@ -22,33 +22,8 @@ finished stays here.
 
 _Things actually ready to do._
 
-Nothing waiting.
+Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-## Found in testing
-
-_Problems a test run turned up. Recorded, not yet fixed — move one into Next
-up to have it done. Each says which run found it. Once fixed, it goes straight
-to [NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes) under **Test Run Fixes**,
-in that run's write-up._
-
-### Run 1 (19 Oct 2026, build 1.0.81)
-
-Six agents, each on its own copy of the app: two feature testers (A: clients
-and their records; B: programs, sign-in, menus and Billy) and four audits
-(D: design; U: ease of use; M: the manual; O and I: speed and ideas). Each
-item keeps the ids of the reports that found it. How the run was done is in
-[NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes), Run 1.
-
-**High**
-
-- **A temporary password opens everything (B-1, security).** Signed in with a
-  temporary password (`mustChangePassword`), every route answers without a new
-  password being chosen: the client list, programs, settings, adding a client,
-  Billy. Only the browser draws "Set a new password". Copy Studio's gate
-  (Studio `server/index.js` 820–837, `PASSWORD_CHANGE_OPEN`): 403
-  `password_change_required` for all but me, password and logout. Tried with
-  a Coach account; a Trainability account is likely the same, since Coach only
-  asks Studio's `/auth/me`.
 - **A client's records can be sent to a different client (A-1, B-4, privacy).**
   `sendFromTrainer` (`server/messages.js`) checks only that an attachment is
   the trainer's and unsent; the attachment routes (`/api/attachments/program`,
@@ -95,6 +70,22 @@ item keeps the ids of the reports that found it. How the run was done is in
   accent at rising opacity, so on a dark ground the busiest muscle is the
   lightest, while it says "Darker means a higher number." The outline nearly
   vanishes in dark; light green's ½ and 1 are hard to tell apart.
+
+
+## Found in testing
+
+_Problems a test run turned up. Recorded, not yet fixed — move one into Next
+up to have it done. Each says which run found it. Once fixed, it goes straight
+to [NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes) under **Test Run Fixes**,
+in that run's write-up._
+
+### Run 1 (19 Oct 2026, build 1.0.81)
+
+Six agents, each on its own copy of the app: two feature testers (A: clients
+and their records; B: programs, sign-in, menus and Billy) and four audits
+(D: design; U: ease of use; M: the manual; O and I: speed and ideas). Each
+item keeps the ids of the reports that found it. How the run was done is in
+[NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes), Run 1.
 
 **Medium**
 

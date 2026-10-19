@@ -349,13 +349,15 @@ which earlier findings it saw fixed.
 
 ### What was found, and how it was fixed
 
-Nothing fixed yet. Found: 10 high (a temporary password opening the whole API,
+Found: 10 high (a temporary password opening the whole API,
 a client's records sendable to another client, UTC dates, numbers changed by
 editing a note, the exercise dialog under the tab bar, the camera's X, a lost
 save when signed out, the unseen "added" message and same-email swap,
 put-away programs with no way back, the body drawing's dark caption), about 35
 medium, the manual's 40 points and the smaller ones, two questions and 14
 ideas — all in BRAINSTORM.md, Found in testing, Run 1.
+
+- **B-1, a temporary password opened everything** (fixed 19 Oct 2026; Glenn: "Let's go through all the highs first"). Build 1.0.83. Copied from Studio's gate (its `server/index.js`, `PASSWORD_CHANGE_OPEN`): while `mustChangePassword` is set, everything but who am I, choosing the password and signing out answers 403 *Choose a new password before doing anything else.* (`password_change_required`). Studio does it as one middleware reading `req.user`; Coach has no `req.user`, since every route asks `signedIn` itself, so the check sits in `signedIn` (`server/index.js`): whichever account it finds, a Coach account or Studio's answer, it throws a refusal when the flag is on, and every route already passes a refusal on as it is. /auth/me, /auth/password and /auth/logout never call `signedIn`, so the Set a new password screen still works. The Coach-account routes that read the account without `signedIn` (Accessibility's six, wide screen, link) check it themselves (`mustChoose`); a Trainability trainer's go on to Studio, which refuses them itself. Tested on a copy against the stand-in Studio: a Coach account with the flag set got 200 from /auth/me and 403 from clients, programs, settings, Billy, theme, wide screen and link, then 200 again after choosing a password; Glenn's stand-in account with `mustChangePassword` got the same 403s through Studio's /auth/me. The page needed nothing: it shows the Set a new password screen before anything that would ask. Untested: a real Studio account with a temporary password (the fixture, on Glenn's Mac).
 
 
 ---

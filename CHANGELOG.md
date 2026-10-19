@@ -11,7 +11,8 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
 - **Sign in with your Studio account.** The same email and password as
   Trainability Studio; there is no separate Coach account. A forgotten
   password is reset from the sign-in screen, and the temporary one works in
-  both apps. Each app keeps its own sign-in, so signing in or out of one
+  both apps. Signed in with a temporary password, nothing else opens
+  until you choose your own. Each app keeps its own sign-in, so signing in or out of one
   leaves the other as it was.
 - **The home screen.** Today's date and a greeting by name on a band shading
   from deep cerulean to sky (a theme's own colors under a theme), your day, and

@@ -150,11 +150,34 @@ async function coachAccount(req) {
    else whoever Studio says, asked with this request's Studio session. */
 async function signedIn(req) {
   const own = await coachAccount(req);
-  if (own) return accounts.asUser(own);
-  const r = await studio(req, "/auth/me");
-  if (!r.ok) throw new StudioRefused(r.status, await r.text());
-  return (await r.json()).user;
+  const user = own ? accounts.asUser(own) : await (async () => {
+    const r = await studio(req, "/auth/me");
+    if (!r.ok) throw new StudioRefused(r.status, await r.text());
+    return (await r.json()).user;
+  })();
+  if (user?.mustChangePassword) throw PASSWORD_CHANGE_REQUIRED();
+  return user;
 }
+
+/* Signed in with a temporary password: choose your own before anything else
+   (Studio's gate, its server/index.js, "PASSWORD_CHANGE_OPEN"; Run 1, B-1).
+   The Set a new password screen is only what the browser draws, so without
+   this every route answered as normal to whoever held the emailed password.
+   Every route that asks who is signed in goes through signedIn, above, and is
+   refused there; the three the screen itself needs (/auth/me, /auth/password,
+   /auth/logout) never ask it. A Coach account's own Accessibility, wide screen
+   and link routes are refused where they read the account; a Trainability
+   trainer's go on to Studio, which refuses them itself. */
+const PASSWORD_CHANGE_REQUIRED = () => new StudioRefused(403, JSON.stringify({
+  error: "Choose a new password before doing anything else.",
+  code: "password_change_required",
+}));
+const mustChoose = (res, account) => {
+  if (!Number(account?.must_change_password)) return false;
+  const err = PASSWORD_CHANGE_REQUIRED();
+  res.status(err.status).type("application/json").send(err.body);
+  return true;
+};
 
 /**
  * The signed-in trainer's own clients, read from Studio each time it is asked.
@@ -1944,6 +1967,7 @@ app.post("/api/auth/link", async (req, res) => {
   try {
     const account = await coachAccount(req);
     if (!account) return res.status(401).json({ error: "Not signed in", code: "not_signed_in" });
+    if (mustChoose(res, account)) return;
     const { email, password } = req.body || {};
     if (slowDown(req, res, email)) return;
     const out = await studioLogin(req, res, { email, password, remember: true });
@@ -2043,6 +2067,7 @@ app.post("/api/auth/wide-screen", async (req, res, next) => {
   try {
     const own = await coachAccount(req);
     if (!own) return next();
+    if (mustChoose(res, own)) return;
     if (typeof req.body?.on !== "boolean") return res.status(400).json({ error: "Say on: true or false", code: "invalid" });
     await accounts.setWideScreen(own, req.body.on);
     res.json({ user: accounts.asUser(await accounts.accountOfSession(cookieOf(req, accounts.COOKIE))) });
@@ -2059,6 +2084,7 @@ for (const [route, key] of [["theme", "theme"], ["tone", "tone"], ["contrast", "
     try {
       const own = await coachAccount(req);
       if (!own) return next();
+      if (mustChoose(res, own)) return;
       if (!await accounts.setLook(own, key, req.body?.[key])) {
         return res.status(400).json({ error: "That is not one of the choices for how a screen looks", code: "invalid", field: key, allowed: accounts.LOOK[key].allowed });
       }
