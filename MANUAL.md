@@ -177,6 +177,14 @@ Either way, Home then says *Your Coach account is now connected to your
 Trainability account.* Your programs, equipment, exercises and settings are
 all still there. Your clients stay private until you move them (4.6).
 
+If both accounts had a place of the same name (each starts with *Where I
+usually train*), Home asks about each one: *Two places called “Where I
+usually train”*, with how many equipment answers each has. Tap **Merge them
+into one** (the Trainability one's answers are kept where both answered, and
+the rest added), **Keep both** (the Coach one is renamed *Where I usually
+train (Coach)*), or **Keep only the Trainability one**. A place not kept is
+put away with its answers, and programs that used it use the one kept.
+
 **A client.** Coach has no sign-in for clients yet. Under the Coach account
 button the box says *Training with us as a client? Your own page is in
 Studio.*, with **Go to my page**, which opens it.

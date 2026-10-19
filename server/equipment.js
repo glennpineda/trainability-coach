@@ -139,6 +139,38 @@ export async function renamePlace(trainerId, placeId, name) {
   await run(`UPDATE coach_places SET name = ? WHERE id = ? AND trainer_id = ?`, [String(name).trim(), placeId, trainerId]);
 }
 
+/**
+ * Two of the trainer's own places of the same name, after linking a Coach
+ * account (Run 1, B-6): `merge` keeps one with the answers of both (the kept
+ * place's where both answered) and puts the other away; `both` keeps both,
+ * the Coach account's renamed "… (Coach)"; `theirs` keeps the Trainability
+ * account's and puts the other away with its answers. Programs that used the
+ * one put away use the one kept. Neither may be one of Studio's places.
+ */
+export async function settleSame(trainerId, coachPlaceId, keepId, choice) {
+  const [a, b] = await Promise.all([placeOf(trainerId, coachPlaceId), placeOf(trainerId, keepId)]);
+  if (!a || !b || a.id === b.id || a.studioPlaceId || b.studioPlaceId) return "not_found";
+  if (choice === "both") {
+    await renamePlace(trainerId, a.id, `${a.name.slice(0, 72)} (Coach)`);
+    return null;
+  }
+  if (choice !== "merge" && choice !== "theirs") return "invalid";
+  if (choice === "merge") {
+    const kept = new Set((await all(`SELECT kind, name_key FROM coach_place_equipment WHERE place_id = ?`, [b.id])).map(r => `${r.kind}|${r.name_key}`));
+    for (const r of await all(`SELECT id, kind, name_key FROM coach_place_equipment WHERE place_id = ?`, [a.id])) {
+      if (!kept.has(`${r.kind}|${r.name_key}`)) await run(`UPDATE coach_place_equipment SET place_id = ? WHERE id = ?`, [b.id, r.id]);
+    }
+  }
+  await run(`UPDATE coach_programs SET place_id = ? WHERE place_id = ? AND trainer_id = ?`, [b.id, a.id, trainerId]);
+  await run(`UPDATE coach_places SET archived = 1 WHERE id = ? AND trainer_id = ?`, [a.id, trainerId]);
+  return null;
+}
+
+/** How many answers a place has, for the question about two of the same name. */
+export async function answersAt(placeId) {
+  return Number((await get(`SELECT COUNT(*) AS n FROM coach_place_equipment WHERE place_id = ?`, [placeId])).n);
+}
+
 /** Put away, never deleted: its answers stay, as everything in memory does. The last place stays. */
 export async function archivePlace(trainerId, placeId) {
   const places = await placesOf(trainerId);

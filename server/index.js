@@ -1043,6 +1043,18 @@ const ownPlace = async (req, res, user) => {
   return place;
 };
 
+/* Two places of the same name after linking (Run 1, B-6): what the page asks
+   about, with how many answers each has. */
+async function placesToAsk(pairs) {
+  return Promise.all(pairs.map(async (p) => ({ ...p, coachAnswers: await equipment.answersAt(p.coachPlaceId), keepAnswers: await equipment.answersAt(p.keepId) })));
+}
+app.post("/api/places/same", asSignedIn("POST /places/same", async (req, res, user) => {
+  const wrong = await equipment.settleSame(user.id, String(req.body?.coachPlaceId || ""), String(req.body?.keepId || ""), req.body?.choice);
+  if (wrong === "not_found") return res.status(404).json({ error: "Those places are no longer there.", code: "not_found" });
+  if (wrong) return res.status(400).json({ error: "Choose merge, both or theirs.", code: "invalid" });
+  res.json({ ok: true });
+}));
+
 app.post("/api/places", asSignedIn("POST /places", async (req, res, user) => {
   const wrong = equipment.checkPlaceName(req.body?.name);
   if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
@@ -2006,9 +2018,9 @@ app.post("/api/auth/login", async (req, res, next) => {
     try {
       const out = await studioLogin(req, res, { email, password, remember });
       if (!out.ok) return res.status(out.status).json(out.json);
-      await accounts.link(account, out.json.user);
+      const { samePlaces } = await accounts.link(account, out.json.user);
       res.append("Set-Cookie", clearCookie(accounts.COOKIE));
-      return res.json({ ...out.json, linked: true });
+      return res.json({ ...out.json, linked: true, samePlaces: await placesToAsk(samePlaces) });
     } catch (err) {
       return unreachable(res, "POST /auth/login (link)", err);
     }
@@ -2041,9 +2053,9 @@ app.post("/api/auth/link", async (req, res) => {
       for (const k of tryKeys(req, email)) accounts.counted(k);
       return res.status(out.status).json(out.json);
     }
-    await accounts.link(account, out.json.user);
+    const { samePlaces } = await accounts.link(account, out.json.user);
     res.append("Set-Cookie", clearCookie(accounts.COOKIE));
-    res.json({ ...out.json, linked: true });
+    res.json({ ...out.json, linked: true, samePlaces: await placesToAsk(samePlaces) });
   } catch (err) {
     unreachable(res, "POST /auth/link", err);
   }

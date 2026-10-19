@@ -254,6 +254,19 @@ export async function changePassword(account, { currentPassword, newPassword }, 
  */
 export async function link(account, studioUser) {
   const from = account.id, to = studioUser.id;
+  /* Places of the same name on both sides ("Where I usually train", which
+     each starts with): moved across as they are, and returned so the page
+     asks the trainer what to do with each pair (Run 1, B-6; Glenn, 19 Oct
+     2026: "Ask at linking"). */
+  const samePlaces = [];
+  if (from !== to) {
+    const mine = await all(`SELECT id, name FROM coach_places WHERE trainer_id = ? AND archived = 0 AND studio_place_id = ''`, [from]);
+    const theirs = await all(`SELECT id, name FROM coach_places WHERE trainer_id = ? AND archived = 0 AND studio_place_id = ''`, [to]);
+    for (const m of mine) {
+      const t = theirs.find(x => x.name.trim().toLowerCase() === m.name.trim().toLowerCase());
+      if (t) samePlaces.push({ coachPlaceId: m.id, keepId: t.id, name: t.name });
+    }
+  }
   if (from !== to) {
     for (const table of ["coach_places", "coach_place_equipment", "coach_programs", "coach_private_exercises", "coach_clients"]) {
       await run(`UPDATE ${table} SET trainer_id = ? WHERE trainer_id = ?`, [to, from]);
@@ -274,6 +287,7 @@ export async function link(account, studioUser) {
   }
   await run(`UPDATE coach_accounts SET studio_user_id = ?, linked_at = ? WHERE id = ?`, [to, now(), from]);
   await run(`DELETE FROM coach_sessions WHERE account_id = ?`, [from]);
+  return { samePlaces };
 }
 
 /* Sign-in and sign-up tries in fifteen minutes, then a wait: ten for one

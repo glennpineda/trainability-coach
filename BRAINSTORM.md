@@ -24,9 +24,6 @@ _Things actually ready to do._
 
 Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
-- **Linking a Coach account doubles "Where I usually train" (B-6).**
-  `accounts.link` moves places without merging; Tess now has three of the same
-  name. Merge, or rename.
 - **Sending a program takes six taps, and isn't checked first (U-8).** No
   "Send to Riley" beside Print for the client; empty days and "stop" points go
   unremarked.

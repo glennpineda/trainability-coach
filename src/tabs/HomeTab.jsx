@@ -3,6 +3,7 @@ import { Link2, X } from "lucide-react";
 import { SECTIONS } from "./sections";
 import { ComingSoonCard } from "./ComingSoonCard";
 import { TodayCard } from "./TodayCard";
+import { SamePlaces } from "../chrome/SamePlaces";
 
 function greeting(now = new Date()) {
   const h = now.getHours();
@@ -25,6 +26,7 @@ export function HomeTab({ user, onOpen, clients, unread = 0, onOpenProgram, onOp
   const today = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
   return (
     <>
+      <SamePlaces />
       {/* A cerulean band, so the greeting has the sign-in screen's color and
           the page does not open on a blank grey. A gradient you can see
           (Glenn, 18 Oct 2026: "make the top colored header on the home tab

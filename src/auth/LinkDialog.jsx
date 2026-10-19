@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { createPortal } from "react-dom";
 import { Loader2, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { SAME_KEY } from "../chrome/SamePlaces";
 
 /**
  * Joining a Coach account to a Trainability (Studio) account with another
@@ -23,8 +24,11 @@ export function LinkDialog({ onClose }) {
     if (!password) { setError("Type your password."); return; }
     setBusy(true);
     try {
-      await apiRequest("POST", "/auth/link", { email: email.trim(), password });
-      try { sessionStorage.setItem("cx-linked", "1"); sessionStorage.setItem("coach-tab", "home"); } catch { /* not kept */ }
+      const { samePlaces = [] } = await apiRequest("POST", "/auth/link", { email: email.trim(), password });
+      try {
+        sessionStorage.setItem("cx-linked", "1"); sessionStorage.setItem("coach-tab", "home");
+        if (samePlaces.length) sessionStorage.setItem(SAME_KEY, JSON.stringify(samePlaces));
+      } catch { /* not kept */ }
       window.location.reload();
     } catch (err) {
       setError(err.status >= 500 || err.status === undefined ? "Couldn't reach Trainability. Check your connection and try again." : err.message || "That email and password don't match.");

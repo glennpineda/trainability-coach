@@ -33,9 +33,15 @@ export function useAuth() {
   }, []);
 
   const login = useCallback(async (email, password, remember) => {
-    const { user, linked } = await apiRequest("POST", "/auth/login", { email, password, remember });
-    /* A Coach account just joined to its Trainability account: Home says so once. */
-    if (linked) { try { sessionStorage.setItem("cx-linked", "1"); } catch { /* not kept */ } }
+    const { user, linked, samePlaces = [] } = await apiRequest("POST", "/auth/login", { email, password, remember });
+    /* A Coach account just joined to its Trainability account: Home says so
+       once, and asks about places both had (SamePlaces.jsx; Run 1, B-6). */
+    if (linked) {
+      try {
+        sessionStorage.setItem("cx-linked", "1");
+        if (samePlaces.length) sessionStorage.setItem("cx-same-places", JSON.stringify(samePlaces));
+      } catch { /* not kept */ }
+    }
     setOffline(false);
     setExpired(false);
     setUser(user);
