@@ -1292,8 +1292,17 @@ Your programs are listed on the Programs page, newest change first, with who
 each is for. Tap one to open it; **All programs** takes you back. To change
 the client, name, goal, level, place, focus, session length or notes later,
 tap **Edit the details**.
-The box button beside a program in the list (**Put away**) takes it off the
-list; it is kept, not deleted.
+**Putting a program away.** Programs you no longer use can be put away. They
+are kept, not deleted.
+
+1. Tap the box button beside the program in the list (**Put away**).
+2. It asks *Put "Next block" away? It goes under Put away, where you can put
+   it back.* Tap **Put away**, or **Keep it** to leave it.
+3. A note says *Next block put away.*
+
+Above the list, **Active** and **Put away** switch between your programs and
+the ones put away, with how many of each. To bring one back, tap **Put away**,
+then **Put back** beside it; a note says *Next block is back on your list.*
 
 ### 5.2 Adding exercises
 

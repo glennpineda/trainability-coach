@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ClipboardList, Plus, Archive } from "lucide-react";
+import { ClipboardList, Plus, Archive, ArchiveRestore } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { Designer, DetailsForm, KindForm } from "../programs/Designer";
+import { Toast } from "../chrome/Toast";
 
 /**
  * Programs (Glenn, 17 Oct 2026: "We need to start creating a workout program
@@ -22,6 +23,12 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
   const [places, setPlaces] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  /* Put away, not deleted (Studio's "Archive, don't delete"; Run 1, U-5):
+     listed under Put away, as Clients has Archived, and put back from there. */
+  const [showPutAway, setShowPutAway] = useState(false);
+  const [asking, setAsking] = useState(null);   // the program whose putting away is being confirmed
+  const [toast, setToast] = useState(null);
+  const toastGone = useCallback(() => setToast(null), []);
 
   useEffect(() => { try { openId ? sessionStorage.setItem("coach-program", openId) : sessionStorage.removeItem("coach-program"); } catch { /* not kept */ } }, [openId]);
 
@@ -36,15 +43,21 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
     catch (err) { fail(err); } finally { setBusy(false); }
   };
   const archive = async (p) => {
-    if (!window.confirm(`Put “${p.name}” away? It stops being listed here.`)) return;
-    try { const o = await apiRequest("DELETE", `/programs/${p.id}`); setData(d => ({ ...d, programs: o.programs })); }
-    catch (err) { fail(err); }
+    setBusy(true); setError("");
+    try { const o = await apiRequest("DELETE", `/programs/${p.id}`); setData(d => ({ ...d, ...o })); setAsking(null); setToast({ message: `${p.name} put away.`, id: Date.now() }); }
+    catch (err) { fail(err); } finally { setBusy(false); }
+  };
+  const putBack = async (p) => {
+    setBusy(true); setError("");
+    try { const o = await apiRequest("POST", `/programs/${p.id}/back`); setData(d => ({ ...d, ...o })); setToast({ message: `${p.name} is back on your list.`, id: Date.now() }); }
+    catch (err) { fail(err); } finally { setBusy(false); }
   };
 
   const active = (clients || []).filter(c => !c.archived);
 
   return (
     <div className="max-w-3xl mx-auto px-4">
+      <Toast toast={toast} onGone={toastGone} />
       <TabHeading>Programs</TabHeading>
       {openId && data ? (
         <Designer id={openId} goals={data.goals} vocab={data} billy={billy} onSignedOut={onSignedOut} onBack={() => { setOpenId(null); load(); }} />
@@ -73,21 +86,61 @@ export function ProgramsTab({ clients, billy, onSignedOut }) {
               <Plus size={16} aria-hidden="true" /> New program
             </button>
           )}
-          {!data ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : data.programs.length === 0 ? (
+          {data && (
+            <div className="flex rounded-[10px] p-1 gap-1 mb-3 w-full sm:w-auto sm:inline-flex" style={{ background: "var(--ghost-fill)" }} role="tablist">
+              {[[false, "Active", data.programs.length], [true, "Put away", (data.putAway || []).length]].map(([value, label, n]) => (
+                <button key={label} type="button" role="tab" aria-selected={showPutAway === value}
+                  onClick={() => { setShowPutAway(value); setAsking(null); }}
+                  className="flex-1 sm:flex-none px-4 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                  style={showPutAway === value
+                    ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
+                    : { color: "var(--iron)" }}>
+                  {label} ({n})
+                </button>
+              ))}
+            </div>
+          )}
+          {!data ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : showPutAway ? (
+            (data.putAway || []).length === 0 ? <p className="text-sm" style={muted}>You have no programs put away.</p> : (
+              <ul className="grid gap-3">
+                {data.putAway.map(p => (
+                  <li key={p.id} className="cx-card p-4 flex items-start gap-3">
+                    <ClipboardList size={20} className="flex-none mt-0.5" style={muted} aria-hidden="true" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold">{p.name}</span>
+                      <span className="block text-sm" style={muted}>For {p.clientName} · {p.kindLabel || p.goalLabel} · {p.days} {p.days === 1 ? "day" : "days"}, {p.exercises} {p.exercises === 1 ? "exercise" : "exercises"}</span>
+                    </span>
+                    <button type="button" className="cx-link text-sm flex-none" disabled={busy} onClick={() => putBack(p)}><ArchiveRestore size={15} aria-hidden="true" /> Put back</button>
+                  </li>
+                ))}
+              </ul>
+            )
+          ) : data.programs.length === 0 ? (
             !making && <p className="text-sm" style={muted}>No programs yet. Tap New program to design the first.</p>
           ) : (
             <ul className="grid gap-3">
               {data.programs.map(p => (
-                <li key={p.id} className="cx-card p-4 flex items-start gap-3">
-                  <ClipboardList size={20} className="flex-none mt-0.5" style={{ color: "var(--accent)" }} aria-hidden="true" />
-                  <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setOpenId(p.id)}>
-                    <span className="block font-semibold">{p.name}</span>
-                    <span className="block text-sm" style={muted}>
-                      For {p.clientName} · {p.kindLabel || p.goalLabel} · {p.days} {p.days === 1 ? "day" : "days"}, {p.exercises} {p.exercises === 1 ? "exercise" : "exercises"}
-                    </span>
-                    <span className="block text-xs" style={muted}>Changed {new Date(p.updatedAt).toLocaleDateString()}</span>
-                  </button>
-                  <button type="button" className="cx-icon-btn" onClick={() => archive(p)} aria-label={`Put ${p.name} away`} title="Put away"><Archive size={16} aria-hidden="true" /></button>
+                <li key={p.id} className="cx-card p-4">
+                  <div className="flex items-start gap-3">
+                    <ClipboardList size={20} className="flex-none mt-0.5" style={{ color: "var(--accent)" }} aria-hidden="true" />
+                    <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setOpenId(p.id)}>
+                      <span className="block font-semibold">{p.name}</span>
+                      <span className="block text-sm" style={muted}>
+                        For {p.clientName} · {p.kindLabel || p.goalLabel} · {p.days} {p.days === 1 ? "day" : "days"}, {p.exercises} {p.exercises === 1 ? "exercise" : "exercises"}
+                      </span>
+                      <span className="block text-xs" style={muted}>Changed {new Date(p.updatedAt).toLocaleDateString()}</span>
+                    </button>
+                    {asking !== p.id && <button type="button" className="cx-icon-btn" onClick={() => setAsking(p.id)} aria-label={`Put ${p.name} away`} title="Put away"><Archive size={16} aria-hidden="true" /></button>}
+                  </div>
+                  {asking === p.id && (
+                    <div className="mt-3 rounded-lg p-2.5 flex flex-wrap items-center gap-2" style={{ background: "var(--ember-soft)", color: "var(--ink-soft)" }}>
+                      <span className="text-sm flex-1 min-w-[10rem]">Put “{p.name}” away? It goes under Put away, where you can put it back.</span>
+                      <span className="flex items-center gap-1">
+                        <button type="button" className="cx-btn-ember px-3 py-1.5 text-sm" disabled={busy} aria-busy={busy} onClick={() => archive(p)}>{busy ? "Putting away…" : "Put away"}</button>
+                        <button type="button" className="px-3 py-1.5 text-sm" style={{ color: "var(--ink-soft)" }} onClick={() => setAsking(null)}>Keep it</button>
+                      </span>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

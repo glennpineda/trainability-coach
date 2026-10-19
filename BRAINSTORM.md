@@ -24,10 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **A put-away program can't be got back (U-5).** Put away is a browser
-  confirm, then nothing lists or restores it (the server filters `archived = 0`
-  and has no way back). The manual says it is kept. Add a "Put away" list with
-  Put back, as Clients has Archived, and Coach's own confirm.
 - **The body drawing's caption is backwards in dark (B-5, D-2).** Shading is the
   accent at rising opacity, so on a dark ground the busiest muscle is the
   lightest, while it says "Darker means a higher number." The outline nearly

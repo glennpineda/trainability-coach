@@ -212,8 +212,9 @@ export async function programOfExercise(trainerId, peId) {
   return e ? programOf(trainerId, e.program_id) : null;
 }
 
-export async function list(trainerId) {
-  const rows = await all(`SELECT * FROM coach_programs WHERE trainer_id = ? AND archived = 0 ORDER BY updated_at DESC`, [trainerId]);
+/** This trainer's programs; with `putAway`, the ones put away instead (Run 1, U-5). */
+export async function list(trainerId, { putAway = false } = {}) {
+  const rows = await all(`SELECT * FROM coach_programs WHERE trainer_id = ? AND archived = ? ORDER BY updated_at DESC`, [trainerId, putAway ? 1 : 0]);
   const out = [];
   for (const r of rows) {
     const days = await get(`SELECT COUNT(*) AS n FROM coach_program_days WHERE program_id = ?`, [r.id]);
@@ -269,6 +270,14 @@ export async function update(program, body, { client, placeId } = {}) {
 /* Archived, not deleted: a client may come back to it. */
 export async function archive(program) {
   await run(`UPDATE coach_programs SET archived = 1, updated_at = ? WHERE id = ?`, [now(), program.id]);
+}
+
+/** A put-away program of this trainer's back on their list, or false when there is none. */
+export async function putBack(trainerId, id) {
+  const r = await get(`SELECT id FROM coach_programs WHERE id = ? AND trainer_id = ? AND archived = 1`, [id, trainerId]);
+  if (!r) return false;
+  await run(`UPDATE coach_programs SET archived = 0, updated_at = ? WHERE id = ?`, [now(), id]);
+  return true;
 }
 
 /* ------------------------------------------------------------- the days */

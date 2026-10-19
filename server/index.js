@@ -1483,7 +1483,7 @@ const sendProgram = async (res, user, program) => {
 app.get("/api/programs", asSignedIn("GET /programs", async (req, res, user) => {
   await syncStudioPlace(req, user);
   res.set("Cache-Control", "private, no-store");
-  res.json({ programs: await programs.list(user.id), goals: programs.goalsList(), ...programs.kindsFor() });
+  res.json({ programs: await programs.list(user.id), putAway: await programs.list(user.id, { putAway: true }), goals: programs.goalsList(), ...programs.kindsFor() });
 }));
 
 /* A client of theirs and one of their places, or a 400 saying which. */
@@ -1546,7 +1546,13 @@ app.delete("/api/programs/:id", asSignedIn("DELETE /programs", async (req, res, 
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
   await programs.archive(program);
-  res.json({ programs: await programs.list(user.id) });
+  res.json({ programs: await programs.list(user.id), putAway: await programs.list(user.id, { putAway: true }) });
+}));
+
+/* A put-away program back on the list (Run 1, U-5), as a client comes back from Archived. */
+app.post("/api/programs/:id/back", asSignedIn("POST /programs/back", async (req, res, user) => {
+  if (!await programs.putBack(user.id, req.params.id)) return notFound(res);
+  res.json({ programs: await programs.list(user.id), putAway: await programs.list(user.id, { putAway: true }) });
 }));
 
 app.post("/api/programs/:id/days", asSignedIn("POST /programs/days", async (req, res, user) => {
