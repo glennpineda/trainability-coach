@@ -86,7 +86,7 @@ function Progress({ list, units }) {
   );
 }
 
-function Form({ units, initial, busy, onSave, onCancel }) {
+function Form({ units, initial, busy, error, onSave, onCancel }) {
   const [takenOn, setTakenOn] = useState(initial?.takenOn || todayIso());
   const [note, setNote] = useState(initial?.note || "");
   const [values, setValues] = useState(() => Object.fromEntries(MEASURES.map(m => [m.key, initial ? String(toShown(m, initial.values[m.key], units) ?? "") : ""])));
@@ -126,6 +126,9 @@ function Form({ units, initial, busy, onSave, onCancel }) {
           placeholder="Such as: taken before breakfast, tape at the navel" onChange={e => setNote(e.target.value)} />
       </label>
       <p className="text-xs" style={{ color: "var(--iron)" }}>Fill in only what you took. Every trainer of this client sees these.</p>
+      {/* By the Save button, where the trainer is looking: at the top of
+          the section it was off a phone's screen (Run 1, A-6). */}
+      {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
       <div className="flex gap-2">
         <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy} aria-busy={busy}>{busy ? "Saving…" : "Save"}</button>
         <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
@@ -139,6 +142,8 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(null);   // "new", or a set's id
+  /* A form opened or closed starts without the last one's words. */
+  useEffect(() => { setError(""); }, [editing]);
   const [deleting, setDeleting] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const [chart, setChart] = useState(false);
@@ -173,7 +178,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
         <Ruler size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
         <span className="text-sm font-semibold">Measurements</span>
       </div>
-      {error && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
+      {error && !editing && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
       {!data ? (!error && <p className="text-sm" style={{ color: "var(--iron)" }}>Loading…</p>) : (
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None taken yet.</p>}
@@ -196,7 +201,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
                   )}
                 </div>
                 {editing === set.id ? (
-                  <Form units={units} initial={set} busy={busy} onCancel={() => setEditing(null)}
+                  <Form units={units} error={error} initial={set} busy={busy} onCancel={() => setEditing(null)}
                     onSave={async (body) => { if (await send("PUT", `/measurements/${set.id}`, body)) setEditing(null); }} />
                 ) : (
                   <>
@@ -232,7 +237,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
           {chart && rest.length > 0 && <Progress list={list} units={units} />}
 
           {editing === "new" ? (
-            <Form units={units} busy={busy} onCancel={() => setEditing(null)}
+            <Form units={units} error={error} busy={busy} onCancel={() => setEditing(null)}
               onSave={async (body) => { if (await send("POST", `/clients/${clientId}/measurements`, body)) setEditing(null); }} />
           ) : (
             <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => setEditing("new")}>

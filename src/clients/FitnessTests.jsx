@@ -48,7 +48,7 @@ function Field({ label, unit, children }) {
   );
 }
 
-function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) {
+function Form({ client, units, initial, latestWeight, busy, error, onSave, onCancel }) {
   const [kind, setKind] = useState(initial?.kind || null);
   const [takenOn, setTakenOn] = useState(initial?.takenOn || todayIso());
   const [age, setAge] = useState(initial?.age != null ? String(initial.age) : "");
@@ -274,6 +274,9 @@ function Form({ client, units, initial, latestWeight, busy, onSave, onCancel }) 
           ? "Feeling agitated or moody, sleeping badly, off their food, low or stressed can be signs of overtraining: back off for at least a week before testing again."
           : "Only good form counts: if the technique breaks down, the test isn't measuring what they can do, and they could be hurt."}
       </p>
+      {/* By the Save button, where the trainer is looking: at the top of
+          the section it was off a phone's screen (Run 1, A-6). */}
+      {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
       <div className="flex gap-2">
         <button type="submit" className="cx-btn-primary px-5 py-2 text-sm" disabled={busy} aria-busy={busy}>{busy ? "Saving…" : "Save"}</button>
         <button type="button" className="cx-quiet px-3 py-2 text-sm" onClick={onCancel}>Cancel</button>
@@ -318,6 +321,8 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(null);   // "new", or a result's id
+  /* A form opened or closed starts without the last one's words. */
+  useEffect(() => { setError(""); }, [editing]);
   const [deleting, setDeleting] = useState(null);
   const [open, setOpen] = useState([]);   // the kinds whose earlier results are open
   const [latestWeight, setLatestWeight] = useState(null);
@@ -367,7 +372,7 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
         )}
       </div>
       {editing === t.id ? (
-        <Form client={client} units={units} initial={t} latestWeight={latestWeight} busy={busy} onCancel={() => setEditing(null)}
+        <Form client={client} units={units} error={error} initial={t} latestWeight={latestWeight} busy={busy} onCancel={() => setEditing(null)}
           onSave={async (body) => { if (await send("PUT", `/tests/${t.id}`, body)) setEditing(null); }} />
       ) : (
         <>
@@ -396,7 +401,7 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
         <HeartPulse size={18} style={{ color: "var(--accent)" }} aria-hidden="true" />
         <span className="text-sm font-semibold">Fitness tests</span>
       </div>
-      {error && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
+      {error && !editing && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
       {!data ? (!error && <p className="text-sm" style={{ color: "var(--iron)" }}>Loading…</p>) : (
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None done yet.</p>}
@@ -421,7 +426,7 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
             );
           })}
           {editing === "new" ? (
-            <Form client={client} units={units} latestWeight={latestWeight} busy={busy} onCancel={() => setEditing(null)}
+            <Form client={client} units={units} error={error} latestWeight={latestWeight} busy={busy} onCancel={() => setEditing(null)}
               onSave={async (body) => { if (await send("POST", `/clients/${clientId}/tests`, body)) setEditing(null); }} />
           ) : (
             <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => setEditing("new")}>
