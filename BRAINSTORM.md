@@ -31,8 +31,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 - **Linking a Coach account doubles "Where I usually train" (B-6).**
   `accounts.link` moves places without merging; Tess now has three of the same
   name. Merge, or rename.
-- **Metric trainer sees "20 kg" on the day but "45 lb" in its box (B-7)**, and
-  the hint says "In your units."
 - **Coach IQ's rep check against a %1RM reads only "N" or the bottom of "N–M"
   (B-8).** At 75%: "12" warns; "10-12", "8–12", "11", "12 each side", "12 reps",
   "AMRAP" don't.
@@ -46,8 +44,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   library exercise.
 - **The printed or sent program shows a bare "75%" when there is no 1RM
   (B-11)**, with no reminder to the trainer.
-- **"Start designing" does nothing with no level chosen (B-12).** No message,
-  no highlight.
 - **Taking an exercise out has no confirm or undo (U-7)**; taking a day out is
   a browser confirm ("with its 1 exercises"). Use the in-app confirm, or an
   Undo bar.

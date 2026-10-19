@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { percentOf, kgAt, weightText, oneRmText } from "../lib/one-rm";
+import { convertText } from "../lib/units";
 
 /**
  * Adding an exercise to a day, or changing one, in a dialog of its own (Glenn,
@@ -37,7 +38,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
   const [pick, setPick] = useState(editing ? { id: editing.exerciseId } : suggested ? { id: suggested.id } : null);
   const [info, setInfo] = useState(null);
   const [f, setF] = useState(() => (editing
-    ? { sets: editing.sets || "", reps: editing.reps || "", load: editing.load || "", effort: editing.effort || "", tempo: editing.tempo || "", rest: editing.restText || "", note: editing.note || "", superset: !!editing.superset }
+    ? { sets: editing.sets || "", reps: editing.reps || "", load: convertText(editing.load || "", units), effort: editing.effort || "", tempo: editing.tempo || "", rest: editing.restText || "", note: editing.note || "", superset: !!editing.superset }
     : suggested ? { ...blank, sets: suggested.dose.sets || "", reps: suggested.dose.reps || "", rest: suggested.dose.restText || "" } : blank));
   const [touched, setTouched] = useState(!!editing || !!suggested);
 
@@ -66,7 +67,14 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
 
   const set = (k) => (e) => { setTouched(true); setF(d => ({ ...d, [k]: e.target.value })); };
   const choose = (x) => { setPick({ id: x.id }); setStep("details"); };
-  const save = (e) => { e.preventDefault(); onSave({ exerciseId: pick.id, ...f }); };
+  /* The load is shown in the trainer's own units, as the day shows it ("45 lb"
+     reads "20 kg" to a metric trainer; Run 1, B-7), and goes back as it was
+     written unless they changed it, so saving rounds nothing. */
+  const save = (e) => {
+    e.preventDefault();
+    const load = editing && f.load === convertText(editing.load || "", units) ? editing.load || "" : f.load;
+    onSave({ exerciseId: pick.id, ...f, load });
+  };
   const startingPoint = () => { if (info?.dose) setF(d => ({ ...d, sets: info.dose.sets || "", reps: info.dose.reps || "", rest: info.dose.restText || "" })); };
 
   const field = (k, label, placeholder, hint, max = 60) => (
