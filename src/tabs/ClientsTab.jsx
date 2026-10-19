@@ -16,6 +16,7 @@ import { ConfirmDialog } from "../chrome/ConfirmDialog";
 import { SegRow } from "../chrome/SegRow";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 import { formatPhone } from "../lib/people";
+import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 
 /* What "Last session" says under a name: the date, or that there has not been
    one. */
@@ -364,17 +365,19 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   return (
     <div className="max-w-5xl mx-auto px-4">
       {outcome}
-      <TabHeading>Clients</TabHeading>
-      <div className="flex items-center justify-between gap-3 -mt-3 mb-4">
-        <p className="text-sm" style={{ color: "var(--iron)" }}>
-          {clients === undefined ? "Loading…" : plural(active.length, "active client")}
-        </p>
+      {/* Each tab's main button in one place, on the heading's line at the
+          right, the same size (Run 1, D-13). */}
+      <div className="flex items-center justify-between gap-3">
+        <TabHeading>Clients</TabHeading>
         {add && !adding && (
           <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-1.5" onClick={() => { setAdding(true); setSaid(""); }}>
             <Plus size={16} aria-hidden="true" /> Add a client
           </button>
         )}
       </div>
+      <p className="text-sm -mt-2 mb-4" style={{ color: "var(--iron)" }}>
+        {clients === undefined ? "Loading…" : plural(active.length, "active client")}
+      </p>
       {said && <p className="text-sm mb-3" role="status" style={{ color: "var(--accent)" }}>{said}</p>}
       {move && <MoveOffer count={toMove} move={move} />}
       {adding && (
@@ -417,13 +420,13 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
             </button>
           </div>
         ) : clients === undefined ? (
-          <p className="p-6 text-center text-sm" style={{ color: "var(--iron)" }}>Loading your clients…</p>
+          <LoadingLine className="p-6 justify-center">Loading your clients…</LoadingLine>
         ) : shown.length === 0 ? (
-          <p className="p-6 text-center text-sm" style={{ color: "var(--iron)" }}>
+          <EmptyState>
             {query.trim() ? `No one matches “${query.trim()}”.`
               : showArchived ? "You have no archived clients."
               : "You have no clients yet. Tap Add a client to add your first."}
-          </p>
+          </EmptyState>
         ) : (
           <ul>
             {shown.map(c => (

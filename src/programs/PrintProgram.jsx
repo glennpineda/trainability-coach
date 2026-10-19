@@ -28,7 +28,10 @@ export function PrintProgram({ id, sent }) {
     if (sent) {
       apiRequest("GET", `/attachments/${sent}`)
         /* Measurements sent in a message print as their own sheet. */
-        .then(a => (a.kind === "measurements" ? setP({ measurements: a.measurements }) : a.kind === "test" ? setP({ test: a.test }) : a.kind === "photos" ? setP({ photos: a.photos }) : setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) })))
+        /* A picture or a video has no printed page: it showed one for nobody,
+           dated "Invalid Date" (Run 1, D-16). */
+        .then(a => (a.kind === "measurements" ? setP({ measurements: a.measurements }) : a.kind === "test" ? setP({ test: a.test }) : a.kind === "photos" ? setP({ photos: a.photos })
+          : a.kind !== "program" ? setError("Only a program, measurements, a fitness test or progress photos can be printed. Open this one in Messages.") : setP({ ...a.program, days: (a.program?.days || []).map((d, i) => ({ ...d, id: i, exercises: d.exercises.map((e, j) => ({ ...e, id: j })) })) })))
         .catch(err => setError(err.status === 404 ? "That isn't something you sent." : err.message));
       return;
     }

@@ -63,14 +63,9 @@ item keeps the ids of the reports that found it. How the run was done is in
   the primary/secondary line, "Nothing yet." days, no trainer name.
 - **"No sessions yet" on the client while Home shows them trained today (U-22,
   D-16)**: maybe the stand-in Studio; check against the fixture.
-- **Design polish (D-11 to D-16).** Accent 4.44:1 on the page and 4.15 on its
-  pale ground; plain "Loading…" ×20 and three kinds of empty state (Studio's
-  LoadingLine and EmptyState); the main button in a different place on each
-  tab and add-buttons of uneven width; Tests' group headings; the wide-screen
-  button covers 6 px of content; Equipment's picked "No" barely shows; its note
-  placeholder cut on a phone; a sent picture's print page says "This page is
-  for ." and "Invalid Date"; measurement labels 450 px from their values on
-  desktop; the browser's square focus ring round the tab pill.
+- **Accent contrast (D-11).** Accent 4.44:1 on the page and 4.15 on its
+  pale ground, just under 4.5:1 for small words. (The rest of D-12 to D-16
+  is fixed; D-15 kept as Studio has it.)
 
 **Questions for Glenn**
 

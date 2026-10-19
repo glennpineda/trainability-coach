@@ -8,6 +8,7 @@ import { Prose, Standing } from "../review/Prose";
 import { BooksSection } from "../review/Books";
 import { SegRow } from "../chrome/SegRow";
 import { fmtDay } from "../lib/date";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 const muted = { color: "var(--iron)" };
 const line = { borderColor: "var(--iron-line)" };
@@ -209,7 +210,7 @@ export function ReviewTab({ onSignedOut }) {
       </p>
       {error && <p className="text-sm mb-3" style={{ color: "var(--ember)" }}>{error}</p>}
 
-      {!summary ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : (
+      {!summary ? (!error && <LoadingLine />) : (
         <>
           <section className="cx-card p-4 mb-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-[1fr_1fr_1fr_auto] items-center">
             <Progress label="exercises" done={summary.approved} flagged={summary.flagged} total={summary.total} />
@@ -335,7 +336,7 @@ export function ReviewTab({ onSignedOut }) {
           )}
 
           {section === "conditions" && (
-            !conditions ? <p className="text-sm" style={muted}>Loading…</p> : (
+            !conditions ? <LoadingLine /> : (
               <div className="grid gap-4 lg:grid-cols-2 items-start">
                 {conditions.map(c => (
                   <article key={c.key} className="cx-card p-4">
@@ -378,7 +379,7 @@ export function ReviewTab({ onSignedOut }) {
           )}
 
           {section === "principles" && (
-            !principles ? <p className="text-sm" style={muted}>Loading…</p> : (
+            !principles ? <LoadingLine /> : (
               <>
                 <p className="text-sm mb-3" style={muted}>
                   How Trainability designs a program, one topic at a time. Billy works from the reviewed ones; a draft waits

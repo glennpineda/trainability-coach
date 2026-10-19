@@ -16,7 +16,9 @@ function YesNo({ value, onChange, disabled, label }) {
             onClick={() => onChange(on ? null : v)}
             className="cx-hit px-3.5 py-1 rounded-lg text-sm font-medium transition-colors"
             style={on
-              ? { background: v ? "var(--fill-cerulean)" : "var(--chalk)", color: v ? "#fff" : "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
+              /* A picked No filled too, in ink, as plain to see as a picked Yes:
+                 white on the grey track it barely showed (Run 1, D-16). */
+              ? { background: v ? "var(--fill-cerulean)" : "var(--ink-soft)", color: v ? "#fff" : "var(--chalk)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" }
               : { color: "var(--iron)" }}>
             {word}
           </button>
@@ -265,7 +267,7 @@ export function EquipmentTab({ onSignedOut }) {
                     {place.categories.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
                   </select>
                 )}
-                <input className="cx-input" placeholder="A note (optional), such as only goes to 50 lb" value={draft.note} maxLength={200}
+                <input className="cx-input" placeholder="A note, such as up to 50 lb" value={draft.note} maxLength={200}
                   onChange={e => setDraft(d => ({ ...d, note: e.target.value }))} aria-label="Note" />
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-sm">{shared ? "Is it there?" : "Do you have it?"}</span>

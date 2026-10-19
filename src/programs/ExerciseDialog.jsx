@@ -6,6 +6,7 @@ import { percentOf, kgAt, weightText, oneRmText, unreadPercent } from "../lib/on
 import { convertText } from "../lib/units";
 import { TECHNIQUES, MAX_DROPS, isPyramid } from "../lib/techniques";
 import { aOrAn } from "../lib/words";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /**
  * Adding an exercise to a day, or changing one, in a dialog of its own (Glenn,
@@ -127,7 +128,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
             <div className="overflow-y-auto px-4 pb-3 grid gap-4" style={{ overscrollBehavior: "contain" }}>
               {/* What it is. */}
               <div className="rounded-xl p-3" style={{ background: "var(--ghost-fill)" }}>
-                {!info ? <p className="text-sm" style={muted}>Loading…</p> : info.failed ? <p className="text-sm" style={{ color: "var(--ember)" }}>That exercise couldn't be loaded.</p> : (
+                {!info ? <LoadingLine /> : info.failed ? <p className="text-sm" style={{ color: "var(--ember)" }}>That exercise couldn't be loaded.</p> : (
                   <>
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">

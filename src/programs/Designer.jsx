@@ -10,6 +10,7 @@ import { useUnits } from "../hooks/useUnits";
 import { ExerciseDialog } from "./ExerciseDialog";
 import { ConfirmDialog } from "../chrome/ConfirmDialog";
 import { aOrAn, kindsWords, plural } from "../lib/words";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "Go"): one program, day by day,
@@ -245,7 +246,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
     return () => clearTimeout(t);
   }, [flash]);
 
-  if (!p) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <p className="text-sm" style={muted}>Loading…</p>;
+  if (!p) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <LoadingLine />;
   const points = (filter) => p.check.filter(filter);
   const top = points(c => !c.day && !c.exercise);
   const count = (lvl) => p.check.filter(c => c.level === lvl).length;

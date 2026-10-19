@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUp, Camera, HeartPulse, ChevronLeft, ClipboardList, Loader2, MessageCircle, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
+import { ArrowUp, Camera, HeartPulse, ChevronLeft, ClipboardList, Loader2, Paperclip, PenSquare, Image as ImageIcon, Ruler, Search, X, RefreshCw } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
@@ -7,6 +7,7 @@ import { rowsOf } from "../lib/measures";
 import { describe, titleOf } from "../lib/fitness-tests";
 import { Face } from "../clients/Face";
 import { usePoll } from "../hooks/usePoll";
+import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 
 /*
  * Messages (Glenn, 18 Oct 2026: "Let's do messages now, apart from basic
@@ -80,7 +81,7 @@ export function MessagesTab({ clients, onSignedOut, onUnread }) {
       <div className="flex items-center justify-between gap-3">
         <TabHeading>Messages</TabHeading>
         {list?.available && (
-          <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-2" onClick={() => setPicking(true)}>
+          <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-1.5" onClick={() => setPicking(true)}>
             <PenSquare size={16} aria-hidden="true" /> New message
           </button>
         )}
@@ -93,20 +94,14 @@ export function MessagesTab({ clients, onSignedOut, onUnread }) {
             <button type="button" onClick={() => { setList(null); load(); }} className="cx-btn-row mt-3"><RefreshCw size={16} aria-hidden="true" /> Try again</button>
           </div>
         ) : !list ? (
-          <div className="py-8 flex items-center justify-center gap-2 text-sm" style={{ color: "var(--iron)" }}>
-            <Loader2 size={16} className="animate-spin" aria-hidden="true" /> Finding your messages
-          </div>
+          <LoadingLine className="py-8 justify-center">Finding your messages…</LoadingLine>
         ) : !list.available ? (
-          <div className="p-6 text-center text-sm" style={{ color: "var(--iron)" }}>
+          <EmptyState>
             Your clients read messages on Trainability&apos;s client page. Once your Coach account is linked to your Trainability account
             and your clients are moved there, you can write to them here.
-          </div>
+          </EmptyState>
         ) : list.conversations.length === 0 ? (
-          <div className="p-6 text-center">
-            <MessageCircle size={28} className="mx-auto" style={{ color: "var(--iron)" }} aria-hidden="true" />
-            <p className="text-base mt-2" style={{ color: "var(--iron)" }}>No messages yet.</p>
-            <p className="text-sm mt-1" style={{ color: "var(--iron)" }}>Tap <strong>New message</strong> to write to a client.</p>
-          </div>
+          <EmptyState>No messages yet. Tap <strong>New message</strong> to write to a client.</EmptyState>
         ) : list.conversations.map((c, i) => (
           <button key={c.id} type="button" onClick={() => setOpen(c.clientId)}
             className={`w-full text-left px-4 py-3 flex items-center gap-3${i ? " border-t" : ""}`} style={{ borderColor: "var(--iron-line)" }}>
@@ -147,7 +142,8 @@ function PickClient({ clients, onPick, onClose }) {
         <button type="button" className="cx-icon-btn" aria-label="Close" onClick={onClose}><X size={18} aria-hidden="true" /></button>
       </div>
       <div className="max-h-72 overflow-y-auto">
-        {shown.length === 0 && <p className="p-4 text-sm text-center" style={{ color: "var(--iron)" }}>{clients === undefined ? "Loading…" : "No client by that name."}</p>}
+        {shown.length === 0 && (clients === undefined ? <LoadingLine className="p-4 justify-center" />
+          : <p className="p-4 text-sm text-center" style={{ color: "var(--iron)" }}>No client by that name.</p>)}
         {shown.map(c => (
           <button key={c.id} type="button" onClick={() => onPick(c.id)} className="w-full text-left px-4 py-2.5 flex items-center gap-3 border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
             <Initials who={c} size={32} />
@@ -293,8 +289,8 @@ function Thread({ clientId, clients, onBack, onSignedOut, onRead }) {
       </div>
       <div className="cx-card px-3 py-2 min-h-[12rem]">
         {error ? <p className="p-4 text-sm text-center" style={{ color: "var(--ember)" }}>{error}</p>
-          : !t ? <div className="py-8 flex items-center justify-center gap-2 text-sm" style={{ color: "var(--iron)" }}><Loader2 size={16} className="animate-spin" aria-hidden="true" /> Loading</div>
-          : t.messages.length === 0 ? <p className="p-4 text-sm text-center" style={{ color: "var(--iron)" }}>No messages with {first} yet. Write the first one below; {first} is emailed to say it&apos;s there.</p>
+          : !t ? <LoadingLine className="py-8 justify-center" />
+          : t.messages.length === 0 ? <EmptyState>No messages with {first} yet. Write the first one below; {first} is emailed to say it&apos;s there.</EmptyState>
           : t.messages.map((m, i) => (
             <React.Fragment key={m.id}>
               {(i === 0 || !sameDay(t.messages[i - 1].at, m.at)) && (
@@ -479,7 +475,7 @@ function Composer({ clientId, first, onSent }) {
               <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>
                 {photoFirst ? `Compare ${setDate(photoFirst.takenOn)} with…` : `${first}'s progress photos`}
               </div>
-              {photoSets === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+              {photoSets === null ? <LoadingLine className="px-2.5 py-2" />
                 : photoSets.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No progress photos of {first} yet. Take them on the Clients page.</p>
                 : !photoFirst ? photoSets.map(x => <MenuItem key={x.id} icon={Camera} label={setDate(x.takenOn)} note={`Taken by ${x.mine ? "you" : x.takenBy}`} onClick={() => (photoSets.length > 1 ? setPhotoFirst(x) : attachPhotos(x))} />)
                 : (
@@ -492,21 +488,21 @@ function Composer({ clientId, first, onSent }) {
           ) : menu === "tests" ? (
             <>
               <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>{first}&apos;s fitness tests</div>
-              {tests === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+              {tests === null ? <LoadingLine className="px-2.5 py-2" />
                 : tests.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No fitness tests for {first} yet. Add them on the Clients page.</p>
                 : tests.map(t => { const d = describe(t, testUnits); return <MenuItem key={t.id} icon={HeartPulse} label={`${titleOf(t, { short: true })} · ${setDate(t.takenOn)}`} note={[d.text, d.rating].filter(Boolean).join(" · ")} onClick={() => attachTest(t)} />; })}
             </>
           ) : menu === "measurements" ? (
             <>
               <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>{first}&apos;s measurements</div>
-              {sets === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+              {sets === null ? <LoadingLine className="px-2.5 py-2" />
                 : sets.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No measurements for {first} yet. Add them on the Clients page.</p>
                 : sets.map(m => <MenuItem key={m.id} icon={Ruler} label={setDate(m.takenOn)} note={`Taken by ${m.mine ? "you" : m.takenBy}`} onClick={() => attachMeasurements(m)} />)}
             </>
           ) : (
             <>
               <div className="px-2.5 py-1.5 text-xs font-medium" style={{ color: "var(--iron)" }}>{first}&apos;s programs</div>
-              {programs === null ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>Loading…</p>
+              {programs === null ? <LoadingLine className="px-2.5 py-2" />
                 : programs.length === 0 ? <p className="px-2.5 py-2 text-sm" style={{ color: "var(--iron)" }}>No programs for {first} yet.</p>
                 : programs.map(p => <MenuItem key={p.id} icon={ClipboardList} label={p.name} note={`${p.goalLabel} · ${plural(p.days, "day")}`} onClick={() => attachProgram(p)} />)}
             </>

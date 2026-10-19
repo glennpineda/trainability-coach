@@ -7,6 +7,7 @@ import { LibraryPicker } from "../tabs/ExercisesTab";
 import { Trend } from "./Trend";
 import { MEASURES, toShown, unitOf, exactIfSame } from "../lib/measures";
 import { todayIso } from "../lib/date";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /*
  * A client's fitness tests (Glenn, 18 Oct 2026; src/lib/fitness-tests.js).
@@ -91,7 +92,8 @@ function Form({ client, units, initial, latestWeight, busy, error, onSave, onCan
         <div className="text-sm font-medium">Which test?</div>
         {TEST_GROUPS.map(g => (
           <div key={g.label} className="grid gap-2">
-            <div className="text-xs font-medium mt-1" style={{ color: "var(--ink-soft)" }}>{g.label}</div>
+            {/* Studio's group heading: small capitals in iron (Run 1, D-14). */}
+            <div className="text-xs uppercase tracking-wide mt-1" style={{ color: "var(--iron)" }}>{g.label}</div>
             {g.kinds.map(k => (
               <button key={k} type="button" onClick={() => setKind(k)} className="text-left rounded-lg border px-3 py-2.5" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)" }}>
                 <span className="block text-sm font-medium" style={{ color: "var(--ink)" }}>{TESTS[k].label}</span>
@@ -402,7 +404,7 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
         <span className="text-sm font-semibold">Fitness tests</span>
       </div>
       {error && !editing && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
-      {!data ? (!error && <p className="text-sm" style={{ color: "var(--iron)" }}>Loading…</p>) : (
+      {!data ? (!error && <LoadingLine />) : (
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None done yet.</p>}
           {series.map((k, i) => {
@@ -411,7 +413,7 @@ export function FitnessTests({ client, onSignedOut, inTab = false }) {
             const heading = (i === 0 || groupOf(series[i - 1]) !== groupOf(k)) && groupOf(k);
             return (
               <div key={k}>
-                {heading && <div className="text-xs font-medium mt-3" style={{ color: "var(--ink-soft)" }}>{heading}</div>}
+                {heading && <div className="text-xs uppercase tracking-wide mt-3" style={{ color: "var(--iron)" }}>{heading}</div>}
                 {row(ofKind[0], true)}
                 {isOpen && <TestTrend results={ofKind} units={units} />}
                 {isOpen && ofKind.slice(1).map(t => row(t))}

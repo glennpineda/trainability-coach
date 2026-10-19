@@ -4,6 +4,7 @@ import { API, apiRequest } from "../lib/api";
 import { Prose } from "./Prose";
 import { PrincipleForm, Problems } from "./LibraryEditor";
 import { fmtDay } from "../lib/date";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /**
  * Review Coach IQ → Books (build 1.0.16; Glenn, 17 Oct 2026: "Do all 3"):
@@ -98,7 +99,7 @@ export function BooksSection({ onSignedOut, onAccepted }) {
   if (openId) {
     return <BookView id={openId} onBack={() => { setOpenId(null); load(); }} onSignedOut={onSignedOut} onAccepted={onAccepted} />;
   }
-  if (!data) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <p className="text-sm" style={muted}>Loading…</p>;
+  if (!data) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <LoadingLine />;
 
   return (
     <div className="grid gap-4">
@@ -202,7 +203,7 @@ function BookView({ id, onBack, onSignedOut, onAccepted }) {
   return (
     <div className="grid gap-4">
       <button type="button" className="text-sm cx-link justify-self-start" onClick={onBack}><ChevronLeft size={16} aria-hidden="true" /> All books</button>
-      {!book ? (error ? <Problems error={error} /> : <p className="text-sm" style={muted}>Loading…</p>) : (
+      {!book ? (error ? <Problems error={error} /> : <LoadingLine />) : (
         <>
           <section className="cx-card p-4">
             <h2 className="cx-display text-2xl">{book.title || book.fileName}</h2>

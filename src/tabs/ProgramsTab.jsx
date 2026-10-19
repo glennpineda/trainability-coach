@@ -6,6 +6,7 @@ import { Designer, DetailsForm, KindForm } from "../programs/Designer";
 import { Toast } from "../chrome/Toast";
 import { SegRow } from "../chrome/SegRow";
 import { fmtDay } from "../lib/date";
+import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 
 /**
  * Programs (Glenn, 17 Oct 2026: "We need to start creating a workout program
@@ -62,7 +63,15 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
   return (
     <div className="max-w-5xl mx-auto px-4">
       <Toast toast={toast} onGone={toastGone} />
-      <TabHeading>Programs</TabHeading>
+      {/* The main button on the heading's line, as on Clients and Messages (Run 1, D-13). */}
+      <div className="flex items-center justify-between gap-3">
+        <TabHeading>Programs</TabHeading>
+        {!openId && !making && data && (
+          <button type="button" className="cx-btn-primary px-4 py-2 text-sm inline-flex items-center gap-1.5" onClick={() => setMaking(true)}>
+            <Plus size={16} aria-hidden="true" /> New program
+          </button>
+        )}
+      </div>
       {openId && data ? (
         <Designer id={openId} goals={data.goals} vocab={data} billy={billy} onSignedOut={onSignedOut} onSend={onSend} onBack={() => { setOpenId(null); load(); }} />
       ) : (
@@ -76,7 +85,7 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
             <section className="cx-card p-4 mb-4">
               <h2 className="cx-display text-xl mb-3">A new program</h2>
               {active.length === 0 ? <p className="text-sm" style={muted}>You have no clients yet. Add them on the Clients page first.</p>
-                : !data ? <p className="text-sm" style={muted}>Loading…</p>
+                : !data ? <LoadingLine />
                 : !kind ? (
                   <KindForm vocab={data} onCancel={() => setMaking(false)} onNext={setKind} />
                 ) : (
@@ -85,18 +94,14 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
                     onBack={() => setKind(null)} onCancel={() => { setMaking(false); setKind(null); }} onSave={create} />
                 )}
             </section>
-          ) : (
-            <button type="button" className="cx-btn-primary px-5 py-2 text-sm inline-flex items-center gap-2 mb-4" onClick={() => setMaking(true)}>
-              <Plus size={16} aria-hidden="true" /> New program
-            </button>
-          )}
+          ) : null}
           {data && (
             <SegRow className="mb-3 sm:w-64" label="Which programs" value={showPutAway ? "away" : "active"}
               onPick={(k) => { setShowPutAway(k === "away"); setAsking(null); }}
               items={[{ key: "active", label: "Active", figure: data.programs.length }, { key: "away", label: "Put away", figure: (data.putAway || []).length }]} />
           )}
-          {!data ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : showPutAway ? (
-            (data.putAway || []).length === 0 ? <p className="text-sm" style={muted}>You have no programs put away.</p> : (
+          {!data ? (!error && <LoadingLine />) : showPutAway ? (
+            (data.putAway || []).length === 0 ? <EmptyState>You have no programs put away.</EmptyState> : (
               <ul className="grid gap-3">
                 {data.putAway.map(p => (
                   <li key={p.id} className="cx-card p-4 flex items-start gap-3">
@@ -111,7 +116,7 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
               </ul>
             )
           ) : data.programs.length === 0 ? (
-            !making && <p className="text-sm" style={muted}>No programs yet. Tap New program to design the first.</p>
+            !making && <EmptyState>No programs yet. Tap New program to design the first.</EmptyState>
           ) : (
             <ul className="grid gap-3">
               {data.programs.map(p => (

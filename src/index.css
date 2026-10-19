@@ -372,6 +372,13 @@
     justify-content: center; color: var(--iron); transition: color .15s ease, transform .15s ease; }
   .cx-navbtn:hover { color: var(--accent); transform: scale(1.15); }
   .cx-navbtn-on, .cx-navbtn-on:hover { color: #fff; transform: none; }
+  /* Focused from the keyboard, a ring round the tab's circle: the browser's
+     own was a rectangle the width of the tab, round the round pill (Run 1,
+     D-16). Ink in high contrast and reduced colour, as their other rings. */
+  .cx-navbtn:focus-visible { outline: none !important; }
+  .cx-navbtn:focus-visible::after { content: ""; position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; border-radius: 999px;
+    transform: translate(-50%, -50%); box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); pointer-events: none; }
+  :root[data-hc] .cx-navbtn:focus-visible::after, :root[data-color="reduced"] .cx-navbtn:focus-visible::after { box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px var(--ink); }
   /* The lit circle, one piece that slides to the tab tapped. */
   .cx-nav-lit { position: absolute; z-index: 0; left: 0; top: 0; pointer-events: none; border-radius: 999px;
     /* The fills that carry white, deep to cerulean: running out to sky, the

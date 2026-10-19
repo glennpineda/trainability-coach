@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { ShieldAlert, Plus, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /* The conditions and facts Coach knows, asked for once. */
 let known = null;
@@ -63,7 +64,7 @@ export function Limitations({ clientId, onSignedOut }) {
         <span className="text-sm font-semibold">Limitations</span>
       </div>
       {error && <p className="text-sm my-1" style={{ color: "var(--ember)" }}>{error}</p>}
-      {!list ? (!error && <p className="text-sm" style={{ color: "var(--iron)" }}>Loading…</p>) : (
+      {!list ? (!error && <LoadingLine />) : (
         <>
           {list.length === 0 && !adding && <p className="text-sm" style={{ color: "var(--iron)" }}>None written down.</p>}
           <ul className="space-y-2">

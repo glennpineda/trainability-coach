@@ -5,6 +5,7 @@ import { ANGLES } from "../lib/progress-photos";
 import { isoDate } from "../lib/date";
 import { PhotoSession } from "./PhotoSession";
 import { PhotoCompare } from "./PhotoCompare";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /*
  * A client's progress photos (Glenn, 19 Oct 2026): front, sides and back,
@@ -127,7 +128,7 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
         <span className="text-sm font-semibold">Progress photos</span>
       </div>
       {error && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
-      {!data ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : !data.consent ? (
+      {!data ? (!error && <LoadingLine />) : !data.consent ? (
         /* Their agreement first. */
         <div className="rounded-lg p-3 mt-1 text-sm" style={{ background: "var(--ghost-fill)" }}>
           <p>Before taking any, ask {first} if they agree. The photos are kept in Coach, and every trainer of {first} can see them.</p>

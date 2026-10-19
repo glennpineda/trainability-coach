@@ -4,6 +4,7 @@ import { apiRequest } from "../lib/api";
 import { MEASURES, toShown, unitOf, rowsOf, previousOf, waistToHip, exactIfSame } from "../lib/measures";
 import { Trend } from "./Trend";
 import { todayIso } from "../lib/date";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /*
  * A client's body measurements (Glenn, 18 Oct 2026): weight, body fat, and
@@ -16,13 +17,15 @@ import { todayIso } from "../lib/date";
 
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 
-/* One set's values, two to a row from sm, each with how it changed since
+/* One set's values, as many to a row as fit at about 13rem each (two on a
+   tablet, four on a desktop; two wide columns had the label and its value
+   450px apart, Run 1, D-16), each with how it changed since
    the set before in grey: up or down is a fact, not good or bad
    (measures.js, rowsOf, which adds the waist-to-hip ratio and puts blood
    pressure on one row). */
 function Values({ set, previous, units }) {
   return (
-    <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
+    <dl className="grid grid-cols-[repeat(auto-fill,minmax(13rem,1fr))] gap-x-6 gap-y-1 text-sm">
       {rowsOf(set.values, previous?.values, units).map(r => (
         <div key={r.key} className="flex items-baseline justify-between gap-2 min-w-0">
           <dt className="truncate" style={{ color: "var(--iron)" }}>{r.label}</dt>
@@ -179,7 +182,7 @@ export function Measurements({ clientId, onSignedOut, onChanged, inTab = false }
         <span className="text-sm font-semibold">Measurements</span>
       </div>
       {error && !editing && <p className="text-sm my-1" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
-      {!data ? (!error && <p className="text-sm" style={{ color: "var(--iron)" }}>Loading…</p>) : (
+      {!data ? (!error && <LoadingLine />) : (
         <>
           {list.length === 0 && editing !== "new" && <p className="text-sm" style={{ color: "var(--iron)" }}>None taken yet.</p>}
           {[latest, ...(showAll ? rest : [])].filter(Boolean).map((set, i) => {

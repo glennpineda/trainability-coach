@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Loader2, Plus, Undo2, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { LoadingLine } from "../chrome/LoadingLine";
 
 /**
  * The pieces of the library's editor on Review Coach IQ (the library lives in
@@ -137,7 +138,7 @@ export function VersionForm({ initial = {}, families, onSave, onCancel, busy, er
     harder: initial.harderSteps || [],
     easier: initial.easierSteps || [],
   }));
-  if (!v) return <p className="text-sm" style={muted}>Loading…</p>;
+  if (!v) return <LoadingLine />;
   const set = (k, val) => setF(d => ({ ...d, [k]: val }));
   const submit = (e) => {
     e.preventDefault();
@@ -214,7 +215,7 @@ export function FamilyForm({ initial = {}, onSave, onCancel, busy, error, childr
     needs: initial.needs || [], measure: initial.measure || [], perSide: !!initial.perSide, implementInName: !!initial.implementInName,
     discipline: initial.discipline || "",
   }));
-  if (!v) return <p className="text-sm" style={muted}>Loading…</p>;
+  if (!v) return <LoadingLine />;
   const set = (k, val) => setF(d => ({ ...d, [k]: val }));
   return (
     <form className="grid gap-3 mt-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
@@ -252,7 +253,7 @@ export function ConditionForm({ initial = {}, onSave, onCancel, busy, error, wor
     modify: { facts: initial.modify?.facts || [], joints: initial.modify?.joints || [] },
     clearance: !!initial.clearance, refer: initial.refer || "",
   }));
-  if (!v) return <p className="text-sm" style={muted}>Loading…</p>;
+  if (!v) return <LoadingLine />;
   const part = (p, k, x) => setF(d => ({ ...d, [p]: { ...d[p], [k]: x } }));
   return (
     <form className="grid gap-3 mt-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
@@ -294,7 +295,7 @@ export function PrincipleForm({ initial = {}, onSave, onCancel, busy, error, wor
 }
 
 export function ChangeList({ changes, onUndo, busy, error }) {
-  if (!changes) return <p className="text-sm" style={muted}>Loading…</p>;
+  if (!changes) return <LoadingLine />;
   if (!changes.length) return <p className="text-sm" style={muted}>No changes yet.</p>;
   return (
     <div className="grid gap-2">

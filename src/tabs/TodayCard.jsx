@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ArrowRight, CalendarDays, Check, ChevronDown, ClipboardList, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, ChevronDown, ClipboardList, RefreshCw, ShieldAlert } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { isoDate } from "../lib/date";
 import { SegRow } from "../chrome/SegRow";
+import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 
 /*
  * Today, on Home (Glenn, 18 Oct 2026: "Let's do the Today tab"): the
@@ -33,9 +34,6 @@ function isOver(a) {
   return Date.now() >= end.getTime();
 }
 
-function EmptyState({ children }) {
-  return <div className="text-base text-center py-6" style={{ color: "var(--iron)" }}>{children}</div>;
-}
 
 /* What each client's row has to say about them, in Studio's order and colours
    (its magenta, for what can be tapped, is Coach's accent). */
@@ -153,9 +151,7 @@ export function TodayCard({ onOpenProgram, onOpenClient, onSignedOut }) {
     );
   } else if (!data) {
     body = (
-      <div className="py-8 flex items-center justify-center gap-2 text-sm" style={{ color: "var(--iron)" }}>
-        <Loader2 size={16} className="animate-spin" aria-hidden="true" /> Finding your sessions
-      </div>
+      <LoadingLine className="py-8 justify-center">Finding your sessions…</LoadingLine>
     );
   } else if (!data.schedule) {
     /* A Coach account: no schedule of its own. */

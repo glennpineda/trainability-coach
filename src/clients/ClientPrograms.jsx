@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ClipboardList, Plus } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
 
 /*
  * A client's programs, on their page (Run 1, U-9; Glenn, 19 Oct 2026: "Fifth
@@ -23,8 +24,8 @@ export function ClientPrograms({ client, onOpenProgram, onNewProgram, onSignedOu
   return (
     <div>
       {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
-      {!list ? (!error && <p className="text-sm" style={muted}>Loading…</p>) : list.length === 0 ? (
-        <p className="text-sm" style={muted}>No programs for {client.firstName || "them"} yet.</p>
+      {!list ? (!error && <LoadingLine />) : list.length === 0 ? (
+        <EmptyState>No programs for {client.firstName || "them"} yet.</EmptyState>
       ) : (
         <ul className="grid gap-2">
           {list.map(p => (
