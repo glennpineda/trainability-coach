@@ -126,7 +126,7 @@ const nice = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 const cap = (m) => m[0].toUpperCase() + m.slice(1);
 
 /** One day's drawing and its numbers. `top` is the scale (exercises for the darkest spot). */
-export function BodyMap({ exercises, top }) {
+export function BodyMap({ exercises, top, forClient = false }) {
   const sets = setsByMuscle(exercises);
   const list = Object.entries(sets).sort((a, b) => b[1] - a[1]);
   if (!list.length) return null;
@@ -152,7 +152,10 @@ export function BodyMap({ exercises, top }) {
             numbers by the muscle groups mean"; then primary and secondary,
             the library's own words). */}
         <p className="mt-1.5" style={{ maxWidth: 300 }}>
-          Each number is how many of this day&apos;s exercises work that muscle: 1 for each where it is a primary muscle, ½ for each where it is a secondary one. The stronger the color, the higher the number.
+          {/* The printed page is the client's: no "primary" and "secondary" (Run 1, U-18). */}
+          {forClient
+            ? <>Each number is how many of this day&apos;s exercises work that muscle: 1 where it does most of the work, ½ where it helps. The stronger the color, the more it works.</>
+            : <>Each number is how many of this day&apos;s exercises work that muscle: 1 for each where it is a primary muscle, ½ for each where it is a secondary one. The stronger the color, the higher the number.</>}
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { loadLine } from "../lib/one-rm";
+import { convertText } from "../lib/units";
+import { weightText } from "../lib/one-rm";
 import { Printer } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { useUnits } from "../hooks/useUnits";
@@ -17,13 +18,22 @@ import { PrintPhotos } from "../clients/PrintPhotos";
  * trainer's names for them, with whatever the trainer filled in, in their
  * units. Only the columns something was written in are printed. Nothing of
  * Coach IQ's check goes on it: that is for the trainer.
+ *
+ * Written for the client, not the trainer (Run 1, U-18; Glenn, 19 Oct 2026:
+ * "For the client"): a load worked out from a 1RM is the weight to lift
+ * ("155 lb", not "75% (155 lb)"), a day with nothing in it is left out, the
+ * muscle drawing is told in plain words, and the trainer's name is at the top.
  */
+const clientLoad = (e, units) => (e.loadKg ? weightText(e.loadKg, units) : convertText(e.load, units));
 /* `sent`, instead of `id`: a program as it was sent in a message, the copy
    kept with it (server/messages.js), in the units it was sent in. */
 export function PrintProgram({ id, sent }) {
   const [p, setP] = useState(null);
   const [error, setError] = useState("");
   const [ownUnits] = useUnits();
+  /* Who is printing it: their trainer, whose name goes at the top. */
+  const [trainer, setTrainer] = useState("");
+  useEffect(() => { apiRequest("GET", "/auth/me").then(d => setTrainer(d?.user?.name || "")).catch(() => {}); }, []);
   useEffect(() => {
     if (sent) {
       apiRequest("GET", `/attachments/${sent}`)
@@ -66,15 +76,16 @@ export function PrintProgram({ id, sent }) {
       <div className="text-sm mt-1" style={{ color: "#5b6b78" }}>
         For {p.clientName} · {p.goalLabel} · {new Date(p.updatedAt).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })}
       </div>
+      {trainer && <div className="text-sm mt-0.5" style={{ color: "#5b6b78" }}>Your trainer: {trainer}</div>}
       {p.notes && <p className="text-sm mt-3 whitespace-pre-wrap cx-wrap">{p.notes}</p>}
-      {p.days.map(d => {
+      {p.days.filter(d => d.exercises.length > 0).map(d => {
         const used = cols.filter(([k]) => d.exercises.some(e => e[k]));
         const labels = labelsFor(d.exercises);
         return (
           <section key={d.id} className="mt-8" style={{ breakInside: "avoid" }}>
             <h2 className="text-xl font-medium">{d.name}</h2>
             {d.notes && <p className="text-sm cx-wrap" style={{ color: "#5b6b78" }}>{d.notes}</p>}
-            {d.exercises.length === 0 ? <p className="text-sm mt-2" style={{ color: "#5b6b78" }}>Nothing yet.</p> : (
+            {(
               <table className="w-full text-sm mt-2 border-collapse">
                 <thead>
                   <tr style={{ borderBottom: "2px solid #172A3A" }}>
@@ -91,7 +102,7 @@ export function PrintProgram({ id, sent }) {
                         <div className="font-medium">{e.name}</div>
                         {e.note && <div className="text-xs cx-wrap" style={{ color: "#5b6b78" }}>{e.note}</div>}
                       </td>
-                      {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? loadLine(e, units) : k === "technique" ? techniqueText(e) : e[k]}</td>)}
+                      {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? clientLoad(e, units) : k === "technique" ? techniqueText(e) : e[k]}</td>)}
                     </tr>
                   ))}
                 </tbody>
@@ -102,7 +113,7 @@ export function PrintProgram({ id, sent }) {
             {d.exercises.some(e => String(e.technique || "").startsWith("pyramid")) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>A pyramid: the reps change each set, as written, and the weight with them, heavier for fewer reps and lighter for more.</p>}
             {/* What the day works (Glenn, 19 Oct 2026: "Go with 3"). A copy
                 sent before the muscles were kept with it has none, and no drawing. */}
-            {d.exercises.some(e => e.primary?.length) && <div style={PAPER}><BodyMap exercises={d.exercises} top={bodyScale} /></div>}
+            {d.exercises.some(e => e.primary?.length) && <div style={PAPER}><BodyMap exercises={d.exercises} top={bodyScale} forClient /></div>}
           </section>
         );
       })}
