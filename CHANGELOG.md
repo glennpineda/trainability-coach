@@ -116,6 +116,9 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   any measurement taken on two days or more (blood pressure's two numbers
   together); opening a fitness test's earlier results charts that test. Tap a
   point to read its day and number.
+- **Photos from Studio.** Your clients' photos, as they are in Studio, on
+  the Clients list and in Messages, and your own in the account menu (which
+  showed only your initials before). Initials stay for anyone without one.
 - **Notifications.** Turn them on for a phone or computer from the account
   menu, as in Studio, and be told when a client writes to you in Messages:
   who, and the start of what they wrote. A tap opens the conversation. Send a

@@ -192,6 +192,9 @@ function studioShape(clients, user) {
       since: c.linkedAt?.[user.id] || c.createdAt || "",
       lastSessionOn: c.lastSessionOn || null,
       latestSessionOn: c.latestSessionOn || null,
+      /* Studio's link to their photo (/api/photos/client/<id>?v=…), which
+         Coach answers by asking Studio (the photo route below). */
+      photoUrl: c.photoUrl || null,
       archived: (c.archivedBy || []).includes(user.id),
       /* Their gym in Studio: their home gym, else a membership still going
          (Studio's homePlaceId and placeIds), for where a program is done. */
@@ -530,7 +533,9 @@ app.get("/api/messages", asSignedIn("GET /messages", async (req, res, user) => {
   res.set("Cache-Control", "private, no-store");
   if (user.coachAccount) return res.json({ available: false, conversations: [], unread: 0 });
   const clients = await studioClientsOf(req, user);
-  const conversations = await messages.trainerConversations(user.id, new Set(clients.map(c => c.id)));
+  const photos = new Map(clients.map(c => [c.id, c.photoUrl || null]));
+  const conversations = (await messages.trainerConversations(user.id, new Set(photos.keys())))
+    .map(c => ({ ...c, photoUrl: photos.get(c.clientId) || null }));
   res.json({ available: true, conversations, unread: conversations.reduce((n, c) => n + c.unread, 0) });
 }));
 
@@ -540,7 +545,7 @@ app.get("/api/messages/:client", asSignedIn("GET /messages/client", async (req, 
   const client = (await studioClientsOf(req, user)).find(c => c.id === req.params.client);
   if (!client) return res.status(404).json({ error: "Not found", code: "not_found" });
   const thread = await messages.trainerThread(user.id, client.id);
-  res.json({ client: { id: client.id, firstName: client.firstName, lastName: client.lastName }, ...(thread || { id: null, clientReadAt: null, messages: [] }) });
+  res.json({ client: { id: client.id, firstName: client.firstName, lastName: client.lastName, photoUrl: client.photoUrl || null }, ...(thread || { id: null, clientReadAt: null, messages: [] }) });
 }));
 
 app.post("/api/messages/:client", asSignedIn("POST /messages/client", async (req, res, user) => {
@@ -1903,6 +1908,41 @@ for (const [route, key] of [["theme", "theme"], ["tone", "tone"], ["contrast", "
     }
   });
 }
+
+/**
+ * A photo from Studio, at the same address Studio gives it
+ * (/api/photos/trainer/<id> or /client/<id>, ?v= the picture's hash), so the
+ * links in Studio's answers work here as they are: the trainer's own in the
+ * account menu, and their clients' (Glenn, 19 Oct 2026). Fetched with the
+ * trainer's Studio session, so Studio decides who may see whose: a client's
+ * face only to those who may see the client, answered as missing to anyone
+ * else. Cached as Studio caches it: privately, and for good, since a new
+ * picture comes with a new link. A Coach account has no Studio session and
+ * gets no photos; their initials show instead.
+ */
+app.get("/api/photos/:kind/:id", async (req, res) => {
+  const { kind, id } = req.params;
+  if ((kind !== "trainer" && kind !== "client") || !/^[A-Za-z0-9_-]{1,64}$/.test(id) || !studioCookie(req.headers.cookie)) return res.status(404).end();
+  const v = typeof req.query.v === "string" ? `?v=${encodeURIComponent(req.query.v.slice(0, 80))}` : "";
+  try {
+    const cookie = studioCookie(req.headers.cookie);
+    const upstream = await fetch(`${STUDIO_ORIGIN}/api/photos/${kind}/${id}${v}`, {
+      headers: { Cookie: cookie, "User-Agent": req.headers["user-agent"] || "Trainability Coach", "X-Forwarded-For": req.ip,
+        ...(req.headers["if-none-match"] ? { "If-None-Match": req.headers["if-none-match"] } : {}) },
+      redirect: "manual", signal: AbortSignal.timeout(15000),
+    });
+    if (upstream.status === 304) return res.status(304).end();
+    const type = upstream.headers.get("content-type") || "";
+    if (!upstream.ok || !type.startsWith("image/")) return res.status(404).end();
+    res.set({ "Content-Type": type, "Cache-Control": "private, max-age=31536000, immutable", "X-Content-Type-Options": "nosniff" });
+    const etag = upstream.headers.get("etag");
+    if (etag) res.set("ETag", etag);
+    res.send(Buffer.from(await upstream.arrayBuffer()));
+  } catch (err) {
+    console.error(`Photo from Studio failed: ${err.message}`);
+    res.status(404).end();
+  }
+});
 
 app.all(/^\/api\/.*/, async (req, res) => {
   const route = req.path.replace(/^\/api/, "");

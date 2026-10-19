@@ -293,8 +293,8 @@ Across the top of every screen:
   **COACH** beside it. Tapping the logo, or pointing at it on a computer, opens the apps panel (3.2).
 - **Billy's face**, in a lilac square, when Billy is set up for your
   business — tap it to ask him something (chapter 6).
-- **In the corner**, your photo (or your initials) with a small arrow
-  pointing down — your account menu (3.5). On a wider screen your name is
+- **In the corner**, your photo from Studio (or your initials) with a small
+  arrow pointing down — your account menu (3.5). On a wider screen your name is
   beside it.
 
 The bar stays at the top as you scroll.
@@ -806,7 +806,9 @@ To leave it, tap another button on the bottom bar.
 
 Each client has one line, in order of first name:
 
-- **A circle with their initials.**
+- **Their photo**, the one in Studio, or a circle with their initials when
+  Studio has no photo of them. To add or change a client's photo, do it in
+  Studio; Coach shows it the next time the list is loaded.
 - **Their name.** If they have told Studio their pronouns, those are next to
   the name in brackets, such as *(they/them)*.
 - **One line about their sessions:**
@@ -1400,8 +1402,8 @@ their measurements (4.8) and their fitness test results (4.9).
 
 1. Tap **Messages** on the bottom bar (the speech bubble).
 2. Your conversations are listed, the latest first. Each shows the client's
-   name, when the last message was sent, and its first words. **You:** in
-   front means you wrote it.
+   photo (or initials) and name, when the last message was sent, and its
+   first words. **You:** in front means you wrote it.
 3. A conversation with messages you haven't read has the client's name in
    bold and a blue number at its end: how many are waiting.
 4. Tap a conversation to open it.

@@ -5,6 +5,7 @@ import { TabHeading } from "./TabHeading";
 import { uploadAttachment, fileUrl } from "../messages/upload";
 import { rowsOf } from "../lib/measures";
 import { describe, titleOf } from "../lib/fitness-tests";
+import { Face } from "../clients/Face";
 
 /*
  * Messages (Glenn, 18 Oct 2026: "Let's do messages now, apart from basic
@@ -33,12 +34,15 @@ const dayLine = (iso) => (sameDay(iso, Date.now()) ? "Today"
   : new Date(iso).toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }));
 const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
 
+/* Their photo from Studio, else their initials. */
 function Initials({ who, size = 40 }) {
   return (
-    <span className="flex-none rounded-full flex items-center justify-center text-sm font-semibold"
-      style={{ width: size, height: size, background: "var(--accent-soft)", color: "var(--accent)" }} aria-hidden="true">
-      {initials(who)}
-    </span>
+    <Face photoUrl={who.photoUrl} size={size}>
+      <span className="flex-none rounded-full flex items-center justify-center text-sm font-semibold"
+        style={{ width: size, height: size, background: "var(--accent-soft)", color: "var(--accent)" }} aria-hidden="true">
+        {initials(who)}
+      </span>
+    </Face>
   );
 }
 

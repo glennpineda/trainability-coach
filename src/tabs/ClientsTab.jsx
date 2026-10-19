@@ -5,6 +5,7 @@ import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
 import { Measurements } from "../clients/Measurements";
 import { FitnessTests } from "../clients/FitnessTests";
+import { Face } from "../clients/Face";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
@@ -36,10 +37,12 @@ function ClientRow({ client: c, open, onToggle, onSignedOut, onEdit, onArchive, 
     <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
       <button onClick={onToggle} aria-expanded={open}
         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--ghost-fill)] transition-colors">
-        <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
-          style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">
-          {clientInitials(c)}
-        </span>
+        <Face photoUrl={c.photoUrl} size={40}>
+          <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
+            style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">
+            {clientInitials(c)}
+          </span>
+        </Face>
         <span className="min-w-0 flex-1">
           <span className="block font-semibold truncate">
             {fullName(c)}
