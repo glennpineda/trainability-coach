@@ -12,6 +12,8 @@ import { PhotoCompare } from "./PhotoCompare";
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" });
 
 export function PrintPhotos({ data }) {
+  /* Hidden since the client stopped agreeing to photos (Run 1, A-14). */
+  if (data.hidden) return <div className="cx-print p-8 text-sm">These progress photos are hidden: {String(data.clientName || "the client").split(" ")[0]} no longer agrees to progress photos.</div>;
   const sets = data.sets || [];
   const two = sets.length > 1;
   const shown = ANGLES.filter(a => sets.every(s => s.photos?.[a.key]) || (!two && sets[0]?.photos?.[a.key]));

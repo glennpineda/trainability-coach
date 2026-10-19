@@ -50,9 +50,6 @@ item keeps the ids of the reports that found it. How the run was done is in
 
 **Questions for Glenn**
 
-- **When a client stops agreeing, their photos stay in messages (A-14).** Any
-  one of their trainers deletes every set, but copies already sent stay
-  readable to trainer and client. As recorded; still right?
 - **Ideas from the run: I-7 left.** A retest reminder for fitness tests,
   like Measurements every, and a Coach IQ note when a 1RM is old. Glenn
   didn't pick it on 19 Oct 2026; the rest (I-1 to I-6, I-9 to I-14) are built.

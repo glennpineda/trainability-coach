@@ -208,6 +208,18 @@ function Attachment({ a }) {
   if (a.kind === "photos") {
     const d = a.photos || {};
     const sets = d.sets || [];
+    /* Hidden since the client stopped agreeing to photos (Run 1, A-14). */
+    if (d.hidden) return (
+      <div className="flex items-center gap-3 rounded-xl px-3 py-2.5 border" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
+        <span className="flex-none w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "var(--ghost-fill)" }}>
+          <Camera size={18} style={{ color: "var(--iron)" }} aria-hidden="true" />
+        </span>
+        <span className="min-w-0 text-xs" style={{ color: "var(--iron)" }}>
+          <span className="block font-medium text-sm">Progress photos hidden</span>
+          {d.clientName ? d.clientName.split(" ")[0] : "The client"} no longer agrees to progress photos.
+        </span>
+      </div>
+    );
     return (
       <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
         className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>
@@ -225,7 +237,7 @@ function Attachment({ a }) {
   }
   if (a.kind === "report") {
     const d = a.report || {};
-    const parts = [d.measurements && "measurements", d.tests?.length && `${d.tests.length} test${d.tests.length === 1 ? "" : "s"}`, d.photos && "photos"].filter(Boolean);
+    const parts = [d.measurements && "measurements", d.tests?.length && `${d.tests.length} test${d.tests.length === 1 ? "" : "s"}`, d.photos && (d.photos.hidden ? "photos hidden" : "photos")].filter(Boolean);
     return (
       <a href={`/print/sent/${a.id}`} target="_blank" rel="noreferrer"
         className="flex items-center gap-3 rounded-xl px-3 py-2.5 border text-left" style={{ borderColor: "var(--iron-line)", background: "var(--chalk)", width: 260, maxWidth: "100%" }}>

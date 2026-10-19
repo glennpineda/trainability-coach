@@ -85,6 +85,12 @@ export function PrintReport({ data }) {
         </section>
       )}
 
+      {data.photos?.hidden && (
+        <section className="mt-8">
+          <h2 className="text-xl font-medium">Progress photos</h2>
+          <p className="text-sm mt-1" style={muted}>Hidden: {String(data.clientName || "the client").split(" ")[0]} no longer agrees to progress photos.</p>
+        </section>
+      )}
       {shown.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-medium">Progress photos</h2>

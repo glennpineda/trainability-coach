@@ -270,7 +270,18 @@ async function copyPhotos(id, sets) {
   }
 }
 
-function shapeAttachment(r, { full = false } = {}) {
+/**
+ * Whether a client's progress photos on sent messages are hidden: they are
+ * while the client doesn't agree to photos (Run 1, A-14; Glenn, 19 Oct 2026:
+ * "it should be hidden"), from trainer and client alike. The files are kept,
+ * so they show again if the client agrees again.
+ */
+export async function photosHidden(clientId) {
+  return !clientId || !(await get(`SELECT 1 AS x FROM coach_photo_consent WHERE client_id = ?`, [clientId]));
+}
+const hasPhotos = (r) => r.kind === "photos" || r.kind === "report";
+
+function shapeAttachment(r, { full = false, hidden = false } = {}) {
   const out = { id: r.id, kind: r.kind, name: r.name, mime: r.mime, bytes: Number(r.bytes) || 0,
     width: r.width == null ? null : Number(r.width), height: r.height == null ? null : Number(r.height) };
   /* Its still by a link (the trainer's; forClient signs one for the client),
@@ -284,7 +295,9 @@ function shapeAttachment(r, { full = false } = {}) {
   if (r.kind === "measurements") out.measurements = parse(r.data);
   if (r.kind === "test") out.test = parse(r.data);
   /* Each picture's address: the trainer's; the client's are signed (index.js). */
-  const withUrls = (d) => ({ ...d, sets: (d.sets || []).map((x, n) => ({ ...x, photos: Object.fromEntries((x.angles || []).map(a => [a, `/api/attachments/${r.id}/photo/${n}/${a}`])) })) });
+  const withUrls = (d) => (hidden
+    ? { ...d, hidden: true, sets: (d.sets || []).map(x => ({ ...x, angles: [], photos: {} })) }
+    : { ...d, sets: (d.sets || []).map((x, n) => ({ ...x, photos: Object.fromEntries((x.angles || []).map(a => [a, `/api/attachments/${r.id}/photo/${n}/${a}`])) })) });
   if (r.kind === "photos") out.photos = withUrls(parse(r.data));
   if (r.kind === "report") {
     const d = parse(r.data);
@@ -308,7 +321,7 @@ export async function attachmentFor(id, { trainerId = null, clientId = null } = 
 }
 /** An attachment that has been sent, for a signed link (which says who may see it). */
 export const sentAttachment = (id) => (ATT.test(String(id)) ? get(`SELECT * FROM coach_attachments WHERE id = ? AND message_id <> ''`, [id]) : null);
-export const attachmentShape = (r) => shapeAttachment(r, { full: true });
+export const attachmentShape = async (r) => shapeAttachment(r, { full: true, hidden: hasPhotos(r) && !!r.message_id && await photosHidden(r.client_id) });
 
 /* ------------------------------------------------------------ conversations */
 
@@ -358,9 +371,12 @@ export const conversationById = (id) => get(`SELECT * FROM coach_conversations W
 export async function messagesOf(conversationId) {
   const rows = await all(`SELECT * FROM coach_messages WHERE conversation_id = ? ORDER BY created_at, id`, [conversationId]);
   const atts = rows.length ? await all(`SELECT * FROM coach_attachments WHERE message_id IN (${rows.map(() => "?").join(", ")}) ORDER BY created_at, id`, rows.map(r => r.id)) : [];
+  /* Asked once per client in the conversation (Run 1, A-14). */
+  const hide = new Map();
+  for (const a of atts) if (hasPhotos(a) && !hide.has(a.client_id)) hide.set(a.client_id, await photosHidden(a.client_id));
   return rows.map(m => ({
     id: m.id, authorKind: m.author_kind, authorName: m.author_name, text: m.text, at: m.created_at,
-    attachments: atts.filter(a => a.message_id === m.id).map(a => shapeAttachment(a)),
+    attachments: atts.filter(a => a.message_id === m.id).map(a => shapeAttachment(a, { hidden: hasPhotos(a) && hide.get(a.client_id) })),
   }));
 }
 

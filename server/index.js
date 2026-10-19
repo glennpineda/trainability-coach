@@ -771,7 +771,7 @@ app.get("/api/attachments/:id", asSignedIn("GET /attachments", async (req, res, 
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
   if (!a) return res.status(404).json({ error: "Not found", code: "not_found" });
   res.set("Cache-Control", "private, no-store");
-  res.json(messages.attachmentShape(a));
+  res.json(await messages.attachmentShape(a));
 }));
 const sendAttachmentFile = (res, a) => {
   if (a.kind !== "picture" && a.kind !== "video") return res.status(404).json({ error: "Not found", code: "not_found" });
@@ -795,6 +795,8 @@ const sendPhoto = (res, file) => {
 app.get("/api/attachments/:id/photo/:n/:angle", asSignedIn("GET /attachments/photo", async (req, res, user) => {
   const a = await messages.attachmentFor(req.params.id, { trainerId: user.id });
   if (!a || (a.kind !== "photos" && a.kind !== "report") || !/^[01]$/.test(req.params.n) || !["front", "left", "right", "back"].includes(req.params.angle)) return res.status(404).json({ error: "Not found", code: "not_found" });
+  /* Hidden once the client no longer agrees (Run 1, A-14). */
+  if (a.message_id && await messages.photosHidden(a.client_id)) return res.status(404).json({ error: "Not found", code: "not_found" });
   sendPhoto(res, messages.attachmentPhotoPath(a.id, req.params.n, req.params.angle));
 }));
 app.get("/api/attachments/:id/file", asSignedIn("GET /attachments/file", async (req, res, user) => {
@@ -895,7 +897,8 @@ app.post("/api/client-link/conversations/:id/messages", linkRoute("client-link r
 /* A progress photo on a sent message, for the client's browser, by its signed link. */
 app.get("/api/attachment-photo/:what", linkRoute("signed attachment photo", async (req, res) => {
   const m = /^(att\d{3}[a-z]{3}\d{3})\.([01])\.(front|left|right|back)$/.exec(req.params.what);
-  if (!m || !progressPhotos.signedOk(req.params.what, req.query.exp, req.query.sig) || !await messages.sentAttachment(m[1])) return res.status(404).json({ error: "Not found", code: "not_found" });
+  const sent = m && progressPhotos.signedOk(req.params.what, req.query.exp, req.query.sig) ? await messages.sentAttachment(m[1]) : null;
+  if (!sent || await messages.photosHidden(sent.client_id)) return res.status(404).json({ error: "Not found", code: "not_found" });
   sendPhoto(res, messages.attachmentPhotoPath(m[1], m[2], m[3]));
 }));
 /* A file for the client's browser, by a signed link from the client link. */

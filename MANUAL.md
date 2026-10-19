@@ -1215,9 +1215,12 @@ these photos? Its trainers will no longer see them.*; tap **Delete**, or
 
 **If the client stops agreeing**, tap **… no longer agrees**, set apart at
 the bottom of the section, below a line. It asks *Delete all of …'s progress photos, taken by any of their
-trainers? Photos already sent in a message stay there.* Tap **Delete them
-all**, or **Keep them**. To take photos again later, record their agreement
-again.
+trainers? Photos already sent in a message are hidden too, for you and for
+them.* Tap **Delete them
+all**, or **Keep them**. In a conversation, a message's photos then show as
+**Progress photos hidden** (and a progress report's photos as hidden). To take
+photos again later, record their agreement again; photos sent before then
+show again in messages too.
 
 To send photos to the client, attach them to a message (7.3).
 

@@ -215,7 +215,7 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false, start = 0 }
           <button type="button" className="cx-btn-quiet w-full mt-3 py-2 text-sm" onClick={() => { setSessionError(""); setSession(true); }}>
             <Plus size={14} aria-hidden="true" /> Take progress photos
           </button>
-          {deleting === "all" ? confirm(`Delete all of ${first}'s progress photos, taken by any of their trainers? Photos already sent in a message stay there.`,
+          {deleting === "all" ? confirm(`Delete all of ${first}'s progress photos, taken by any of their trainers? Photos already sent in a message are hidden too, for you and for them.`,
             async () => { if (await send("DELETE", `/clients/${clientId}/progress-photos/consent`)) { setDeleting(null); setAgreed(false); } }, "Delete them all")
             /* Apart from Take progress photos, below a rule, since it deletes
                every set (Run 1, U-21). */
