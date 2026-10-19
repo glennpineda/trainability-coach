@@ -452,7 +452,9 @@ async function oneRmsOf(clientId) {
    a level"): a 1RM over their body weight on the four barbell lifts, against
    the bands most strength-standard tables give, rounded, men and women apart.
    Below the first number is beginner, from it intermediate, from the second
-   advanced. A guide for the trainer, not a rule; change the numbers here. */
+   advanced. A guide for the trainer, not a rule (Glenn, 19 Oct 2026: "Keep
+   them"), written up as coach-iq/principles/strength-levels.md: change both
+   together. */
 const STANDARDS = {
   squat: { label: "back squat", male: [1.0, 1.5], female: [0.75, 1.25] },
   bench: { label: "bench press", male: [0.75, 1.25], female: [0.5, 0.85] },

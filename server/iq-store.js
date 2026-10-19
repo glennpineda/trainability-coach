@@ -107,6 +107,20 @@ export async function load() {
       [id, `Loaded the principles from the files: ${principles.length} topics`, "[]", "", "Coach", stamp]));
     rows = await all(`SELECT kind, id, pos, data FROM coach_iq_docs`);
   }
+  /* A topic added to the files after the principles went in (strength
+     levels, Run 1, U-15): loaded on its own, as the file has it (a draft,
+     for the Primary Master to review), never over one already in the app. */
+  const had = new Set(rows.filter(r => r.kind === "principle").map(r => r.id));
+  const added = readPrinciples().filter(p => !had.has(p.key));
+  if (added.length) {
+    let pos = Number((await get(`SELECT MAX(pos) AS top FROM coach_iq_docs`))?.top) || 0;
+    const stamp = now();
+    for (const p of added) await insertDoc("principle", p.key, p, ++pos, stamp);
+    await insertWithNewId("libraryHistory", (id) => run(
+      `INSERT INTO coach_iq_history (id, summary, changes, changed_by, changed_by_name, changed_at) VALUES (?, ?, ?, ?, ?, ?)`,
+      [id, `Added from the files: ${added.map(p => p.title).join(", ")}`, "[]", "", "Coach", stamp]));
+    rows = await all(`SELECT kind, id, pos, data FROM coach_iq_docs`);
+  }
   fromDatabase = true;
   replace(assemble(rows));
 }

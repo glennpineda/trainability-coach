@@ -30,3 +30,4 @@ for Billy's suggestions, never a rule to argue with.
 | [frequency-and-variety.md](frequency-and-variety.md) | How often to train, when to change a program, keeping it varied |
 | [starting-out.md](starting-out.md) | The first months of training: training age, the beginner's first program |
 | [women-and-teenagers.md](women-and-teenagers.md) | What changes, and what doesn't, for women and for teenagers (Coach IQ doesn't cover children) |
+| [strength-levels.md](strength-levels.md) | A level from a client's 1RMs: the four barbell lifts against body weight |
