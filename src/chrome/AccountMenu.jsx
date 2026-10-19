@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Accessibility, Bell, BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
+import { Accessibility, Bell, SlidersHorizontal, BookOpen, ChevronDown, ClipboardCheck, Dumbbell, Link2, LogOut, Settings, ShieldCheck, Sparkles } from "lucide-react";
 import { LinkDialog } from "../auth/LinkDialog";
 import { AccessibilityDialog } from "./AccessibilityDialog";
 import { NotificationsDialog, currentSubscription } from "./NotificationsDialog";
@@ -7,7 +7,8 @@ import { apiRequest } from "../lib/api";
 import { lookOf, lookSummary } from "../lib/look";
 import { VERSION_LABEL } from "../version";
 import { Avatar } from "./Avatar";
-import { useUnits, useMySettings } from "../hooks/useUnits";
+import { useMySettings } from "../hooks/useUnits";
+import { SettingsDialog } from "./SettingsDialog";
 
 const ROLE = { master: "Master", admin: "Admin", staff: "Front desk", trainer: "Trainer" };
 
@@ -61,12 +62,13 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
   }, [open]);
 
   const role = user.isPrimary ? "Primary Master" : ROLE[user.role];
-  const [units, setUnits] = useUnits();
-  const [mine, changeMine] = useMySettings();
+  const [mine] = useMySettings();
+  const [setting, setSetting] = useState(false);
   return (
     <div className="relative cx-account" ref={ref}>
       {linking && <LinkDialog onClose={() => setLinking(false)} />}
       {notifying && push && <NotificationsDialog info={push} state={pushState} setState={setPushState} onClose={() => setNotifying(false)} />}
+      {setting && <SettingsDialog onClose={() => setSetting(false)} />}
       {looking && chooseLook && <AccessibilityDialog user={user} chooseLook={chooseLook} onClose={() => setLooking(false)} />}
       <button ref={btnRef} type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-haspopup="menu"
         aria-label={`${user.name}: account menu`}
@@ -124,31 +126,18 @@ export function AccountMenu({ user, onLogout, onOpen, billy, chooseLook }) {
               <Link2 size={16} style={{ color: "var(--accent)" }} aria-hidden="true" /> Link your Trainability account
             </button>
           )}
-          {/* Each trainer's own (Glenn, 17 Oct 2026: "Each trainer only"):
-              how weights and distances are shown to them, and by Billy. */}
-          <div className="px-3 py-2">
-            <div className="text-xs mb-1.5" style={{ color: "var(--iron)" }} id="units-label">Units</div>
-            <div className="grid grid-cols-2 gap-1 p-0.5 rounded-lg" style={{ background: "var(--ghost-fill)" }} role="radiogroup" aria-labelledby="units-label">
-              {[["imperial", "Imperial", "lb, ft"], ["metric", "Metric", "kg, m"]].map(([key, word, hint]) => (
-                <button key={key} type="button" role="radio" aria-checked={units === key} onClick={() => setUnits(key)}
-                  className="rounded-md px-2 py-1 text-sm"
-                  style={units === key ? { background: "var(--cerulean)", color: "#fff" } : { color: "var(--ink)" }}>
-                  {word} <span className="text-xs" style={{ opacity: 0.8 }}>{hint}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          {/* How often each client's measurements are due (Glenn, 19 Oct
-              2026: "about every 5 weeks, this should be a setting"): the
-              Clients list says "Measurements due" once it has been as long. */}
-          <label className="px-3 py-2 flex items-center justify-between gap-2 text-sm">
-            <span className="text-xs" style={{ color: "var(--iron)" }}>Measurements every</span>
-            <select className="cx-input text-sm" style={{ width: "auto", padding: "0.3rem 2rem 0.3rem 0.6rem", color: "var(--ink)" }}
-              value={mine.measureEvery} onChange={e => changeMine({ measureEvery: Number(e.target.value) })}>
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => <option key={n} value={n}>{n === 1 ? "1 week" : `${n} weeks`}</option>)}
-              <option value={0}>Off</option>
-            </select>
-          </label>
+          {/* The trainer's own settings (Glenn, 19 Oct 2026): units, and how
+              often measurements are due; the line says what is chosen. */}
+          <button role="menuitem" type="button" onClick={() => { setOpen(false); setSetting(true); }}
+            className="w-full flex items-start gap-2.5 px-3 py-2 rounded-lg text-sm text-left hover:bg-(--ghost-fill)">
+            <SlidersHorizontal size={16} className="mt-0.5 flex-none" style={{ color: "var(--accent)" }} aria-hidden="true" />
+            <span className="min-w-0">
+              <span className="block">Settings</span>
+              <span className="block text-xs" style={{ color: "var(--iron)" }}>
+                {mine.units === "metric" ? "Metric" : "Imperial"} · {mine.measureEvery ? `measurements every ${mine.measureEvery === 1 ? "week" : `${mine.measureEvery} weeks`}` : "measurements due off"}
+              </span>
+            </span>
+          </button>
           {/* Studio's Accessibility (its Profile → Accessibility): the line
               says light, dark or matching the device, and what else differs. */}
           {chooseLook && (

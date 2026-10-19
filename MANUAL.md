@@ -426,17 +426,21 @@ your Trainability account.* (3.5).
      the library (3.9).
    - **Installation** — only for the Primary Master: settings for this copy of
      Coach on its server (3.10).
-   - **Units** — **Imperial** (pounds, inches, feet, yards, miles) or
-     **Metric** (kilograms, centimetres, metres, kilometres). Tap one to
-     choose it; it is shaded blue when chosen. It starts on **Imperial**.
-     Weights and distances in Coach IQ, and in Billy's answers, are then
-     shown in your units only, rounded to what a gym has: loads to 5 lb or
-     2.5 kg. It is your own choice; other trainers keep theirs.
-   - **Measurements every** — how many weeks apart you measure your clients:
-     **1 week** to **12 weeks**, or **Off**. It starts at **5 weeks**. When a
-     client's last measurements are that old, or they have none, their line
-     on the Clients list says **Measurements due** (4.2). **Off** never says
-     it. It is your own choice; other trainers keep theirs.
+   - **Settings** — the line under it says what you have chosen, such as
+     *Imperial · measurements every 5 weeks*. Tap it, and a box opens with:
+     - **Units** — **Imperial** (pounds, inches, feet, yards, miles) or
+       **Metric** (kilograms, centimetres, metres, kilometres). Tap one to
+       choose it. It starts on **Imperial**. Weights and distances in Coach
+       IQ, and in Billy's answers, are then shown in your units only,
+       rounded to what a gym has: loads to 5 lb or 2.5 kg.
+     - **Measurements every** — how many weeks apart you measure your
+       clients: **1 week** to **12 weeks**, or **Off**. It starts at **5
+       weeks**. When a client's last measurements are that old, or they have
+       none, their line on the Clients list says **Measurements due** (4.2).
+       **Off** never says it.
+
+     Each is saved as soon as you choose it, and is your own; other trainers
+     keep theirs. Tap **X**, or anywhere outside the box, to close it.
    - **Link your Trainability account** — only with a Coach account (2.1):
      connects it to a Trainability account with another email.
    - **Accessibility** — light or dark, the app's colors, contrast, motion and
@@ -828,7 +832,7 @@ Each client has one line, in order of first name:
 - **Measurements due**, in blue after it, when it is time to measure them
   again: their last measurements (4.8) were taken at least as many weeks ago
   as you have chosen, or none have been taken yet. How many weeks is yours
-  to choose in your account menu, **Measurements every** (3.5); it starts at
+  to choose in your account menu, **Settings**, **Measurements every** (3.5); it starts at
   5 weeks. Once you add their measurements, it goes.
 
 If you have no clients yet, the list says *You have no clients yet. Tap Add
@@ -838,10 +842,10 @@ a client, or add them in Studio.*
 
 ![A client's details](docs/images/06-client-details.png)
 
-*A client, opened*
+*A client's page*
 
-1. Tap the client's line. They open in a box of their own, over the list:
-   their photo, their name and their last session at the top, and under it
+1. Tap the client's line. Their own page opens in place of the list: their
+   name at the top, with their photo and their last session, and under it
    four tabs:
    - **Details & limitations**: who they are (below), their limitations
      (4.7), and **Edit details** and **Archive**.
@@ -850,7 +854,7 @@ a client, or add them in Studio.*
    - **Fitness tests** (4.10).
 
    On a phone the tabs say **Details**, **Measurements**, **Photos** and
-   **Tests**. Tap one to see it. The box opens on **Details & limitations**,
+   **Tests**. Tap one to see it. The page opens on **Details & limitations**,
    which shows:
 
 | Detail | What it shows |
@@ -865,8 +869,7 @@ a client, or add them in Studio.*
 
    Anything Studio does not have says **Not given**, **Not known**,
    **None yet** or **Nothing booked**.
-2. To close it, tap the **X** in its top right corner, tap outside it, or
-   press **Esc** on a keyboard.
+2. To go back to the list, tap the arrow pointing left, beside their name.
 
 ### 4.4 Finding a client
 
@@ -881,7 +884,7 @@ If nobody matches, the list says *No one matches* and what you typed.
 
 Clients you have archived — people you no longer train — are kept apart from
 the rest. To archive one, open them (4.3) and tap **Archive** at the bottom
-of **Details & limitations**; the box closes and it says *Jamie Ortiz archived. They're under Archived.*
+of **Details & limitations**; the list comes back and it says *Jamie Ortiz archived. They're under Archived.*
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.
@@ -920,7 +923,7 @@ If something is missing, it says what, such as *Last name and Email are
 required*.
 
 **To change a client's details**, open them (4.3) and tap **Edit details**
-at the bottom of **Details & limitations**. The box closes and the same form
+at the bottom of **Details & limitations**. The list comes back and the same form
 opens, headed *Edit Jamie's details*, with what
 is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
 details saved.*
@@ -990,7 +993,7 @@ line and the bottom as a dashed one, each named at its end. Where two sets
 were taken on one day, the later one counts. Tap **Hide progress** to put the
 chart away.
 
-They are shown in your own units (3.5, **Units**): pounds and inches on
+They are shown in your own units (3.5, **Settings**, **Units**): pounds and inches on
 **Imperial**, kilograms and centimetres on **Metric**. Inches are shown to the
 nearest quarter, as a tape reads them.
 
@@ -1624,7 +1627,7 @@ can write to them here.*
 | **Limitation** | Something a client should not do, or should do with care, written down by one of their trainers (4.7). |
 | **Archived client** | A client you have archived in Studio because you no longer train them. They are under **Archived** on the Clients page (4.5). |
 | **Apps panel** | The panel that folds down from the Coach logo, for switching between Coach and Studio (3.2). |
-| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Units, Accessibility, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
+| **Account menu** | The menu under your photo in the top right corner: who is signed in, your equipment and exercises, Settings (your units and how often measurements are due), Accessibility, Log out and the version (3.5). To go to Studio, use the apps panel under the logo (3.2). |
 | **Version** | Which release of Coach you are using: a number such as 1.0.1, and the release's name, such as Caesious. Shown on the sign-in screen and at the foot of your account menu. |
 
 <div style="page-break-after: always;"></div>

@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { Search, ChevronRight, X, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Search, ChevronLeft, ChevronRight, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
 import { TabHeading } from "./TabHeading";
 import { Limitations } from "../clients/Limitations";
@@ -45,11 +44,11 @@ function measurementsDue(c, weeks) {
 
 /* One line on the list: the face, the name, and under it the last session
    and, when it's time, that measurements are due (Glenn, 19 Oct 2026). A tap
-   opens the client's dialog. */
+   opens the client's page. */
 function ClientRow({ client: c, due, onOpen }) {
   return (
     <li className="border-t first:border-t-0" style={{ borderColor: "var(--iron-line)" }}>
-      <button type="button" onClick={onOpen} aria-haspopup="dialog"
+      <button type="button" onClick={onOpen}
         className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--ghost-fill)] transition-colors">
         <Face photoUrl={c.photoUrl} size={40}>
           <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
@@ -73,7 +72,7 @@ function ClientRow({ client: c, due, onOpen }) {
   );
 }
 
-/* The dialog's tabs, the long name and the one a phone shows. */
+/* The client's tabs, the long name and the one a phone shows. */
 const CLIENT_TABS = [
   ["details", "Details & limitations", "Details"],
   ["measurements", "Measurements", "Measurements"],
@@ -84,98 +83,86 @@ const CLIENT_TABS = [
 /*
  * A client, opened from the list (Glenn, 19 Oct 2026: "each client item on
  * client tab, when clicked, should open its own dialog containing all the
- * content sections in its own tab in a tab band"). Studio's client dialog
- * (its ClientsTab.jsx, ClientDetailDialog): the person at the top, then a
- * tab band (its TabbedCard), each tab one part of their record. Here: their
- * details and limitations, measurements, progress photos, fitness tests. The
- * band is Coach's own segmented row (the list's Active · Archived), in a
- * portal so it sits over the app's bars, as Coach's other dialogs do.
+ * content sections in its own tab in a tab band", then "Make that client
+ * dialog fill the whole panel so it's large on desktop view", and "the client
+ * dialog's title should be the client's name with a chevron pointing to the
+ * left to go back to the client tab"). Studio's client dialog (its
+ * ClientsTab.jsx, ClientDetailDialog): the person at the top, then a tab band
+ * (its TabbedCard), each tab one part of their record. Here in the Clients
+ * tab's own place, in place of the list, headed as a conversation in
+ * Messages is: the back arrow, their face and their name. The band is
+ * Coach's own segmented row (the list's Active · Archived).
  */
-function ClientDialog({ client: c, onClose, onSignedOut, onEdit, onArchive, busy, onMeasured }) {
+function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured }) {
   const [tab, setTab] = useState("details");
   const next = nextBooked(c);
-  /* Focus in the dialog once, as it opens, for the keyboard and a screen reader. */
-  const box = useRef(null);
-  useEffect(() => { box.current?.focus({ preventScroll: true }); }, []);
-  useEffect(() => {
-    const key = (e) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-  }, [onClose]);
-  return createPortal(
-    <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ zIndex: 50, background: "rgba(0,0,0,0.4)" }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      {/* One height whichever tab is open, so the sheet doesn't jump as the tabs change. */}
-      <div role="dialog" aria-modal="true" aria-label={fullName(c)} tabIndex={-1} ref={box}
-        className="cx-card w-full sm:max-w-2xl flex flex-col outline-none" style={{ borderRadius: 16, height: "min(88dvh, 820px)" }}>
-        <div className="flex items-center gap-3 px-4 pt-4">
-          <Face photoUrl={c.photoUrl} size={48}>
-            <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-12 h-12"
-              style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">{clientInitials(c)}</span>
-          </Face>
-          <div className="min-w-0 flex-1">
-            <h2 className="cx-display text-xl truncate">{fullName(c)}</h2>
-            <div className="text-xs truncate" style={{ color: "var(--iron)" }}>
-              {[c.pronouns && `(${c.pronouns})`, lastLine(c), c.archived && "Archived"].filter(Boolean).join(" · ")}
-            </div>
+  useEffect(() => { window.scrollTo({ top: 0 }); }, [c.id]);
+  return (
+    <div className="max-w-5xl mx-auto px-4">
+      <div className="flex items-center gap-2 pt-4 pb-3">
+        <button type="button" className="cx-icon-btn flex-none" aria-label="All clients" onClick={onBack}><ChevronLeft size={22} aria-hidden="true" /></button>
+        <Face photoUrl={c.photoUrl} size={40}>
+          <span className="rounded-full flex-none flex items-center justify-center font-semibold text-white w-10 h-10 text-sm"
+            style={{ background: c.archived ? "var(--iron)" : "var(--cerulean)" }} aria-hidden="true">{clientInitials(c)}</span>
+        </Face>
+        <div className="min-w-0 flex-1">
+          <h1 className="cx-display text-xl truncate">{fullName(c)}</h1>
+          <div className="text-xs truncate" style={{ color: "var(--iron)" }}>
+            {[c.pronouns && `(${c.pronouns})`, lastLine(c), c.archived && "Archived"].filter(Boolean).join(" · ")}
           </div>
-          <button type="button" className="cx-icon-btn flex-none" onClick={onClose} aria-label="Close"><X size={18} aria-hidden="true" /></button>
-        </div>
-        <div className="px-4 pt-3">
-          <div className="flex rounded-[10px] p-1 gap-1" style={{ background: "var(--ghost-fill)" }} role="tablist" aria-label={`${c.firstName || "Client"}'s record`}>
-            {CLIENT_TABS.map(([key, long, short]) => (
-              <button key={key} type="button" role="tab" id={`client-tab-${key}`} aria-selected={tab === key} aria-controls="client-panel" onClick={() => setTab(key)}
-                className="flex-auto px-1.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
-                style={tab === key ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" } : { color: "var(--iron)" }}>
-                <span className="sm:hidden">{short}</span><span className="hidden sm:inline">{long}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        <div id="client-panel" role="tabpanel" aria-labelledby={`client-tab-${tab}`} className="px-4 pb-4 pt-2 overflow-y-auto flex-1 min-h-0">
-          {tab === "details" && (
-            <div className="grid sm:grid-cols-2 gap-x-6">
-              <Detail icon={Mail} label="Email">
-                {c.email ? <a href={`mailto:${c.email}`} className="cx-link">{c.email}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
-              </Detail>
-              <Detail icon={Phone} label="Phone">
-                {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="cx-link">{c.phone}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
-              </Detail>
-              <Detail icon={Cake} label="Birthday">
-                {birthday(c.dateOfBirth) || <span style={{ color: "var(--iron)" }}>Not given</span>}
-              </Detail>
-              <Detail icon={UserPlus} label="Your client since">
-                {c.since ? longDate(c.since, true) : <span style={{ color: "var(--iron)" }}>Not known</span>}
-              </Detail>
-              <Detail icon={CalendarCheck} label="Last session">
-                {c.lastSessionOn ? longDate(c.lastSessionOn, true) : <span style={{ color: "var(--iron)" }}>None yet</span>}
-              </Detail>
-              <Detail icon={CalendarClock} label="Next booked">
-                {next ? longDate(next, true) : <span style={{ color: "var(--iron)" }}>Nothing booked</span>}
-              </Detail>
-              {c.sharedWith > 0 && (
-                <Detail icon={Users} label="Shared">
-                  Also trains with {plural(c.sharedWith, "other trainer")}
-                </Detail>
-              )}
-              <Limitations clientId={c.id} onSignedOut={onSignedOut} />
-              {(onEdit || onArchive) && (
-                <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
-                  {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}
-                  {onArchive && (c.archived
-                    ? <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>
-                    : <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, true)} disabled={busy}><Archive size={15} aria-hidden="true" /> Archive</button>)}
-                </div>
-              )}
-            </div>
-          )}
-          {tab === "measurements" && <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={onMeasured} inTab />}
-          {tab === "photos" && <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />}
-          {tab === "tests" && <FitnessTests client={c} onSignedOut={onSignedOut} inTab />}
         </div>
       </div>
-    </div>,
-    document.body,
+      <div className="flex rounded-[10px] p-1 gap-1" style={{ background: "var(--ghost-fill)" }} role="tablist" aria-label={`${c.firstName || "Client"}'s record`}>
+        {CLIENT_TABS.map(([key, long, short]) => (
+          <button key={key} type="button" role="tab" id={`client-tab-${key}`} aria-selected={tab === key} aria-controls="client-panel" onClick={() => setTab(key)}
+            className="flex-auto px-1.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
+            style={tab === key ? { background: "var(--chalk)", color: "var(--ink)", boxShadow: "0 1px 2px rgba(23,42,58,0.15)" } : { color: "var(--iron)" }}>
+            <span className="sm:hidden">{short}</span><span className="hidden sm:inline">{long}</span>
+          </button>
+        ))}
+      </div>
+      <div id="client-panel" role="tabpanel" aria-labelledby={`client-tab-${tab}`} className="cx-card mt-3 p-4 sm:p-5">
+        {tab === "details" && (
+          <div className="grid sm:grid-cols-2 gap-x-6">
+            <Detail icon={Mail} label="Email">
+              {c.email ? <a href={`mailto:${c.email}`} className="cx-link">{c.email}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
+            </Detail>
+            <Detail icon={Phone} label="Phone">
+              {c.phone ? <a href={`tel:${c.phone.replace(/[^\d+]/g, "")}`} className="cx-link">{c.phone}</a> : <span style={{ color: "var(--iron)" }}>Not given</span>}
+            </Detail>
+            <Detail icon={Cake} label="Birthday">
+              {birthday(c.dateOfBirth) || <span style={{ color: "var(--iron)" }}>Not given</span>}
+            </Detail>
+            <Detail icon={UserPlus} label="Your client since">
+              {c.since ? longDate(c.since, true) : <span style={{ color: "var(--iron)" }}>Not known</span>}
+            </Detail>
+            <Detail icon={CalendarCheck} label="Last session">
+              {c.lastSessionOn ? longDate(c.lastSessionOn, true) : <span style={{ color: "var(--iron)" }}>None yet</span>}
+            </Detail>
+            <Detail icon={CalendarClock} label="Next booked">
+              {next ? longDate(next, true) : <span style={{ color: "var(--iron)" }}>Nothing booked</span>}
+            </Detail>
+            {c.sharedWith > 0 && (
+              <Detail icon={Users} label="Shared">
+                Also trains with {plural(c.sharedWith, "other trainer")}
+              </Detail>
+            )}
+            <Limitations clientId={c.id} onSignedOut={onSignedOut} />
+            {(onEdit || onArchive) && (
+              <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
+                {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}
+                {onArchive && (c.archived
+                  ? <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>
+                  : <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, true)} disabled={busy}><Archive size={15} aria-hidden="true" /> Archive</button>)}
+              </div>
+            )}
+          </div>
+        )}
+        {tab === "measurements" && <Measurements clientId={c.id} onSignedOut={onSignedOut} onChanged={onMeasured} inTab />}
+        {tab === "photos" && <ProgressPhotos client={c} onSignedOut={onSignedOut} inTab />}
+        {tab === "tests" && <FitnessTests client={c} onSignedOut={onSignedOut} inTab />}
+      </div>
+    </div>
   );
 }
 
@@ -293,7 +280,7 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   const [{ measureEvery }] = useMySettings();
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
-  /* The client whose dialog is open: already, when Today sent the trainer here. */
+  /* The client open: already, when Today sent the trainer here. */
   const [openId, setOpenId] = useState(() => { try { const id = sessionStorage.getItem("coach-client"); sessionStorage.removeItem("coach-client"); return id || null; } catch { return null; } });
   const [adding, setAdding] = useState(false);   // true, or the client whose details are being changed
   const [said, setSaid] = useState("");
@@ -324,6 +311,14 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
       || (digits.length >= 3 && c.phone.replace(/\D/g, "").includes(digits)));
   }, [list, query]);
 
+  /* A client open: their page, in place of the list. */
+  if (open) {
+    return (
+      <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh}
+        onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); window.scrollTo({ top: 0, behavior: "smooth" }); } : null}
+        onArchive={archive ? archiveOne : null} />
+    );
+  }
   return (
     <div className="max-w-5xl mx-auto px-4">
       <TabHeading>Clients</TabHeading>
@@ -396,11 +391,6 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
           </ul>
         )}
       </div>
-      {open && (
-        <ClientDialog key={open.id} client={open} onClose={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh}
-          onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); window.scrollTo({ top: 0, behavior: "smooth" }); } : null}
-          onArchive={archive ? archiveOne : null} />
-      )}
 
     </div>
   );
