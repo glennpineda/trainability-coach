@@ -31,16 +31,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 - **Linking a Coach account doubles "Where I usually train" (B-6).**
   `accounts.link` moves places without merging; Tess now has three of the same
   name. Merge, or rename.
-- **Loads it can't read as a percentage pass silently (B-9).** "0%", "1000%",
-  "3x75%", "75-80%", "~75%", "75%+", "75% e1RM"; "0.5%" gives "about 1 lb".
-- **A load over 100%, or a % with no 1RM, isn't flagged where it's typed
-  (U-12).** The hint stays grey ("…about 250 lb." / "In your units."); the
-  warning only comes in Coach IQ's check.
-- **The 1RM warning asks the impossible for the trainer's own exercises
-  (B-10)**: "Add one in their Fitness tests" — a 1RM can only be recorded for a
-  library exercise.
-- **The printed or sent program shows a bare "75%" when there is no 1RM
-  (B-11)**, with no reminder to the trainer.
 - **Taking an exercise out has no confirm or undo (U-7)**; taking a day out is
   a browser confirm ("with its 1 exercises"). Use the in-app confirm, or an
   Undo bar.

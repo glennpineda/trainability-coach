@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BodyMap, scaleOf } from "./BodyMap";
-import { loadLine } from "../lib/one-rm";
+import { loadLine, percentOf } from "../lib/one-rm";
 import {
   ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Sparkles, Trash2, TriangleAlert, Info, X,
 } from "lucide-react";
@@ -224,6 +224,17 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
                 </button>
               )}
             </div>
+            {/* A load the client can't use on paper: a share of a 1RM with no
+                weight worked out prints as the bare percentage (Run 1, B-11). */}
+            {(() => {
+              const bare = p.days.flatMap(d => d.exercises).filter(e => percentOf(e.load) != null && !e.loadKg).length;
+              return bare > 0 && (
+                <p className="text-xs mt-2 flex items-start gap-1" style={muted}>
+                  <TriangleAlert size={13} className="flex-none mt-px" style={{ color: LEVEL_COLOR.warn }} aria-label="Take care" />
+                  {bare === 1 ? "One load is" : `${bare} loads are`} a share of a 1RM {p.clientName} hasn't got, so {bare === 1 ? "it prints" : "they print"} as a bare percentage. Write the weight, or add the 1RM in their Fitness tests.
+                </p>
+              );
+            })()}
           </>
         )}
         <div className="mt-3 pt-3 border-t text-sm" style={line}>

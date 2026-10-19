@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { percentOf, kgAt, weightText, oneRmText } from "../lib/one-rm";
+import { percentOf, kgAt, weightText, oneRmText, unreadPercent } from "../lib/one-rm";
 import { convertText } from "../lib/units";
 
 /**
@@ -81,7 +81,9 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
     <label className="grid gap-1 text-sm">
       <span className="font-medium">{label}</span>
       <input className="cx-input" value={f[k]} maxLength={max} placeholder={placeholder} onChange={set(k)} />
-      {hint && <span className="text-xs" style={muted}>{hint}</span>}
+      {hint && (typeof hint === "string" ? <span className="text-xs" style={muted}>{hint}</span>
+        : hint.warn ? <span className="text-xs flex items-start gap-1" style={{ color: "var(--ink)" }}><TriangleAlert size={13} className="flex-none mt-px" style={{ color: COLOR.warn }} aria-label="Take care" />{hint.text}</span>
+        : <span className="text-xs" style={muted}>{hint.text}</span>)}
     </label>
   );
   const x = info?.exercise;
@@ -90,9 +92,19 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
   const orm = pick && oneRms?.[pick.id];
   const pct = percentOf(f.load);
   const whenTaken = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
-  const loadHint = !orm ? "In your units."
-    : pct != null ? `${pct}% of their 1RM is about ${weightText(kgAt(orm.kg, pct), units)}.`
-    : `Or a share of ${clientName || "their"}${clientName ? "'s" : ""} 1RM, ${oneRmText(orm.kg, units)} (${whenTaken(orm.takenOn)}), such as 75%.`;
+  /* What the Load box says under it. A percentage that can't come to a
+     weight is said in orange as it is typed, not only later in Coach IQ's
+     check (Run 1, U-12): no 1RM for it, one of the trainer's own exercises
+     (which never has one), more than all of it, or one it can't read. */
+  const who = clientName || "They";
+  const loadHint = unreadPercent(f.load) ? { warn: true, text: "Write one share of their 1RM, such as 75%, or the weight." }
+    : pct != null && x?.own ? { warn: true, text: "A 1RM is only kept for exercises from the library. Write the weight." }
+    : pct != null && !orm ? { warn: true, text: `${who} ${clientName ? "has" : "have"} no 1RM for this exercise. Add one in their Fitness tests, or write the weight.` }
+    : pct != null && pct > 100 ? { warn: true, text: `More than their 1RM, the most they can lift once: about ${weightText(kgAt(orm.kg, pct), units)}.` }
+    : pct != null && pct < 10 ? { warn: true, text: `${pct}% of their 1RM is next to nothing. Check the load.` }
+    : pct != null ? { text: `${pct}% of their 1RM is about ${weightText(kgAt(orm.kg, pct), units)}.` }
+    : !orm ? { text: "In your units." }
+    : { text: `Or a share of ${clientName || "their"}${clientName ? "'s" : ""} 1RM, ${oneRmText(orm.kg, units)} (${whenTaken(orm.takenOn)}), such as 75%.` };
 
   /* Sent to the page's body, as every other dialog is, so it covers the
      header and the tab bar instead of sitting under them (Run 1, U-1/D-1). */

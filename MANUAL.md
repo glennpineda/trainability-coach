@@ -1391,6 +1391,17 @@ the same on the printed program (5.6) and a program sent in a message. When
 the client's 1RM changes, the weight changes with it; a copy already sent
 stays as it was. The latest 1RM for that exercise is the one used.
 
+If a percentage can't come to a weight, the box says so in orange as you
+type, with a triangle: when the client has no 1RM for the exercise (*Avery
+has no 1RM for this exercise. Add one in their Fitness tests, or write the
+weight.*), for one of your own exercises (*A 1RM is only kept for exercises
+from the library. Write the weight.*), for more than 100% (*More than their
+1RM, the most they can lift once: about 280 lb.*), for next to nothing, or
+for one it can't read, such as *75-80%* (*Write one share of their 1RM, such
+as 75%, or the weight.*). A percentage with no weight prints as just the
+percentage, which a client can't use, so under **Print for the client** the
+program says how many loads are like that.
+
 **To change an exercise already on a day**, tap its name or **Details** under
 it. The same box opens with what it has; change anything, or tap **Change
 exercise** to put another in its place, then tap **Save**.
