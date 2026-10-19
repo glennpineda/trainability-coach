@@ -4,7 +4,7 @@ import { LEVELS } from "./coach-iq.js";
 import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
-import { percentOf, kgAt, maxRepsAt, weightText } from "../src/lib/one-rm.js";
+import { percentOf, kgAt, maxRepsAt, weightText, unreadPercent, topReps } from "../src/lib/one-rm.js";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "We need to start creating a
@@ -602,10 +602,19 @@ function check(program, rows, ctx, own) {
       /* A load as a percentage of 1RM (Glenn, 19 Oct 2026): something to go
          by, no more than all of it, and reps that can be done at it. */
       const pct = percentOf(e.load);
+      const top = topReps(e.reps);
       if (pct != null) {
-        if (!e.oneRm) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% of a 1RM ${program.clientName} hasn't got for it. Add one in their Fitness tests, or write the weight.` });
+        /* A 1RM is only kept for the library's exercises (fitness-tests.js),
+           so one of the trainer's own is only told to have a weight (Run 1, B-10). */
+        if (!e.oneRm) add({ ...at, level: "warn", from: "one-rm", text: e.own
+          ? `${e.name}: ${pct}% of a 1RM, but a 1RM is only kept for exercises from the library. Write the weight.`
+          : `${e.name}: ${pct}% of a 1RM ${program.clientName} hasn't got for it. Add one in their Fitness tests, or write the weight.` });
         else if (pct > 100) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% is more than their 1RM, the most they can lift once.` });
-        else if (r && r[0] > maxRepsAt(pct) + 1) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: at ${pct}% of 1RM about ${maxRepsAt(pct)} reps can be done; ${e.reps} asks for more. Lighten it, or fewer reps.` });
+        else if (pct < 10) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% of their 1RM is next to nothing. Check the load.` });
+        /* The top of a range counts: 10–12 at 75% asks for 12 (Run 1, B-8). */
+        else if (top && top > maxRepsAt(pct) + 1) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: at ${pct}% of 1RM about ${maxRepsAt(pct)} reps can be done; ${e.reps} asks for more. Lighten it, or fewer reps.` });
+      } else if (unreadPercent(e.load)) {
+        add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: “${e.load}” can't be worked out from a 1RM. Write one share of it, such as 75%, or the weight.` });
       }
       if (e.rest != null && goal.rest_range && !e.superset) {
         if (e.rest < goal.rest_range[0] || e.rest > goal.rest_range[1]) {

@@ -31,9 +31,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 - **Linking a Coach account doubles "Where I usually train" (B-6).**
   `accounts.link` moves places without merging; Tess now has three of the same
   name. Merge, or rename.
-- **Coach IQ's rep check against a %1RM reads only "N" or the bottom of "N–M"
-  (B-8).** At 75%: "12" warns; "10-12", "8–12", "11", "12 each side", "12 reps",
-  "AMRAP" don't.
 - **Loads it can't read as a percentage pass silently (B-9).** "0%", "1000%",
   "3x75%", "75-80%", "~75%", "75%+", "75% e1RM"; "0.5%" gives "about 1 lb".
 - **A load over 100%, or a % with no 1RM, isn't flagged where it's typed

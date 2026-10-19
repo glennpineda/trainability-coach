@@ -1405,7 +1405,7 @@ brackets.
 | Mark | Means | For example |
 |---|---|---|
 | Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
-| Orange triangle | Take care | Something to make easier for the client, or above their level; a load from a 1RM they haven't got for that exercise, more than 100% of it, or more reps than can be done at it |
+| Orange triangle | Take care | Something to make easier for the client, or above their level; a load from a 1RM they haven't got for that exercise (or one of your own exercises, which has no 1RM), more than 100% of it or next to nothing, a percentage it can't work out (such as *75-80%* or *~75%*: write one, such as 75%), or more reps than can be done at it (the top of a range counts, and *12 each side* is 12) |
 | Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly, a step back from something the client did in an earlier program |
 
 They are guidance: your word wins. If one is wrong, it shows where Coach IQ
