@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { percentOf, kgAt, weightText, oneRmText } from "../lib/one-rm";
@@ -85,7 +86,9 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
     : pct != null ? `${pct}% of their 1RM is about ${weightText(kgAt(orm.kg, pct), units)}.`
     : `Or a share of ${clientName || "their"}${clientName ? "'s" : ""} 1RM, ${oneRmText(orm.kg, units)} (${whenTaken(orm.takenOn)}), such as 75%.`;
 
-  return (
+  /* Sent to the page's body, as every other dialog is, so it covers the
+     header and the tab bar instead of sitting under them (Run 1, U-1/D-1). */
+  return createPortal(
     <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ zIndex: 50, background: "rgba(0,0,0,0.4)" }}>
       <div role="dialog" aria-modal="true" aria-label={editing ? "Change an exercise" : `Add an exercise to ${dayName}`}
         className="cx-card w-full sm:max-w-lg flex flex-col" style={{ maxHeight: "92dvh", color: "var(--ink)" }}>
@@ -172,7 +175,8 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

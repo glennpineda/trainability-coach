@@ -24,11 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **The tab bar covers the exercise dialog's buttons (U-1, D-1).**
-  `ExerciseDialog.jsx` is drawn inside the page, not portalled like every other
-  dialog, so the tab bar sits over **Add to …** and **Save** and dimming stops
-  at the panel. A tap on Add opened Clients and lost what was typed. Phone and
-  desktop.
 - **The camera's X throws away the photos taken (U-2).** After 3 of 4, X closed
   with no question. Ask first ("Keep taking" / "Stop"), and guard the back
   gesture.
