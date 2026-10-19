@@ -51,8 +51,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
 - **Save errors appear off screen (A-6, U-6).** The alert is at the top of the
   section, the Save button at the foot of a long form; on a phone nothing
   seems to happen. Show it by Save, or scroll to it and mark the box.
-- **Impossible dates are accepted through the API (A-7).** 2026-02-30 is stored
-  and shown as Mar 2. Check by round trip.
 - **A long note with no spaces widens the page (A-8)** to 5996 px on a phone.
   `break-words`.
 - **Progress photo links die while the page stays open (A-9)**, after 1–2 h:

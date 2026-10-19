@@ -4,6 +4,7 @@ import { TESTS, VO2_SOURCES, NEEDS_WHO, JUMP_STYLES, JUMP_TOOLS, HOLDS, MAX_REPS
   stepRating, rockportVo2, secondsOf, brzycki, rsiOf } from "../src/lib/fitness-tests.js";
 import { exerciseById } from "./library.js";
 import { MEASURES, fromShown } from "../src/lib/measures.js";
+import { isRealDay } from "../src/lib/date.js";
 
 /**
  * A client's fitness tests, heart and lungs and strength (Glenn, 18 Oct 2026; the tests and
@@ -48,7 +49,7 @@ export function check(body = {}) {
   const kind = String(body.kind || "");
   if (!TESTS[kind]) return { error: "Choose which test it was." };
   const takenOn = String(body.takenOn || "");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(takenOn) || Number.isNaN(Date.parse(`${takenOn}T00:00:00Z`))) return { error: "Choose the day of the test." };
+  if (!isRealDay(takenOn)) return { error: "Choose the day of the test." };
   if (takenOn > latestDay() || takenOn < "1990-01-01") return { error: "Choose a day that has been, not one still to come." };
   const note = typeof body.note === "string" ? body.note.trim().slice(0, 1000) : "";
   const age = num(body.age);

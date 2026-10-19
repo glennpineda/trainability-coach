@@ -1,6 +1,7 @@
 import { all, get, run } from "./db.js";
 import { insertWithNewId } from "./ids.js";
 import { MEASURES, MEASURE_KEYS, fromShown } from "../src/lib/measures.js";
+import { isRealDay } from "../src/lib/date.js";
 
 /**
  * A client's body measurements (Glenn, 18 Oct 2026): weight, body fat, and
@@ -46,7 +47,7 @@ const latestDay = () => new Date(Date.now() + 86400000).toISOString().slice(0, 1
 export function check(body = {}) {
   const units = body.units === "metric" ? "metric" : "imperial";
   const takenOn = String(body.takenOn || "");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(takenOn) || Number.isNaN(Date.parse(`${takenOn}T00:00:00Z`))) return { error: "Choose the day they were taken." };
+  if (!isRealDay(takenOn)) return { error: "Choose the day they were taken." };
   if (takenOn > latestDay() || takenOn < "1990-01-01") return { error: "Choose a day that has been, not one still to come." };
   const values = {};
   let any = false;
