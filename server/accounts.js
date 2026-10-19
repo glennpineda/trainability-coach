@@ -213,6 +213,11 @@ export async function resetPassword(account, origin) {
   await run(`UPDATE coach_accounts SET password_hash = ?, must_change_password = 1 WHERE id = ?`, [await hashPassword(temp), account.id]);
   await run(`DELETE FROM coach_sessions WHERE account_id = ?`, [account.id]);
   const result = await sendEmail({ to: account.email, ...resetEmail({ name: account.name, email: account.email, temp, origin }) });
+  /* Logged when it can't be emailed, as Studio does (its
+     server/account-emails.js), and kept so after Run 1 (B-21): the password is
+     stored only as a hash, so this is the only copy, and dropping it would lock
+     the account until another is asked for, which would fail the same way. On
+     a server that can send mail, nothing is logged. */
   if (!result.sent) {
     console.log(`Temporary password for ${account.email}: ${temp} (${EMAIL_CONFIGURED() ? `email not sent: ${result.reason}` : "no email set up, so it is here instead"})`);
   }

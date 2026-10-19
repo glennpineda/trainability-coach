@@ -55,8 +55,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   title, Billy's errors, missing words (Coach account, Primary Master,
   Settings, Wide screen, Today, Superset, Place), and a "what each account can
   do" chapter like Studio's. Each with its corrected text in the report.
-- **The temporary password is written in the server log** when email isn't set
-  up (B-21).
 - **Step test bands (A-13)**: 65 falls in 56–65 while "65+" starts at 66;
   women 56–65 Average and Below average overlap (a misprint?).
 - **Coach IQ ignores the client's tests (U-15)**: a 1.26 × body weight squat
