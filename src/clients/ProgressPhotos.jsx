@@ -57,8 +57,18 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
   }, [onSignedOut]);
   useEffect(() => {
     let alive = true;
-    apiRequest("GET", `/clients/${clientId}/progress-photos`).then(d => { if (alive) setData(d); }).catch(err => { if (alive) fail(err); });
-    return () => { alive = false; };
+    let loadedAt = 0;
+    const load = () => apiRequest("GET", `/clients/${clientId}/progress-photos`)
+      .then(d => { if (alive) { loadedAt = Date.now(); setData(d); } }).catch(err => { if (alive) fail(err); });
+    load();
+    /* The pictures' signed links last an hour at least (server/progress-photos.js),
+       so a page left open asks again before they run out: every few minutes
+       while it is seen, and on coming back to it (Run 1, A-9). */
+    const fresh = () => { if (loadedAt && document.visibilityState === "visible" && Date.now() - loadedAt > 45 * 60 * 1000) load(); };
+    const t = setInterval(fresh, 5 * 60 * 1000);
+    document.addEventListener("visibilitychange", fresh);
+    window.addEventListener("focus", fresh);
+    return () => { alive = false; clearInterval(t); document.removeEventListener("visibilitychange", fresh); window.removeEventListener("focus", fresh); };
   }, [clientId, fail]);
 
   const send = async (method, path, body, set = setError) => {

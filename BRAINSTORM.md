@@ -48,9 +48,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   (B-11)**, with no reminder to the trainer.
 - **"Start designing" does nothing with no level chosen (B-12).** No message,
   no highlight.
-- **Progress photo links die while the page stays open (A-9)**, after 1–2 h:
-  full size gives a JSON 404. Refetch on focus or when a picture fails.
-  (From the code.)
 - **Taking an exercise out has no confirm or undo (U-7)**; taking a day out is
   a browser confirm ("with its 1 exercises"). Use the in-app confirm, or an
   Undo bar.
