@@ -63,8 +63,6 @@ item keeps the ids of the reports that found it. How the run was done is in
   83.9 kg × 5" for 185 lb typed (U-17).
 - **The printed program is written for the trainer (U-18)**: "75% (155 lb)",
   the primary/secondary line, "Nothing yet." days, no trainer name.
-- **Casey's account button is named only "CD" (U-20).** Save their agreement is
-  greyed with no reason (U-21).
 - **"No sessions yet" on the client while Home shows them trained today (U-22,
   D-16)**: maybe the stand-in Studio; check against the fixture.
 - **Design polish (D-11 to D-16).** Accent 4.44:1 on the page and 4.15 on its

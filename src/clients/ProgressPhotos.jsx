@@ -44,6 +44,9 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  /* Save tapped before the box is ticked: said, rather than a button greyed
+     with no reason (Run 1, U-21). */
+  const [askTick, setAskTick] = useState(false);
   const [session, setSession] = useState(false);
   const [sessionError, setSessionError] = useState("");
   const [showAll, setShowAll] = useState(false);
@@ -129,11 +132,12 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
         <div className="rounded-lg p-3 mt-1 text-sm" style={{ background: "var(--ghost-fill)" }}>
           <p>Before taking any, ask {first} if they agree. The photos are kept in Coach, and every trainer of {first} can see them.</p>
           <label className="flex items-start gap-2 mt-2">
-            <input type="checkbox" className="mt-1" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
+            <input type="checkbox" className="mt-1" checked={agreed} onChange={e => { setAgreed(e.target.checked); setAskTick(false); }} />
             <span>{first} agrees to progress photos being taken and kept.</span>
           </label>
-          <button type="button" className="cx-btn-quiet mt-2 px-4 py-2 text-sm" disabled={!agreed || busy} aria-busy={busy}
-            onClick={() => send("POST", `/clients/${clientId}/progress-photos/consent`, { agreed: true })}>Save their agreement</button>
+          {askTick && <p className="text-sm mt-2" role="alert" style={{ color: "var(--ember)" }}>Tick the box once {first} has said yes.</p>}
+          <button type="button" className="cx-btn-quiet mt-2 px-4 py-2 text-sm" disabled={busy} aria-busy={busy}
+            onClick={() => (agreed ? send("POST", `/clients/${clientId}/progress-photos/consent`, { agreed: true }) : setAskTick(true))}>Save their agreement</button>
         </div>
       ) : (
         <>
@@ -174,7 +178,11 @@ export function ProgressPhotos({ client, onSignedOut, inTab = false }) {
           </button>
           {deleting === "all" ? confirm(`Delete all of ${first}'s progress photos, taken by any of their trainers? Photos already sent in a message stay there.`,
             async () => { if (await send("DELETE", `/clients/${clientId}/progress-photos/consent`)) { setDeleting(null); setAgreed(false); } }, "Delete them all")
-            : <button type="button" className="cx-hit text-xs mt-3 block" style={{ color: "var(--iron)" }} onClick={() => setDeleting("all")}>{first} no longer agrees</button>}
+            /* Apart from Take progress photos, below a rule, since it deletes
+               every set (Run 1, U-21). */
+            : <div className="mt-6 pt-3 border-t" style={{ borderColor: "var(--iron-line)" }}>
+              <button type="button" className="cx-hit text-xs block" style={{ color: "var(--iron)" }} onClick={() => setDeleting("all")}>{first} no longer agrees</button>
+            </div>}
         </>
       )}
       {session && (

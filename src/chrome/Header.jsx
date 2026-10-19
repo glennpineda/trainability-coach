@@ -112,8 +112,10 @@ export function Header({ user, onLogout, billy, onOpen, chooseLook }) {
           className={`cx-logo-badge${open ? " cx-logo-badge-open" : ""}`}
           aria-expanded={open}
           aria-controls="cx-apps"
-          aria-label={open ? "Hide the Trainability apps" : "Trainability apps: switch between Coach and Studio"}
-          title={open ? "Hide" : "Switch apps"}
+          /* A Coach account has no Studio to switch to (Run 1, U-10), so its
+             name doesn't offer one (U-20). */
+          aria-label={open ? "Hide the Trainability apps" : user?.coachAccount ? "Trainability apps" : "Trainability apps: switch between Coach and Studio"}
+          title={open ? "Hide" : user?.coachAccount ? "Trainability apps" : "Switch apps"}
         >
           {/* The logo kit's two badges: cerulean on light, white on dark. */}
           {/* Light or dark as the page is (useScheme), which may be chosen
