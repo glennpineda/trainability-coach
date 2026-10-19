@@ -11,6 +11,7 @@ import { Face } from "../clients/Face";
 import { useMySettings } from "../hooks/useUnits";
 import { Toast } from "../chrome/Toast";
 import { NoticeDialog } from "../chrome/NoticeDialog";
+import { ConfirmDialog } from "../chrome/ConfirmDialog";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
@@ -98,6 +99,7 @@ const CLIENT_TABS = [
  */
 function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, onMeasured }) {
   const [tab, setTab] = useState("details");
+  const [asking, setAsking] = useState(false);   // the Archive question open
   const next = nextBooked(c);
   useEffect(() => { scrollPageTo({ top: 0 }); }, [c.id]);
   return (
@@ -114,7 +116,21 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
             {[c.pronouns && `(${c.pronouns})`, lastLine(c), c.archived && "Archived"].filter(Boolean).join(" · ")}
           </div>
         </div>
+        {/* Studio's archive: a quiet iron icon at the top right that only
+            asks; the red button is in the question (its CONTRIBUTING,
+            "Quiet on the row, weighty in the dialog"; Run 1, D-7). */}
+        {onArchive && !c.archived && (
+          <button type="button" className="cx-icon-btn flex-none" aria-label={`Archive ${fullName(c)}`} title="Archive" onClick={() => setAsking(true)} disabled={busy}>
+            <Archive size={16} style={{ color: "var(--iron)" }} aria-hidden="true" />
+          </button>
+        )}
       </div>
+      {asking && (
+        <ConfirmDialog title={`Archive ${c.firstName || fullName(c)}?`} yes="Archive" no="Keep them" busy={busy}
+          onYes={async () => { await onArchive(c, true); setAsking(false); }} onNo={() => setAsking(false)}>
+          They go under Archived, with everything kept, and you can put them back on your list from there.
+        </ConfirmDialog>
+      )}
       <div className="flex rounded-[10px] p-1 gap-1" style={{ background: "var(--ghost-fill)" }} role="tablist" aria-label={`${c.firstName || "Client"}'s record`}>
         {CLIENT_TABS.map(([key, long, short]) => (
           <button key={key} type="button" role="tab" id={`client-tab-${key}`} aria-selected={tab === key} aria-controls="client-panel" onClick={() => setTab(key)}
@@ -151,12 +167,10 @@ function ClientView({ client: c, onBack, onSignedOut, onEdit, onArchive, busy, o
               </Detail>
             )}
             <Limitations clientId={c.id} onSignedOut={onSignedOut} />
-            {(onEdit || onArchive) && (
+            {(onEdit || (onArchive && c.archived)) && (
               <div className="sm:col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 mt-1 border-t" style={{ borderColor: "var(--iron-line)" }}>
                 {onEdit && <button type="button" className="cx-btn-row" onClick={() => onEdit(c)} disabled={busy}><Pencil size={15} aria-hidden="true" /> Edit details</button>}
-                {onArchive && (c.archived
-                  ? <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>
-                  : <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, true)} disabled={busy}><Archive size={15} aria-hidden="true" /> Archive</button>)}
+                {onArchive && c.archived && <button type="button" className="text-sm cx-link" onClick={() => onArchive(c, false)} disabled={busy}><ArchiveRestore size={15} aria-hidden="true" /> Put back on my list</button>}
               </div>
             )}
           </div>

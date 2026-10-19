@@ -899,8 +899,17 @@ If nobody matches, the list says *No one matches* and what you typed.
 ### 4.5 Archived clients
 
 Clients you have archived — people you no longer train — are kept apart from
-the rest. To archive one, open them (4.3) and tap **Archive** at the bottom
-of **Details & limitations**; the list comes back and it says *Jamie Ortiz archived. They're under Archived.*
+the rest. To archive one:
+
+1. Open them (4.3) and tap the box button at the top right, beside their
+   name (**Archive**).
+2. It asks *Archive Jamie? They go under Archived, with everything kept, and
+   you can put them back on your list from there.* Tap **Archive**, or **Keep
+   them** to leave them as they are.
+3. The list comes back and says *Jamie Ortiz archived. They're under
+   Archived.*
+
+To see them:
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.

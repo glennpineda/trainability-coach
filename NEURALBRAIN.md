@@ -357,6 +357,7 @@ put-away programs with no way back, the body drawing's dark caption), about 35
 medium, the manual's 40 points and the smaller ones, two questions and 14
 ideas — all in BRAINSTORM.md, Found in testing, Run 1.
 
+- **D-7, Archive was a link and acted at once** (fixed 19 Oct 2026; Glenn: "Let's go through the mediums next"). Build 1.0.109. Copied from Studio's rule (its CONTRIBUTING, "Archive is the offer" and "Quiet on the row, weighty in the dialog"): an archive icon in iron at the top right, named for screen readers, that only opens the question, with the red button in the question. On a client's page (`ClientsTab.jsx`) the accent **Archive** link at the foot of Details, which archived on the first tap, is gone; a quiet box icon at the top right of the page's header (*Archive Jamie Ortiz*) opens a new `src/chrome/ConfirmDialog.jsx` (Studio's confirm in Coach's colors: title, words, the safe answer first and focused, Escape keeps): *Archive Eve? They go under Archived, with everything kept, and you can put them back on your list from there.*, **Keep them** and **Archive**. **Put back on my list** stays where it was and acts at once, since it takes nothing away. On Photos, *… no longer agrees*, which leads to deleting every photo, was a small accent link; it is now quiet iron words, a little further from **Take progress photos** (it still asks before deleting). MANUAL 4.5 has the steps. Tested on a copy as Casey, iPhone 13: the old link was gone; the icon asked in those words; Keep them left Eve's page open; Archive gave *Eve Ortiz archived. They're under Archived.* with Archived (1); under Archived, Put back on my list gave *Eve Ortiz is back on your list.*
 - **D-8, a cancelled session's words failed contrast** (fixed 19 Oct 2026; Glenn: "Let's go through the mediums next"). Build 1.0.108. On Home's Today (`TodayCard.jsx`) a cancelled session's whole row was faded to 0.6, which took its place line, length and *Cancelled* to 2.5:1 (3.3 in dark) and even the name to 4.1. Studio greys a cancelled item with its iron words rather than fading it; the row is now at full strength, with the time and the struck-through name in iron, like the place, length and *Cancelled* already were: 5.5:1 on the card in light, more in dark. Tested on a copy: the stand-in's cancelled 6:00 PM session for Avery at full opacity, its name #5B6B78 in light and #9DB0BF in dark, still struck through.
 - **D-6, Programs and Messages were narrower than the other pages** (fixed 19 Oct 2026; Glenn: "Let's go through the mediums next"). Build 1.0.107. Programs (`ProgramsTab.jsx`) and Messages (`MessagesTab.jsx`, its list and its conversation) were `max-w-3xl` where every other page is `max-w-5xl`, so on a desktop their headings began about 110 px further in and the left edge jumped from tab to tab, and wide screen, which lifts only `.max-w-5xl`, left them a narrow column. Both are `max-w-5xl` now, so wide screen widens them too. Installation's card (`InstallationTab.jsx`) was `max-w-2xl` under a full-width heading; it now fills the column like the other pages' cards. The Programs page's Active · Put away row (build 1.0.91) sat beside New program on a desktop; it is now on its own line under it. Tested on a copy at 1280 × 900: the heading of Clients, Programs, Messages, My equipment and Installation all start 145 px in.
 - **D-5, the lit tab's white icon was faint at the sky end** (fixed 19 Oct 2026; Glenn: "Let's go through the mediums next"). Build 1.0.106. `.cx-nav-lit` (src/index.css), the round light under the open tab, ran from `--cerulean` out to `--sky`, and the white icon on its sky end measured 2.64:1 in the default look and 1.75 to 2.34 in the dark tones, under the 3:1 an icon needs. It now runs between the two fills made for white, `--fill-deep` to `--fill-cerulean`, as the primary button does: 4.8:1 at its lightest in the default look and more in every tone, high contrast and reduced colour unchanged (they already set their own). Its glow stays. Tested on a copy: the tab bar in light and dark on a phone, the Clients light deep blue to cerulean with the white icon clear.
@@ -1291,8 +1292,17 @@ If nobody matches, the list says *No one matches* and what you typed.
 #### 4.5 Archived clients
 
 Clients you have archived — people you no longer train — are kept apart from
-the rest. To archive one, open them (4.3) and tap **Archive** at the bottom
-of **Details & limitations**; the list comes back and it says *Jamie Ortiz archived. They're under Archived.*
+the rest. To archive one:
+
+1. Open them (4.3) and tap the box button at the top right, beside their
+   name (**Archive**).
+2. It asks *Archive Jamie? They go under Archived, with everything kept, and
+   you can put them back on your list from there.* Tap **Archive**, or **Keep
+   them** to leave them as they are.
+3. The list comes back and says *Jamie Ortiz archived. They're under
+   Archived.*
+
+To see them:
 
 1. Tap **Archived** next to the search box. The number in brackets is how
    many there are.
