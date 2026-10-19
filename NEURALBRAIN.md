@@ -357,6 +357,7 @@ put-away programs with no way back, the body drawing's dark caption), about 35
 medium, the manual's 40 points and the smaller ones, two questions and 14
 ideas — all in BRAINSTORM.md, Found in testing, Run 1.
 
+- **U-4, A-10 and M-14, "added" and "saved" were never seen, and a same-email add swapped the person** (fixed 19 Oct 2026; Glenn: "Let's go through all the highs first"). Build 1.0.90. After **Add client** or **Save**, the client's page opens in place of the list, and the message was drawn on the list, so it was only there after tapping back; adding "Riley Novak" with an email already ours opened Riley Hart with nothing said. Copied from Studio's two ways of answering (its hooks/useToast.js and App.jsx's toast, and primitives.jsx's NoticeDialog; CONTRIBUTING, "Toasts are for short confirmations"), neither of which Coach had: `src/chrome/Toast.jsx`, a card with Billy happy that rises off the tab bar inside the app's card, closes on a tap and goes by itself after Studio's `showFor` (about 18 characters a second, 2.4 to 7 seconds); and `src/chrome/NoticeDialog.jsx`, a title, the words and OK. In `ClientsTab.jsx` both are drawn over whichever is on screen, the list or the client's page: *Jamie Ortiz added.*, *… is back on your list.* and *…'s details saved.* are toasts; somebody already ours is a notice, **Already a client of ours** (*… was already a client of ours, with that email, so they're on your list now.*) or **Already on your list** (*… is already on your list, with that email.*), and when the name typed isn't theirs it adds *The name you typed, Riley Novak, wasn't used: that email is Riley Hart's.* Archiving keeps its line on the list, which is what is on screen then. MANUAL 4.6 says what happens now. Tested on a copy as Casey (a Coach account), on an iPhone 13: Eve Ortiz added opened her page with the toast *Eve Ortiz added.*, gone after five seconds; "Zed Novak" with Eve's email opened Eve with the notice and both sentences; OK closed it with Eve's page underneath. No errors on the page. Untested: the same for a Trainability trainer against the real Studio (same code; Studio decides added, linked, back or already).
 - **U-3, signed out during a save lost the work** (fixed 19 Oct 2026; Glenn: "Let's go through all the highs first"). Build 1.0.89. Studio has nothing to copy: it goes back to its sign-in screen ("You have been signed out.", its App.jsx), so done fresh, in the words and steps of Coach's own sign-in screen and Link dialog. A 401 from any request used to set the user to nobody, which took the whole app off the screen and everything typed with it, and the sign-in after it started on Home or the last tab. Now `signedOut` (`src/hooks/useAuth.js`) only marks the session `expired`; the app stays as it is and a new box, `src/auth/SignInAgain.jsx`, opens over it (sent to the body, above even the photo session): **Sign in again**, *You've been signed out. Sign in again to carry on: what you were doing is still here, so you can save it.*, the email as text (a box for it when the account doesn't say), Password, Keep me logged in, **Log in** and **Log out**, with the sign-in screen's error words. Signed in again, the box goes and the screen is untouched; the trainer taps Save again. `Shell` is keyed by the user's id (`src/App.jsx`), so somebody else signing in starts afresh rather than seeing the last person's screen. MANUAL chapter 9 has the message and the steps. Tested on a copy, as Glenn, on an iPhone 13: Jordan's Add measurements with 181.5 lb and a note typed, the session cookie deleted, Save: the box opened over the kept form (both values still in it); a wrong password said *That email and password don't match.*; the right one closed the box with the form unchanged; Save then saved 181.5 lb and the note. Untested: the real Studio (whose /auth/me gives the email, so the box shows it rather than asking; the stand-in gives none).
 - **U-2, the camera's X threw away the photos taken** (fixed 19 Oct 2026; Glenn: "Let's go through all the highs first"). Build 1.0.88. Copied from Studio's `DiscardDialog` (its `src/components/primitives.jsx`: a small sheet over the dialog, the safe answer first and focused, Escape keeping what was done, the other answer in ember), in Coach's colors and in the photos' words. In `src/clients/PhotoSession.jsx`, the X (and now Escape) closes at once while nothing is taken; once a photo is kept, or one just taken is on screen, it asks *Discard the photos taken?* — *The 2 photos taken haven't been saved, so closing now loses them.* (*The photo taken hasn't…* for one) — with **Keep taking** and **Discard**; Escape on the question keeps them. While any are taken, leaving or reloading the page asks the browser's own question (`beforeunload`), which Studio has nowhere, for the phone's back gesture. MANUAL 4.9 says so after the steps. Tested with Chromium's fake camera on a copy, as Glenn on Avery: with none taken the X closed; with two taken it asked in those words and stayed open; Keep taking went back to the third angle; Escape asked again; Discard closed it. No errors on the page.
 - **U-1 and D-1, the tab bar covered the exercise dialog's buttons** (fixed 19 Oct 2026; Glenn: "Let's go through all the highs first"). Build 1.0.87. The add-exercise and Details dialog (`src/programs/ExerciseDialog.jsx`) was the one dialog drawn inside the page rather than sent to the body: from 640 px the app's card has `transform: translateZ(0)`, so the dialog's `fixed` layer was held to the page area under the header and tab bar, and on a phone the tab bar (z 30, a later layer) sat over **Save** and **Add to …**. It is now sent to `document.body` with `createPortal`, as Settings, Accessibility, Notifications, Link and the photo session already were, the way Studio does all of its dialogs. Checked that no other full-screen layer is left inside the page (the install sheet is only on the sign-in screen, which has no tab bar). Tested on a copy, Glenn's Next block, an exercise's Details scrolled to its foot: on an iPhone 13 and at 1280 × 900 the dialog's parent is the body, and the point in the middle of **Save** is Save itself (it was the tab bar's Clients icon before); the header and tab bar are dimmed behind it.
@@ -1291,16 +1292,23 @@ of **Details & limitations**; the list comes back and it says *Jamie Ortiz archi
    client uses, or tap the small arrow in the box and pick from the list
    (such as **Woman**, **Non-binary**, **she/her**, **they/them**). Pronouns
    are kept in small letters.
-3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
-   open in the list. **Cancel** closes the form without adding anyone.
+3. Tap **Add client**. The new client's page opens (4.3), and a note rises
+   above the tab bar for a few seconds: *Jamie Ortiz added.* (Tap it to close
+   it sooner.) **Cancel** closes the form without adding anyone.
 
-If someone with that email is already a client of ours:
+If someone with that email is already a client of ours, their page opens
+instead:
 
-- someone on another trainer's list is added to yours too: *Riley Hart was
-  already a client of ours, so they're on your list now.*
 - someone you had archived comes back: *Morgan Hart is back on your list.*
-- someone already on your list is left as they are: *Casey Moss is already
-  on your list.*
+- someone on another trainer's list is added to yours too, and a box says so
+  (**Already a client of ours**): *Riley Hart was already a client of ours,
+  with that email, so they're on your list now.* Tap **OK**.
+- someone already on your list is left as they are, and a box says so
+  (**Already on your list**): *Casey Moss is already on your list, with that
+  email.* Tap **OK**.
+
+If the name you typed is not theirs, the box also says so, for example *The
+name you typed, Riley Novak, wasn't used: that email is Riley Hart's.*
 
 If only the phone number matches another client, nobody is added, since
 families and twins often share a phone. It says, for example, *Riley Hart
@@ -1313,8 +1321,8 @@ required*.
 **To change a client's details**, open them (4.3) and tap **Edit details**
 at the bottom of **Details & limitations**. The list comes back and the same form
 opens, headed *Edit Jamie's details*, with what
-is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
-details saved.*
+is there now. Change what you need and tap **Save**. Their page opens again, and a note
+says *Jamie Ortiz's details saved.*
 
 **Clients from a Coach account.** If you have just connected a Coach account
 to your Trainability account (2.1), the Clients page shows its clients with

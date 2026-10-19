@@ -24,12 +24,6 @@ _Things actually ready to do._
 
 Run 1's highs (Glenn, 19 Oct 2026: "Let's go through all the highs first"), in order. Each is written up in full in Found in testing's style; ids are Run 1's.
 
-- **"Added" and "saved" are never seen, and a same-email add swaps the person
-  (U-4, A-10, M-14).** After Add client or Save, the client's page opens and
-  the message is only on the list behind it. Adding "Riley Novak" with an email
-  already ours silently opened the existing Riley Hart, with her limitation;
-  "…was already a client of ours…" never shows. Show it on the client's page,
-  or as a dialog when it was someone else.
 - **A put-away program can't be got back (U-5).** Put away is a browser
   confirm, then nothing lists or restores it (the server filters `archived = 0`
   and has no way back). The manual says it is kept. Add a "Put away" list with

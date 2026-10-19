@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { scrollPageTo } from "../lib/scroll";
 import { Search, ChevronLeft, ChevronRight, Mail, Phone, Cake, CalendarCheck, CalendarClock, UserPlus, Users, RefreshCw, Plus, Pencil, Archive, ArchiveRestore } from "lucide-react";
 import { fullName, clientInitials, longDate, birthday, plural } from "../clients/format";
@@ -9,6 +9,8 @@ import { ProgressPhotos } from "../clients/ProgressPhotos";
 import { FitnessTests } from "../clients/FitnessTests";
 import { Face } from "../clients/Face";
 import { useMySettings } from "../hooks/useUnits";
+import { Toast } from "../chrome/Toast";
+import { NoticeDialog } from "../chrome/NoticeDialog";
 import { SuggestInput, GENDER_SUGGESTIONS, GENDER_MAX, PRONOUN_SUGGESTIONS, PRONOUNS_MAX, lowercase } from "../clients/SuggestInput";
 
 /* What "Last session" says under a name: the date, or that there has not been
@@ -220,12 +222,14 @@ function ClientForm({ initial, onAdd, onDone, onCancel }) {
   );
 }
 
-/* What the trainer is told once a client is added, by what Studio did. */
+/* What the trainer is told once a client is added, by what Studio did: a
+   toast for the short ones; a notice with OK when the person on the list is
+   somebody already ours, since the name typed may not be theirs (Run 1, U-4). */
 const ADDED = {
-  added: (n) => `${n} added.`,
-  linked: (n) => `${n} was already a client of ours, so they're on your list now.`,
-  back: (n) => `${n} is back on your list.`,
-  already: (n) => `${n} is already on your list.`,
+  added: (n) => ({ toast: `${n} added.` }),
+  back: (n) => ({ toast: `${n} is back on your list.` }),
+  linked: (n) => ({ title: "Already a client of ours", text: `${n} was already a client of ours, with that email, so they're on your list now.` }),
+  already: (n) => ({ title: "Already on your list", text: `${n} is already on your list, with that email.` }),
 };
 
 /* The Clients tab: everyone on this trainer's own list, kept in Studio and
@@ -286,6 +290,17 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   const [adding, setAdding] = useState(false);   // true, or the client whose details are being changed
   const [said, setSaid] = useState("");
   const [busy, setBusy] = useState(false);
+  /* An outcome shown over whichever is on screen, the list or the client's
+     page that opens after adding or saving: a toast, or a notice with OK. */
+  const [toast, setToast] = useState(null);
+  const [notice, setNotice] = useState(null);
+  const toastGone = useCallback(() => setToast(null), []);
+  const outcome = (
+    <>
+      <Toast toast={toast} onGone={toastGone} />
+      {notice && <NoticeDialog title={notice.title} onClose={() => setNotice(null)}>{notice.lines.map(l => <p key={l}>{l}</p>)}</NoticeDialog>}
+    </>
+  );
   const archiveOne = async (c, on) => {
     setBusy(true); setSaid("");
     try {
@@ -315,13 +330,17 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
   /* A client open: their page, in place of the list. */
   if (open) {
     return (
+      <>
+      {outcome}
       <ClientView key={open.id} client={open} onBack={() => setOpenId(null)} onSignedOut={onSignedOut} busy={busy} onMeasured={refresh}
         onEdit={edit ? (x) => { setOpenId(null); setAdding(x); setSaid(""); scrollPageTo({ top: 0, behavior: "smooth" }); } : null}
         onArchive={archive ? archiveOne : null} />
+      </>
     );
   }
   return (
     <div className="max-w-5xl mx-auto px-4">
+      {outcome}
       <TabHeading>Clients</TabHeading>
       <div className="flex items-center justify-between gap-3 -mt-3 mb-4">
         <p className="text-sm" style={{ color: "var(--iron)" }}>
@@ -340,7 +359,13 @@ export function ClientsTab({ clients, error, retry, refresh, add, edit, archive,
           onAdd={adding === true ? add : (fields) => edit(adding.id, fields)} onCancel={() => setAdding(false)}
           onDone={(out, typed) => {
             const c = (out.clients || []).find(x => x.id === out.clientId);
-            setSaid(adding === true ? (ADDED[out.done] || ADDED.added)(c ? fullName(c) : typed) : `${c ? fullName(c) : typed}'s details saved.`);
+            const name = c ? fullName(c) : typed;
+            const said = adding === true ? (ADDED[out.done] || ADDED.added)(name) : { toast: `${name}'s details saved.` };
+            if (said.toast) setToast({ message: said.toast, id: Date.now() });
+            else {
+              const other = typed && name.toLowerCase() !== typed.toLowerCase();
+              setNotice({ title: said.title, lines: [said.text, ...(other ? [`The name you typed, ${typed}, wasn't used: that email is ${name}'s.`] : [])] });
+            }
             setAdding(false); setQuery(""); setShowArchived(!!c?.archived); setOpenId(out.clientId);
           }} />
       )}

@@ -919,16 +919,23 @@ of **Details & limitations**; the list comes back and it says *Jamie Ortiz archi
    client uses, or tap the small arrow in the box and pick from the list
    (such as **Woman**, **Non-binary**, **she/her**, **they/them**). Pronouns
    are kept in small letters.
-3. Tap **Add client**. It says *Jamie Ortiz added.*, and the new client is
-   open in the list. **Cancel** closes the form without adding anyone.
+3. Tap **Add client**. The new client's page opens (4.3), and a note rises
+   above the tab bar for a few seconds: *Jamie Ortiz added.* (Tap it to close
+   it sooner.) **Cancel** closes the form without adding anyone.
 
-If someone with that email is already a client of ours:
+If someone with that email is already a client of ours, their page opens
+instead:
 
-- someone on another trainer's list is added to yours too: *Riley Hart was
-  already a client of ours, so they're on your list now.*
 - someone you had archived comes back: *Morgan Hart is back on your list.*
-- someone already on your list is left as they are: *Casey Moss is already
-  on your list.*
+- someone on another trainer's list is added to yours too, and a box says so
+  (**Already a client of ours**): *Riley Hart was already a client of ours,
+  with that email, so they're on your list now.* Tap **OK**.
+- someone already on your list is left as they are, and a box says so
+  (**Already on your list**): *Casey Moss is already on your list, with that
+  email.* Tap **OK**.
+
+If the name you typed is not theirs, the box also says so, for example *The
+name you typed, Riley Novak, wasn't used: that email is Riley Hart's.*
 
 If only the phone number matches another client, nobody is added, since
 families and twins often share a phone. It says, for example, *Riley Hart
@@ -941,8 +948,8 @@ required*.
 **To change a client's details**, open them (4.3) and tap **Edit details**
 at the bottom of **Details & limitations**. The list comes back and the same form
 opens, headed *Edit Jamie's details*, with what
-is there now. Change what you need and tap **Save**; it says *Jamie Ortiz's
-details saved.*
+is there now. Change what you need and tap **Save**. Their page opens again, and a note
+says *Jamie Ortiz's details saved.*
 
 **Clients from a Coach account.** If you have just connected a Coach account
 to your Trainability account (2.1), the Clients page shows its clients with
