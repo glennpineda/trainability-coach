@@ -4,6 +4,7 @@ import { LEVELS } from "./coach-iq.js";
 import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
+import { percentOf, kgAt, maxRepsAt, weightText } from "../src/lib/one-rm.js";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "We need to start creating a
@@ -397,7 +398,18 @@ async function context(trainerId, program) {
   const place = places.find(p => p.id === program.place_id) || null;
   const lims = await limitations.limitationsOf(program.client_id, trainerId);
   const history = await historyOf(trainerId, program.client_id, { before: program });
-  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps };
+  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms: await oneRmsOf(program.client_id) };
+}
+
+/* The client's latest 1RM for each exercise (fitness-tests.js, kind onerm;
+   Glenn, 19 Oct 2026), for a load written as a percentage of it. */
+async function oneRmsOf(clientId) {
+  const out = new Map();
+  for (const r of await all(`SELECT data, result, taken_on FROM coach_fitness_tests WHERE client_id = ? AND kind = 'onerm' ORDER BY taken_on DESC, created_at DESC`, [clientId])) {
+    let d; try { d = JSON.parse(r.data || "{}"); } catch { d = {}; }
+    if (d.exerciseId && !out.has(d.exerciseId)) out.set(d.exerciseId, { kg: Number(r.result), takenOn: r.taken_on });
+  }
+  return out;
 }
 
 /* ---------------------------------------------- what the client has done */
@@ -490,6 +502,9 @@ export async function full(trainerId, program, { withCheck = true } = {}) {
       ...(p ? { own: true } : {}),
       superset: !!Number(r.superset),
       sets: r.sets, reps: r.reps, load: r.load_text, effort: r.effort, tempo: r.tempo,
+      /* A load as a percentage of the client's 1RM for it, worked out. */
+      ...(ctx.oneRms.get(r.exercise_id) ? { oneRm: ctx.oneRms.get(r.exercise_id) } : {}),
+      ...(percentOf(r.load_text) && ctx.oneRms.get(r.exercise_id) ? { loadKg: Math.round(kgAt(ctx.oneRms.get(r.exercise_id).kg, percentOf(r.load_text)) * 100) / 100 } : {}),
       rest: r.rest_seconds == null ? null : Number(r.rest_seconds), restText: restWords(r.rest_seconds == null ? null : Number(r.rest_seconds)), note: r.note,
     };
   };
@@ -502,6 +517,8 @@ export async function full(trainerId, program, { withCheck = true } = {}) {
     /* With the one above means nothing for a day's first exercise. */
     days: days.map(d => ({ id: d.id, name: d.name, notes: d.notes, kind: d.kind || "full", kindLabel: (DAY_KINDS[d.kind] || DAY_KINDS.full).label, exercises: rows.filter(r => r.day_id === d.id).map(shape).map((e, i) => (i ? e : { ...e, superset: false })) })),
     places: ctx.places.map(p => ({ id: p.id, name: p.name, ...(p.fromStudio ? { fromStudio: true } : {}) })),
+    /* The client's latest 1RM for each exercise, for the exercise dialog. */
+    oneRms: Object.fromEntries(ctx.oneRms),
   };
   if (withCheck) out.check = check(out, rows, ctx, own);
   return out;
@@ -571,6 +588,14 @@ function check(program, rows, ctx, own) {
         }
       }
       if (r && beginner && r[0] < 8) add({ ...at, level: "note", from: "reps", text: `${e.name}: in the first year about 8 reps and up work best; ${e.reps} is heavy for a beginner.` });
+      /* A load as a percentage of 1RM (Glenn, 19 Oct 2026): something to go
+         by, no more than all of it, and reps that can be done at it. */
+      const pct = percentOf(e.load);
+      if (pct != null) {
+        if (!e.oneRm) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% of a 1RM ${program.clientName} hasn't got for it. Add one in their Fitness tests, or write the weight.` });
+        else if (pct > 100) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: ${pct}% is more than their 1RM, the most they can lift once.` });
+        else if (r && r[0] > maxRepsAt(pct) + 1) add({ ...at, level: "warn", from: "one-rm", text: `${e.name}: at ${pct}% of 1RM about ${maxRepsAt(pct)} reps can be done; ${e.reps} asks for more. Lighten it, or fewer reps.` });
+      }
       if (e.rest != null && goal.rest_range && !e.superset) {
         if (e.rest < goal.rest_range[0] || e.rest > goal.rest_range[1]) {
           add({ ...at, level: "note", from: "rest", text: `${e.name}: ${e.restText} rest is outside ${restWords(goal.rest_range[0])}–${restWords(goal.rest_range[1])}, the usual for ${goal.label.toLowerCase()}.` });
@@ -846,6 +871,9 @@ export async function forBilly(trainerId, program) {
       exercises: d.exercises.map(e => {
         const out = { name: e.name };
         for (const k of ["sets", "reps", "load", "effort", "tempo", "note"]) if (e[k]) out[k] = e[k];
+        /* A percentage load worked out, and the 1RM it is of, in kg (Billy says it in the trainer's units). */
+        if (e.loadKg) out.loadWorkedOutKg = e.loadKg;
+        if (e.oneRm) out.clientsOneRm = { kg: e.oneRm.kg, takenOn: e.oneRm.takenOn };
         if (e.restText) out.rest = e.restText;
         if (e.superset) out.withThePrevious = true;
         if (e.own) out.theirOwnExercise = true;

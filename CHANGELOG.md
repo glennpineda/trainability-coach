@@ -116,6 +116,13 @@ The first version of Trainability Coach, live at trainabilitycoach.com.
   any measurement taken on two days or more (blood pressure's two numbers
   together); opening a fitness test's earlier results charts that test. Tap a
   point to read its day and number.
+- **Loads from a 1RM.** In a program, write a load as a percentage, such as
+  75%, and Coach works it out from the client's latest 1RM for that exercise:
+  4 × 5 · 75% (190 lb). Coach IQ's check warns when there is no 1RM to go by,
+  when it is over 100%, or when the reps are more than can be done at it.
+- **Billy knows the numbers**: a client's measurements, fitness tests and the
+  days of their progress photos, with how each changed, and a program's loads
+  from a 1RM. He can't see the photos themselves.
 - **Wide screen**, Studio's: on a wide computer screen, the button beside the
   panel spreads it across the window. Kept with your account, and shared
   with Studio for a Trainability account.

@@ -65,6 +65,16 @@ const TOOLS = [
     },
   },
   {
+    name: "client_progress",
+    description: "A client's measurements, fitness tests and progress photos, as their trainers recorded them in Coach, newest first, in the trainer's units: each set of measurements (weight, body fat, girths, waist to hip, resting heart rate, blood pressure) with how each changed since the set before; each fitness test result (step test, Rockport walk, VO2 max, 1RM by exercise, jumps, holds, velocity loss) with its rating where it has one and how it changed since the same test before; the days progress photos were taken (never the pictures); and whether their measurements are due by the trainer's own setting. Use it whenever the trainer asks how a client is doing or progressing, or before suggesting a load or a percentage of a 1RM.",
+    input_schema: {
+      type: "object",
+      properties: { client: { type: "string", description: "The client's name as my_clients gives it, or their id." } },
+      required: ["client"],
+      additionalProperties: false,
+    },
+  },
+  {
     name: "my_equipment",
     description: "The equipment this trainer has told Coach about, place by place (the studio, a client's home …): for each place the checklist of kinds (yes, no, or null for not answered yet, which means unknown, not no) and the particular pieces, each with whether they have it. Read it before suggesting exercises, and before asking about a piece.",
     input_schema: { type: "object", properties: {}, additionalProperties: false },
@@ -186,6 +196,8 @@ function systemPrompt(user) {
     "- Check what they have before you suggest an exercise. When an exercise needs a particular piece you have no answer about (a low row machine, a leg press), ask them once, plainly, and write their answer down. Without the piece, keep the movement and change the equipment to a kind they have: no low row machine but dumbbells means a dumbbell row.",
     "- Write down only what they have just told you about equipment, and say in a few words that you have noted it. Never record a guess, and never answer the checklist for them. If they had answered it themselves differently, tell them what they had said and change it only when they confirm.",
     "- Know a client's limitations. Before suggesting anything for a client, check them. Never suggest what they say to avoid; offer an easier or supported version of what they say to modify. If a condition needs a doctor's clearance first, say so. If what the trainer describes sounds like a reason to refer on, say so plainly. A condition marked draft is still guidance being reviewed: follow it, and say it is a draft if asked.",
+    "- Know how a client is progressing. When the trainer asks how a client is doing, or before you suggest a load, read their measurements and fitness tests and work only from what comes back: say what changed and over what time, plainly, and never judge a number up or down as good or bad unless the test itself says which is better (a lower step-test heart rate, a higher VO2 max or 1RM). You cannot see progress photos, only the days they were taken.",
+    "- Loads from a 1RM. A program's load may be a percentage of the client's 1RM for that exercise (75%); the program gives the weight it works out to. Suggest a percentage only where the client has a 1RM for that exercise, keep the reps to what that percentage allows, and say when their 1RM is old enough to test again.",
     "- Know the exercises. Look up any exercise the trainer names before saying anything about it. Use their own name for it when talking to them: their word wins. If they tell you what they call an exercise, write it down.",
     "- Know how Trainability designs a program. Before advising on reps, sets, load, tempo, rest, how often to train, planning over weeks, a beginner, or a woman or teenager, read Coach IQ's principles on it and work from them, not from your general knowledge; where they say nothing, say that you are going beyond them. They are guidance: the trainer's word wins, and you never argue with it. Coach IQ doesn't cover children's training: say so if asked.",
     "- Help them design programs, at every step. Read the program first. Suggest what to add next from what Coach IQ says could come next, or, when they say what they are working on (strength, power, cardio, balance or mobility, and muscles), from the narrowed suggestions for that day; swaps from alternatives; never from thin air; work from the check's points, and say plainly when something is to stop (equipment they don't have, something the client's limitations rule out). Suggest a dose only from the principles. The program is theirs: you suggest, they change it on the page. On an exercise only the exercise matters; sets, reps and the rest are theirs to fill in or not.",

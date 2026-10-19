@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { loadLine } from "../lib/one-rm";
 import {
   ArrowDown, ArrowUp, ChevronLeft, Link2, Lightbulb, OctagonAlert, Pencil, Plus, Printer, Repeat, Sparkles, Trash2, TriangleAlert, Info, X,
 } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { convertText } from "../lib/units";
 import { useUnits } from "../hooks/useUnits";
 import { ExerciseDialog } from "./ExerciseDialog";
 
@@ -26,7 +26,7 @@ const FROM = {
   equipment: "The place's equipment", limitations: "The client's limitations", library: "Coach IQ's library",
   reps: "Principles: Reps", sets: "Principles: Sets", rest: "Principles: Rest", tempo: "Principles: Tempo",
   "starting-out": "Principles: Starting out", "frequency-and-variety": "Principles: How often",
-  progression: "The client's earlier programs",
+  progression: "The client's earlier programs", "one-rm": "The client's 1RM",
 };
 
 /* "3 × 8–12 · 45 lb · RPE 7 · 3-1-1-0 · rest 75 s": what is filled in, in the reader's units. */
@@ -35,7 +35,7 @@ export function doseLine(e, units) {
   if (e.sets && e.reps) parts.push(`${e.sets} × ${e.reps}`);
   else if (e.sets) parts.push(`${e.sets} sets`);
   else if (e.reps) parts.push(`${e.reps} reps`);
-  if (e.load) parts.push(convertText(e.load, units));
+  if (e.load) parts.push(loadLine(e, units));
   if (e.effort) parts.push(e.effort);
   if (e.tempo) parts.push(`tempo ${e.tempo}`);
   if (e.restText) parts.push(`rest ${e.restText}`);
@@ -317,7 +317,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab }) {
       </button>
       {dialog && (
         <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} vocab={vocab}
-          remembered={lastAsk} onRemember={rememberAsk}
+          remembered={lastAsk} onRemember={rememberAsk} oneRms={p.oneRms} units={units} clientName={p.clientName ? p.clientName.split(" ")[0] : ""}
           onAskBilly={billy?.available ? (words) => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}): ${words}`) : null}
           busy={busy} error={dialogError} onSave={saveDialog} onClose={() => setDialog(null)} />
       )}

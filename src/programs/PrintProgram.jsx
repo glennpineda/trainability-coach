@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { loadLine } from "../lib/one-rm";
 import { Printer } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { convertText } from "../lib/units";
 import { useUnits } from "../hooks/useUnits";
 import { labelsFor } from "./Designer";
 import { PrintMeasurements } from "../clients/PrintMeasurements";
@@ -80,7 +80,7 @@ export function PrintProgram({ id, sent }) {
                         <div className="font-medium">{e.name}</div>
                         {e.note && <div className="text-xs" style={{ color: "#5b6b78" }}>{e.note}</div>}
                       </td>
-                      {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? convertText(e[k], units) : e[k]}</td>)}
+                      {used.map(([k]) => <td key={k} className="py-2 pr-3 align-top whitespace-nowrap">{k === "load" ? loadLine(e, units) : e[k]}</td>)}
                     </tr>
                   ))}
                 </tbody>

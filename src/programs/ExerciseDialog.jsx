@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, Info, Lightbulb, OctagonAlert, Search, Sparkles, TriangleAlert, X } from "lucide-react";
 import { apiRequest } from "../lib/api";
+import { percentOf, kgAt, weightText, oneRmText } from "../lib/one-rm";
 
 /**
  * Adding an exercise to a day, or changing one, in a dialog of its own (Glenn,
@@ -30,7 +31,7 @@ const COLOR = { stop: "var(--ember)", warn: "#B7791F", note: "var(--iron)" };
 
 const blank = { sets: "", reps: "", load: "", effort: "", tempo: "", rest: "", note: "", superset: false };
 
-export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember }) {
+export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember, oneRms, units = "imperial", clientName }) {
   const [step, setStep] = useState(editing || suggested ? "details" : "pick");
   const [pick, setPick] = useState(editing ? { id: editing.exerciseId } : suggested ? { id: suggested.id } : null);
   const [info, setInfo] = useState(null);
@@ -75,6 +76,14 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
     </label>
   );
   const x = info?.exercise;
+  /* The client's latest 1RM for this exercise, if they have one (Fitness
+     tests), so the load can be a percentage of it (Glenn, 19 Oct 2026). */
+  const orm = pick && oneRms?.[pick.id];
+  const pct = percentOf(f.load);
+  const whenTaken = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  const loadHint = !orm ? "In your units."
+    : pct != null ? `${pct}% of their 1RM is about ${weightText(kgAt(orm.kg, pct), units)}.`
+    : `Or a share of ${clientName || "their"}${clientName ? "'s" : ""} 1RM, ${oneRmText(orm.kg, units)} (${whenTaken(orm.takenOn)}), such as 75%.`;
 
   return (
     <div className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4" style={{ zIndex: 50, background: "rgba(0,0,0,0.4)" }}>
@@ -139,7 +148,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, onSa
                 <div className="grid grid-cols-2 gap-3">
                   {field("sets", "Sets", "3", "Or a range, such as 1–3.", 20)}
                   {field("reps", "Reps", "8–12, or 30 s", "Or a time, or each side.", 40)}
-                  {field("load", "Load", "45 lb", "In your units.")}
+                  {field("load", "Load", orm ? "45 lb, or 75%" : "45 lb", loadHint)}
                   {field("effort", "Effort", "2 in reserve", "Or RPE 7.")}
                   {field("tempo", "Tempo", "3-1-1-0", "Down, pause, up, pause.", 20)}
                   {field("rest", "Rest", "90 s, or 2 min", "Between sets.", 20)}

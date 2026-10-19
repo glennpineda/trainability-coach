@@ -23,8 +23,8 @@ import * as push from "./push.js";
 import * as measurements from "./measurements.js";
 import * as fitnessTests from "./fitness-tests.js";
 import * as progressPhotos from "./progress-photos.js";
-import { previousOf } from "../src/lib/measures.js";
-import { seriesOf } from "../src/lib/fitness-tests.js";
+import { previousOf, rowsOf } from "../src/lib/measures.js";
+import { seriesOf, titleOf, describe as describeTest, changeOf as changeOfTest } from "../src/lib/fitness-tests.js";
 import { newId } from "./ids.js";
 import { chooseStorage, refreshStorage, storageState } from "./durable-home.js";
 import { FLAGS, JOINTS } from "./coach-iq.js";
@@ -1689,6 +1689,41 @@ app.post("/api/assistant", async (req, res) => {
         const client = await clientNamed(input?.client);
         if (client.error) return client;
         return limitations.meaningOf(await limitations.limitationsOf(client.id, user.id));
+      },
+      /* How a client is doing (Glenn, 19 Oct 2026: "Billy knows the
+         numbers"): their measurements and fitness tests in the trainer's
+         units, as the client's page shows them, and only the days of their
+         progress photos, never the pictures; none at all without the
+         client's agreement to photos. */
+      client_progress: async (input) => {
+        const client = await clientNamed(input?.client);
+        if (client.error) return client;
+        const u = units || "imperial";
+        const sets = await measurements.measurementsOf(client.id, user.id);
+        const tests = await fitnessTests.testsOf(client.id, user.id);
+        const consent = await progressPhotos.consentOf(client.id, user.id);
+        const photoSets = consent ? await progressPhotos.setsOf(client.id, user.id) : [];
+        const every = await trainerSettings.measureEveryOf(user.id);
+        const last = sets[0]?.takenOn || null;
+        return {
+          client: `${client.firstName} ${client.lastName}`.trim(), today: new Date().toISOString().slice(0, 10),
+          measurements: sets.slice(0, 12).map(m => {
+            const before = previousOf(sets, m);
+            return { takenOn: m.takenOn, takenBy: m.mine ? "the trainer" : m.takenBy, ...(m.note ? { note: m.note } : {}),
+              ...(before ? { changesSince: before.takenOn } : {}),
+              values: rowsOf(m.values, before?.values, u).map(r => ({ [r.label]: r.text, ...(r.change ? { change: r.change } : {}) })) };
+          }),
+          measurementsDue: every ? (!last || (Date.now() - Date.parse(`${last}T00:00:00Z`)) / 864e5 >= every * 7) : "the trainer has turned this off",
+          measureEveryWeeks: every || null,
+          fitnessTests: tests.slice(0, 40).map(t => {
+            const d = describeTest(t, u);
+            const before = tests.find(x => seriesOf(x) === seriesOf(t) && x.takenOn < t.takenOn);
+            const c = changeOfTest(t, before, u);
+            return { test: titleOf(t), takenOn: t.takenOn, result: d.text, ...(d.rating ? { rating: d.rating } : {}), ...(d.detail ? { detail: d.detail } : {}),
+              ...(c && before ? { change: `${c} since ${before.takenOn}` } : {}), ...(t.note ? { note: t.note } : {}) };
+          }),
+          progressPhotos: consent ? { agreed: true, takenOn: photoSets.map(x => x.takenOn) } : { agreed: false },
+        };
       },
       /* The library, searched in code (ideas audit, 4): their own names
          first, then their private exercises, then the library. */

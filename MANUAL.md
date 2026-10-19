@@ -1347,7 +1347,7 @@ what you want:
 |---|---|---|
 | **Sets** | 3 | Or a range, such as 1–3. |
 | **Reps** | 8–12 | Or a time (30 s), or each side. |
-| **Load** | 45 lb | In your units (3.5). |
+| **Load** | 45 lb, or 75% | In your units (3.5), or a share of the client's 1RM. |
 | **Effort** | 2 in reserve | Or RPE 7. |
 | **Tempo** | 3-1-1-0 | Down, pause, up, pause. |
 | **Rest** | 90 s, or 2 min | Between sets. |
@@ -1356,6 +1356,16 @@ what you want:
 What you filled in shows under the exercise on the day, such as *3 × 10 · 45
 lb · tempo 3-1-1-0 · rest 2 min*; an exercise with nothing filled in says *No
 sets or reps yet.*
+
+**A load from their 1RM.** When the client has a 1RM for the exercise in
+their Fitness tests (4.10), the Load box says so under it, such as *Or a
+share of Avery's 1RM, 253.1 lb (Oct 18, 2026), such as 75%.* Write the load
+as a percentage, such as **75%** (or *75% 1RM*), and the box works out the
+weight as you type: *75% of their 1RM is about 190 lb.* On the day it shows
+as *4 × 5 · 75% (190 lb)*, rounded to what a gym has (5 lb or 2.5 kg), and
+the same on the printed program (5.6) and a program sent in a message. When
+the client's 1RM changes, the weight changes with it; a copy already sent
+stays as it was. The latest 1RM for that exercise is the one used.
 
 **To change an exercise already on a day**, tap its name or **Details** under
 it. The same box opens with what it has; change anything, or tap **Change
@@ -1371,7 +1381,7 @@ brackets.
 | Mark | Means | For example |
 |---|---|---|
 | Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
-| Orange triangle | Take care | Something to make easier for the client, or above their level |
+| Orange triangle | Take care | Something to make easier for the client, or above their level; a load from a 1RM they haven't got for that exercise, more than 100% of it, or more reps than can be done at it |
 | Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly, a step back from something the client did in an earlier program |
 
 They are guidance: your word wins. If one is wrong, it shows where Coach IQ
@@ -1418,7 +1428,7 @@ the suggestions, and talks it through; he changes nothing himself.
 ## 6. Asking Billy
 
 Billy is the assistant you may know from Studio. In Coach he can tell you
-about the clients on your list, and he can read a photo or a PDF you give him
+about the clients on your list, how they are progressing, and he can read a photo or a PDF you give him
 — a client's food log, a form they filled in, a program — and answer
 questions about it.
 
@@ -1491,6 +1501,12 @@ page clears it too: Coach does not keep your conversations with Billy.
 - **He reads your programs** (chapter 5), with Coach IQ's check and what
   could come next, and suggests from those; he never changes a program
   himself.
+- **He knows how your clients are doing**: their measurements, fitness tests
+  and the days their progress photos were taken (4.8 to 4.10), with how each
+  changed, and whether their measurements are due. Ask "how is Avery's squat
+  coming along?" or "how has Sam's waist changed?". He can't see the photos
+  themselves. He also knows a program's loads from a 1RM, and what they
+  come to.
 - **He talks in your units** (3.5): every weight and distance in pounds and
   feet, or kilograms and metres, rounded to what a gym has.
 - **His suggestions come from the library, already checked.** Ask him for
