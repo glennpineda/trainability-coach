@@ -144,9 +144,10 @@ export function BodyMap({ exercises, top }) {
           ))}
         </ul>
         {/* What the numbers are (Glenn, 19 Oct 2026: "Explain more what the
-            numbers by the muscle groups mean"). */}
+            numbers by the muscle groups mean"; then primary and secondary,
+            the library's own words). */}
         <p className="mt-1.5" style={{ maxWidth: 300 }}>
-          Each number is how many of this day&apos;s exercises work that muscle: 1 for each that mainly works it, ½ for each that also works it. Darker means a higher number.
+          Each number is how many of this day&apos;s exercises work that muscle: 1 for each where it is a primary muscle, ½ for each where it is a secondary one. Darker means a higher number.
         </p>
       </div>
     </div>

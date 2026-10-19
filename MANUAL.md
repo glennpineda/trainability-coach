@@ -1417,9 +1417,11 @@ front and from the back, shades the muscles that day's exercises work, from
 light to dark (the muscles it doesn't work are only outlined): the darker, the more exercises work it. Beside it,
 **Exercises this day, by muscle** lists each one with its count, the most
 first. Each number is how many of the day's exercises work that muscle: 1
-for each that mainly works it, ½ for each that also works it, as Coach IQ's
-library has them, whatever its sets. So *Glutes 2.5* is two exercises that
-mainly work the glutes and one that also works them. The same words are
+for each where it is a primary muscle (what the exercise is chosen for and
+mostly works) and ½ for each where it is a secondary one (what helps or
+steadies the movement), as Coach IQ's library has them, whatever its sets.
+So *Glutes 2.5* is two exercises with the glutes as a primary muscle and one
+with them as a secondary one. The same words are
 under the list on screen. The shades are on one scale across the whole
 program, so a lighter day looks lighter. The pelvic floor is in the list but
 not drawn. A day with no exercises has no
