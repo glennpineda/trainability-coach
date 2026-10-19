@@ -24,9 +24,6 @@ _Things actually ready to do._
 
 Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids are Run 1's.
 
-- **Coach IQ's check is noisy on one exercise (U-13).** Five lines on one
-  squat; "Ask first: Resistance bands" vs the dialog's "Nobody has said whether
-  … has resistance bands." Group by exercise; word it as the dialog does.
 - **Tab rows are built four ways, none Studio's (D-3).** The client record,
   Today and Active/Archived use Studio's filter look (the record's tabs should
   be the accent look); Review and Equipment places use round chips that wrap on

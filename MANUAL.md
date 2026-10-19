@@ -1444,7 +1444,10 @@ exercise** to put another in its place, then tap **Save**.
 Coach IQ checks the whole program every time you change it. At the top,
 **Coach IQ's check** counts what it found; each point then shows where it
 applies, under the exercise or the day, with where it comes from in
-brackets.
+brackets. Under an exercise with more than one, the most serious shows and
+**1 more** (or **2 more**…) opens the rest; **Show fewer** folds them again.
+A suggestion that needs equipment nobody has said the place has says so,
+such as *Check “Trainability Downtown” has resistance bands.*
 
 | Mark | Means | For example |
 |---|---|---|

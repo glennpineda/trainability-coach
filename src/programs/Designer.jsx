@@ -66,8 +66,31 @@ function Point({ p }) {
   );
 }
 
+/* An exercise's points, the most serious first; past the first, folded
+   behind "N more" (Run 1, U-13; Glenn, 19 Oct 2026: "Fold extras"): one
+   squat could carry five lines. */
+const RANK = { stop: 0, warn: 1, note: 2 };
+function Points({ list }) {
+  const [all, setAll] = useState(false);
+  const sorted = [...list].sort((a, b) => RANK[a.level] - RANK[b.level]);
+  const shown = all ? sorted : sorted.slice(0, 1);
+  return (
+    <div className="mt-1">
+      <ul className="grid gap-1">{shown.map((c, j) => <Point key={j} p={c} />)}</ul>
+      {sorted.length > 1 && (
+        <button type="button" className="cx-link text-xs mt-0.5" aria-expanded={all} onClick={() => setAll(v => !v)}>
+          {all ? "Show fewer" : `${sorted.length - 1} more`}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* Equipment nobody has said a place has, in the dialog's own words (Run 1, U-13). */
+const checkWords = (placeName, list) => `Check ${placeName ? `“${placeName}”` : "the place"} has ${list.join(", ").toLowerCase()}.`;
+
 /* Alternatives for one exercise, fitted to this program. */
-function Swaps({ peId, onPick, onCancel, busy }) {
+function Swaps({ peId, onPick, onCancel, busy, placeName }) {
   const [out, setOut] = useState(null);
   useEffect(() => {
     let alive = true;
@@ -88,7 +111,7 @@ function Swaps({ peId, onPick, onCancel, busy }) {
             <li key={a.id} className="flex items-start justify-between gap-2">
               <span className="min-w-0 text-sm">
                 <span className="font-medium">{a.name}</span> <span className="text-xs" style={muted}>· {a.level} · {a.why}</span>
-                {a.askFirst && <span className="block text-xs" style={muted}>Ask first: {a.askFirst.join(", ")}</span>}
+                {a.askFirst && <span className="block text-xs" style={muted}>{checkWords(placeName, a.askFirst)}</span>}
                 {a.modifyFor && <span className="block text-xs" style={{ color: "#B7791F" }}>Make easier for: {a.modifyFor.join(", ")}</span>}
               </span>
               <button type="button" className="cx-btn-row flex-none" disabled={busy} onClick={() => onPick(a)}>Use it</button>
@@ -101,7 +124,7 @@ function Swaps({ peId, onPick, onCancel, busy }) {
 }
 
 /* What could come next on a day. */
-function Next({ dayId, version, busy, onTake, units }) {
+function Next({ dayId, version, busy, onTake, units, placeName }) {
   const [out, setOut] = useState(null);
   useEffect(() => {
     let alive = true;
@@ -122,7 +145,7 @@ function Next({ dayId, version, busy, onTake, units }) {
             <span className="min-w-0 text-sm">
               <span className="font-medium">{s.name}</span> <span className="text-xs" style={muted}>· {s.level}</span>
               <span className="block text-xs" style={muted}>{s.why} {doseLine({ ...s.dose }, units) ? `Start with ${doseLine({ ...s.dose }, units)}.` : ""}</span>
-              {s.askFirst && <span className="block text-xs" style={muted}>Ask first: {s.askFirst.join(", ")}</span>}
+              {s.askFirst && <span className="block text-xs" style={muted}>{checkWords(placeName, s.askFirst)}</span>}
               {s.modifyFor && <span className="block text-xs" style={{ color: "#B7791F" }}>Make easier for: {s.modifyFor.join(", ")}</span>}
             </span>
             <button type="button" className="cx-btn-row flex-none" disabled={busy} onClick={() => onTake(s)}><Plus size={14} aria-hidden="true" /> Add</button>
@@ -343,8 +366,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
                         </button>
                         {doseLine(e, units) ? <div className="text-sm">{doseLine(e, units)}</div> : <div className="text-xs" style={muted}>No sets or reps yet.</div>}
                         {e.note && <div className="text-xs cx-wrap" style={muted}>{e.note}</div>}
-                        {mine.length > 0 && <ul className="grid gap-1 mt-1">{mine.map((c, j) => <Point key={j} p={c} />)}</ul>}
-                        {is("swap", e.id) && <Swaps peId={e.id} busy={busy} onCancel={() => setOpen(null)} onPick={(a) => call("PATCH", `/program-exercises/${e.id}`, { exerciseId: a.id })} />}
+                        {mine.length > 0 && <Points list={mine} />}
+                        {is("swap", e.id) && <Swaps peId={e.id} busy={busy} placeName={p.placeName} onCancel={() => setOpen(null)} onPick={(a) => call("PATCH", `/program-exercises/${e.id}`, { exerciseId: a.id })} />}
                         <div className="flex flex-wrap items-center gap-1 mt-1.5">
                             <button type="button" className="cx-btn-row" onClick={() => openDialog({ day: d, editing: e, first: i === 0 })}><Pencil size={14} aria-hidden="true" /> Details</button>
                             <button type="button" className="text-xs cx-link ml-2" onClick={() => setOpen(is("swap", e.id) ? null : { kind: "swap", id: e.id })}><Repeat size={13} aria-hidden="true" /> Swap</button>
@@ -370,7 +393,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
                   )}
                 </div>
             </div>}
-            {!p.frozen && <Next dayId={d.id} version={version} busy={busy} units={units}
+            {!p.frozen && <Next dayId={d.id} version={version} busy={busy} units={units} placeName={p.placeName}
               onTake={(s) => openDialog({ day: d, suggested: s, first: d.exercises.length === 0 })} />}
           </section>
         );
