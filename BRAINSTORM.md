@@ -48,10 +48,6 @@ Run 1's mediums (Glenn, 19 Oct 2026: "Let's go through the mediums next"). Ids a
   be the accent look); Review and Equipment places use round chips that wrap on
   a phone; none has arrow keys (Studio's `SegRow`); the picked chip is 1.2:1
   against its track.
-- **Chart text grows with the window (D-9)**: about 9.5 px on a phone (series
-  labels 8 px), 16 px on desktop; wide screen leaves half the card empty; the
-  ten measure chips wrap to three lines on a phone. The body drawing's
-  Front/Back labels the same.
 - **Speed: the message list scans whole tables (O-1, O-2).** Two queries per
   conversation with no index: 1.3–2.2 s at 12,000 messages, 7 ms with an index
   on `coach_messages(conversation_id, created_at)` and

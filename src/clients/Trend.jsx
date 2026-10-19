@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 /*
  * A small line chart of one number over time, for a client's measurements and
@@ -16,7 +16,10 @@ import React, { useEffect, useState } from "react";
  * fitter, a falling weight may or may not be.
  */
 
-const W = 360, H = 180;
+/* Drawn at the width it is shown, one unit to a pixel, so its lettering is
+   the same size on a phone and a desktop (Run 1, D-9): it used to be drawn
+   360 wide and stretched, about 9.5px text on a phone and 16px on a desktop. */
+const H = 180;
 const DAY = 86400000;
 const dateText = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 const shortDate = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString(undefined, { day: "numeric", month: "short" });
@@ -44,6 +47,15 @@ export function Trend({ series, format, tick = (v) => String(v), label }) {
   const days = [...new Set(series.flatMap(s => s.points.map(p => p.date)))].sort();
   const [picked, setPicked] = useState(days.length - 1);
   useEffect(() => { setPicked(days.length - 1); }, [days.length, days[days.length - 1]]);
+  const box = useRef(null);
+  const [W, setW] = useState(360);
+  useEffect(() => {
+    const el = box.current;
+    if (!el || typeof ResizeObserver === "undefined") return undefined;
+    const o = new ResizeObserver(([e]) => setW(Math.max(240, Math.round(e.contentRect.width))));
+    o.observe(el);
+    return () => o.disconnect();
+  }, [days.length >= 2]);
   if (days.length < 2) return null;
   /* Room on the right for a second line's name. */
   const PAD = { top: 10, right: series.length > 1 ? 50 : 14, bottom: 26, left: 40 };
@@ -66,23 +78,22 @@ export function Trend({ series, format, tick = (v) => String(v), label }) {
   const edges = xs.map((v, i) => [i ? (xs[i - 1] + v) / 2 : v - 14, i < xs.length - 1 ? (v + xs[i + 1]) / 2 : v + 14]);
 
   return (
-    /* No wider than a phone's: drawn to scale, a wider chart only makes its lettering bigger. */
-    <div className="mt-2 rounded-lg p-2.5" style={{ background: "var(--chalk)", border: "1px solid var(--iron-line)", maxWidth: 520 }}>
+    <div className="mt-2 rounded-lg p-2.5" style={{ background: "var(--chalk)", border: "1px solid var(--iron-line)" }}>
       <div className="text-sm mb-1 tabular-nums" style={{ minHeight: "1.25rem" }} aria-live="polite">
         <span style={{ color: "var(--iron)" }}>{dateText(day)}: </span>{said.join(" · ")}
       </div>
-      <div style={{ position: "relative" }}>
+      <div ref={box} style={{ position: "relative" }}>
         <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={label} style={{ display: "block", overflow: "visible" }}>
           {lines.map(v => (
             <g key={v}>
               <line x1={PAD.left} x2={PAD.left + PLOT.w} y1={y(v)} y2={y(v)} stroke="var(--iron-line)" strokeWidth="1" />
-              <text x={PAD.left - 6} y={y(v) + 4} textAnchor="end" fontSize="11" fill="var(--iron)">{tick(v)}</text>
+              <text x={PAD.left - 6} y={y(v) + 4} textAnchor="end" fontSize="12" fill="var(--iron)">{tick(v)}</text>
             </g>
           ))}
           <line x1={xs[picked]} x2={xs[picked]} y1={PAD.top} y2={PAD.top + PLOT.h} stroke="var(--iron-line)" strokeWidth="1" strokeDasharray="3 3" />
           {/* The first and last days, and the one being read. */}
           {[...new Set([0, days.length - 1, picked])].map(i => (
-            <text key={i} x={xs[i]} y={H - 8} fontSize="11" fill={i === picked ? "var(--ink)" : "var(--iron)"}
+            <text key={i} x={xs[i]} y={H - 8} fontSize="12" fill={i === picked ? "var(--ink)" : "var(--iron)"}
               textAnchor={i === 0 ? "start" : i === days.length - 1 ? "end" : "middle"}>{shortDate(days[i])}</text>
           ))}
           {series.map((s, n) => (
@@ -95,7 +106,7 @@ export function Trend({ series, format, tick = (v) => String(v), label }) {
               ))}
               {series.length > 1 && s.points.length > 0 && (
                 <text x={x(s.points[s.points.length - 1].date) + 6} y={y(s.points[s.points.length - 1].value) + 4}
-                  fontSize="10" fill="var(--iron)">{s.name}</text>
+                  fontSize="12" fill="var(--iron)">{s.name}</text>
               )}
             </g>
           ))}

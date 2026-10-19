@@ -117,7 +117,7 @@ function Figure({ spots, sets, top, label, x }) {
           <g transform={MIRROR}>{list.map((s, i) => shape(s, {}, `r${i}`))}</g>
         </g>
       ))}
-      <text x="60" y="272" textAnchor="middle" fontSize="11" fill="var(--iron)">{label}</text>
+      <text x="60" y="272" textAnchor="middle" fontSize="13" fill="var(--iron)">{label}</text>
     </g>
   );
 }
