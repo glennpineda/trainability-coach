@@ -1,9 +1,11 @@
-# Prompts for Studio: programs by subscription
+# Prompts for Studio: add-ons, starting with Programs
 
 Written in Coach (20 Oct 2026) for Glenn to give, one at a time, to a
 Trainability Studio session. Each is one piece of work and one pull request
 there, in this order: each one leans on the ones before it. The plan they
-serve is in Coach's BRAINSTORM.md, Ideas, **Programs by subscription**.
+serve is in Coach's BRAINSTORM.md, Ideas, **Add-ons, starting with
+Programs**. Glenn named them **add-ons** (20 Oct 2026): monthly services
+bought on top of a membership or training, of which Programs is the first.
 
 Coach's side of each (the queue, the approval, sending) is built in Coach
 once Studio's is in. Nothing here changes Coach's repository.
@@ -43,28 +45,48 @@ scoped keys, not a shared database".
 > Check Studio first for anything like this already. Ask me before choosing
 > the header's name or anything that needs a new id prefix.
 
-## 2. A monthly program plan for members
+## 2. Add-ons, and Programs as the first
 
-> I want to sell members a monthly subscription: up to 2 workout programs a
-> month, written by a trainer in Coach (our coaching app) and delivered to
-> them in Studio. Studio sells and bills it; Coach never touches money.
+> I want to sell **add-ons**: monthly services anybody with a /me can buy on
+> top of what they have, a gym membership or personal training. The first is
+> **Programs**: up to 2 workout programs a month, written by a trainer in
+> Coach (our coaching app) and delivered to them in Studio. Others may follow
+> (nutrition, monthly check-ins), so build add-ons as a kind of thing, with
+> Programs as one of them. Studio sells and bills them; Coach never touches
+> money. Check that "add-on" clashes with nothing in Studio's words.
 >
-> Copy the billing of the business's own memberships (server/own-memberships.js:
-> a plan with a price and how often it is charged, the card stored here
-> charged on the day, tries again 3, 5 and 7 days after a failed charge with
-> the member written to each time, cancelling at the close of the paid
-> period, nothing refunded), as its own kind of plan, not a gym membership:
-> it must work at places the CRM bills memberships at too, as Studio already
-> bills those members for sessions and the Store.
+> **Billed on its own**, not folded into another bill:
 >
-> - A master sets the plan: its name, price and how many programs a month
->   (2 to start).
-> - A member subscribes and cancels on /me, with their card; the desk can do
->   both for them.
-> - Each billing month gives them that many requests; unused ones don't carry
->   over. (Tell me if you think they should.)
-> - It shows wherever a member's memberships and payments show, on their
->   profile, and in Payments and Analytics.
+> - Where the CRM bills somebody's membership, the add-on is never put on the
+>   CRM's bill: that would mean writing to the CRM, and Studio would only
+>   learn whether it was paid from the sync.
+> - Clients who train with a trainer have no monthly bill to add it to; they
+>   buy session packages.
+> - A failed or cancelled add-on must never touch their membership, their
+>   check-in or their session balance, and its money is the business's, kept
+>   apart from trainers' session money.
+>
+> So each add-on is its own monthly charge on the card Studio keeps, copying
+> the billing of the business's own memberships (server/own-memberships.js:
+> a price and how often it is charged, the card charged on the day, tried
+> again 3, 5 and 7 days after a failed charge with them written to each
+> time, cancelling at the close of the paid period, nothing refunded). A
+> member whose card is with the CRM adds one on /me when they buy, as clients
+> already do. **One charge where Studio bills both**: at a place where Studio
+> sells the membership itself (no CRM), the add-on is charged on the
+> membership's day as one payment, with a receipt that lists each (*Membership
+> $X, Programs add-on $Y*).
+>
+> - A master sets each add-on: its name, price, and for Programs how many a
+>   month (2 to start).
+> - Bought and cancelled on /me, with their card; the desk can do both for
+>   them. Members and personal-training clients alike.
+> - **Your plans** on /me shows their membership and their add-ons together,
+>   each with its next bill, so it reads as one account.
+> - Each billing month of Programs gives them that many requests; unused ones
+>   don't carry over. (Tell me if you think they should.)
+> - It shows wherever their memberships and payments show, on their profile,
+>   and in Payments and Analytics.
 >
 > Before building, ask me: the price, whether the allowance runs by billing
 > month or calendar month, what happens if a program isn't delivered in time
@@ -74,7 +96,8 @@ scoped keys, not a shared database".
 
 ## 3. Asking for a program on /me, and the queue Coach reads
 
-> With a program plan (the last PR), a member asks for each program on /me:
+> With the Programs add-on (the last PR), its holder asks for each program
+> on /me:
 > a **Request a program** button, which opens a short form, one question at a
 > time like the kiosk's sign-up (src/kiosk/Register.jsx). The answers are the
 > ones Coach's own steps ask a trainer (Coach's server/programs.js), so Coach
@@ -113,8 +136,8 @@ scoped keys, not a shared database".
 ## 4. Programs on /me, sent from Coach
 
 > Trainers write programs in Coach. A program for a client they train in
-> Studio, or for a member's request (the last PR), needs to reach the person
-> in Studio. Please add, through the key (prompt 1):
+> Studio, or for a request made with the Programs add-on (the last PR), needs
+> to reach the person in Studio. Please add, through the key (prompt 1):
 >
 > - **Coach sends a program** for a Studio client or member: its name, who
 >   wrote it, who reviewed and approved it and when, and its days as Coach
@@ -135,7 +158,7 @@ scoped keys, not a shared database".
 
 ## 5. Paying the trainer for each program
 
-> When Coach sends a program written for a member's request (prompt 4), the
+> When Coach sends a program written for a Programs add-on request (prompt 4), the
 > trainer who wrote it earns a fee, set by a master (one fee, or one per
 > trainer).
 >
@@ -149,7 +172,7 @@ scoped keys, not a shared database".
 
 ## 6. Later: paying trainers outside the team
 
-> Phase two of programs by subscription. Trainers outside the team (Coach
+> Phase two of the Programs add-on. Trainers outside the team (Coach
 > accounts) write programs for our members and are owed a fee for each
 > (prompt 5 keeps the tally). Pay them through Stripe Connect: each sets up
 > their own payout account (Express?) from Coach, linked through the key, and

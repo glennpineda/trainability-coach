@@ -56,18 +56,30 @@ None open: A-14 is decided, and the run's ideas built or moved to Ideas.
 
 _Not thought through yet._
 
-- **Programs by subscription.** (20 Oct 2026; Glenn: "I want to offer a paid
+- **Add-ons, starting with Programs.** (20 Oct 2026; Glenn: "I want to offer a paid
   subscription service to our members on Studio (members that goes to our
   gym). This monthly subscription allows them to receive up to 2 programs a
   month created on Coach. The trainers that creates these programs are either
   part of the Team on Studio or an online trainer. The trainer can use Coach
   IQ to create a program but needs to be verified by them before they send
-  it.") The plan talked through with Glenn, in two phases:
-  - **Studio sells and bills it**, as a program plan beside the gym
-    membership, copying its own memberships' billing (a plan, a monthly
-    charge on the card it keeps, retries at 3, 5 and 7 days, cancelling at the
-    end of the paid month), working at CRM places too. Coach never touches
-    money.
+  it.", then: "Can we call these subscriptions “add-on” services? Is this
+  something we tack on a bill for one amount to Studio clients or
+  separate?", and "Yes, update them") The plan talked through with Glenn, in
+  two phases:
+  - **Add-ons**: monthly services bought on top of a membership or training,
+    by gym members and personal-training clients alike; **Programs** (2 a
+    month) is the first, others may follow (nutrition, check-ins).
+  - **Studio sells and bills them, each on its own**, copying its own
+    memberships' billing (a monthly charge on the card it keeps, retries at
+    3, 5 and 7 days, cancelling at the end of the paid month). Not folded into
+    another bill: the CRM bills most memberships (adding to its bill means
+    writing to the CRM), training clients have no monthly bill (they buy
+    packages), and a failed add-on must never touch a membership or a session
+    balance. **One charge where Studio bills both**: where it sells the
+    membership itself, the add-on goes on the membership's day as one
+    payment, the receipt listing each. **Your plans** on /me shows the
+    membership and the add-ons together, so it reads as one account. Coach
+    never touches money.
   - **A member asks; nobody is assigned.** *Request a program* on Studio's /me,
     one question at a time, asking what Coach's steps ask (focus, anything
     else, days a week, minutes, where they train and with what, anything the
@@ -91,7 +103,7 @@ _Not thought through yet._
     their payouts.
   - **Studio's half first**, asked for in six prompts Glenn gives to a Studio
     session, in order: [docs/STUDIO-PROMPTS.md](docs/STUDIO-PROMPTS.md) (a
-    key for Coach to call Studio, the program plan, requests and the queue,
+    key for Coach to call Studio, add-ons with Programs first, requests and the queue,
     programs on /me, paying the trainer, later paying online trainers).
     Coach's half after each: the queue, taking a request into the steps, the
     approval, sending to Studio.
@@ -143,7 +155,7 @@ _Not thought through yet._
 
 _To decide before building._
 
-- **Programs by subscription: Glenn's to decide** (20 Oct 2026, from the
+- **The Programs add-on: Glenn's to decide** (20 Oct 2026, from the
   plan in Ideas). The price, and who sets it (a master, as the business's own
   plans?). The two programs: by billing month or calendar month, and do
   unused ones expire? The turnaround promised (3 working days?). Does a member
