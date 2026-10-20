@@ -242,6 +242,16 @@ export function kindOfDays(kinds) {
 const GROUPS = Object.fromEntries(MUSCLE_GROUPS.map(g => [g.key, g]));
 const musclesOf = (list) => [...new Set((Array.isArray(list) ? list : []).filter(m => GROUPS[m]))];
 
+/*
+ * The sets a session holds: 20–25 is the usual (sets.md), well beyond 30 the
+ * quality falls. Those are for a session of about an hour; a longer one
+ * holds more at the same rate (Glenn, 20 Oct 2026, asked whether long
+ * sessions should go past 25 sets: "Yes it can"), so a 90-minute session
+ * about 38, and too many past 45. Never fewer than the hour's.
+ */
+export const setsHeld = (mins) => Math.max(25, Math.round(25 * (Number(mins) || 60) / 60));
+export const setsTooMany = (mins) => Math.max(30, Math.round(30 * (Number(mins) || 60) / 60));
+
 /* ------------------------------------------------------ reading values */
 
 /** Rest typed as "90", "90 s", "2 min", "1:30" or "2–3 min" → seconds (the first), or null. */
@@ -881,19 +891,22 @@ function check(program, rows, ctx, own) {
         }
       }
     }
+    /* The sets a session holds, for its length (setsHeld): 25 and 30 for an
+       hour or less, as the principles give, and more for a longer one. */
+    const mins = day.minutes ?? program.minutes;
+    const held = setsHeld(mins), tooMany = setsTooMany(mins);
     if (counted) {
-      if (sets > 30 || (beginner && sets > 36)) add({ day: day.id, level: "warn", from: beginner ? "starting-out" : "sets", text: `${day.name}: about ${sets} sets. Well beyond 30 the quality of the work falls; keep a session under about 20–25.` });
-      else if (sets > 25) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${sets} sets, over the 20–25 a session usually holds.` });
+      if (sets > tooMany || (beginner && sets > tooMany + 6)) add({ day: day.id, level: "warn", from: beginner ? "starting-out" : "sets", text: `${day.name}: about ${sets} sets. Well beyond ${tooMany}${mins > 60 ? ` in ${aOrAn(mins)} ${mins}-minute session` : ""} the quality of the work falls; keep it under about ${held}.` });
+      else if (sets > held) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${sets} sets, over the ${mins > 60 ? `${held} ${aOrAn(mins)} ${mins}-minute session` : "20–25 a session"} usually holds.` });
     }
     if (beginner && dayRows.length > 7) add({ day: day.id, level: "note", from: "starting-out", text: `${day.name}: ${dayRows.length} exercises. A beginner's session is usually 4–7, unless it is a circuit.` });
     /* Timed, not counted (Glenn, 20 Oct 2026): its sets, reps, tempo and
        rests, with the warm-up and cool-down, against the session's length. */
-    const mins = day.minutes ?? program.minutes;
     const planned = Math.round(day.plannedSeconds / 60);
     if (mins && day.plannedSeconds > (mins + 5) * 60) add({ day: day.id, level: "note", from: "session-time", text: `${day.name}: about ${planned} minutes planned, over its ${mins}-minute session.` });
     /* Short of it only where the sets are already at what a session holds:
        otherwise there is simply room for more, which the suggestions say. */
-    else if (mins && counted && sets >= 25 && day.plannedSeconds < (mins - 15) * 60) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${planned} minutes planned for ${aOrAn(mins)} ${mins}-minute session, with ${sets} sets already, about what a session holds. Longer rests, or a slower tempo, would fill it.` });
+    else if (mins && counted && sets >= held && day.plannedSeconds < (mins - 15) * 60) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${planned} minutes planned for ${aOrAn(mins)} ${mins}-minute session, with ${sets} sets already, about what it holds. Longer rests, or a slower tempo, would fill it.` });
     /* The warm-up and the cool-down are checked for what could hurt or
        can't be done there: the place, the limitations, the level. Their
        doses are their own, so the goal's ranges aren't held to them. */
@@ -1406,8 +1419,9 @@ export async function build(trainerId, client, placeId, body) {
     const budget = minutes * 60 - partSeconds([...guess.warmup, ...guess.cooldown].map(p => p.dose));
     const onDay = new Set(), families = new Set();
     const planned = [];
-    /* Never past the 25 sets a session usually holds (sets.md), by the top
-       of each range, so the check has nothing to say about the build. */
+    /* Never past the sets a session of this length holds (setsHeld), by the
+       top of each range, so the check has nothing to say about the build. */
+    const held = setsHeld(minutes);
     let sets = 0;
     /* Full when what is left is shorter than a short exercise. */
     const full = (limit) => time(planned) >= limit - 150;
@@ -1415,7 +1429,7 @@ export async function build(trainerId, client, placeId, body) {
       const x = library.exerciseById(s?.id);
       if (!x || onDay.has(x.id) || families.has(x.movement)) return false;
       const top = range(s.dose?.sets)?.[1] || 0;
-      if (sets + top > 25) return false;
+      if (sets + top > held) return false;
       const dose = planDose(program, s, ctx, "", day.kind);
       if (time([...planned, dose]) > limit + 60) return false;
       await addExercise(program, day.id, s.id, dose, "", { byIq: true });

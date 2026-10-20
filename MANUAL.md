@@ -1444,11 +1444,12 @@ seconds, about six. Every exercise passes the place's equipment, the
 client's level and their limitations. It takes the next step on from
 exercises in your earlier programs for them, never one they have moved past,
 and prefers lifts they have a 1RM for, writing the load as a share of it
-(such as *60%* for 6 to 12 reps). It keeps a session to 25 sets or fewer, which the principles give as about
-what a session holds; if that comes well short of the session's length, the
-day says so (*Upper: about 65 minutes planned for a 90-minute session, with
-25 sets already, about what a session holds. Longer rests, or a slower
-tempo, would fill it.*). A loaded compound lift (a squat, a deadlift, a
+(such as *60%* for 6 to 12 reps). It keeps a session to the sets it holds: 25 for an hour or less, as the
+principles give, and more for a longer one at the same rate (about 38 in 90
+minutes). If that comes well short of the session's length, the day says so
+(*Upper: about 40 minutes planned for a 60-minute session, with 25 sets
+already, about what it holds. Longer rests, or a slower tempo, would fill
+it.*). A loaded compound lift (a squat, a deadlift, a
 press, a row or a pull with a barbell, dumbbells, kettlebells or a machine,
 above beginner level) gets a warm-up set in its note, such as *Warm-up set
 first: 8–10 easy reps at about half the working weight.*, with a second at
@@ -1660,7 +1661,7 @@ such as *Check “Trainability Downtown” has resistance bands.*
 |---|---|---|
 | Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
 | Orange triangle | Take care | Something to make easier for the client, or above their level; a load from a 1RM they haven't got for that exercise (or one of your own exercises, which has no 1RM), more than 100% of it or next to nothing, a percentage it can't work out (such as *75-80%* or *~75%*: write one, such as 75%), or more reps than can be done at it (the top of a range counts, and *12 each side* is 12) |
-| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a day that takes more than 5 minutes over its session's length (*Upper A: about 72 minutes planned, over its 60-minute session.*), a tempo written oddly, a step back from something the client did in an earlier program or has a 1RM for, a loaded compound lift with no warm-up set in its note (*Bent-over barbell row: a loaded compound lift. Start it with a warm-up set: 8–10 easy reps at about half the working weight.*) |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session (over 25 in an hour or less, more in a longer one: 38 in 90 minutes), a day that takes more than 5 minutes over its session's length (*Upper A: about 72 minutes planned, over its 60-minute session.*), a tempo written oddly, a step back from something the client did in an earlier program or has a 1RM for, a loaded compound lift with no warm-up set in its note (*Bent-over barbell row: a loaded compound lift. Start it with a warm-up set: 8–10 easy reps at about half the working weight.*) |
 
 They are guidance: your word wins. If one is wrong, it shows where Coach IQ
 needs fixing; tell the Primary Master.
