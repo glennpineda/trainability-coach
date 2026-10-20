@@ -155,6 +155,21 @@ _Not thought through yet._
 
 _To decide before building._
 
+- **Who joins the pool of trainers who verify Programs add-on requests**
+  (20 Oct 2026; Glenn: "I need to decide who can join this pool of trainers
+  that can verify programs"). Glenn's to decide before Studio's prompt 3 (a
+  per-trainer setting, kept by a master) is given. To settle: who may join
+  (any team trainer or only some; for online trainers, a certification,
+  insurance, experience?); how they are let in (switched on by a master,
+  perhaps after a trial program or two Glenn reviews); how quality is kept
+  (the Primary Master checking their first few; taken out of the pool for
+  late programs or complaints); and what they may write for (beginners only
+  at first? nobody with limitations until proven?). Also on hold until then:
+  rewriting prompt 6 around Stripe's Global Payouts, which can pay
+  individuals in the Philippines in PHP by wire with an email and a name
+  (Connect can't, the Philippines not being a Stripe account country);
+  monthly batches, a W-8BEN from each, and which Stripe balance pays.
+
 - **The Programs add-on: Glenn's to decide** (20 Oct 2026, from the
   plan in Ideas). The price, and who sets it (a master, as the business's own
   plans?). The two programs: by billing month or calendar month, and do
