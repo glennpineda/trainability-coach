@@ -1438,9 +1438,11 @@ warm-up and cool-down included. Coach IQ times every exercise: each set is
 its reps at about 3 seconds a rep (or the tempo, if one is written), plus 5
 seconds to get set, so 8 reps take about 29 seconds and 12 about 41; then
 the rest after it. A set held for a time takes that time. Where no rest is
-written it counts 60 seconds. With a strength program's 2 to 3 minutes'
-rest, a 60-minute day holds about three main lifts; with muscle size's 75
-seconds, about six. Every exercise passes the place's equipment, the
+written it counts 60 seconds. A strength program rests 2 minutes between
+sets, the low end of the principle's 2 to 5, and its notes tell the client
+*Rest about 2 minutes between sets. Take longer if you need it.*; a
+60-minute strength day holds about four main lifts, and one for muscle size,
+with 75 seconds' rest, about six. Every exercise passes the place's equipment, the
 client's level and their limitations. It takes the next step on from
 exercises in your earlier programs for them, never one they have moved past,
 and prefers lifts they have a 1RM for, writing the load as a share of it
@@ -1451,7 +1453,7 @@ minutes). If that comes well short of the session's length, the day says so
 already, about what it holds. Longer rests, or a slower tempo, would fill
 it.*). A loaded compound lift (a squat, a deadlift, a
 press, a row or a pull with a barbell, dumbbells, kettlebells or a machine,
-above beginner level) gets a warm-up set in its note, such as *Warm-up set
+above beginner level, and not in a circuit or on a mobility day) gets a warm-up set in its note, such as *Warm-up set
 first: 8–10 easy reps at about half the working weight.*, with a second at
 about 70% for heavy sets, and its time is counted. A
 circuit day is dosed for conditioning and a mobility day for mobility,
