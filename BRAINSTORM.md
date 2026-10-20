@@ -56,6 +56,60 @@ None open: A-14 is decided, and the run's ideas built or moved to Ideas.
 
 _Not thought through yet._
 
+- **Programs by subscription.** (20 Oct 2026; Glenn: "I want to offer a paid
+  subscription service to our members on Studio (members that goes to our
+  gym). This monthly subscription allows them to receive up to 2 programs a
+  month created on Coach. The trainers that creates these programs are either
+  part of the Team on Studio or an online trainer. The trainer can use Coach
+  IQ to create a program but needs to be verified by them before they send
+  it.") The plan talked through with Glenn, in two phases:
+  - **Studio sells and bills it**, as a program plan beside the gym
+    membership, copying its own memberships' billing (a plan, a monthly
+    charge on the card it keeps, retries at 3, 5 and 7 days, cancelling at the
+    end of the paid month), working at CRM places too. Coach never touches
+    money.
+  - **A member asks; nobody is assigned.** *Request a program* on Studio's /me,
+    one question at a time, asking what Coach's steps ask (focus, anything
+    else, days a week, minutes, where they train and with what, anything the
+    trainer should know, a trainer they'd like). Each request uses one of the
+    month's two. Requests wait in a **queue in Coach**; a trainer takes one,
+    and Coach IQ builds from the member's answers (`build`, with the steps
+    filled in), which the trainer then works on.
+  - **The trainer verifies before it can go**: *I've reviewed this program*,
+    not offered while Coach IQ has a point to stop at, recording who and when;
+    the member sees *Reviewed by Alex*. The Primary Master could check an
+    online trainer's first few.
+  - **Delivered on Studio's /me**, a new Programs tab, with a text or email
+    when it is ready; the same route carries any program a team trainer sends
+    to a client they train in Studio.
+  - **Two kinds of trainer, one queue**: team trainers by their Studio sign-in;
+    online trainers by their Coach accounts, seeing only what a request
+    carries. Paid a fee per approved program: team trainers on Studio's
+    balance ledger; online trainers settled by hand until phase two pays them
+    through Stripe Connect.
+  - **Phase one** is team trainers only; **phase two** online trainers and
+    their payouts.
+  - **Studio's half first**, asked for in six prompts Glenn gives to a Studio
+    session, in order: [docs/STUDIO-PROMPTS.md](docs/STUDIO-PROMPTS.md) (a
+    key for Coach to call Studio, the program plan, requests and the queue,
+    programs on /me, paying the trainer, later paying online trainers).
+    Coach's half after each: the queue, taking a request into the steps, the
+    approval, sending to Studio.
+
+- **/me for Coach's own clients.** (20 Oct 2026; Glenn: "We also need to enable
+  /me for Coach clients as well.") Clients kept in Coach (a Coach account's,
+  ids `cli…`) aren't in Studio, and Studio's notes say people outside the
+  business must never reach it, so they get Coach's own /me at
+  trainabilitycoach.com/me, copied from Studio's (its server/client-portal.js
+  and MANUAL-CLIENT.md): sign in with a six-digit code by text or email, no
+  password, its own cookie and session table apart from trainers', the code
+  hashed and spent after five wrong tries, nothing saying whether an address
+  is known, ninety days from the last visit. To start: their programs (the
+  same tab Studio's /me gets), and perhaps their Messages, which today can't
+  reach a client kept in Coach. A client a team trainer trains in Studio, and
+  every gym member, keeps Studio's /me. Studio first for every screen and
+  message.
+
 - **Retest reminders for fitness tests (Run 1, I-7).** (19 Oct 2026; Glenn:
   "Keep it in Ideas") A **Retest every** setting, off by default, like
   Measurements every: "Tests due" on the client as measurements due works,
@@ -88,6 +142,15 @@ _Not thought through yet._
 ## Questions
 
 _To decide before building._
+
+- **Programs by subscription: Glenn's to decide** (20 Oct 2026, from the
+  plan in Ideas). The price, and who sets it (a master, as the business's own
+  plans?). The two programs: by billing month or calendar month, and do
+  unused ones expire? The turnaround promised (3 working days?). Does a member
+  pick their trainer, or the queue decide? The trainer's fee per program, and
+  whether it differs for online trainers. A program not delivered in time: a
+  refund, or the request given back? Studio's prompts ask most of these again
+  where they are built.
 
 - **Studio 2's old measurements (`Measurements_T`): remind Glenn when he is
   on his Mac.** (19 Oct 2026; Glenn: "remind me again later, I'm on cloud
