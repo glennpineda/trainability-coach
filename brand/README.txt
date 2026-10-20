@@ -36,3 +36,12 @@ In the app (copied from this kit, 18 Oct 2026; replace them together with the ki
   src/chrome/CoachWordmark.jsx                             COACH cut from the lockup's outlines
   Whenever the icons change, raise the ?v= number on their addresses in
   index.html and public/manifest.webmanifest, so phones fetch the new picture.
+
+The app icon's ground (20 Oct 2026, build 1.0.171; Glenn: "Can we get a more
+defined gradient background on the app icon like the studio app icon? It looks
+like one solid dark blue right now."): a gradient from the top left #1B6693 to
+the bottom right #0E1B26, in place of the kit's flat Navy #172A3A, as Studio's
+icon runs from a light purple to a dark one. Only the ground changed; the mark
+is the kit's. app-icon/coach-app-icon.svg holds it, and every PNG of the icon
+was drawn again from it (at 2048 px, then made smaller).
+

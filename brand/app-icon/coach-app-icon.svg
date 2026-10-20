@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024.00 1024.00" width="1024" height="1024" role="img" aria-label="Trainability Coach">
 <title>Trainability Coach</title>
-<rect width="1024.00" height="1024.00" fill="#172A3A"/>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B6693"/><stop offset="1" stop-color="#0E1B26"/></linearGradient></defs>
+<rect width="1024.00" height="1024.00" fill="url(#bg)"/>
 <path d="M 604.21 175.08 L 787.74 281.03 Q 879.95 334.23 879.95 440.63 L 879.95 583.37 Q 879.95 689.77 787.74 742.97 L 604.21 848.92 Q 512.00 902.12 419.79 848.92 L 236.26 742.97 Q 144.05 689.77 144.05 583.37 L 144.05 440.63 Q 144.05 334.23 236.26 281.03 L 419.79 175.08 Q 512.00 121.88 604.21 175.08 Z" fill="#FFFFFF"/>
 <path d="M 623.27 319.16 L 572.73 289.90 Q 512.00 254.88 451.27 289.90 L 320.04 365.71 Q 259.31 400.73 259.31 470.77 L 259.31 553.23 Q 259.31 623.27 320.04 658.29 L 451.27 734.10 Q 512.00 769.12 572.73 734.10 L 623.27 704.84" fill="none" stroke="#007BA7" stroke-width="84.23" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M 698.19 423.34 L 755.82 512.00 L 698.19 600.66" fill="none" stroke="#4FA8DC" stroke-width="84.23" stroke-linecap="round" stroke-linejoin="round"/>

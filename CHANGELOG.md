@@ -8,6 +8,9 @@ account menu; the details of any change are in `NEURALBRAIN.md`.
 
 The first version of Trainability Coach, live at trainabilitycoach.com.
 
+- **The app icon on a gradient**, as Studio's is: cerulean at the top left
+  deepening to navy, where it was one flat dark blue. Remove Coach from your
+  home screen and add it again to see it.
 - **Coach IQ learns your way.** Suggestions, and the programs it makes, lean
   to the exercises you use and choose, and away from the ones you take out;
   the programs it makes use your usual rest. For a client, it also keeps
