@@ -15,6 +15,7 @@ import * as principles from "./principles.js";
 import * as books from "./books.js";
 import * as trainerSettings from "./trainer-settings.js";
 import * as programs from "./programs.js";
+import * as taste from "./taste.js";
 import * as accounts from "./accounts.js";
 import * as coachClients from "./coach-clients.js";
 import * as today from "./today.js";
@@ -1863,6 +1864,8 @@ app.post("/api/program-days/:id/exercises", asSignedIn("POST /program-days/exerc
   const dose = programs.doseFrom(req.body);
   if (dose.error) return res.status(400).json({ error: dose.error, code: "invalid" });
   await programs.addExercise(program, req.params.id, req.body.exerciseId, dose, req.body.part);
+  /* Coach IQ learns the trainer's way from what they put in (taste.js). */
+  if (!programs.partOf(req.body.part)) await taste.record(user.id, req.body.exerciseId, "added");
   await sendProgram(res, user, program);
 }));
 
@@ -1876,7 +1879,14 @@ app.patch("/api/program-exercises/:id", asSignedIn("PATCH /program-exercises", a
   if (req.body?.move) await programs.moveExercise(req.params.id, program.id, Number(req.body.move));
   const dose = programs.doseFrom(req.body || {});
   if (dose.error) return res.status(400).json({ error: dose.error, code: "invalid" });
+  const was = await programs.exerciseRow(req.params.id);
   await programs.updateExercise(req.params.id, program.id, dose, req.body?.exerciseId);
+  /* A swap: one swapped away (and, if Coach IQ built it in, dropped), one swapped in. */
+  if (req.body?.exerciseId && was && req.body.exerciseId !== was.exercise_id && !programs.partOf(was.part)) {
+    await taste.record(user.id, was.exercise_id, "swapped-out");
+    if (Number(was.by_iq) === 1) await taste.record(user.id, was.exercise_id, "iq-dropped");
+    await taste.record(user.id, req.body.exerciseId, "swapped-in");
+  }
   await sendProgram(res, user, program);
 }));
 
@@ -1884,7 +1894,12 @@ app.delete("/api/program-exercises/:id", asSignedIn("DELETE /program-exercises",
   const program = await programs.programOfExercise(user.id, req.params.id);
   if (!program) return notFound(res);
   if (!await changeable(req, res, user, program)) return;
+  const was = await programs.exerciseRow(req.params.id);
   await programs.deleteExercise(req.params.id, program.id);
+  if (was && !programs.partOf(was.part)) {
+    await taste.record(user.id, was.exercise_id, "removed");
+    if (Number(was.by_iq) === 1) await taste.record(user.id, was.exercise_id, "iq-dropped");
+  }
   await sendProgram(res, user, program);
 }));
 

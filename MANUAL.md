@@ -1409,9 +1409,9 @@ anything.
      **Shoulders**, **Back**, **Arms**, **Core** and **Legs** to give that
      day extra exercises for them. Tap **Next**.
    - *Day 1: how long is the session?* Tap **30 min**, **45 min**, **60
-     min**, **75 min** or **90 min**. The line above says how many exercises
-     fit, such as *About 6 exercises fit in a 60-minute session, besides the
-     warm-up and cool-down.* Tap **Next**.
+     min**, **75 min** or **90 min**. The line above says *Coach IQ fills it
+     to about 60 minutes, warm-up and cool-down included, timing every set
+     and rest.* Tap **Next**.
 8. *Add a warm-up, cool-down or stretching?* All three are ticked. Tap one to
    take its tick off:
    - **Warm-up**: a few easy minutes, then moving drills for what the day
@@ -1431,13 +1431,28 @@ anything.
     program opens, ready to change.
 
 **What Coach IQ puts in.** For each day, the exercises it would suggest next
-(5.4), one after another, until the session is full: the main lifts first,
-then more for the muscle groups you chose for that day, then more of what
-that kind of day works. Every exercise passes the place's equipment, the
+(5.4), one after another, until the session's time is full: the day's main
+lifts first, then more for the muscle groups you chose for that day, then
+more of what that kind of day works. The session's length is all of it,
+warm-up and cool-down included. Coach IQ times every exercise: each set is
+its reps at about 3 seconds a rep (or the tempo, if one is written), plus 5
+seconds to get set, so 8 reps take about 29 seconds and 12 about 41; then
+the rest after it. A set held for a time takes that time. Where no rest is
+written it counts 60 seconds. With a strength program's 2 to 3 minutes'
+rest, a 60-minute day holds about three main lifts; with muscle size's 75
+seconds, about six. Every exercise passes the place's equipment, the
 client's level and their limitations. It takes the next step on from
 exercises in your earlier programs for them, never one they have moved past,
 and prefers lifts they have a 1RM for, writing the load as a share of it
-(such as *60%* for 6 to 12 reps). It keeps a session to 25 sets or fewer. A
+(such as *60%* for 6 to 12 reps). It keeps a session to 25 sets or fewer, which the principles give as about
+what a session holds; if that comes well short of the session's length, the
+day says so (*Upper: about 65 minutes planned for a 90-minute session, with
+25 sets already, about what a session holds. Longer rests, or a slower
+tempo, would fill it.*). A loaded compound lift (a squat, a deadlift, a
+press, a row or a pull with a barbell, dumbbells, kettlebells or a machine,
+above beginner level) gets a warm-up set in its note, such as *Warm-up set
+first: 8–10 easy reps at about half the working weight.*, with a second at
+about 70% for heavy sets, and its time is counted. A
 circuit day is dosed for conditioning and a mobility day for mobility,
 whatever the program's focus. Each day's warm-up and cool-down come from the
 exercises Coach IQ's library marks for them, aimed at what the day works.
@@ -1645,10 +1660,35 @@ such as *Check “Trainability Downtown” has resistance bands.*
 |---|---|---|
 | Red octagon | Stop: swap it | An exercise needing equipment the place doesn't have, or one the client's limitations say to avoid |
 | Orange triangle | Take care | Something to make easier for the client, or above their level; a load from a 1RM they haven't got for that exercise (or one of your own exercises, which has no 1RM), more than 100% of it or next to nothing, a percentage it can't work out (such as *75-80%* or *~75%*: write one, such as 75%), or more reps than can be done at it (the top of a range counts, and *12 each side* is 12) |
-| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a tempo written oddly, a step back from something the client did in an earlier program or has a 1RM for |
+| Grey circle | A note | Reps or rest outside the usual range for the goal, too many sets for one session, a day that takes more than 5 minutes over its session's length (*Upper A: about 72 minutes planned, over its 60-minute session.*), a tempo written oddly, a step back from something the client did in an earlier program or has a 1RM for, a loaded compound lift with no warm-up set in its note (*Bent-over barbell row: a loaded compound lift. Start it with a warm-up set: 8–10 easy reps at about half the working weight.*) |
 
 They are guidance: your word wins. If one is wrong, it shows where Coach IQ
 needs fixing; tell the Primary Master.
+
+**Coach IQ learns your way.** It notices what you do with exercises, and
+leans its suggestions, and the programs it makes (5.1), towards the ones you
+use:
+
+- An exercise in more of your programs, recent ones most, comes up sooner,
+  and so do other ways of doing it (another deadlift, say). Its reason then
+  ends *You often use it (in 4 of your programs).*
+- One you add yourself, or swap in, comes up sooner: *You have chosen it
+  before.*
+- One you take out, or swap away, comes up later; above all one Coach IQ put
+  in a program it made and you took out.
+- Your usual rest between sets, from the rests you write yourself, is used
+  in the programs it makes, once you have written five for that kind of
+  program (strength, muscle size and so on). Until then it uses the rest the
+  principles give.
+
+It works only from your own programs: each trainer's way is their own.
+
+**Keeping it fresh.** For a client with programs or logged sessions behind
+them, Coach IQ also leans towards what they haven't done: a new way to do an
+exercise they know (*New for Avery: another way to do a squat they know.*),
+one they haven't done in eight weeks or more (*Avery hasn't done it in 10
+weeks.*), and, a little, something new altogether (*New for Avery.*); and a
+little away from what was in their last program.
 
 **Swap**, under an exercise, lists exercises that could stand in for it,
 already fitting the place, the level and the limitations. Tap **Use it**.
@@ -1665,8 +1705,13 @@ of your own, such as a client's home, is never questioned.
 
 ### 5.5 Days, order and supersets
 
+- **One day at a time.** A program with more than one day shows its days as
+  tabs in a band above them (**Upper A**, **Lower A**, **Upper B** …); tap one
+  to see that day. On a phone, slide the band sideways to reach the rest. A
+  tab with a number has that many points to stop at or take care with (5.4).
+  The day you were on stays picked while you go to other pages.
 - **Add a day**, at the bottom, adds the next day in the program's turn:
-  Upper C after Lower B, Day D after Day C.
+  Upper C after Lower B, Day D after Day C, and shows it.
 - Beside a day's name: the arrows move it up or down, the pencil renames it
   (and gives it a note, what it trains, **How long is this session?** and
   **More work for (optional)**), and the bin takes it out with its
@@ -1706,9 +1751,11 @@ to the cool-down**) opens the **Add an exercise** box, where Coach IQ suggests
 what fits that part of the day, such as *Open book (thoracic rotation): Moves
 the upper back and chest, which the day works.*, with a dose of its own (a
 few minutes, 8–10 moves, or a 30-second hold). On a day without them, **Add a
-warm-up** and **Add a cool-down** sit beside **Add an exercise**. They don't
-count towards the session's length, and Coach IQ checks them only for the
-place, the client's level and their limitations.
+warm-up** and **Add a cool-down** sit beside **Add an exercise**. They count
+towards the session's length, as everything does: under the day's name,
+*60-minute session · about 55 min planned* is the whole day, timed as in 5.1.
+Coach IQ checks them only for the place, the client's level and their
+limitations.
 
 **What a day works.** Under a day's name, a drawing of a body, from the
 front and from the back, colors the muscles that day's exercises work, from

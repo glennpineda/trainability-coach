@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { apiRequest } from "../lib/api";
-import { aOrAn, andList, plural } from "../lib/words";
+import { andList, plural } from "../lib/words";
 
 /**
  * A new program, one question at a time (Glenn, 20 Oct 2026: "When creating a
@@ -289,10 +289,9 @@ export function ProgramSteps({ vocab, clients, places, forClient, onSkip, onCanc
     );
   } else if (step.key === "length") {
     const d = a.days[step.day];
-    const holds = vocab.holds?.[d.minutes];
     body = (
       <>
-        <Ask hint={holds ? `About ${plural(holds, "exercise")} fit in ${aOrAn(d.minutes)} ${d.minutes}-minute session, besides the warm-up and cool-down.` : null}>
+        <Ask hint={`Coach IQ fills it to about ${d.minutes} minutes, warm-up and cool-down included, timing every set and rest.`}>
           Day {step.day + 1}: how long is the session?
         </Ask>
         <Chips label={`How long day ${step.day + 1} is`} value={d.minutes} onChange={(m) => setDay(step.day, { minutes: m })}

@@ -14,6 +14,8 @@ import { LoadingLine } from "../chrome/LoadingLine";
 import { LogSession } from "./LogSession";
 import { entryText, nextLoadKg } from "../lib/workout-log";
 import { Toast } from "../chrome/Toast";
+import { minutesWords } from "../lib/session-time";
+import { SegRow } from "../chrome/SegRow";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "Go"): one program, day by day,
@@ -35,6 +37,7 @@ const FROM = {
   reps: "Principles: Reps", sets: "Principles: Sets", rest: "Principles: Rest", tempo: "Principles: Tempo",
   "starting-out": "Principles: Starting out", "frequency-and-variety": "Principles: How often",
   progression: "The client's earlier programs", "one-rm": "The client's 1RM", technique: "Advanced sets",
+  "warm-up-sets": "Principles: Warm-up sets", "session-time": "The session's length",
 };
 
 /* "3 × 8–12 · 45 lb · RPE 7 · 3-1-1-0 · rest 75 s": what is filled in, in the reader's units. */
@@ -245,6 +248,12 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
   const rememberAsk = (v) => { setLastAsk(v); try { localStorage.setItem(askKey, JSON.stringify(v)); } catch { /* not kept: asked afresh */ } };
   const [version, setVersion] = useState(0);
   const [units] = useUnits();
+  /* The day shown (Glenn, 20 Oct 2026: "Can we list each day of the workout
+     program in a tab band so the page is not that long?"), kept for this
+     program while the tab is open. */
+  const dayKey = `cx-day:${id}`;
+  const [dayId, setDayId] = useState(() => { try { return sessionStorage.getItem(dayKey); } catch { return null; } });
+  useEffect(() => { try { if (dayId) sessionStorage.setItem(dayKey, dayId); } catch { /* not kept */ } }, [dayKey, dayId]);
 
   const fail = useCallback((err) => {
     if (err.status === 401) onSignedOut?.();
@@ -262,7 +271,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
       const out = await apiRequest(method, path, body);
       setP(out); setVersion(v => v + 1);
       if (!keepOpen) setOpen(null);
-      return true;
+      return out;
     } catch (err) { fail(err); return false; } finally { setBusy(false); }
   };
   const is = (kind, key) => open?.kind === kind && open?.id === key;
@@ -308,6 +317,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
   if (!p) return error ? <p className="text-sm" style={{ color: "var(--ember)" }}>{error}</p> : <LoadingLine />;
   const points = (filter) => p.check.filter(filter);
   const top = points(c => !c.day && !c.exercise);
+  /* The day on its tab: the one picked, else the first (a day taken out falls back to it). */
+  const shown = p.days.find(d => d.id === dayId) || p.days[0];
   const count = (lvl) => p.check.filter(c => c.level === lvl).length;
 
   return (
@@ -385,12 +396,23 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
       {error && <p className="text-sm" role="alert" style={{ color: "var(--ember)" }}>{error}</p>}
 
       <fieldset disabled={!!p.frozen} className="contents">
+      {/* One day at a time, picked on a band of tabs (Studio's SegRow, as
+          Review's sections: sized by their words, sideways on a phone). */}
+      {p.days.length > 1 && (
+        <div className="overflow-x-auto -mb-1">
+          <SegRow pick fit className="min-w-max" label="Days" value={shown?.id} onPick={setDayId} panelId="day-panel" idOf={(key) => `day-tab-${key}`}
+            items={p.days.map(d => ({ key: d.id, label: d.name,
+              /* What there is to stop at or take care with on a day, so a day out of sight still says so. */
+              figure: p.check.filter(c => c.day === d.id && c.level !== "note").length || null }))} />
+        </div>
+      )}
       {p.days.map((d, di, days) => {
+        if (d.id !== shown?.id) return null;
         const bodyScale = scaleOf(days);
         const dayPoints = points(c => c.day === d.id && !c.exercise);
         const labels = labelsFor(d.exercises);
         return (
-          <section key={d.id} className="cx-card p-4">
+          <section key={d.id} id="day-panel" role={p.days.length > 1 ? "tabpanel" : undefined} aria-labelledby={p.days.length > 1 ? `day-tab-${d.id}` : undefined} className="cx-card p-4">
             {is("day", d.id) ? (
               <DayForm day={d} dayKinds={vocab?.dayKinds} minutes={vocab?.minutes} muscleGroups={vocab?.muscleGroups} busy={busy} onCancel={() => setOpen(null)} onSave={(body) => call("PATCH", `/program-days/${d.id}`, body)} />
             ) : (
@@ -406,9 +428,11 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
                 </div>
               </div>
             )}
-            {!is("day", d.id) && (d.minutes || d.muscleLabels?.length > 0) && (
+            {!is("day", d.id) && (d.minutes || p.minutes || d.plannedSeconds > 0 || d.muscleLabels?.length > 0) && (
               <p className="text-xs mt-0.5" style={muted}>
-                {[d.minutes ? `${d.minutes}-minute session` : null, d.muscleLabels?.length ? `more work for ${d.muscleLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
+                {[(d.minutes ?? p.minutes) ? `${d.minutes ?? p.minutes}-minute session` : null,
+                  d.plannedSeconds > 0 ? `${minutesWords(d.plannedSeconds)} planned` : null,
+                  d.muscleLabels?.length ? `more work for ${d.muscleLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
               </p>
             )}
             {d.notes && !is("day", d.id) && <p className="text-sm mt-1 cx-wrap" style={muted}>{d.notes}</p>}
@@ -507,7 +531,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
       })}
 
       {!p.frozen && (
-        <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy} onClick={() => call("POST", `/programs/${p.id}/days`, {})}>
+        <button type="button" className="cx-btn-quiet w-full py-2 text-sm" disabled={busy}
+          onClick={async () => { const out = await call("POST", `/programs/${p.id}/days`, {}); if (out?.days?.length) setDayId(out.days[out.days.length - 1].id); }}>
           <Plus size={15} className="inline" aria-hidden="true" /> Add a day
         </button>
       )}

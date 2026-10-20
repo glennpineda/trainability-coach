@@ -8,6 +8,20 @@ account menu; the details of any change are in `NEURALBRAIN.md`.
 
 The first version of Trainability Coach, live at trainabilitycoach.com.
 
+- **Coach IQ learns your way.** Suggestions, and the programs it makes, lean
+  to the exercises you use and choose, and away from the ones you take out;
+  the programs it makes use your usual rest. For a client, it also keeps
+  things fresh: new ways to do what they know, and what they haven't done in
+  a while.
+- **Programs fit their session.** Every day is timed, sets, reps, tempo,
+  rests, warm-up and cool-down, shown under the day (*about 55 min
+  planned*), and the programs Coach IQ makes are filled to the session's
+  length.
+- **Warm-up sets.** A new Coach IQ principle, waiting for review: a light
+  set of the same exercise first, above all on loaded compound lifts. The
+  programs Coach IQ makes write it in, and the check suggests it.
+- **A program's days on tabs.** One day at a time, picked from a band of
+  tabs, so the page is shorter.
 - **A new program, one question at a time.** New program asks who it's for,
   where they train, the focus, how many days, what each day works and for
   how long, whether to add a warm-up, cool-down and stretching, and the

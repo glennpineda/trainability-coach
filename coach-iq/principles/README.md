@@ -31,3 +31,4 @@ for Billy's suggestions, never a rule to argue with.
 | [starting-out.md](starting-out.md) | The first months of training: training age, the beginner's first program |
 | [women-and-teenagers.md](women-and-teenagers.md) | What changes, and what doesn't, for women and for teenagers (Coach IQ doesn't cover children) |
 | [strength-levels.md](strength-levels.md) | A level from a client's 1RMs: the four barbell lifts against body weight |
+| [warm-up-sets.md](warm-up-sets.md) | A light set of the same exercise before the working sets, above all on loaded compound lifts |

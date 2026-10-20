@@ -5,9 +5,11 @@ import * as library from "./library.js";
 import * as equipment from "./equipment.js";
 import * as limitations from "./limitations.js";
 import * as workoutLogs from "./workout-logs.js";
+import * as taste from "./taste.js";
 import { percentOf, kgAt, maxRepsAt, weightText, oneRmText, unreadPercent, topReps } from "../src/lib/one-rm.js";
 import { TECHNIQUE_KEYS, MAX_DROPS, isPyramid, groupSizes, techniqueText } from "../src/lib/techniques.js";
 import { aOrAn, kindsWords, plural } from "../src/lib/words.js";
+import { sessionSeconds, partSeconds, REST_DEFAULT } from "../src/lib/session-time.js";
 
 /**
  * The program designer (Glenn, 17 Oct 2026: "We need to start creating a
@@ -464,18 +466,26 @@ const COLUMNS = { sets: "sets", reps: "reps", load: "load_text", effort: "effort
 export const PARTS = { warmup: "Warm-up", cooldown: "Cool-down" };
 export const partOf = (v) => (PARTS[v] ? v : "");
 
-export async function addExercise(program, dayId, exerciseId, dose, part = "") {
+/* `byIq`: put in by Coach IQ building from the steps (taste.js learns from
+   what the trainer then takes out). */
+export async function addExercise(program, dayId, exerciseId, dose, part = "", { byIq = false } = {}) {
   const top = await get(`SELECT MAX(pos) AS top FROM coach_program_exercises WHERE day_id = ?`, [dayId]);
   const id = await insertWithNewId("programExercise", (newId) => run(
-    `INSERT INTO coach_program_exercises (id, program_id, day_id, exercise_id, pos, part) VALUES (?, ?, ?, ?, ?, ?)`,
-    [newId, program.id, dayId, exerciseId, (Number(top?.top) || 0) + 1, partOf(part)]));
-  await updateExercise(id, program.id, dose);
+    `INSERT INTO coach_program_exercises (id, program_id, day_id, exercise_id, pos, part, by_iq) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [newId, program.id, dayId, exerciseId, (Number(top?.top) || 0) + 1, partOf(part), byIq ? 1 : 0]));
+  await updateExercise(id, program.id, dose, null, { byTrainer: false });
   return id;
 }
 
-export async function updateExercise(peId, programId, dose, exerciseId) {
+/* One exercise on a day as stored: its exercise and who chose it. */
+export const exerciseRow = (peId) => get(`SELECT exercise_id, by_iq, part FROM coach_program_exercises WHERE id = ?`, [peId]);
+
+/* `byTrainer`: a change the trainer made (the route), not the dose first written by addExercise. */
+export async function updateExercise(peId, programId, dose, exerciseId, { byTrainer = true } = {}) {
   const keys = Object.keys(dose).filter(k => COLUMNS[k]);
-  if (exerciseId) await run(`UPDATE coach_program_exercises SET exercise_id = ? WHERE id = ?`, [exerciseId, peId]);
+  /* Swapped, it is the trainer's choice; Coach IQ's with its dose changed, still Coach IQ's but changed. */
+  if (exerciseId) await run(`UPDATE coach_program_exercises SET exercise_id = ?, by_iq = 0 WHERE id = ?`, [exerciseId, peId]);
+  else if (keys.length && byTrainer) await run(`UPDATE coach_program_exercises SET by_iq = 2 WHERE id = ? AND by_iq = 1`, [peId]);
   if (keys.length) await run(`UPDATE coach_program_exercises SET ${keys.map(k => `${COLUMNS[k]} = ?`).join(", ")} WHERE id = ?`, [...keys.map(k => dose[k]), peId]);
   await touch(programId);
 }
@@ -530,7 +540,14 @@ async function context(trainerId, program, { frozen = false } = {}) {
   const history = await historyOf(trainerId, program.client_id, { before: program, tested: [...oneRms.keys()] });
   /* What was done last time with each exercise, from the client's logged sessions (Run 1, I-14). */
   const lastTime = frozen ? new Map() : await workoutLogs.lastByExercise(program.client_id);
-  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms, lastTime };
+  /* A logged session counts as done, on its day. */
+  for (const [id, l] of lastTime) {
+    if (!history.steps.seen.has(id) || history.steps.seen.get(id) < l.doneOn) history.steps.seen.set(id, l.doneOn);
+    const f = library.exerciseById(id)?.movement;
+    if (f) history.steps.families.add(f);
+  }
+  return { places, place, rules: limitations.rulesOf(lims), hasLimitations: lims.length > 0, ...history.steps, oneRms, lastTime,
+    taste: await taste.tasteOf(trainerId), clientFirst: String(program.client_name || "").split(" ")[0] || "them" };
 }
 
 /* The client's latest 1RM for each exercise (fitness-tests.js, kind onerm;
@@ -644,7 +661,15 @@ export async function historyOf(trainerId, clientId, { before = null, tested = [
       down.push(...library.easierOf(e));
     }
   }
-  const steps = { steps: { done, next, outgrown } };
+  /* For keeping it fresh (Glenn, 20 Oct 2026: "suggesting exercises that
+     client hasn't done in a while and new ones they haven't done"): when
+     each was last in a program, what the latest program had, and the
+     families they know. */
+  const seen = new Map();
+  for (const p of list) for (const x of p.xs) seen.set(x.id, p.created_at.slice(0, 10));
+  const latest = new Set(list.length ? list[list.length - 1].xs.map(x => x.id) : []);
+  const families = new Set([...doneXs.map(([x]) => x.movement)]);
+  const steps = { steps: { done, next, outgrown, seen, latest, families } };
   if (!list.length) return { level: null, programs: 0, trend: null, ...steps };
 
   const last = list[list.length - 1];
@@ -719,6 +744,12 @@ export async function full(trainerId, program, { withCheck = true, ctx: given = 
     /* The client's latest 1RM for each exercise, for the exercise dialog. */
     oneRms: Object.fromEntries(ctx.oneRms),
   };
+  /* About how long each day takes, all of it (src/lib/session-time.js). */
+  const restDefault = ctx.taste?.usualRest(program.goal) ?? REST_DEFAULT;
+  for (const d of out.days) {
+    d.plannedSeconds = d.exercises.length || d.warmup.length || d.cooldown.length
+      ? sessionSeconds(d.exercises, { restDefault, warmupSet: hasWarmupSet }) + partSeconds(d.warmup) + partSeconds(d.cooldown) : 0;
+  }
   if (frozen) out.frozen = true;
   if (withCheck) out.check = check(out, rows, ctx, own);
   return out;
@@ -805,6 +836,7 @@ function check(program, rows, ctx, own) {
           add({ ...at, level: "note", from: "library", text: `${e.name} is usually a main lift, done before ${sawLater}.` });
         }
         if (!sawLater && (roles.includes("finisher") || (roles.includes("accessory") && !roles.includes("main")))) sawLater = e.name;
+        if (needsWarmupSet(x) && !hasWarmupSet(e)) add({ ...at, level: "note", from: "warm-up-sets", text: `${e.name}: a loaded compound lift. Start it with a warm-up set: 8–10 easy reps at about half the working weight.` });
       } else if (own.get(e.exerciseId)) {
         const p = own.get(e.exerciseId);
         if (ctx.place && p.needs.length) {
@@ -854,9 +886,14 @@ function check(program, rows, ctx, own) {
       else if (sets > 25) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${sets} sets, over the 20–25 a session usually holds.` });
     }
     if (beginner && dayRows.length > 7) add({ day: day.id, level: "note", from: "starting-out", text: `${day.name}: ${dayRows.length} exercises. A beginner's session is usually 4–7, unless it is a circuit.` });
+    /* Timed, not counted (Glenn, 20 Oct 2026): its sets, reps, tempo and
+       rests, with the warm-up and cool-down, against the session's length. */
     const mins = day.minutes ?? program.minutes;
-    const fits = MINUTES[mins];
-    if (fits && dayRows.length > fits + 1) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: ${dayRows.length} exercises, more than about ${fits} fit in ${aOrAn(mins)} ${mins}-minute session.` });
+    const planned = Math.round(day.plannedSeconds / 60);
+    if (mins && day.plannedSeconds > (mins + 5) * 60) add({ day: day.id, level: "note", from: "session-time", text: `${day.name}: about ${planned} minutes planned, over its ${mins}-minute session.` });
+    /* Short of it only where the sets are already at what a session holds:
+       otherwise there is simply room for more, which the suggestions say. */
+    else if (mins && counted && sets >= 25 && day.plannedSeconds < (mins - 15) * 60) add({ day: day.id, level: "note", from: "sets", text: `${day.name}: about ${planned} minutes planned for ${aOrAn(mins)} ${mins}-minute session, with ${sets} sets already, about what a session holds. Longer rests, or a slower tempo, would fill it.` });
     /* The warm-up and the cool-down are checked for what could hurt or
        can't be done there: the place, the limitations, the level. Their
        doses are their own, so the goal's ranges aren't held to them. */
@@ -932,15 +969,41 @@ function rank(list, ctx, { level, purpose, role }) {
     else if (ctx.outgrown?.has(x.id)) s -= 3;
     /* Building from the steps: a lift they have a 1RM for, so its weight can be written. */
     if (ctx.prefer?.has(x.id)) s += 2;
+    /* The trainer's way, learned (taste.js), and keeping it fresh for the client. */
+    if (ctx.taste) s += ctx.taste.score(x);
+    s += freshness(x, ctx).bonus;
     return s;
   };
   return [...list].sort((a, b) => score(b) - score(a));
+}
+
+/*
+ * Keeping it fresh for the client: never anything when they have no history
+ * yet (everything would be new). In the latest program: a little down. Not
+ * in a program or a logged session for WEEKS_FRESH weeks: up. Never done, a
+ * family they know (a new way to do a lift they know): up most. Never done,
+ * a family they don't: up a little.
+ */
+const WEEKS_FRESH = 8;
+function freshness(x, ctx) {
+  if (!ctx.seen?.size) return { bonus: 0, why: "" };
+  if (ctx.latest?.has(x.id)) return { bonus: -1, why: "" };
+  const last = ctx.seen.get(x.id);
+  if (last) {
+    const weeks = Math.floor((Date.now() - Date.parse(`${last}T00:00:00`)) / WEEK);
+    return weeks >= WEEKS_FRESH ? { bonus: 1, why: `${ctx.clientFirst} hasn't done it in ${weeks} weeks.` } : { bonus: 0, why: "" };
+  }
+  if (ctx.families?.has(x.movement)) return { bonus: 1.5, why: `New for ${ctx.clientFirst}: another way to do ${aOrAn(library.familyOf(x)?.label || "it")} ${String(library.familyOf(x)?.label || "").toLowerCase()} they know.` };
+  return { bonus: 0.5, why: `New for ${ctx.clientFirst}.` };
 }
 
 function suggestion(x, ctx, why, dose) {
   const fit = ctx.place ? library.placeCheck(x, ctx.place) : "yes";
   const lim = library.limitsCheck(x, ctx.rules);
   const step = ctx.next?.get(x.id);
+  /* One learned reason at most: the trainer's way, else what is fresh. */
+  const learned = (ctx.taste?.why(x)) || (!step && freshness(x, ctx).why) || "";
+  why = learned ? `${why} ${learned}` : why;
   return {
     ...library.brief(x), why: step ? `${why} A step on from ${step.name}, ${step.tested ? "which they have a 1RM for" : "from an earlier program"}.` : why,
     ...(Array.isArray(fit) ? { askFirst: fit } : {}),
@@ -1010,7 +1073,10 @@ export async function suggestFor(trainerId, program, dayId, { workOn = null, mus
  * version, already passing the place, the level and the limitations, with a
  * starting dose. Up to `limit`, the program's gaps first.
  */
-export async function suggestNext(trainerId, program, dayId, limit = 4, given = null) {
+/* `inOrder`: the day's own movements in their order, main lifts first,
+   whatever other days have (building a second Lower day starts with a
+   squat, not with what the first Lower day left out). */
+export async function suggestNext(trainerId, program, dayId, limit = 4, given = null, { inOrder = false } = {}) {
   const ctx = given || await context(trainerId, program);
   const rows = await all(`SELECT day_id, exercise_id FROM coach_program_exercises WHERE program_id = ? AND part = ''`, [program.id]);
   const patternOf = (id) => { const x = library.exerciseById(id); return x ? library.familyOf(x)?.pattern : null; };
@@ -1038,7 +1104,7 @@ export async function suggestNext(trainerId, program, dayId, limit = 4, given = 
      day already has of it. */
   const focusInDay = [...inDayX, ...inDay].filter(p => focusOf.has(p)).length;
   const front = [...focusOf.keys()].filter(fits).filter(open).slice(0, Math.max(0, 2 - focusInDay));
-  const base = [...new Set([...allowed.filter(p => !inProgram.has(p)), ...allowed])].filter(p => open(p) && !front.includes(p));
+  const base = [...new Set([...(inOrder ? [] : allowed.filter(p => !inProgram.has(p))), ...allowed])].filter(p => open(p) && !front.includes(p));
   const order = [];
   for (let i = 0; i < Math.max(base.length, front.length); i++) {
     if (base[i]) order.push(base[i]);
@@ -1057,11 +1123,14 @@ export async function suggestNext(trainerId, program, dayId, limit = 4, given = 
     out.push(suggestion(best, ctx, why, doseFor(dayGoal, program.level, { accessory, measure: firstMeasure(best) })));
   }
   const mins = day?.minutes ?? program.minutes;
-  const holds = MINUTES[mins];
+  const asWritten = mins ? await all(`SELECT sets, reps, tempo, rest_seconds, superset, technique, drops, note, part FROM coach_program_exercises WHERE day_id = ? ORDER BY pos, id`, [dayId]) : [];
+  const shaped = asWritten.map(r => ({ ...r, rest: r.rest_seconds == null ? null : Number(r.rest_seconds), superset: !!Number(r.superset) }));
+  const planned = sessionSeconds(shaped.filter(r => !partOf(r.part)), { restDefault: ctx.taste?.usualRest(program.goal) ?? REST_DEFAULT, warmupSet: hasWarmupSet })
+    + partSeconds(shaped.filter(r => partOf(r.part)));
   return {
     suggestions: out,
     day: DAY_KINDS[dayKind].label,
-    ...(holds && dayRows.length >= holds ? { full: `This day has about as much as ${aOrAn(mins)} ${mins}-minute session holds.` } : {}),
+    ...(mins && planned >= mins * 60 - 150 ? { full: `This day already fills about ${aOrAn(mins)} ${mins}-minute session.` } : {}),
     ...(ctx.place ? { place: ctx.place.name } : {}),
     ...(ctx.hasLimitations ? { limitationsChecked: true } : {}),
   };
@@ -1200,27 +1269,28 @@ function partsFor(ctx, program, worked, onDay, { warmup, cooldown, stretching, m
     const pulse = pick(pool.filter(x => roles(x).includes("warm-up") && patt(x) === "conditioning"), 1, (x) => -easy(x));
     const drills = pick(pool.filter(x => roles(x).includes("warm-up") && ["mobility", "hinge", "balance"].includes(patt(x)) && !STATIC.test(x.name)),
       minutes >= 60 ? 2 : 1, (x) => overlap(x));
-    out.warmup = [...pulse, ...drills].map(x => ({ x, dose: partDose(x, "warmup") }));
+    out.warmup = [...pulse, ...drills].map(x => ({ x, dose: partDose(x, "warmup", minutes) }));
   }
   if (cooldown) {
     const easyOut = pick(pool.filter(x => roles(x).includes("cool-down") && ["conditioning", "breathing"].includes(patt(x))), 1,
       (x) => (patt(x) === "conditioning" ? 1 : 0) - easy(x));
-    out.cooldown.push(...easyOut.map(x => ({ x, dose: partDose(x, "cooldown") })));
+    out.cooldown.push(...easyOut.map(x => ({ x, dose: partDose(x, "cooldown", minutes) })));
   }
   if (stretching) {
     const holds = pick(pool.filter(x => roles(x).includes("cool-down") && patt(x) === "mobility"), minutes >= 60 ? 3 : 2,
       (x) => overlap(x) * 2 + (STATIC.test(x.name) ? 2 : 0));
-    out.cooldown.push(...holds.map(x => ({ x, dose: partDose(x, "cooldown") })));
+    out.cooldown.push(...holds.map(x => ({ x, dose: partDose(x, "cooldown", minutes) })));
   }
   return out;
 }
 
 /* A warm-up's or a cool-down's dose: a few easy minutes of something
-   steady, a short while of breathing, a moving drill counted or timed, a
-   stretch held. No rest: one goes straight on to the next. */
-export function partDose(x, part) {
+   steady (three in a short session), a short while of breathing, a moving
+   drill counted or timed, a stretch held. No rest: one goes straight on. */
+/* In a session of 45 minutes or less, three easy minutes, not five. */
+export function partDose(x, part, minutes = 60) {
   const p = library.familyOf(x)?.pattern;
-  if (p === "conditioning") return { sets: "1", reps: "5 min", rest: null };
+  if (p === "conditioning") return { sets: "1", reps: minutes <= 45 ? "3 min" : "5 min", rest: null };
   if (p === "breathing") return { sets: "1", reps: "2 min", rest: null };
   if (part === "cooldown" || STATIC.test(x.name)) return { sets: "1–2", reps: "30 s", rest: null };
   return { sets: "1", reps: ["time", "distance"].includes(firstMeasure(x)) ? "30 s" : "8–10", rest: null };
@@ -1260,12 +1330,42 @@ const andWords = (list) => (list.length > 1 ? `${list.slice(0, -1).join(", ")} a
 
 /* What Coach IQ offers for a day, put on it: its dose, and a weight from
    the client's 1RM where they have one for it. */
-async function put(program, dayId, s, ctx, part = "") {
+/*
+ * A warm-up set of the same exercise before the working sets
+ * (coach-iq/principles/warm-up-sets.md; Glenn, 20 Oct 2026: "suggest a warm
+ * up set of the same exercise with a low weight, specially if it's an
+ * advanced compound exercise"): a loaded compound main lift (a squat, a
+ * hinge, a press, a row or a pull with a barbell, dumbbells, kettlebells, a
+ * machine …) above beginner level. Heavy working sets get a second.
+ */
+const COMPOUND = new Set(["squat", "hinge", "push-horizontal", "push-vertical", "pull-horizontal", "pull-vertical"]);
+const LOADED = new Set(["Barbell", "Trap Bar", "Smith Machine", "Landmine", "Dumbbell", "Kettlebell", "Machine", "Cable"]);
+/* An inverted row hangs from a barbell or a Smith machine, but its load is
+   the body's own weight: no lighter set to do. */
+export const needsWarmupSet = (x) => !!x && x.level !== "beginner" && COMPOUND.has(library.familyOf(x)?.pattern)
+  && (library.familyOf(x)?.roles || []).includes("main") && LOADED.has(x.attributes?.implement) && !/inverted/i.test(x.name);
+export const hasWarmupSet = (e) => /warm[- ]?up set/i.test(e?.note || "");
+function warmupSetNote(dose, pct) {
+  const top = topReps(dose.reps);
+  const heavy = (pct && pct >= 80) || (top && top <= 6);
+  return heavy ? "Warm-up sets first: 8–10 easy reps at about half the working weight, then 3–5 at about 70%."
+    : "Warm-up set first: 8–10 easy reps at about half the working weight.";
+}
+
+/* What Coach IQ puts on a day, as it will be written: its dose (the
+   trainer's usual rest where they have one, on a day dosed as the
+   program is), a weight from the client's 1RM where they have one, and a
+   warm-up set where the lift needs one. */
+function planDose(program, s, ctx, part, dayKind) {
   const dose = { sets: s.dose.sets || "", reps: s.dose.reps || "" };
   if (s.dose.rest != null) dose.rest = s.dose.rest;
-  const pct = !part && ctx.oneRms.get(s.id) && program.goal !== "mobility" ? percentFor(dose.reps) : null;
+  if (part) return dose;
+  const usual = ctx.taste?.usualRest(program.goal);
+  if (dose.rest != null && usual && goalOfDay(dayKind, program.goal) === program.goal) dose.rest = usual;
+  const pct = ctx.oneRms.get(s.id) && program.goal !== "mobility" ? percentFor(dose.reps) : null;
   if (pct) dose.load = `${pct}%`;
-  await addExercise(program, dayId, s.id, dose, part);
+  if (needsWarmupSet(library.exerciseById(s.id))) dose.note = warmupSetNote(dose, pct);
+  return dose;
 }
 
 /** The program made from the steps' answers (checkSteps first); its id. */
@@ -1288,47 +1388,66 @@ export async function build(trainerId, client, placeId, body) {
   ctx.prefer = new Set(ctx.oneRms.keys());
   const days = await all(`SELECT * FROM coach_program_days WHERE program_id = ? ORDER BY pos, id`, [id]);
   const workOn = aim.goal === "mobility" ? "mobility" : aim.goal === "power" ? "power" : aim.goal === "fat-loss" ? "cardio" : "strength";
+  const wants = { warmup: !!body.warmup, cooldown: !!body.cooldown, stretching: !!body.stretching };
+  /* How long a day takes (src/lib/session-time.js), with the trainer's usual rest where nothing is written. */
+  const restDefault = ctx.taste?.usualRest(program.goal) ?? REST_DEFAULT;
+  const time = (list) => sessionSeconds(list, { restDefault, warmupSet: hasWarmupSet });
   for (const [i, day] of days.entries()) {
     const step = body.days[i];
-    const holds = MINUTES[step.minutes];
+    const minutes = Number(step.minutes);
+    /*
+     * The session's length is all of it (Glenn, 20 Oct 2026: "make sure the
+     * amount of exercises/set corresponds with the length of the session
+     * they selected"): the warm-up and cool-down are timed first, as Coach
+     * IQ would choose them for a day of this kind, and the exercises fill
+     * what is left, each timed by its sets, reps, tempo and rest.
+     */
+    const guess = partsFor(ctx, program, new Set(DAY_MUSCLES[day.kind] || []), new Set(), { ...wants, minutes });
+    const budget = minutes * 60 - partSeconds([...guess.warmup, ...guess.cooldown].map(p => p.dose));
     const onDay = new Set(), families = new Set();
+    const planned = [];
     /* Never past the 25 sets a session usually holds (sets.md), by the top
        of each range, so the check has nothing to say about the build. */
     let sets = 0;
-    const take = async (s) => {
+    /* Full when what is left is shorter than a short exercise. */
+    const full = (limit) => time(planned) >= limit - 150;
+    const take = async (s, limit) => {
       const x = library.exerciseById(s?.id);
       if (!x || onDay.has(x.id) || families.has(x.movement)) return false;
       const top = range(s.dose?.sets)?.[1] || 0;
       if (sets + top > 25) return false;
-      await put(program, day.id, s, ctx);
-      onDay.add(x.id); families.add(x.movement); sets += top;
+      const dose = planDose(program, s, ctx, "", day.kind);
+      if (time([...planned, dose]) > limit + 60) return false;
+      await addExercise(program, day.id, s.id, dose, "", { byIq: true });
+      planned.push(dose); onDay.add(x.id); families.add(x.movement); sets += top;
       return true;
     };
-    /* The muscle groups asked for get the last places of the session, a
-       third of it at most, after its main movements. */
+    /* The muscle groups asked for get the last third of the session, after its main movements. */
     const muscles = musclesOf(step.muscles).flatMap(g => GROUPS[g].muscles);
-    const forMuscles = muscles.length ? Math.max(1, Math.min(3, Math.floor(holds / 3))) : 0;
-    while (onDay.size < holds - forMuscles) {
-      const { suggestions } = await suggestNext(trainerId, program, day.id, 1, ctx);
-      if (!suggestions.length || !await take(suggestions[0])) break;
+    const mainLimit = muscles.length ? Math.round(budget * 2 / 3) : budget;
+    /* Two of the day's own movements come first whatever is kept back,
+       so long strength rests can't leave a day with one main lift. */
+    while (onDay.size < 2 ? !full(budget) : !full(mainLimit)) {
+      const { suggestions } = await suggestNext(trainerId, program, day.id, 1, ctx, { inOrder: true });
+      if (!suggestions.length || !await take(suggestions[0], onDay.size < 2 ? budget : mainLimit)) break;
     }
     const fillFrom = async (opts, { single = false } = {}) => {
-      if (onDay.size >= holds) return;
+      if (full(budget)) return;
       const { suggestions } = await suggestFor(trainerId, program, day.id, opts, 12, ctx);
       /* More for a muscle group is single-muscle work first: the big lifts
          that also reach it are what the day's own movements already gave. */
       const isolated = (s) => library.familyOf(library.exerciseById(s.id))?.pattern === "isolation";
       const order = single ? [...suggestions.filter(isolated), ...suggestions.filter(s => !isolated(s))] : suggestions;
-      for (const s of order) { if (onDay.size >= holds) break; await take(s); }
+      for (const s of order) { if (full(budget)) break; await take(s, budget); }
     };
     if (muscles.length) await fillFrom({ workOn, muscles }, { single: true });
     const dk = day.kind;
     await fillFrom(dk === "circuit" ? { workOn: "cardio" } : dk === "mobility" ? { workOn: "mobility" } : { workOn, muscles: DAY_MUSCLES[dk] || [] });
-    if (body.warmup || body.cooldown || body.stretching) {
+    if (wants.warmup || wants.cooldown || wants.stretching) {
       const worked = new Set([...onDay].flatMap(xid => library.exerciseById(xid)?.primary || []));
-      const parts = partsFor(ctx, program, worked, families, { warmup: !!body.warmup, cooldown: !!body.cooldown, stretching: !!body.stretching, minutes: Number(step.minutes) });
+      const parts = partsFor(ctx, program, worked, families, { ...wants, minutes });
       for (const part of ["warmup", "cooldown"]) {
-        for (const { x, dose } of parts[part]) await put(program, day.id, { id: x.id, dose }, ctx, part);
+        for (const { x, dose } of parts[part]) await addExercise(program, day.id, x.id, dose, part, { byIq: true });
       }
     }
   }
@@ -1351,6 +1470,7 @@ export async function forBilly(trainerId, program, units) {
     days: p.days.map(d => ({
       name: d.name, notes: d.notes, trains: d.kindLabel,
       ...(d.minutes ? { sessionMinutes: d.minutes } : {}),
+      ...(d.plannedSeconds ? { plannedMinutes: Math.round(d.plannedSeconds / 60) } : {}),
       ...(d.muscleLabels.length ? { worksMore: d.muscleLabels } : {}),
       ...(d.warmup.length ? { warmUp: d.warmup.map(e => [e.name, doseWords(e)].filter(Boolean).join(": ")) } : {}),
       ...(d.cooldown.length ? { coolDown: d.cooldown.map(e => [e.name, doseWords(e)].filter(Boolean).join(": ")) } : {}),
@@ -1382,5 +1502,5 @@ const doseWords = (e) => [e.sets && e.reps ? `${e.sets} × ${e.reps}` : e.sets |
 export const FROM = {
   equipment: "the place's equipment", limitations: "the client's limitations", library: "Coach IQ's library",
   reps: "Reps", sets: "Sets", rest: "Rest", tempo: "Tempo", "starting-out": "Starting out", "frequency-and-variety": "How often, and keeping it varied",
-  technique: "Advanced sets",
+  technique: "Advanced sets", "warm-up-sets": "Warm-up sets", "session-time": "The session's length",
 };

@@ -429,6 +429,22 @@ const SCHEMA = [
      2026): one day of a program as it was actually done, `entries` its
      exercises as JSON (done or not, and set by set where the trainer opened
      one), weights in kg. */
+  /* What a trainer does with exercises in their programs, counted for Coach
+     IQ to learn their way (server/taste.js; Glenn, 20 Oct 2026: "make sure we
+     learn how each trainer creates programs"): put in by hand, taken out,
+     swapped in, swapped away, and taken out or swapped away after Coach IQ
+     built it in. One row a trainer and exercise. */
+  `CREATE TABLE IF NOT EXISTS coach_iq_taste (
+    trainer_id VARCHAR(64) NOT NULL,
+    exercise_id VARCHAR(40) NOT NULL,
+    added INTEGER NOT NULL DEFAULT 0,
+    removed INTEGER NOT NULL DEFAULT 0,
+    swapped_in INTEGER NOT NULL DEFAULT 0,
+    swapped_out INTEGER NOT NULL DEFAULT 0,
+    iq_dropped INTEGER NOT NULL DEFAULT 0,
+    updated_at VARCHAR(32) NOT NULL,
+    PRIMARY KEY (trainer_id, exercise_id)
+  )`,
   `CREATE TABLE IF NOT EXISTS coach_workout_logs (
     id VARCHAR(40) PRIMARY KEY,
     client_id VARCHAR(64) NOT NULL,
@@ -571,6 +587,9 @@ const COLUMNS = [
   ["coach_program_days", "minutes", "INTEGER NULL"],
   ["coach_program_days", "muscles", "VARCHAR(200) NOT NULL DEFAULT '[]'"],
   ["coach_program_exercises", "part", "VARCHAR(12) NOT NULL DEFAULT ''"],
+  /* Who chose an exercise (server/taste.js): 0 the trainer, 1 Coach IQ
+     building from the steps, 2 Coach IQ's and then changed by the trainer. */
+  ["coach_program_exercises", "by_iq", "INTEGER NOT NULL DEFAULT 0"],
 ];
 
 /*
