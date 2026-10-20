@@ -31,26 +31,8 @@ up to have it done. Each says which run found it. Once fixed, it goes straight
 to [NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes) under **Test Run Fixes**,
 in that run's write-up._
 
-### Run 1 (19 Oct 2026, build 1.0.81)
-
-Six agents, each on its own copy of the app: two feature testers (A: clients
-and their records; B: programs, sign-in, menus and Billy) and four audits
-(D: design; U: ease of use; M: the manual; O and I: speed and ideas). Each
-item keeps the ids of the reports that found it. How the run was done is in
-[NEURALBRAIN.md](NEURALBRAIN.md#test-run-fixes), Run 1.
-
-**Low**
-
-- **The manual's pictures (M-1), Glenn's to do.** All six are build 1.0.0.
-  `npm run screenshots` works again (build 1.0.144); run it on the Mac against
-  Studio's fixture with SHOT_EMAIL and SHOT_PASSWORD in server/.env, then
-  `npm run check-docs`. The rest of the manual points are done.
-- **"No sessions yet" on the client while Home shows them trained today (U-22,
-  D-16)**: maybe the stand-in Studio; check against the fixture.
-
-**Questions for Glenn**
-
-None open: A-14 is decided, and the run's ideas built or moved to Ideas.
+Nothing waiting. Run 1's findings are all fixed, decided or moved to Ideas
+(NEURALBRAIN.md, Test Run Fixes, Run 1).
 
 ## Ideas
 

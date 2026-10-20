@@ -169,7 +169,9 @@ As in Studio:
 - **`MANUAL.md`** — the user manual, step by step. After editing it, run
   `npm run manual` to refresh its copy at the bottom of `NEURALBRAIN.md`;
   `npm run check-docs` fails if the copy is behind or a picture is missing.
-  `npm run screenshots` retakes its pictures from the running app.
+  `npm run screenshots` retakes its pictures from the running app. Where
+  Studio's fixture can't run (a cloud session), `node scripts/standin-studio.mjs`
+  stands in for it with one fixture trainer; its comment says how.
 - **`CHANGELOG.md`** — what changed in each release, under its version and
   name (1.0 is Caesious).
 - **`BRAINSTORM.md`** — the working queue. Saying "brainstorm" means work
