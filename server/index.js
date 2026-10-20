@@ -1801,6 +1801,16 @@ app.post("/api/programs/:id/back", asSignedIn("POST /programs/back", async (req,
   res.json({ programs: await programs.list(user.id), putAway: await programs.list(user.id, { putAway: true }) });
 }));
 
+/* A put-away program deleted for good, when no logged session uses it (programs.deleteForGood). */
+app.delete("/api/programs/:id/for-good", asSignedIn("DELETE /programs/for-good", async (req, res, user) => {
+  const done = await programs.deleteForGood(user.id, req.params.id);
+  if (done === "not_found") return notFound(res);
+  if (done.logged) {
+    return res.status(409).json({ error: `${done.logged === 1 ? "A logged session uses" : `${done.logged} logged sessions use`} this program, so it stays put away.`, code: "has_logs" });
+  }
+  res.json({ programs: await programs.list(user.id), putAway: await programs.list(user.id, { putAway: true }) });
+}));
+
 app.post("/api/programs/:id/days", asSignedIn("POST /programs/days", async (req, res, user) => {
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);

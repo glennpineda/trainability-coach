@@ -8,6 +8,8 @@ account menu; the details of any change are in `NEURALBRAIN.md`.
 
 The first version of Trainability Coach, live at trainabilitycoach.com.
 
+- **Delete a put-away program for good**, from Put away, when no logged
+  session uses it. Copies already sent in Messages stay with the client.
 - **The app icon on a gradient**, as Studio's is: cerulean at the top left
   deepening to navy, where it was one flat dark blue. Remove Coach from your
   home screen and add it again to see it.

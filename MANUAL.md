@@ -1540,6 +1540,20 @@ Above the list, **Active** and **Put away** switch between your programs and
 the ones put away, with how many of each. To bring one back, tap **Put away**,
 then **Put back** beside it; a note says *Next block is back on your list.*
 
+**Deleting a program for good.** Only a program already put away can be
+deleted, and only when nothing would be lost.
+
+1. Tap **Put away** above the list.
+2. Tap the bin beside the program (**Delete for good**).
+3. It asks *Delete “Next block” for good?* Its days and exercises go with it,
+   and it can't be put back; a copy already sent to the client in Messages
+   stays with them. Tap **Delete for good**, or **Keep it** to leave it.
+4. A note says *Next block deleted.*
+
+A program a logged session uses (5.7) has no bin: it says *Kept: a logged
+session uses it.*, because a logged session is changed against its program. It
+stays put away.
+
 ### 5.2 Adding exercises
 
 1. Under a day, tap **Add an exercise**. A box opens: *Add an exercise to

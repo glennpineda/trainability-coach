@@ -304,8 +304,10 @@ export async function list(trainerId, { putAway = false } = {}) {
   const counts = async (table) => new Map((await all(`SELECT t.program_id, COUNT(*) AS n FROM ${table} t JOIN coach_programs p ON p.id = t.program_id
     WHERE p.trainer_id = ? AND p.archived = ? GROUP BY t.program_id`, [trainerId, putAway ? 1 : 0])).map(r => [r.program_id, Number(r.n)]));
   const [days, ex] = await Promise.all([counts("coach_program_days"), counts("coach_program_exercises")]);
+  /* Put away, how many logged sessions use each: those can't be deleted for good. */
+  const logged = putAway ? await counts("coach_workout_logs") : new Map();
   return rows.map(r => ({ id: r.id, name: r.name, clientId: r.client_id, clientName: r.client_name, goal: r.goal, goalLabel: GOALS[r.goal]?.label || r.goal, kindLabel: (KINDS[r.kind] || KINDS.full).label,
-    level: r.level, days: days.get(r.id) || 0, exercises: ex.get(r.id) || 0, updatedAt: r.updated_at }));
+    level: r.level, days: days.get(r.id) || 0, exercises: ex.get(r.id) || 0, updatedAt: r.updated_at, ...(putAway ? { logged: logged.get(r.id) || 0 } : {}) }));
 }
 
 /** What makes a program's details worth keeping, or the reason not. */
@@ -362,6 +364,27 @@ export async function putBack(trainerId, id) {
   if (!r) return false;
   await run(`UPDATE coach_programs SET archived = 0, updated_at = ? WHERE id = ?`, [now(), id]);
   return true;
+}
+
+/**
+ * A put-away program deleted for good (Glenn, 20 Oct 2026: "let's be able to
+ * delete programs that are put away permanently"), Studio's way (its "Delete
+ * for good", MANUAL 9.5; CLAUDE.md: "Archive, don't delete: delete only what
+ * is archived and has no history"): only one already put away, and only when
+ * no logged session uses it, since a logged session is changed against its
+ * program. Its days and exercises go with it. Copies sent in Messages are
+ * copies and stay. `"not_found"`, `{ logged: n }` when sessions stand in the
+ * way, or `"deleted"`.
+ */
+export async function deleteForGood(trainerId, id) {
+  const r = await get(`SELECT id FROM coach_programs WHERE id = ? AND trainer_id = ? AND archived = 1`, [id, trainerId]);
+  if (!r) return "not_found";
+  const logged = Number((await get(`SELECT COUNT(*) AS n FROM coach_workout_logs WHERE program_id = ?`, [id]))?.n || 0);
+  if (logged) return { logged };
+  await run(`DELETE FROM coach_program_exercises WHERE program_id = ?`, [id]);
+  await run(`DELETE FROM coach_program_days WHERE program_id = ?`, [id]);
+  await run(`DELETE FROM coach_programs WHERE id = ?`, [id]);
+  return "deleted";
 }
 
 /* ------------------------------------------------------------- the days */

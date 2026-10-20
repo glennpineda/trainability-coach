@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ClipboardList, Plus, Archive, ArchiveRestore } from "lucide-react";
+import { ClipboardList, Plus, Archive, ArchiveRestore, Trash2 } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { Designer, DetailsForm, KindForm } from "../programs/Designer";
@@ -8,6 +8,7 @@ import { Toast } from "../chrome/Toast";
 import { SegRow } from "../chrome/SegRow";
 import { fmtDay } from "../lib/date";
 import { LoadingLine, EmptyState } from "../chrome/LoadingLine";
+import { ConfirmDialog } from "../chrome/ConfirmDialog";
 
 /**
  * Programs (Glenn, 17 Oct 2026: "We need to start creating a workout program
@@ -37,6 +38,8 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
      listed under Put away, as Clients has Archived, and put back from there. */
   const [showPutAway, setShowPutAway] = useState(false);
   const [asking, setAsking] = useState(null);   // the program whose putting away is being confirmed
+  /* A put-away program being deleted for good, asked first (Studio's Delete for good). */
+  const [deleting, setDeleting] = useState(null);
   const [toast, setToast] = useState(null);
   const toastGone = useCallback(() => setToast(null), []);
 
@@ -57,6 +60,11 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
     try { const o = await apiRequest("DELETE", `/programs/${p.id}`); setData(d => ({ ...d, ...o })); setAsking(null); setToast({ message: `${p.name} put away.`, id: Date.now() }); }
     catch (err) { fail(err); } finally { setBusy(false); }
   };
+  const deleteForGood = async (p) => {
+    setBusy(true); setError("");
+    try { const o = await apiRequest("DELETE", `/programs/${p.id}/for-good`); setData(d => ({ ...d, ...o })); setDeleting(null); setToast({ message: `${p.name} deleted.`, id: Date.now() }); }
+    catch (err) { setDeleting(null); fail(err); } finally { setBusy(false); }
+  };
   const putBack = async (p) => {
     setBusy(true); setError("");
     try { const o = await apiRequest("POST", `/programs/${p.id}/back`); setData(d => ({ ...d, ...o })); setToast({ message: `${p.name} is back on your list.`, id: Date.now() }); }
@@ -68,6 +76,12 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
   return (
     <div className="max-w-5xl mx-auto px-4">
       <Toast toast={toast} onGone={toastGone} />
+      {deleting && (
+        <ConfirmDialog title={`Delete “${deleting.name}” for good?`} yes="Delete for good" no="Keep it" busy={busy}
+          onNo={() => setDeleting(null)} onYes={() => deleteForGood(deleting)}>
+          Its days and exercises go with it, and it can't be put back. A copy already sent to {deleting.clientName.split(" ")[0] || "the client"} in Messages stays with them.
+        </ConfirmDialog>
+      )}
       {/* The main button on the heading's line, as on Clients and Messages (Run 1, D-13). */}
       <div className="flex items-center justify-between gap-3">
         <TabHeading>Programs</TabHeading>
@@ -119,8 +133,14 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
                     <span className="min-w-0 flex-1">
                       <span className="block font-semibold">{p.name}</span>
                       <span className="block text-sm" style={muted}>For {p.clientName} · {p.kindLabel || p.goalLabel} · {p.days} {p.days === 1 ? "day" : "days"}, {p.exercises} {p.exercises === 1 ? "exercise" : "exercises"}</span>
+                      {p.logged > 0 && <span className="block text-xs" style={muted}>Kept: {p.logged === 1 ? "a logged session uses" : `${p.logged} logged sessions use`} it.</span>}
                     </span>
                     <button type="button" className="cx-link text-sm flex-none" disabled={busy} onClick={() => putBack(p)}><ArchiveRestore size={15} aria-hidden="true" /> Put back</button>
+                    {/* Deleted for good only with nothing to lose (Studio's rule):
+                        a logged session is changed against its program. */}
+                    {p.logged ? null : (
+                      <button type="button" className="cx-icon-btn flex-none" disabled={busy} onClick={() => setDeleting(p)} aria-label={`Delete ${p.name} for good`} title="Delete for good"><Trash2 size={16} aria-hidden="true" /></button>
+                    )}
                   </li>
                 ))}
               </ul>
