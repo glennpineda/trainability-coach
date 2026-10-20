@@ -36,7 +36,9 @@ const COLOR = { stop: "var(--ember)", warn: "#B7791F", note: "var(--iron)" };
 
 const blank = { sets: "", reps: "", load: "", effort: "", tempo: "", rest: "", note: "", superset: false, technique: "", drops: "" };
 
-export function ExerciseDialog({ dayId, dayName, first, editing, suggested, muscle = null, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember, oneRms, units = "imperial", clientName }) {
+/* `part`: adding to the day's warm-up or cool-down, which Coach IQ suggests
+   for and doses as its own (server/programs.js suggestPart, partDose). */
+export function ExerciseDialog({ dayId, dayName, part = "", first, editing, suggested, muscle = null, onSave, onClose, busy, error, vocab, onAskBilly, remembered, onRemember, oneRms, units = "imperial", clientName }) {
   const [step, setStep] = useState(editing || suggested ? "details" : "pick");
   const [pick, setPick] = useState(editing ? { id: editing.exerciseId } : suggested ? { id: suggested.id } : null);
   const [info, setInfo] = useState(null);
@@ -58,7 +60,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, musc
     if (!pick) { setInfo(null); return undefined; }
     let alive = true;
     setInfo(null);
-    apiRequest("GET", `/program-days/${dayId}/preview?exercise=${encodeURIComponent(pick.id)}`)
+    apiRequest("GET", `/program-days/${dayId}/preview?exercise=${encodeURIComponent(pick.id)}${part ? `&part=${part}` : ""}`)
       .then(o => {
         if (!alive) return;
         setInfo(o);
@@ -121,7 +123,7 @@ export function ExerciseDialog({ dayId, dayName, first, editing, suggested, musc
         </div>
 
         {step === "pick" ? (
-          <Pick dayId={dayId} dayName={dayName} vocab={vocab} muscle={muscle} remembered={remembered} onRemember={onRemember} onPick={choose} onBack={pick ? () => setStep("details") : null}
+          <Pick dayId={dayId} dayName={dayName} part={part} vocab={vocab} muscle={muscle} remembered={remembered} onRemember={onRemember} onPick={choose} onBack={pick ? () => setStep("details") : null}
             onAskBilly={onAskBilly ? (words) => { onClose(); onAskBilly(words); } : null} />
         ) : (
           <form onSubmit={save} className="flex flex-col min-h-0">
@@ -242,7 +244,7 @@ function Chips({ options, value, onChange, many = false, label, iq = false }) {
 
 /* Step 1: what we are working on (optional), then by name, or from what
    Coach IQ suggests, narrowed to it. */
-function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, onRemember, muscle = null }) {
+function Pick({ dayId, dayName, part = "", vocab, onPick, onBack, onAskBilly, remembered, onRemember, muscle = null }) {
   const [q, setQ] = useState("");
   const [found, setFound] = useState(null);
   const [next, setNext] = useState(null);
@@ -268,10 +270,10 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, o
   useEffect(() => {
     let alive = true;
     setNext(null);
-    const query = [workOn && `workOn=${workOn}`, muscles.length && `muscles=${encodeURIComponent(muscles.join(","))}`].filter(Boolean).join("&");
+    const query = part ? `part=${part}` : [workOn && `workOn=${workOn}`, muscles.length && `muscles=${encodeURIComponent(muscles.join(","))}`].filter(Boolean).join("&");
     apiRequest("GET", `/program-days/${dayId}/suggestions${query ? `?${query}` : ""}`).then(o => alive && setNext(o)).catch(() => alive && setNext({ suggestions: [] }));
     return () => { alive = false; };
-  }, [dayId, workOn, muscles.join(",")]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dayId, part, workOn, muscles.join(",")]); // eslint-disable-line react-hooks/exhaustive-deps
   const narrowed = !!(workOn || muscles.length);
   const workOnLabel = vocab?.workOn?.find(w => w.key === workOn)?.label;
   /* In words for Billy: a whole group by its name, else the muscles picked in it. */
@@ -298,7 +300,8 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, o
   return (
     <div className="overflow-y-auto px-4 pb-4 grid gap-3" style={{ overscrollBehavior: "contain" }}>
       {/* Coach IQ's questions, in a card of its own (Glenn, 18 Oct 2026). */}
-      {vocab?.workOn && (
+      {/* Not for a warm-up or a cool-down: what it is for is already said. */}
+      {vocab?.workOn && !part && (
         <section className="grid gap-1.5 rounded-xl p-3 border" aria-label="Coach IQ" style={{ background: "var(--iq-card)", borderColor: "var(--iq-card-line)", color: "var(--iq-ink)" }}>
           <div className="text-sm font-semibold inline-flex items-center gap-1.5"><Lightbulb size={15} aria-hidden="true" /> Coach IQ</div>
           <div className="text-sm font-medium">What are we working on?</div>
@@ -333,7 +336,7 @@ function Pick({ dayId, dayName, vocab, onPick, onBack, onAskBilly, remembered, o
       )) : !next ? <p className="text-xs" style={muted}>Coach IQ is looking…</p> : (
         <div className="grid gap-1.5">
           <div className="text-xs font-medium inline-flex items-center gap-1" style={{ color: "var(--accent)" }}>
-            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{narrowed ? `: ${[workOnLabel, musclesWords].filter(Boolean).join(" · ")}` : next.day ? ` for ${aOrAn(next.day)} ${next.day.toLowerCase()} day` : ""}
+            <Lightbulb size={13} aria-hidden="true" /> Coach IQ suggests{next.part ? ` for the ${next.part.toLowerCase()}` : narrowed ? `: ${[workOnLabel, musclesWords].filter(Boolean).join(" · ")}` : next.day ? ` for ${aOrAn(next.day)} ${next.day.toLowerCase()} day` : ""}
           </div>
           {next.suggestions.length > 0 ? (
             <ul className="rounded-lg overflow-hidden border" style={line}>

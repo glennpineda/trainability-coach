@@ -1368,10 +1368,87 @@ next, and Billy can talk it over with you. Only you see your programs.
 
 ### 5.1 Starting a program
 
+**New program** asks its questions one at a time, and from your answers Coach
+IQ makes the whole program for you: every day filled with exercises, a
+warm-up and a cool-down. You can then change, add or take out anything, as in
+any program. If you would rather start with an empty program, tap **Skip the
+questions and start with an empty program** under any question (see
+*Skipping the questions*, below).
+
+Along the top, a row of numbered dots shows how far you are: **Who**,
+**Focus**, **Days**, **Warm-up**, **Level** and **Make it**. The dots you have
+done get a tick. Under each question, **Next** goes on and **Back** goes to
+the question before. On the first question, **Cancel** stops without making
+anything.
+
 1. Tap **Programs** on the bar at the bottom (the clipboard).
-2. Tap **New program**. It asks first: *What kind of program are you
-   thinking of?* Coach IQ uses your answers to suggest exercises for each
-   day.
+2. Tap **New program**. It asks *Who is this program for?* Tap the client,
+   then **Next**. (Started from a client's page (4.4), they are already
+   chosen.)
+3. *Where does Avery train?* Coach IQ only chooses exercises that can be done
+   there. Tap one of your places (3.7). If the client has a gym in Studio, it
+   is already chosen and says *Avery's gym in Studio.* **Not chosen** leaves
+   the equipment unchecked. Tap **Next**.
+4. *What should this program focus on?* Tap one: **Strength**, **Muscle
+   size**, **Power**, **Cardio and fat loss**, **Strength endurance**,
+   **Balance and stability**, **Mobility** or **General fitness**. It sets the
+   sets, reps and rest. Tap **Next**.
+5. *Anything else to work on?* This is optional. Tap any of **Legs and
+   glutes**, **Upper body**, **Core**, **Balance and stability**, **Posture**
+   and **Conditioning**, or none. Each day gives them a place where they fit.
+   Tap **Next**.
+6. *How many days a week?* The usual number for the focus is already chosen,
+   such as *Muscle size: 4 days a week is the usual start.* Tap another if you
+   like, then **Next**.
+7. Then two questions for each day:
+   - *Day 1: what should it work?* Coach IQ has already chosen one to suit
+     the number of days (with 4 days: upper body, lower body, upper body,
+     lower body). Tap another if you like: **Full body**, **Upper body**,
+     **Lower body**, **Push**, **Pull**, **Legs**, **Circuit** or
+     **Mobility**. Under **More work for (optional)**, tap any of **Chest**,
+     **Shoulders**, **Back**, **Arms**, **Core** and **Legs** to give that
+     day extra exercises for them. Tap **Next**.
+   - *Day 1: how long is the session?* Tap **30 min**, **45 min**, **60
+     min**, **75 min** or **90 min**. The line above says how many exercises
+     fit, such as *About 6 exercises fit in a 60-minute session, besides the
+     warm-up and cool-down.* Tap **Next**.
+8. *Add a warm-up, cool-down or stretching?* All three are ticked. Tap one to
+   take its tick off:
+   - **Warm-up**: a few easy minutes, then moving drills for what the day
+     works.
+   - **Cool-down**: an easy walk or breathing, to finish.
+   - **Stretching**: held stretches for the muscles the day worked.
+
+   Tap **Next**.
+9. *How hard should it be?* Coach IQ has already chosen a level from the
+   programs you have made for the client before, or from their 1RMs, with its
+   reason above (see step 8 of *Skipping the questions*). Tap **Beginner**,
+   **Intermediate** or **Advanced**, then **Next**.
+10. *Ready to make it?* Your answers are listed, each with **Change** to go
+    back to that question. The **Name** fills in as *Avery's program*; change
+    it if you like.
+11. Tap **Make the program**. It says *Making it…* for a moment, then the
+    program opens, ready to change.
+
+**What Coach IQ puts in.** For each day, the exercises it would suggest next
+(5.4), one after another, until the session is full: the main lifts first,
+then more for the muscle groups you chose for that day, then more of what
+that kind of day works. Every exercise passes the place's equipment, the
+client's level and their limitations. It takes the next step on from
+exercises in your earlier programs for them, never one they have moved past,
+and prefers lifts they have a 1RM for, writing the load as a share of it
+(such as *60%* for 6 to 12 reps). It keeps a session to 25 sets or fewer. A
+circuit day is dosed for conditioning and a mobility day for mobility,
+whatever the program's focus. Each day's warm-up and cool-down come from the
+exercises Coach IQ's library marks for them, aimed at what the day works.
+
+**Skipping the questions.** **Skip the questions and start with an empty
+program** opens the shorter way, with no exercises filled in:
+
+1. Tap **Programs**, then **New program**, then **Skip the questions and start
+   with an empty program**.
+2. It asks: *What kind of program are you thinking of?* Coach IQ uses your
+   answers to suggest exercises for each day.
 3. Tap one:
    - **Full body**: every day works the whole body.
    - **Upper and lower**: days take turns, upper body, then lower body.
@@ -1591,7 +1668,9 @@ of your own, such as a client's home, is never questioned.
 - **Add a day**, at the bottom, adds the next day in the program's turn:
   Upper C after Lower B, Day D after Day C.
 - Beside a day's name: the arrows move it up or down, the pencil renames it
-  (and gives it a note), and the bin takes it out with its exercises. A day
+  (and gives it a note, what it trains, **How long is this session?** and
+  **More work for (optional)**), and the bin takes it out with its
+  exercises. A day
   with exercises asks first: *Take Day A out of the program? Its 5 exercises
   go with it.* Tap **Take it out**, or **Keep it**.
 - Beside each exercise: the arrows move it up or down the day, and the bin
@@ -1617,6 +1696,19 @@ of your own, such as a client's home, is never questioned.
   first), when a muscle gets more than two drop sets or giant-set exercises a
   week, and when a pyramid's reps aren't written set by set or run the wrong
   way.
+
+**Warm-up and cool-down.** A program made from the questions (5.1) has a
+**Warm-up** box above each day's exercises and a **Cool-down** box below
+them, apart from the numbered exercises, such as *Marching in place, 1 × 5
+min*. Tap an exercise in them to change its sets, reps or note; **Swap**, the
+arrows and the bin work as for any exercise. **Add to the warm-up** (or **Add
+to the cool-down**) opens the **Add an exercise** box, where Coach IQ suggests
+what fits that part of the day, such as *Open book (thoracic rotation): Moves
+the upper back and chest, which the day works.*, with a dose of its own (a
+few minutes, 8–10 moves, or a 30-second hold). On a day without them, **Add a
+warm-up** and **Add a cool-down** sit beside **Add an exercise**. They don't
+count towards the session's length, and Coach IQ checks them only for the
+place, the client's level and their limitations.
 
 **What a day works.** Under a day's name, a drawing of a body, from the
 front and from the back, colors the muscles that day's exercises work, from
@@ -1659,7 +1751,9 @@ Trainability.
    is for and the date, *Your trainer:* and your name, then each day's
    exercises in your names for them, with whatever you filled in, in your
    units. A load from their 1RM is just the weight to lift, such as *190 lb*.
-   A day with no exercises is left out. Under each day is its body drawing
+   A day with no exercises is left out. A day's warm-up is one line above
+   its exercises and its cool-down one line below, such as *Warm-up:
+   Marching in place, 1 × 5 min; Cat-cow, 1 × 8–10*. Under each day is its body drawing
    and muscle list (5.5), in color, with plainer words under it: *1 where
    it does most of the work, ½ where it helps. The stronger the color, the
    more it works.* Coach IQ's check is not on it.

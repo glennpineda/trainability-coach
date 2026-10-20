@@ -165,6 +165,54 @@ function Next({ dayId, version, busy, onTake, units, placeName }) {
   );
 }
 
+/* A day's warm-up or cool-down (Glenn, 20 Oct 2026, asked how they should
+   show: "Own parts of the day"): apart from the session's numbered
+   exercises, each with its dose, Coach IQ's points and the same changes. */
+const PART_WORDS = { warmup: "Warm-up", cooldown: "Cool-down" };
+function PartList({ part, day, list, points, busy, frozen, units, onOpen, onCall, onTake, swapOpen, onSwap, placeName }) {
+  if (!list.length && frozen) return null;
+  return (
+    <div className="mt-3 rounded-lg p-3" style={{ background: "var(--ghost-fill)" }}>
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>{PART_WORDS[part]}</span>
+        {!frozen && (
+          <button type="button" className="text-xs cx-link" onClick={() => onOpen({ day, part })}>
+            <Plus size={13} aria-hidden="true" /> Add to the {PART_WORDS[part].toLowerCase()}
+          </button>
+        )}
+      </div>
+      {list.length === 0 ? <p className="text-xs mt-1" style={muted}>None. Add one, or leave it out.</p> : (
+        <ul className="mt-1">
+          {list.map((e, i) => {
+            const mine = points(c => c.exercise === e.id);
+            return (
+              <li key={e.id} id={`ex-${e.id}`} className="py-1.5 border-t first:border-t-0" style={line}>
+                <div className="flex items-start gap-2">
+                  <button type="button" className="text-left min-w-0 flex-1" onClick={() => onOpen({ day, part, editing: e })}>
+                    <span className="block text-sm font-medium">{e.name}{e.own && <span className="text-xs font-normal" style={muted}> · your own</span>}</span>
+                    {doseLine(e, units) && <span className="block text-xs" style={muted}>{doseLine(e, units)}</span>}
+                    {e.note && <span className="block text-xs cx-wrap" style={muted}>{e.note}</span>}
+                  </button>
+                  {!frozen && (
+                    <span className="flex items-center flex-none">
+                      <button type="button" className="text-xs cx-link mr-1" onClick={() => onSwap(e.id)}><Repeat size={13} aria-hidden="true" /> Swap</button>
+                      <button type="button" className="cx-icon-btn" disabled={busy || i === 0} onClick={() => onCall("PATCH", `/program-exercises/${e.id}`, { move: -1 })} aria-label={`Move ${e.name} up`} title="Move up"><ArrowUp size={15} aria-hidden="true" /></button>
+                      <button type="button" className="cx-icon-btn" disabled={busy || i === list.length - 1} onClick={() => onCall("PATCH", `/program-exercises/${e.id}`, { move: 1 })} aria-label={`Move ${e.name} down`} title="Move down"><ArrowDown size={15} aria-hidden="true" /></button>
+                      <button type="button" className="cx-icon-btn" disabled={busy} onClick={() => onTake({ day, exercise: e })} aria-label={`Take ${e.name} out`} title="Take it out"><Trash2 size={15} aria-hidden="true" /></button>
+                    </span>
+                  )}
+                </div>
+                {mine.length > 0 && <Points list={mine} />}
+                {swapOpen === e.id && <Swaps peId={e.id} busy={busy} placeName={placeName} onCancel={() => onSwap(null)} onPick={(a) => onCall("PATCH", `/program-exercises/${e.id}`, { exerciseId: a.id })} />}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 const firstOf = (name) => String(name || "").split(" ")[0] || "the client";
 /* What to see to before a program goes to the client: days with nothing on
    them, and Coach IQ's stop points. */
@@ -221,18 +269,20 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
   /* Saved from the dialog: a new exercise on the day, or one changed. It
      stays open with the server's words if the save is refused. */
   const saveDialog = async (body) => {
-    const { day, editing } = dialog;
+    const { day, editing, part } = dialog;
     const { exerciseId, ...dose } = body;
     setBusy(true); setDialogError("");
     try {
       const out = editing
         ? await apiRequest("PATCH", `/program-exercises/${editing.id}`, { ...dose, ...(exerciseId !== editing.exerciseId ? { exerciseId } : {}) })
-        : await apiRequest("POST", `/program-days/${day.id}/exercises`, { exerciseId, ...dose });
+        : await apiRequest("POST", `/program-days/${day.id}/exercises`, { exerciseId, ...dose, ...(part ? { part } : {}) });
       /* A new one is shown where it went (Run 1, U-14): the one on that day
          that wasn't there before. */
       if (!editing) {
-        const before = new Set(day.exercises.map(e => e.id));
-        setFlash(out.days.find(d => d.id === day.id)?.exercises.find(e => !before.has(e.id))?.id || null);
+        const all = (d) => [...d.exercises, ...(d.warmup || []), ...(d.cooldown || [])];
+        const before = new Set(all(day).map(e => e.id));
+        const now = out.days.find(d => d.id === day.id);
+        setFlash((now && all(now).find(e => !before.has(e.id))?.id) || null);
       }
       setP(out); setVersion(v => v + 1); setDialog(null);
     } catch (err) {
@@ -342,7 +392,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
         return (
           <section key={d.id} className="cx-card p-4">
             {is("day", d.id) ? (
-              <DayForm day={d} dayKinds={vocab?.dayKinds} busy={busy} onCancel={() => setOpen(null)} onSave={(body) => call("PATCH", `/program-days/${d.id}`, body)} />
+              <DayForm day={d} dayKinds={vocab?.dayKinds} minutes={vocab?.minutes} muscleGroups={vocab?.muscleGroups} busy={busy} onCancel={() => setOpen(null)} onSave={(body) => call("PATCH", `/program-days/${d.id}`, body)} />
             ) : (
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="font-semibold text-lg">{d.name}{!d.name.toLowerCase().startsWith(d.kindLabel.split(" ")[0].toLowerCase()) && <span className="text-xs font-normal ml-2" style={muted}>{d.kindLabel}</span>}</h3>
@@ -351,10 +401,15 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
                   <button type="button" className="cx-icon-btn" disabled={busy || di === p.days.length - 1} onClick={() => call("PATCH", `/program-days/${d.id}`, { move: 1 })} aria-label={`Move ${d.name} down`} title="Move down"><ArrowDown size={16} aria-hidden="true" /></button>
                   <button type="button" className="cx-icon-btn" onClick={() => setOpen({ kind: "day", id: d.id })} aria-label={`Rename ${d.name}`} title="Rename"><Pencil size={16} aria-hidden="true" /></button>
                   <button type="button" className="cx-icon-btn" disabled={busy}
-                    onClick={() => (d.exercises.length === 0 ? call("DELETE", `/program-days/${d.id}`) : setTaking({ day: d }))}
+                    onClick={() => (d.exercises.length + (d.warmup?.length || 0) + (d.cooldown?.length || 0) === 0 ? call("DELETE", `/program-days/${d.id}`) : setTaking({ day: d }))}
                     aria-label={`Take ${d.name} out`} title="Take the day out"><Trash2 size={16} aria-hidden="true" /></button>
                 </div>
               </div>
+            )}
+            {!is("day", d.id) && (d.minutes || d.muscleLabels?.length > 0) && (
+              <p className="text-xs mt-0.5" style={muted}>
+                {[d.minutes ? `${d.minutes}-minute session` : null, d.muscleLabels?.length ? `more work for ${d.muscleLabels.join(", ").toLowerCase()}` : null].filter(Boolean).join(" · ")}
+              </p>
             )}
             {d.notes && !is("day", d.id) && <p className="text-sm mt-1 cx-wrap" style={muted}>{d.notes}</p>}
             {dayPoints.length > 0 && <ul className="grid gap-1 mt-2">{dayPoints.map((c, i) => <Point key={i} p={c} />)}</ul>}
@@ -362,6 +417,11 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
             {d.exercises.length > 0 && <BodyMap exercises={d.exercises} top={bodyScale}
               onPickMuscle={p.frozen ? null : (m) => openDialog({ day: d, first: d.exercises.length === 0, muscle: m })} />}
 
+            {(d.warmup?.length > 0 || d.cooldown?.length > 0) && (
+              <PartList part="warmup" day={d} list={d.warmup} points={points} busy={busy} frozen={p.frozen} units={units} placeName={p.placeName}
+                onOpen={openDialog} onCall={call} onTake={setTaking} swapOpen={open?.kind === "swap" ? open.id : null}
+                onSwap={(id) => setOpen(id ? { kind: "swap", id } : null)} />
+            )}
             {d.exercises.length === 0 && <p className="text-sm mt-2" style={muted}>No exercises yet. Add one, or take one of Coach IQ's suggestions below.</p>}
             <ol className="mt-2">
               {d.exercises.map((e, i) => {
@@ -415,10 +475,21 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
                 );
               })}
             </ol>
+            {(d.warmup?.length > 0 || d.cooldown?.length > 0) && (
+              <PartList part="cooldown" day={d} list={d.cooldown} points={points} busy={busy} frozen={p.frozen} units={units} placeName={p.placeName}
+                onOpen={openDialog} onCall={call} onTake={setTaking} swapOpen={open?.kind === "swap" ? open.id : null}
+                onSwap={(id) => setOpen(id ? { kind: "swap", id } : null)} />
+            )}
 
             {!p.frozen && <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   <button type="button" className="cx-btn-row" onClick={() => openDialog({ day: d, first: d.exercises.length === 0 })}><Plus size={15} aria-hidden="true" /> Add an exercise</button>
+                  {!d.warmup?.length && !d.cooldown?.length && (
+                    <>
+                      <button type="button" className="text-sm cx-link" onClick={() => openDialog({ day: d, part: "warmup" })}><Plus size={15} aria-hidden="true" /> Add a warm-up</button>
+                      <button type="button" className="text-sm cx-link" onClick={() => openDialog({ day: d, part: "cooldown" })}><Plus size={15} aria-hidden="true" /> Add a cool-down</button>
+                    </>
+                  )}
                   {d.exercises.length > 0 && p.clientId && (
                     <button type="button" className="cx-btn-row" onClick={() => setLogging(d)}><ClipboardCheck size={15} aria-hidden="true" /> Log this session</button>
                   )}
@@ -455,7 +526,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
           onYes={async () => { if (await call("DELETE", taking.exercise ? `/program-exercises/${taking.exercise.id}` : `/program-days/${taking.day.id}`)) setTaking(null); }}>
           {taking.exercise
             ? "Its sets, reps, load and note go with it."
-            : `${taking.day.exercises.length === 1 ? "Its one exercise goes" : `Its ${taking.day.exercises.length} exercises go`} with it.`}
+            : ((n) => `${n === 1 ? "Its one exercise goes" : `Its ${n} exercises go`} with it.`)(taking.day.exercises.length + (taking.day.warmup?.length || 0) + (taking.day.cooldown?.length || 0))}
         </ConfirmDialog>
       )}
       <Toast toast={toast} onGone={toastGone} />
@@ -468,7 +539,7 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
           }} />
       )}
       {dialog && (
-        <ExerciseDialog dayId={dialog.day.id} dayName={dialog.day.name} first={dialog.first} editing={dialog.editing} suggested={dialog.suggested} muscle={dialog.muscle} vocab={vocab}
+        <ExerciseDialog dayId={dialog.day.id} part={dialog.part || ""} dayName={dialog.part ? `${dialog.day.name}'s ${PART_WORDS[dialog.part].toLowerCase()}` : dialog.day.name} first={dialog.first || !!dialog.part} editing={dialog.editing} suggested={dialog.suggested} muscle={dialog.muscle} vocab={vocab}
           remembered={lastAsk} onRemember={rememberAsk} oneRms={p.oneRms} units={units} clientName={p.clientName ? p.clientName.split(" ")[0] : ""}
           onAskBilly={billy?.available ? (words) => askBilly(`In my program “${p.name}” for ${p.clientName} (${p.id}): ${words}`) : null}
           busy={busy} error={dialogError} onSave={saveDialog} onClose={() => setDialog(null)} />
@@ -477,8 +548,8 @@ export function Designer({ id, onBack, onSignedOut, billy, goals, vocab, onSend 
   );
 }
 
-function DayForm({ day, dayKinds, busy, onSave, onCancel }) {
-  const [f, setF] = useState({ name: day.name, notes: day.notes || "", kind: day.kind || "full" });
+function DayForm({ day, dayKinds, minutes, muscleGroups, busy, onSave, onCancel }) {
+  const [f, setF] = useState({ name: day.name, notes: day.notes || "", kind: day.kind || "full", minutes: day.minutes ?? null, muscles: day.muscles || [] });
   return (
     <form className="grid gap-2" onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
       <input className="cx-input" value={f.name} maxLength={80} required aria-label="The day's name" onChange={e => setF(d => ({ ...d, name: e.target.value }))} />
@@ -488,6 +559,16 @@ function DayForm({ day, dayKinds, busy, onSave, onCancel }) {
             {dayKinds.map(k => <option key={k.key} value={k.key}>{k.label}</option>)}
           </select>
         </label>
+      )}
+      {minutes && (
+        <div className="grid gap-1 text-xs" style={muted}>How long is this session?
+          <Choices label="Session length" options={[[null, "As the program"], ...minutes.map(m => [m, `${m} min`])]} value={f.minutes} onChange={(m) => setF(d => ({ ...d, minutes: m }))} />
+        </div>
+      )}
+      {muscleGroups && (
+        <div className="grid gap-1 text-xs" style={muted}>More work for (optional)
+          <Choices many label="More work for" options={muscleGroups.map(g => [g.key, g.label])} value={f.muscles} onChange={(v) => setF(d => ({ ...d, muscles: v }))} />
+        </div>
       )}
       <input className="cx-input text-sm" value={f.notes} maxLength={1000} placeholder="A note for the day (optional)" aria-label="A note for the day" onChange={e => setF(d => ({ ...d, notes: e.target.value }))} />
       <div className="flex items-center gap-2">

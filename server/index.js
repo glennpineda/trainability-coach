@@ -1742,6 +1742,17 @@ app.post("/api/programs", asSignedIn("POST /programs", async (req, res, user) =>
   await sendProgram(res, user, { id });
 }));
 
+/* A program made from the answers to the steps (Glenn, 20 Oct 2026:
+   "Answering one question at a time"), built by Coach IQ (programs.build). */
+app.post("/api/programs/build", asSignedIn("POST /programs/build", async (req, res, user) => {
+  const wrong = programs.checkSteps(req.body || {});
+  if (wrong) return res.status(400).json({ error: wrong, code: "invalid" });
+  const world = await programWorld(req, user, { clientId: req.body.clientId ?? "", placeId: req.body.placeId ?? "" });
+  if (world.error) return res.status(400).json({ error: world.error, code: "invalid" });
+  const id = await programs.build(user.id, world.client, world.placeId, req.body);
+  await sendProgram(res, user, { id });
+}));
+
 app.get("/api/programs/:id", asSignedIn("GET /programs/one", async (req, res, user) => {
   const program = await programs.programOf(user.id, req.params.id);
   if (!program) return notFound(res);
@@ -1824,6 +1835,8 @@ app.get("/api/program-days/:id/suggestions", asSignedIn("GET /program-days/sugge
   res.set("Cache-Control", "private, no-store");
   /* Narrowed to what they are working on, when the dialog says (workOn, a
      kind of movement; muscles, comma-separated); otherwise what comes next. */
+  /* For the day's warm-up or cool-down, what is marked for it. */
+  if (programs.partOf(String(req.query.part || ""))) return res.json(await programs.suggestPart(user.id, program, req.params.id, String(req.query.part)));
   const workOn = String(req.query.workOn || "") || null;
   const muscles = String(req.query.muscles || "").split(",").map(m => m.trim()).filter(Boolean).slice(0, 12);
   if (workOn || muscles.length) return res.json(await programs.suggestFor(user.id, program, req.params.id, { workOn, muscles }));
@@ -1835,7 +1848,7 @@ app.get("/api/program-days/:id/preview", asSignedIn("GET /program-days/preview",
   const program = await programs.programOfDay(user.id, req.params.id);
   if (!program) return notFound(res);
   if (!await changeable(req, res, user, program)) return;
-  const out = await programs.preview(user.id, program, String(req.query.exercise || ""));
+  const out = await programs.preview(user.id, program, String(req.query.exercise || ""), String(req.query.part || ""));
   if (!out) return notFound(res);
   res.set("Cache-Control", "private, no-store");
   res.json({ ...out, dose: { ...out.dose, restText: programs.restWords(out.dose.rest) } });
@@ -1849,7 +1862,7 @@ app.post("/api/program-days/:id/exercises", asSignedIn("POST /program-days/exerc
   if (!await programs.canUse(user.id, req.body?.exerciseId)) return res.status(400).json({ error: "Choose an exercise from the library or your own.", code: "invalid" });
   const dose = programs.doseFrom(req.body);
   if (dose.error) return res.status(400).json({ error: dose.error, code: "invalid" });
-  await programs.addExercise(program, req.params.id, req.body.exerciseId, dose);
+  await programs.addExercise(program, req.params.id, req.body.exerciseId, dose, req.body.part);
   await sendProgram(res, user, program);
 }));
 

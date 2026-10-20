@@ -564,6 +564,13 @@ const COLUMNS = [
   ["coach_measurements", "height", "REAL NULL"],
   /* The Studio session a log was made from, on Today (Glenn, 19 Oct 2026: "Log from Today"). */
   ["coach_workout_logs", "appointment_id", "VARCHAR(64) NOT NULL DEFAULT ''"],
+  /* A program made step by step (Glenn, 20 Oct 2026: "Answering one question
+     at a time"): each day's own session length and the muscle groups it is
+     to work more (programs.js, MUSCLE_GROUPS, a JSON list), and the part of
+     the day an exercise is in: '' the session itself, warmup or cooldown. */
+  ["coach_program_days", "minutes", "INTEGER NULL"],
+  ["coach_program_days", "muscles", "VARCHAR(200) NOT NULL DEFAULT '[]'"],
+  ["coach_program_exercises", "part", "VARCHAR(12) NOT NULL DEFAULT ''"],
 ];
 
 /*

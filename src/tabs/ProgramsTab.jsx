@@ -3,6 +3,7 @@ import { ClipboardList, Plus, Archive, ArchiveRestore } from "lucide-react";
 import { apiRequest } from "../lib/api";
 import { TabHeading } from "./TabHeading";
 import { Designer, DetailsForm, KindForm } from "../programs/Designer";
+import { ProgramSteps } from "../programs/ProgramSteps";
 import { Toast } from "../chrome/Toast";
 import { SegRow } from "../chrome/SegRow";
 import { fmtDay } from "../lib/date";
@@ -25,6 +26,10 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
   const [making, setMaking] = useState(!!forClient);
   /* The answers to the first step, what kind of program, until the second is saved. */
   const [kind, setKind] = useState(null);
+  /* A new program starts with the questions, one at a time (ProgramSteps);
+     skipped, it is the empty program with suggestions, as before. */
+  const [skipped, setSkipped] = useState(false);
+  const stopMaking = () => { setMaking(false); setKind(null); setSkipped(false); };
   const [places, setPlaces] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -44,7 +49,7 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
 
   const create = async (body) => {
     setBusy(true); setError("");
-    try { const p = await apiRequest("POST", "/programs", { ...body, ...kind }); setMaking(false); setKind(null); setOpenId(p.id); load(); }
+    try { const p = await apiRequest("POST", "/programs", { ...body, ...kind }); stopMaking(); setOpenId(p.id); load(); }
     catch (err) { fail(err); } finally { setBusy(false); }
   };
   const archive = async (p) => {
@@ -86,21 +91,26 @@ export function ProgramsTab({ clients, billy, onSignedOut, onSend }) {
               <h2 className="cx-display text-xl mb-3">A new program</h2>
               {active.length === 0 ? <p className="text-sm" style={muted}>You have no clients yet. Add them on the Clients page first.</p>
                 : !data ? <LoadingLine />
-                : !kind ? (
-                  <KindForm vocab={data} onCancel={() => setMaking(false)} onNext={setKind} />
+                : !skipped ? (
+                  <ProgramSteps vocab={data} clients={active} places={places} forClient={forClient} onSignedOut={onSignedOut}
+                    onSkip={() => setSkipped(true)} onCancel={stopMaking}
+                    onMade={(p) => { stopMaking(); setOpenId(p.id); load(); }} />
+                ) : !kind ? (
+                  <KindForm vocab={data} onCancel={stopMaking} onNext={setKind} />
                 ) : (
                   <DetailsForm key={kind.kind} clients={active} goals={data.goals || []} places={places} busy={busy} word="Start designing"
                     initial={{ goal: data.kinds.find(k => k.key === kind.kind)?.goal, ...(forClient && active.some(c => c.id === forClient) ? { clientId: forClient, name: `${active.find(c => c.id === forClient).firstName}'s program` } : {}) }}
-                    onBack={() => setKind(null)} onCancel={() => { setMaking(false); setKind(null); }} onSave={create} />
+                    onBack={() => setKind(null)} onCancel={stopMaking} onSave={create} />
                 )}
             </section>
           ) : null}
-          {data && (
+          {/* While a new program is being made, only its questions. */}
+          {data && !making && (
             <SegRow className="mb-3 sm:w-64" label="Which programs" value={showPutAway ? "away" : "active"}
               onPick={(k) => { setShowPutAway(k === "away"); setAsking(null); }}
               items={[{ key: "active", label: "Active", figure: data.programs.length }, { key: "away", label: "Put away", figure: (data.putAway || []).length }]} />
           )}
-          {!data ? (!error && <LoadingLine />) : showPutAway ? (
+          {making ? null : !data ? (!error && <LoadingLine />) : showPutAway ? (
             (data.putAway || []).length === 0 ? <EmptyState>You have no programs put away.</EmptyState> : (
               <ul className="grid gap-3">
                 {data.putAway.map(p => (

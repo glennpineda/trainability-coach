@@ -87,6 +87,7 @@ export function PrintProgram({ id, sent }) {
           <section key={d.id} className="mt-8" style={{ breakInside: "avoid" }}>
             <h2 className="text-xl font-medium">{d.name}</h2>
             {d.notes && <p className="text-sm cx-wrap" style={{ color: "#5b6b78" }}>{d.notes}</p>}
+            <Part title="Warm-up" list={d.warmup} />
             {(
               <table className="w-full text-sm mt-2 border-collapse">
                 <thead>
@@ -110,6 +111,7 @@ export function PrintProgram({ id, sent }) {
                 </tbody>
               </table>
             )}
+            <Part title="Cool-down" list={d.cooldown} />
             {labels.some(l => l.inPair) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>Exercises sharing a number (3a, 3b) are done together, one after the other, before resting: two are a superset, three or more a giant set.</p>}
             {d.exercises.some(e => e.technique === "drop") && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>A drop set: lift to failure, then straight away about 20–30% lighter and on to failure again, with no rest between drops.</p>}
             {d.exercises.some(e => String(e.technique || "").startsWith("pyramid")) && <p className="text-xs mt-1" style={{ color: "#5b6b78" }}>A pyramid: the reps change each set, as written, and the weight with them, heavier for fewer reps and lighter for more.</p>}
@@ -122,6 +124,21 @@ export function PrintProgram({ id, sent }) {
       {p.days.some(d => d.exercises.some(e => e.tempo)) && (
         <p className="text-xs mt-8" style={{ color: "#5b6b78" }}>Tempo is seconds for each part of a rep: lowering, pause, lifting, pause. X means as fast as you can.</p>
       )}
+    </div>
+  );
+}
+
+/* A day's warm-up or cool-down, before and after its exercises: each by
+   name and dose in one line, as they go straight one into the next. A copy
+   sent before they were kept has none. */
+function Part({ title, list }) {
+  if (!list?.length) return null;
+  return (
+    <div className="text-sm mt-2">
+      <span className="font-semibold">{title}: </span>
+      {list.map((e, i) => (
+        <span key={i}>{i > 0 && "; "}{e.name}{e.sets && e.reps ? `, ${e.sets} × ${e.reps}` : e.reps ? `, ${e.reps}` : ""}</span>
+      ))}
     </div>
   );
 }

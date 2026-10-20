@@ -174,8 +174,10 @@ async function sweepIncoming() {
 
 /** A program kept as a copy, waiting to be sent: the shape programs.full gives. */
 export async function programAttachment(owner, program, units) {
+  /* The warm-up and the cool-down as the client reads them: names and doses. */
+  const brief = (list) => (list || []).map(e => ({ name: e.name, sets: e.sets, reps: e.reps, note: e.note }));
   const days = program.days.map(d => ({
-    name: d.name, notes: d.notes || "",
+    name: d.name, notes: d.notes || "", warmup: brief(d.warmup), cooldown: brief(d.cooldown),
     exercises: d.exercises.map(e => ({ name: e.name, superset: !!e.superset, technique: e.technique || "", drops: e.drops ?? null, sets: e.sets, reps: e.reps, load: e.load, ...(e.loadKg ? { loadKg: e.loadKg } : {}), effort: e.effort, tempo: e.tempo, restText: e.restText, note: e.note, primary: e.primary || [], secondary: e.secondary || [] })),
   }));
   const data = { programId: program.id, name: program.name, clientName: program.clientName, goalLabel: program.goalLabel, kindLabel: program.kindLabel, notes: program.notes || "", updatedAt: program.updatedAt, units, days };

@@ -8,6 +8,14 @@ account menu; the details of any change are in `NEURALBRAIN.md`.
 
 The first version of Trainability Coach, live at trainabilitycoach.com.
 
+- **A new program, one question at a time.** New program asks who it's for,
+  where they train, the focus, how many days, what each day works and for
+  how long, whether to add a warm-up, cool-down and stretching, and the
+  level, then Coach IQ makes the whole program from the answers, the
+  client's earlier programs and their 1RMs. Change anything after, or skip
+  the questions and start with an empty program as before. Each day now has
+  its own warm-up and cool-down, apart from its exercises, and its own
+  session length.
 - **More equipment Coach knows by name.** The pieces in BUGE's guide to gym
   equipment, from an arm curl machine to a punching bag, are suggested as you
   add a piece to a place, and known by their other names too.
