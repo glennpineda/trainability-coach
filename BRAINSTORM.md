@@ -38,6 +38,58 @@ Nothing waiting. Run 1's findings are all fixed, decided or moved to Ideas
 
 _Not thought through yet._
 
+- **Health trackers, starting with Oura.** (21 Oct 2026; Glenn: "With the
+  measurements, let's integrate with health tracker devices such as Oura,
+  Whoop, and Fitbit. Let's go with them one by one and see what's possible.
+  Primarily, to see if we can connect their health data to the time of their
+  personal training session and the session they set. Let's start with Oura
+  first.", then "Yes put it under ideas") One tracker at a time; Whoop and
+  Fitbit to be looked at the same way. **Oura**, read from its API
+  specification (openapi 1.42, cloud.ouraring.com/v2/docs, 22 Oct 2026; the
+  cloud environment's allowed domains now include cloud.ouraring.com and
+  api.ouraring.com):
+  - **Access**: OAuth2 only (personal access tokens retired December 2025);
+    the client consents to each kind of data (scopes `daily`, `heartrate`,
+    `workout`, `session`, `spo2`, `personal`, `email`, `tag`,
+    `heart_health`). An app is limited to **10 users until Oura approves
+    it**. The client needs an **active Oura Membership**: lapsed, Oura answers
+    403. Refresh tokens rotate.
+  - **Heart rate** (`/v2/usercollection/heartrate`, any start and end time):
+    **5-minute increments**, each sample a time, bpm and a source (`awake`,
+    `workout`, `rest`, `sleep`, `live`, `session`). A 60-minute session is
+    about 12 samples: an average, a peak and roughly the time spent hard, not
+    set by set. Samples marked `workout` when the client starts a workout on
+    the ring.
+  - **Workouts** (`/workout`): start and end, activity, calories, distance,
+    intensity (easy, moderate, hard), and source (`manual`, `autodetected`,
+    `confirmed`, `workout_heart_rate`, `live_oura_heart_rate`,
+    `live_third_party_heart_rate`). **Sessions** are Oura's breathing,
+    meditation, nap and rest moments, not workouts.
+  - **Daily readiness**: a score with its contributors (previous night,
+    HRV balance, resting heart rate, recovery index, sleep balance, body
+    temperature, activity balance …); also sleep, activity, stress, SpO2,
+    VO2 max, resilience, cardiovascular age.
+  - **Webhooks** (recommended by Oura) for workouts, readiness, sleep, daily
+    activity and more, about 30 seconds after the phone syncs; **not heart
+    rate**, which is asked for by time. Sleep arrives only once the client
+    opens the Oura app. Rate limits per token and per app.
+  - **A sandbox** (`/v2/sandbox/usercollection/…`, any bearer token) with
+    made-up data (one heart-rate sample a day, so no help with intervals),
+    enough to build against before an app is registered.
+  - **What it gives Coach**: (1) a personal-training session's heart rate,
+    from Studio's session time and length, once the ring has synced; (2)
+    **readiness before the session** on Today ("Readiness 58 · HRV balance
+    low · slept 5h 40m"), the strongest use; (3) the workouts the client does
+    on their own, on their page.
+  - **How a client connects**: a **Connect Oura** link the trainer sends from
+    the client's page (Coach has no client sign-in yet; later from /me); the
+    client signs in to Oura and agrees; disconnecting deletes what Coach
+    kept. Coach's server holds the app's keys; health data needs its own
+    consent words.
+  - **Glenn's to do before real clients**: register the app on Oura's
+    developer portal for its keys, and ask Oura for approval before the
+    eleventh client.
+
 - **Add-ons, starting with Programs.** (20 Oct 2026; Glenn: "I want to offer a paid
   subscription service to our members on Studio (members that goes to our
   gym). This monthly subscription allows them to receive up to 2 programs a
