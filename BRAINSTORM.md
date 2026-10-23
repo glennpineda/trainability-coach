@@ -89,6 +89,46 @@ _Not thought through yet._
   - **Glenn's to do before real clients**: register the app on Oura's
     developer portal for its keys, and ask Oura for approval before the
     eleventh client.
+  **Whoop**, read from its API specification
+  (api.prod.whoop.com/developer/doc/openapi.json) and developer pages
+  (developer.whoop.com: webhooks, rate limiting, OAuth, app approval,
+  workout), 22 Oct 2026; Glenn: "Now let's see what whoop offers", then "Yes,
+  add it under ideas":
+  - **Access**: OAuth2, the member consenting per scope (`read:recovery`,
+    `read:cycles`, `read:workout`, `read:sleep`, `read:profile`,
+    `read:body_measurement`; `offline` for a refresh token). **Tiers**: every
+    app starts at 10 members (Sandbox, no request), then 100, 1,000, 5,000
+    and unlimited, each asked for in the Developer Dashboard and reviewed by
+    hand; from 100 up, half the current tier must be connected first. A Whoop
+    strap needs a membership to work at all.
+  - **Workouts** (`/v2/activity/workout`), detected or started by the member,
+    with a sport (*Weightlifting*, *Strength Trainer*, *Functional Fitness*,
+    *HIIT* …) and, once scored: **strain**, **average and maximum heart
+    rate**, **minutes in each of six heart-rate zones** (`zone_durations`),
+    kilojoules and the share of heart rate recorded. **No heart rate over
+    time** at all, unlike Oura: summaries only. Strength Trainer's sets and
+    reps aren't in the API.
+  - **Recovery** each day: a 0–100% score, resting heart rate, HRV (RMSSD);
+    SpO2 and skin temperature on 4.0 and up. Also sleep (performance,
+    stages), the day's cycle (strain, average and maximum heart rate, steps)
+    and body measurements (height, weight, Whoop's maximum heart rate).
+  - **Webhooks** (v2) for workout, sleep and recovery, updated or deleted,
+    signed (HMAC SHA256 of the timestamp and body with the app's secret),
+    retried five times over about an hour. Rate limits 100 a minute and
+    10,000 a day by default.
+  - **No sample data**: unlike Oura's sandbox, testing needs a real Whoop
+    member, which the first tier allows.
+  - **What it gives Coach**: (1) a personal-training session's **strain,
+    average and maximum heart rate and minutes in each zone**, better than
+    Oura's, when Whoop recorded it as a workout (the strap detected it, or the
+    client started Strength Trainer or Weightlifting), matched by time to the
+    Studio session; not recorded, only the day's totals; (2) **recovery
+    before the session** on Today ("Recovery 34% · HRV 41 ms · RHR 58"), as
+    Oura's readiness; (3) the client's own workouts with strain and zones.
+    Connected the same way, a **Connect Whoop** link from the client's page.
+  - **Glenn's to do before real clients**: create the app in Whoop's Developer
+    Dashboard (with a privacy policy URL), test with one Whoop member, and
+    ask for the next tier before the eleventh.
 
 - **Add-ons, starting with Programs.** (20 Oct 2026; Glenn: "I want to offer a paid
   subscription service to our members on Studio (members that goes to our
