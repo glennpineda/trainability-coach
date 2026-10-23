@@ -11,6 +11,10 @@ Folders
              "dark" = for dark backgrounds (white badge). SVG + PNG 256-2048 px.
   lockup/    Stacked mark + TRAINABILITY® COACH. Transparent SVG/PNG for light and
              dark backgrounds, plus a version on navy.
+             Also side by side, mark + COACH, as Studio's header logo
+             (coach-horizontal-*): "dark" = white badge and COACH in Sky, for dark
+             backgrounds; "light" = cerulean badge and COACH in Cerulean; plus
+             one on navy with room around it. SVG + PNG 600/1500/3000 px wide.
   app-icon/  Full-bleed square on navy. iOS/Android round the corners themselves,
              so don't pre-round it. PNG 48-1024 px.
   favicon/   favicon.svg, favicon.ico (16/32/48), PNGs incl. 180 px apple-touch icon.
@@ -44,4 +48,10 @@ the bottom right #0E1B26, in place of the kit's flat Navy #172A3A, as Studio's
 icon runs from a light purple to a dark one. Only the ground changed; the mark
 is the kit's. app-icon/coach-app-icon.svg holds it, and every PNG of the icon
 was drawn again from it (at 2048 px, then made smaller).
+
+The side-by-side logo (23 Oct 2026; Glenn, with Studio's mark + STUDIO on
+dark: "can we create something similar for Coach like this for Studio, with
+coaches colors?"): built from this kit's own parts, the badge (badge/) and
+COACH's outlines (as src/chrome/CoachWordmark.jsx has them), COACH 36% of the
+badge's height and 32 units from it, as Studio's STUDIO sits beside its mark.
 
